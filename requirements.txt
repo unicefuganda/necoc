@@ -1,0 +1,5 @@
+Django==1.6.5
+django-mongodb-engine==0.5.2
+djangotoolbox==1.6.2
+pymongo==2.7.2
+wsgiref==0.1.2

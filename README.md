@@ -11,6 +11,4 @@ SETTING UP NECOC ON YOUR MACHINE
 -----------------------------------
 1. Create any suitable directory on your computer.
 
-2. From your computer terminal run this command: git clone
-
-3. To install mongodb run command: brew install mongodb 
+2. From your computer terminal run this command: git clone git@github.com:unicefuganda/necoc.git

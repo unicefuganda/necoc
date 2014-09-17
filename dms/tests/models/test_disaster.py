@@ -8,7 +8,7 @@ class TestDisaster(NoSQLTestCase):
         pass
 
     def test_create_disaster(self):
-        attributes = {"name": "Flood", "description":"a lot of water everywhere"}
+        attributes = {"name": "Flood", "description": "a lot of water everywhere"}
         Disaster(**attributes).save()
         disasters = Disaster.objects(name="Flood")
         disaster = disasters[0]

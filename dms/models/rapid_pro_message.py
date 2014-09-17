@@ -9,3 +9,6 @@ class RapidProMessage (Message):
     status = StringField()
     direction = StringField()
     event = StringField()
+
+    class Meta:
+        app_label = 'dms'

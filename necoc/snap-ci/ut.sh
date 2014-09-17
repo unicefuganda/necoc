@@ -1,4 +1,5 @@
 #!/bin/bash
-pip install python-coveralls
+
+source ../necoc_env/bin/activate
 coverage run manage.py test
 coveralls

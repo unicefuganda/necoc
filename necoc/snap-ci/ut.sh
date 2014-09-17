@@ -1,3 +1,4 @@
 #!/bin/bash
-pip install coveralls
+pip install python-coveralls
 coverage run manage.py test
+coveralls

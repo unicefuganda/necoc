@@ -8,5 +8,6 @@ enabled=1" > /etc/yum.repos.d/mongodb.repo
 
 sudo yum update -y
 sudo yum install -y mongodb-org
+sudo service mongod start
 
 pip install -r requirements.txt

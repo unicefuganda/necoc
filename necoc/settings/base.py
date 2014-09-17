@@ -137,7 +137,9 @@ DJANGO_APPS = (
 )
 
 
-THIRD_PARTY_APPS = ()
+THIRD_PARTY_APPS = (
+    'rest_framework',
+)
 
 LOCAL_APPS = (
     'dms',
@@ -146,6 +148,14 @@ LOCAL_APPS = (
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 TEST_RUNNER = 'dms.tests.runner.NoSQLTestRunner'
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

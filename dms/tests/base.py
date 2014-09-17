@@ -7,3 +7,4 @@ class NoSQLTestCase(TestCase):
 
     def _fixture_teardown(self):
         pass
+

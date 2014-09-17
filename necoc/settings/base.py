@@ -26,6 +26,7 @@ MONGODB_DATABASE_HOST = 'mongodb://%s/%s' % (MONGODB_HOST, MONGODB_NAME)
 
 mongoengine.connect(MONGODB_NAME, host=MONGODB_DATABASE_HOST)
 
+
 AUTHENTICATION_BACKENDS = (
     'mongoengine.django.auth.MongoEngineBackend',
 )

@@ -1,8 +1,14 @@
 # Django settings for necoc project.
 import mongoengine
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+here = lambda * x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
+PROJECT_ROOT = here("..")
+root = lambda * x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
+
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -68,23 +74,24 @@ MEDIA_ROOT = ''
 MEDIA_URL = ''
 
 # Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
+# Don't put anything in this directory yourself; store your client files
+# in apps' "client/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
 STATIC_ROOT = ''
 
-# URL prefix for static files.
-# Example: "http://example.com/static/", "http://static.example.com/"
+# URL prefix for client files.
+# Example: "http://example.com/static/", "http://client.example.com/"
 STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    root("..", "dms/client/app"),
+    # Put strings here, like "/home/html/client" or "C:/www/django/client".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
 
-# List of finder classes that know how to find static files in
+# List of finder classes that know how to find client files in
 # various locations.
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -118,6 +125,7 @@ ROOT_URLCONF = 'necoc.urls'
 WSGI_APPLICATION = 'necoc.wsgi.application'
 
 TEMPLATE_DIRS = (
+    root("..", "dms/templates"),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.

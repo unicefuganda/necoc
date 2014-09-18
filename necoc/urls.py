@@ -5,11 +5,12 @@ from django.conf.urls import patterns, include, url
 # from django.contrib import admin
 # admin.autodiscover()
 from dms.api.rapid_pro_message import RapidProListCreateView
+from dms.views.views import HomeView
 
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'necoc.views.home', name='home'),
+    url(r'^$', HomeView.as_view()),
     # url(r'^necoc/', include('necoc.foo.urls')),
 
     # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),

@@ -1,8 +1,8 @@
-from django.test import TestCase
 from rest_framework.test import APITestCase
+from django.test import TestCase
 
 
-class NoSQLTestCase(TestCase):
+class MongoTestCase(TestCase):
     def _fixture_setup(self):
         pass
 

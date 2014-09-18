@@ -1,8 +1,8 @@
 from dms.models.disaster import Disaster
-from dms.tests.base import NoSQLTestCase
+from dms.tests.base import MongoTestCase
 
 
-class TestDisaster(NoSQLTestCase):
+class TestDisaster(MongoTestCase):
 
     def setUp(self):
         pass

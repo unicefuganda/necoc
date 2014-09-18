@@ -147,7 +147,8 @@ LOCAL_APPS = (
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-TEST_RUNNER = 'dms.tests.runner.NoSQLTestRunner'
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+# TEST_RUNNER = 'dms.tests.runner.NoSQLTestRunner'
 
 
 # A sample logging configuration. The only tangible logging

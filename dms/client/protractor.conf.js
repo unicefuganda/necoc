@@ -2,8 +2,6 @@ exports.config = {
     seleniumServerJar: 'node_modules/selenium-standalone/.selenium/2.43.1/server.jar',
     chromeDriver: 'node_modules/selenium-standalone/.selenium/2.43.1/chromedriver',
 
-    chromeOnly: true,
-
     framework: 'cucumber',
 
     specs: [
@@ -11,7 +9,7 @@ exports.config = {
     ],
 
     capabilities: {
-        'browserName': 'chrome'
+        'browserName': 'phantomjs'
     },
 
     baseUrl: 'http://localhost:7999',

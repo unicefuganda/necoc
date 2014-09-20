@@ -5,7 +5,7 @@ from django.conf.urls import patterns, include, url
 # from django.contrib import admin
 # admin.autodiscover()
 from dms.api.rapid_pro_message import RapidProListCreateView
-from dms.views.views import HomeView
+from dms.views.homepage import HomeView
 
 
 urlpatterns = patterns('',

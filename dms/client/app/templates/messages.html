@@ -12,11 +12,11 @@
     </thead>
     <tbody>
     <tr ng-repeat="message in messages">
-        <td>-</td>
+        <td>{[{ message.sms }]}</td>
         <td>-</td>
         <td>{[{ message.time }]}</td>
         <td>{[{ message.text }]}</td>
-        <td>-</td>
+        <td>{[{ message.source }]}</td>
     </tr>
     </tbody>
 </table>

@@ -9,12 +9,13 @@ var MessagesPage = function () {
             phone: "023020302",
             time: "2014-02-13T02:00:00",
             relayer: 2,
-            sms: 1,
+            sms: '1',
             text: "Where are yout",
             relayer_phone: "2939829949",
             status: "2",
             direction: "43",
-            event: "43"
+            event: "43",
+            source: "NECOC Volunteer"
         }
     ];
 
@@ -26,9 +27,9 @@ var MessagesPage = function () {
         return element.all(by.repeater("message in messages")).count();
     };
 
-    this.hasMessageAtPosition =  function(row) {
-        return this.messages[row].text == element(by.repeater('message in messages').row(row).column('{[{ message.text }]}'));
-    };
+    this.getMessageData =  function (name, row) {
+        return element(by.repeater('message in messages').row(row).column('{[{ message.'+name+' }]}')).getText();
+    }
 
 };
 

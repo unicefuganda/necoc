@@ -20,7 +20,8 @@ class RapidProMessageSerializerTest(MongoTestCase):
     def test_should_serialize_rapid_pro_message_object(self):
         rapid_pro_message = RapidProMessage(**self.message).save()
         serialized_object = RapidProMessageSerializer(rapid_pro_message)
-        self.assertEqual(self.serialized_data, serialized_object.data)
+        serialized_data_with_source = dict(self.serialized_data.items() + {'source': 'NECOC Volunteer'}.items())
+        self.assertEqual(serialized_data_with_source, serialized_object.data)
 
     def test_should_deserialize_rapid_pro_message_object(self):
         serializer = RapidProMessageSerializer(data=self.serialized_data)

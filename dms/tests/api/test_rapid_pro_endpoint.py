@@ -32,3 +32,4 @@ class RapidProEndPointTest(NoSQLAPITestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, len(response.data))
         self.assertDictContainsSubset(self.expected_message, response.data[0])
+        self.assertEqual('NECOC Volunteer', response.data[0]['source'])

@@ -17,4 +17,4 @@
 
     });
 
-})(angular.module('dms', ['ngRoute', 'dms.message']));
+})(angular.module('dms', ['ngRoute', 'siTable', 'dms.message']));

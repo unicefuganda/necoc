@@ -1,15 +1,16 @@
-<h1>MESSAGES</h1>
+<h3 class="page-header">Messages</h3>
 
-<table class="table table-hover">
+<table si-table="" class="table table-hover table-bordered">
     <thead>
-        <tr>
-            <th>#</th>
-            <th>Location</th>
-            <th>Date Time</th>
-            <th>SMS Body</th>
-            <th>Source</th>
-        </tr>
+    <tr>
+        <th>Identifier</th>
+        <th>Location</th>
+        <th>Date Time</th>
+        <th>SMS Body</th>
+        <th>Source</th>
+    </tr>
     </thead>
+
     <tbody>
     <tr ng-repeat="message in messages">
         <td>{[{ message.sms }]}</td>
@@ -19,4 +20,12 @@
         <td>{[{ message.source }]}</td>
     </tr>
     </tbody>
+
+    <tfoot>
+    <tr>
+        <td colspan="5">
+            <si-table-pagination limit="10" />
+        </td>
+    </tr>
+    </tfoot>
 </table>

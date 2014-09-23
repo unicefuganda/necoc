@@ -1,3 +1,15 @@
 .with-margin {
-    margin-top: 60px;
+    margin-top: 40px;
+}
+
+.page-header {
+    padding-bottom: 9px;
+    margin: 40px 0 20px;
+    border-bottom: 1px dotted #C9C5C5;
+
+}
+
+.page-header h3 {
+    font-weight: 200;
+    color: #2679b5;
 }

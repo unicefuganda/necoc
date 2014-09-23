@@ -2,6 +2,8 @@
 FROM dockerfile/java
 MAINTAINER Timothy Akampa timothyakampa@gmail.com
 
+ENV NGINX_SERVER_NAME 127.0.0.1
+
 RUN apt-get -qq update
 RUN apt-get -qqy install wget build-essential
 
@@ -61,6 +63,8 @@ VOLUME ["/data", "/var/log/"]
 # --- Add a starter script ----
 ADD deployment/scripts  /scripts
 RUN chmod +x /scripts/run.sh
+RUN chmod +x /necoc/deployment/scripts/start_uwsgi.sh
+RUN chmod +x /necoc/deployment/scripts/start_nginx.sh
 
 # --- SSH ----
 EXPOSE 22

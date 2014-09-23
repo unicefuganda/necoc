@@ -6,6 +6,8 @@ var MessagesPage = function () {
             relayer_phone: "2939829949", status: "2", direction: "43", event: "43", source: "NECOC Volunteer" },
     ];
 
+    this.formattedTime = 'Feb 13, 2014 - 2:00AM';
+
     this.postMessage = function () {
         request.post('http://localhost:7999/api/v1/rapid-pro/', {form: this.messages[0]})
     };

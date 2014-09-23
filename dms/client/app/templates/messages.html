@@ -1,26 +1,24 @@
 <div class="page-header">
-    <h3>Messages</h3>
+    <h4>Disaster SMS report stream</h4>
 </div>
 
 
 <table si-table="" class="table table-hover table-striped table-bordered">
     <thead>
     <tr>
-        <th>Identifier</th>
-        <th>Location</th>
-        <th>Date Time</th>
+        <th class="md-column">Source</th>
         <th>SMS Body</th>
-        <th>Source</th>
+        <th class="sm-column" >Location</th>
+        <th class="sm-column">Date Time</th>
     </tr>
     </thead>
 
     <tbody>
     <tr ng-repeat="message in messages">
-        <td>{[{ message.sms }]}</td>
-        <td>-</td>
-        <td>{[{ message.time }]}</td>
+        <td>{[{ message.source }]} <span>({[{ message.phone }]})</span></td>
         <td>{[{ message.text }]}</td>
-        <td>{[{ message.source }]}</td>
+        <td>-</td>
+        <td>{[{ message.time | date:"MMM dd, yyyy - h:mma" }]}</td>
     </tr>
     </tbody>
 

@@ -3,13 +3,45 @@
 }
 
 .page-header {
-    padding-bottom: 9px;
+    padding-bottom: 0px;
     margin: 40px 0 20px;
     border-bottom: 1px dotted #C9C5C5;
 
 }
 
-.page-header h3 {
+.md-column {
+    width: 22%
+}
+
+.sm-column {
+    width: 15%
+}
+
+.xsm-column {
+    width: 10%
+}
+
+.page-header h3, .page-header h4 {
     font-weight: 200;
     color: #2679b5;
+}
+
+.navbar {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-width: 0;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    min-height: 45px;
+    background: rgba(67, 142, 185, 0.92);
+}
+
+.navbar .navbar-brand, .navbar-default .navbar-nav>li>a  {
+    color: #fff;
+}
+
+.navbar .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {
+    color: #e6e6e6;
 }

@@ -1,3 +1,3 @@
 #!/bin/bash
 mkdir -p /data/db
-service supervisor start
+sed -i "s/##SERVER_NAME##/$NGINX_SERVER_NAME/g" /etc/nginx/conf.d/necoc.conf && service supervisor start

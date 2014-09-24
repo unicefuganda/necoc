@@ -77,7 +77,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your client files
 # in apps' "client/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = root("..", "dms/client/app")
+STATIC_ROOT = '/static'
 
 # URL prefix for client files.
 # Example: "http://example.com/static/", "http://client.example.com/"
@@ -85,6 +85,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
+    root("..", "dms/client/app"),
     # Put strings here, like "/home/html/client" or "C:/www/django/client".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.

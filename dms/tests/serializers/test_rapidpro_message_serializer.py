@@ -7,12 +7,11 @@ import datetime
 class RapidProMessageSerializerTest(MongoTestCase):
     def setUp(self):
         date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
-        self.serialized_data = dict(phone="+256775019449", time=date_time, relayer=234, sms=23243,
-                                    text="There is a fire", relayer_phone="+256773434324", status="Q",
-                                    direction="I", event="mo_sms")
+        self.serialized_data = dict(phone="+256775019449", time=date_time, relayer=234, run=23243,
+                                    text="There is a fire")
 
         self.message = dict(phone_no="+256775019449", text="There is a fire", received_at=date_time, relayer_id=234,
-                            relayer_phone="+256773434324", sms_id=23243, status="Q", direction="I", event="mo_sms")
+                            run_id=23243)
 
     def tearDown(self):
         RapidProMessage.drop_collection()

@@ -2,8 +2,8 @@ var MessagesPage = function () {
     var request = require('request');
 
     this.messages = [
-        { phone: "023020302", time: "2014-02-13T02:00:00", relayer: 2, sms: '1', text: "Where are yout",
-            relayer_phone: "2939829949", status: "2", direction: "43", event: "43", source: "NECOC Volunteer" },
+        { phone: "023020302", time: "2014-02-13T02:00:00", relayer: 2, run: '1', text: "Where are yout",
+            source: "NECOC Volunteer" },
     ];
 
     this.formattedTime = 'Feb 13, 2014 - 2:00AM';
@@ -14,9 +14,8 @@ var MessagesPage = function () {
 
     this.postMessages = function (number) {
         for (var i = 0; i < number; i++) {
-            var message = { phone: "023020302" + i, time: "2014-02-13T0" + i + ":00:00", relayer: 2, sms: String(i),
-                text: "I am message" + i, relayer_phone: "2939829949", status: "2",
-                direction: "43", event: "43", source: "NECOC Volunteer" };
+            var message = { phone: "023020302" + i, time: "2014-02-13T0" + i + ":00:00", relayer: 2, run: String(i),
+                text: "I am message" + i, source: "NECOC Volunteer" };
             request.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
         }
     };
@@ -29,9 +28,9 @@ var MessagesPage = function () {
         return element(by.repeater('message in messages').row(row).column('{[{ message.' + name + ' }]}')).getText();
     }
 
-   this.clickSecondPagination =  function(callback) {
+    this.clickSecondPagination = function (callback) {
         element(by.repeater("page in showPages").row(1).column('{[{ page }]}')).click();
-   }
+    }
 
 };
 

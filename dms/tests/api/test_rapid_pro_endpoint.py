@@ -10,10 +10,9 @@ class RapidProEndPointTest(NoSQLAPITestCase):
     def setUp(self):
         date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
         self.expected_message = dict(phone="+256775019449", text="There is a fire", time=date_time, relayer=234,
-                                     relayer_phone="+256773434324", sms=23243, status="Q", direction="I",
-                                     event="mo_sms")
+                                     run=23243)
         self.message = dict(phone_no="+256775019449", text="There is a fire", received_at=date_time, relayer_id=234,
-                            relayer_phone="+256773434324", sms_id=23243, status="Q", direction="I", event="mo_sms")
+                            run_id=23243)
 
     def tearDown(self):
         RapidProMessage.drop_collection()

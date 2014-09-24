@@ -12,5 +12,4 @@ Feature: Messages
     And I visit the messages listing page
     Then I should see 10 messages in the first pagination
     When I click on the second pagination
-    Then I should see 6 messages in the second pagination
-
+    Then I should see 5 messages in the second pagination

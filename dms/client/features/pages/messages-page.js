@@ -12,11 +12,23 @@ var MessagesPage = function () {
         request.post('http://localhost:7999/api/v1/rapid-pro/', {form: this.messages[0]})
     };
 
-    this.postMessages = function (number) {
-        for (var i = 0; i < number; i++) {
-            var message = { phone: "023020302" + i, time: "2014-02-13T0" + i + ":00:00", relayer: 2, run: String(i),
-                text: "I am message" + i, source: "NECOC Volunteer" };
-            request.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
+    this.postMessages = function (number, next) {
+        var index = 0;
+        postInIntervals();
+
+        function postInIntervals () {
+            var message = { phone: "023020302" + index, time: "2014-02-13T02:00:00", relayer: 2, run: String(index),
+                text: "I am message" + index, source: "NECOC Volunteer" };
+
+            setTimeout(function () {
+                if (index < number) {
+                    request.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
+                    index ++;
+                    postInIntervals();
+                } else {
+                    next();
+                }
+            }, 100);
         }
     };
 

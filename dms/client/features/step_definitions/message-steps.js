@@ -38,9 +38,7 @@ module.exports = function () {
     });
 
     this.When(/^I POST a list of messages to NECOC DMS$/, function (next) {
-        messagesPage.postMessages(10);
-        messagesPage.postMessages(5);
-        next();
+        messagesPage.postMessages(15, next);
     });
 
     this.Then(/^I should see (\d+) messages in the first pagination$/, function (paginationLimit, next) {

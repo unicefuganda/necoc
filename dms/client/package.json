@@ -33,6 +33,7 @@
     "chai": "^1.9.1",
     "chai-as-promised": "^4.1.1",
     "grunt-run": "^0.2.4",
-    "request": "^2.44.0"
+    "request": "^2.44.0",
+    "mongodb": "^1.4.12"
   }
 }

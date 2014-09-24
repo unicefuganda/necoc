@@ -64,7 +64,6 @@ VOLUME ["/data", "/var/log/"]
 ADD deployment/scripts  /scripts
 RUN chmod +x /scripts/run.sh
 RUN chmod +x /necoc/deployment/scripts/start_uwsgi.sh
-RUN chmod +x /necoc/deployment/scripts/start_nginx.sh
 
 # --- SSH ----
 EXPOSE 22

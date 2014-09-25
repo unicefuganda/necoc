@@ -5,7 +5,6 @@ from dms.tests.base import NoSQLAPITestCase
 class TestLocationEndpoint(NoSQLAPITestCase):
 
     LOCATION_ENDPOINT = '/api/v1/locations/'
-    DISTRICTS_ENDPOINT = '/api/v1/districts/'
 
     def setUp(self):
         self.district_to_post = dict(name='Kampala', type='district')
@@ -37,6 +36,17 @@ class TestLocationEndpoint(NoSQLAPITestCase):
     def test_should_get_a_list_of_locations(self):
         Location(**self.district).save()
         response = self.client.get(self.LOCATION_ENDPOINT, format='json')
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertDictContainsSubset(self.expected_district, response.data[0])
+
+    def test_should_filter_locations_by_type(self):
+        village = dict(name='Wakiso', type='village')
+        Location(**self.district).save()
+        Location(**village).save()
+
+        response = self.client.get(self.LOCATION_ENDPOINT + '?type=district', format='json')
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, len(response.data))

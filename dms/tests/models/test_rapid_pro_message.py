@@ -12,7 +12,6 @@ class TestRapidProMessage(MongoTestCase):
         self.message = dict(phone_no="+256775019449", text="There is a fire", received_at=date_time, relayer_id=234,
                         run_id=23243)
 
-
     def tearDown(self):
         RapidProMessage.drop_collection()
 

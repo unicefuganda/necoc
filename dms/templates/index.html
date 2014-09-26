@@ -21,6 +21,10 @@
             </div>
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Admin Panel</a></li>
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#">Logged in as: Solomon</a></li>
                     <li class="dropdown">
@@ -37,7 +41,7 @@
     </div>
 
     <div class="container with-margin">
-        <div ng-view></div>
+        <div ui-view></div>
     </div>
 
 {% endblock %}
@@ -46,7 +50,7 @@
     <!-- Libs -->
     <script src="{{ STATIC_URL }}bower_components/jquery/dist/jquery.min.js"></script>
     <script src="{{ STATIC_URL }}bower_components/angular/angular.min.js"></script>
-    <script src="{{ STATIC_URL }}bower_components/angular-route/angular-route.min.js"></script>
+    <script src="{{ STATIC_URL }}bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="{{ STATIC_URL }}bower_components/si-table/dist/si-table.js"></script>
     <script src="{{ STATIC_URL }}bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- Custom files -->

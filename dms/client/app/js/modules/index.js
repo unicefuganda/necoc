@@ -1,20 +1,19 @@
 (function (module) {
 
-    module.config(function ($routeProvider, $interpolateProvider, $locationProvider) {
+    module.config(function ($stateProvider, $urlRouterProvider, $interpolateProvider, $locationProvider) {
         $locationProvider.html5Mode(true);
+        $urlRouterProvider.otherwise('/');
 
         $interpolateProvider.startSymbol('{[{');
         $interpolateProvider.endSymbol('}]}');
 
-        $routeProvider
-            .when('/', {
+        $stateProvider
+            .state('index', {
+                url: '/',
                 templateUrl: '/static/templates/messages.html',
                 controller: 'MessageController'
             })
-            .otherwise({
-                redirectTo: '/'
-            });
 
     });
 
-})(angular.module('dms', ['ngRoute', 'siTable', 'dms.message']));
+})(angular.module('dms', ['ui.router', 'siTable', 'dms.message']));

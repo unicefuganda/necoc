@@ -19,9 +19,6 @@ class TestMobileUserModel(MongoTestCase):
         saved_mobile_user = MobileUser.objects(**mobile_user)
         self.assertEqual(1, saved_mobile_user.count())
 
-    def xtest_should_not_save_a_user_without_a_phone_number_and_location(self):
+    def test_should_not_save_a_user_without_a_phone_number_and_location(self):
         mobile_user = dict(name='timothy', email=None)
-        MobileUser(**mobile_user).save()
-        MobileUser.objects(**mobile_user)
-
-        self.assertRaises(ValidationError, 'dad')
+        self.assertRaises(ValidationError, MobileUser(**mobile_user).save)

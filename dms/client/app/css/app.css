@@ -38,10 +38,107 @@
     background: rgba(67, 142, 185, 0.92);
 }
 
-.navbar .navbar-brand, .navbar-default .navbar-nav>li>a  {
+.navbar .navbar-brand, .navbar-default .navbar-nav > li > a {
     color: #fff;
 }
 
-.navbar .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {
+.sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 40px 0;
+    background-color: #f5f5f5;
+    border-right: 1px solid #D3D3D3;
+}
+
+.section .page-header {
+    margin: 20px 0 20px;
+}
+
+.section {
+    margin: 0 2%;
+}
+
+.modal-content {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.nav-sidebar > li {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.nav-sidebar > li:first-child {
+    border-top: 1px solid #e5e5e5;
+}
+
+.nav-sidebar > li >a:hover {
+    background-color: #f9f9f9;
+}
+
+.nav-sidebar > li.active:before {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    z-index: 500;
+    right: -1px;
+    top: 8px;
+    border: 12px solid;
+    border-color: transparent rgb(187, 187, 187) transparent transparent;
+}
+
+.nav-sidebar > li.active:after {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    z-index: 500;
+    right: -1px;
+    top: 9px;
+    border: 11px solid;
+    border-color: transparent #fff transparent transparent;
+}
+
+.nav-sidebar > li.active > a:before, .nav-sidebar > li:active > a:hover:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 41px solid;
+    border-left: 3px solid;
+    position: absolute;
+    left: 0;
+    top: -1px;
+    color: #2b7dbc;
+}
+
+.nav-sidebar > li > a:hover:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 41px solid;
+    border-left: 3px solid;
+    position: absolute;
+    left: 0;
+    top: -1px;
+    color: #c8c8c8;
+}
+
+.nav-sidebar > li.active > a {
+    background-color: #fff;
+    color: #2b7dbc;
+}
+
+.nav-sidebar > li > a {
+    cursor: pointer;
+}
+
+.navbar .navbar-brand:hover, .navbar-default .navbar-nav > li > a:hover {
     color: #e6e6e6;
 }

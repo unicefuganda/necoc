@@ -3,6 +3,7 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{{ STATIC_URL }}bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}bower_components/selectize/dist/css/selectize.bootstrap3.css"/>
     <link rel="stylesheet" href="{{ STATIC_URL }}css/app.css"/>
 {% endblock %}
 
@@ -22,8 +23,8 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="#">Dashboard</a></li>
-                    <li><a href="#">Admin Panel</a></li>
+                    <li><a ui-sref="index">Dashboard</a></li>
+                    <li><a ui-sref="admin">Admin Panel</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#">Logged in as: Solomon</a></li>
@@ -40,9 +41,7 @@
         </div>
     </div>
 
-    <div class="container with-margin">
-        <div ui-view></div>
-    </div>
+    <div ui-view></div>
 
 {% endblock %}
 
@@ -53,8 +52,12 @@
     <script src="{{ STATIC_URL }}bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="{{ STATIC_URL }}bower_components/si-table/dist/si-table.js"></script>
     <script src="{{ STATIC_URL }}bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="{{ STATIC_URL }}bower_components/sifter/sifter.min.js"></script>
+    <script src="{{ STATIC_URL }}bower_components/microplugin/src/microplugin.js"></script>
+    <script src="{{ STATIC_URL }}bower_components/selectize/dist/js/selectize.min.js"></script>
     <!-- Custom files -->
     <script src="{{ STATIC_URL }}js/modules/index.js"></script>
     <script src="{{ STATIC_URL }}js/modules/config.js"></script>
     <script src="{{ STATIC_URL }}js/modules/message.js"></script>
+    <script src="{{ STATIC_URL }}js/modules/location.js"></script>
 {% endblock %}

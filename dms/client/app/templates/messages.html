@@ -1,32 +1,34 @@
-<div class="page-header">
-    <h4>Disaster SMS report stream</h4>
+<div class="container with-margin">
+    <div class="page-header">
+        <h4>Disaster SMS report stream</h4>
+    </div>
+
+
+    <table si-table="" class="table table-hover table-striped table-bordered">
+        <thead>
+        <tr>
+            <th class="md-column">Source</th>
+            <th>SMS Body</th>
+            <th class="sm-column">Location</th>
+            <th class="sm-column">Date Time</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="message in messages">
+            <td>{[{ message.source }]} <span>({[{ message.phone }]})</span></td>
+            <td>{[{ message.text }]}</td>
+            <td>-</td>
+            <td>{[{ message.time | date:"MMM dd, yyyy - h:mma" }]}</td>
+        </tr>
+        </tbody>
+
+        <tfoot>
+        <tr>
+            <td colspan="5">
+                <si-table-pagination limit="10"/>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
 </div>
-
-
-<table si-table="" class="table table-hover table-striped table-bordered">
-    <thead>
-    <tr>
-        <th class="md-column">Source</th>
-        <th>SMS Body</th>
-        <th class="sm-column" >Location</th>
-        <th class="sm-column">Date Time</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <tr ng-repeat="message in messages">
-        <td>{[{ message.source }]} <span>({[{ message.phone }]})</span></td>
-        <td>{[{ message.text }]}</td>
-        <td>-</td>
-        <td>{[{ message.time | date:"MMM dd, yyyy - h:mma" }]}</td>
-    </tr>
-    </tbody>
-
-    <tfoot>
-    <tr>
-        <td colspan="5">
-            <si-table-pagination limit="10" />
-        </td>
-    </tr>
-    </tfoot>
-</table>

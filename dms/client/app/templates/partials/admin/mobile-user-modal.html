@@ -1,0 +1,43 @@
+<div class="modal fade" id="mobile-user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog sm-2">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title">Add Mobile User</h4>
+            </div>
+            <form role="form" ng-submit="saveUser()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" ng-model="user.name" class="form-control"
+                               placeholder="enter name" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone-number">Phone Number</label>
+                        <input type="text" id="phone-number" ng-model="user.phone" class="form-control"
+                               placeholder="enter phone number" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Email</label>
+                        <input type="email" id="email" ng-model="user.email" class="form-control"
+                               placeholder="enter email" required="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">District</label>
+                        <input type="text" id="district" select-location="" class="form-control"
+                               placeholder="select location" required="">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" load-state="" data-loading-text="Saving...">Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

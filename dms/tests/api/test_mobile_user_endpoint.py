@@ -31,5 +31,6 @@ class TestMobileUserEndpoint(NoSQLAPITestCase):
         self.assertEqual(1, len(response.data))
         self.assertEqual(self.mobile_user_to_post['name'], response.data[0]['name'])
         self.assertEqual(self.mobile_user_to_post['phone'], response.data[0]['phone'])
+        self.assertEqual(self.mobile_user_to_post['email'], response.data[0]['email'])
         self.assertEqual(self.district.name, response.data[0]['location']['name'])
 

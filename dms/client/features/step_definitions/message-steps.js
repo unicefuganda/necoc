@@ -1,7 +1,6 @@
 module.exports = function () {
     var messagesPage = require("../pages/messages-page");
 
-
     this.World = require("../support/world").World;
 
     this.Given(/^I am logged in as a NECOC admin$/, function (next) {

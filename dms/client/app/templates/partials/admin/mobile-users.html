@@ -3,6 +3,39 @@
         <h4>Mobile users</h4>
     </div>
 
-    <ng-include src="'/static/templates/partials/admin/mobile-user-modal.html'" ></ng-include>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mobile-user-modal">Create New User</button>
+    <ng-include src="'/static/templates/partials/admin/mobile-user-modal.html'"></ng-include>
+    <div class="page-actions pull-right">
+        <button type="button" id="create-user" class="btn btn-primary" data-toggle="modal" data-target="#mobile-user-modal">Create New
+            User
+        </button>
+    </div>
+
+
+    <table si-table="" class="table table-hover table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Location</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="user in users">
+            <td>{[{ user.name }]}</td>
+            <td>{[{ user.phone }]}</td>
+            <td>{[{ user.location.name }]}</td>
+            <td>{[{ user.email }]}</td>
+        </tr>
+        </tbody>
+
+        <tfoot>
+        <tr>
+            <td colspan="5">
+                <si-table-pagination limit="10"/>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
 </div>

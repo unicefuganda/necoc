@@ -24,7 +24,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a ui-sref="index">Dashboard</a></li>
-                    <li><a ui-sref="admin">Admin Panel</a></li>
+                    <li><a id="admin-panel" ui-sref="admin">Admin Panel</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#">Logged in as: Solomon</a></li>
@@ -60,4 +60,6 @@
     <script src="{{ STATIC_URL }}js/modules/config.js"></script>
     <script src="{{ STATIC_URL }}js/modules/message.js"></script>
     <script src="{{ STATIC_URL }}js/modules/location.js"></script>
+    <script src="{{ STATIC_URL }}js/modules/mobile-user.js"></script>
+    <script src="{{ STATIC_URL }}js/modules/utils.js"></script>
 {% endblock %}

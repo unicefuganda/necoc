@@ -30,6 +30,7 @@ describe('dms.mobile-user', function () {
         beforeEach(function () {
             inject(function ($controller) {
                 httpMock.when('POST', apiUrl + 'mobile-users/').respond(responseStub);
+                httpMock.when('GET', apiUrl + 'mobile-users/').respond([responseStub]);
 
                 $controller('MobileUserController', {$scope: scope});
             })
@@ -38,6 +39,13 @@ describe('dms.mobile-user', function () {
         it('should post the user to the api endpoint', function () {
             scope.saveUser();
             httpMock.expectPOST(apiUrl + 'mobile-users/');
+            httpMock.flush();
+
+            expect(scope.users).toEqual([responseStub, responseStub]);
+        });
+
+        it('should add existing users to the scope', function () {
+            httpMock.expectGET(apiUrl + 'mobile-users/');
             httpMock.flush();
 
             expect(scope.users).toEqual([responseStub]);

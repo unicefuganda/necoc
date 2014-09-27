@@ -23,9 +23,9 @@
 
             .state('admin.mobile-users', {
                 url: '/mobile-users',
-                templateUrl: '/static/templates/partials/admin/mobile-users.html'
+                templateUrl: '/static/templates/partials/admin/mobile-users.html',
+                controller: 'MobileUserController'
             })
-
     });
 
-})(angular.module('dms', ['ui.router', 'siTable', 'dms.message', 'dms.location']));
+})(angular.module('dms', ['ui.router', 'siTable', 'dms.message', 'dms.location', 'dms.mobile-user', 'dms.utils']));

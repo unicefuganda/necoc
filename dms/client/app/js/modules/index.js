@@ -1,6 +1,8 @@
 (function (module) {
 
     module.config(function ($stateProvider, $urlRouterProvider, $interpolateProvider) {
+
+        $urlRouterProvider.when('/admin','/admin/mobile-users');
         $urlRouterProvider.otherwise('/');
 
         $interpolateProvider.startSymbol('{[{');
@@ -15,10 +17,7 @@
 
             .state('admin', {
                 url: '/admin',
-                templateUrl: '/static/templates/admin-panel.html',
-                controller: function ($state) {
-                    $state.go('admin.mobile-users');
-                }
+                templateUrl: '/static/templates/admin-panel.html'
             })
 
             .state('admin.mobile-users', {

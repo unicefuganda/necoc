@@ -1,8 +1,8 @@
 from dms.models.location import Location
-from dms.tests.base import NoSQLAPITestCase
+from dms.tests.base import MongoAPITestCase
 
 
-class TestLocationEndpoint(NoSQLAPITestCase):
+class TestLocationEndpoint(MongoAPITestCase):
 
     LOCATION_ENDPOINT = '/api/v1/locations/'
 

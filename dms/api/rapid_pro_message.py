@@ -11,10 +11,11 @@ class RapidProMessageSerializer(serializers.MongoEngineModelSerializer):
     relayer = fields.IntegerField(source='relayer_id')
     run = fields.IntegerField(source='run_id')
     source = serialiserzz.Field(source='source')
+    location = serialiserzz.Field(source='location_str')
 
     class Meta:
         model = RapidProMessage
-        fields = ('phone', 'time', 'relayer', 'run', 'text', 'source')
+        fields = ('phone', 'time', 'relayer', 'run', 'text', 'source', 'location')
 
 
 class RapidProListCreateView(ListCreateAPIView):

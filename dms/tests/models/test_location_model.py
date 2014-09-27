@@ -27,6 +27,18 @@ class TestLocationModel(MongoTestCase):
         self.assertEqual(village['name'], saved_village.name)
         self.assertEqual(district['name'], saved_village.parent.name)
 
+    def test_to_string_parent(self):
+        district = dict(name='Kampala', parent=None, type='district')
+        location = Location(**district).save()
+
+        self.assertEqual('Kampala', str(location))
+
+    def test_to_string_child(self):
+        kampala = Location(**(dict(name='Kampala', parent=None, type='district'))).save()
+        bukoto = Location(**(dict(name='Bukoto', parent=kampala, type='village'))).save()
+
+        self.assertEqual('Kampala >> Bukoto', str(bukoto))
+
 
 
 

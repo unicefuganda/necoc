@@ -1,9 +1,9 @@
 from dms.models.location import Location
 from dms.models.mobile_user import MobileUser
-from dms.tests.base import NoSQLAPITestCase
+from dms.tests.base import MongoAPITestCase
 
 
-class TestMobileUserEndpoint(NoSQLAPITestCase):
+class TestMobileUserEndpoint(MongoAPITestCase):
 
     API_ENDPOINT = '/api/v1/mobile-users/'
 

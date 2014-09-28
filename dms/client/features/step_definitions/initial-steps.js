@@ -7,9 +7,9 @@ module.exports = function () {
         next();
     });
 
-    this.Before(function (callback) {
-        browser.driver.manage().window().setSize(1280, 1024);
-        callback();
+    this.registerHandler('BeforeFeatures', function (event, next) {
+        browser.driver.manage().window().setSize(1380, 1380);
+        next();
     });
 
     this.After(function (callback) {

@@ -51,10 +51,10 @@ module.exports = function () {
                 self.expect(mobileUsersPage.getMobileUsersData(0, 'phone')).to.eventually.equal(user.phone);
             })
             .then(function () {
-                self.expect(mobileUsersPage.getMobileUsersData(0, 'location.name')).to.eventually.equal(user.location);
+                self.expect(mobileUsersPage.getMobileUsersData(0, 'email')).to.eventually.equal(user.email);
             })
             .then(function () {
-                self.expect(mobileUsersPage.getMobileUsersData(0, 'email')).to.eventually.equal(user.email)
+                self.expect(mobileUsersPage.getMobileUsersData(0, 'location.name')).to.eventually.equal(user.location)
                     .and.notify(next);
             });
 

@@ -8,6 +8,11 @@ var MessagesPage = function () {
 
     this.formattedTime = 'Feb 13, 2014 - 2:00AM';
 
+    this.senderLocation = { "name": "Kampala",  "type": "district"};
+
+    this.NecocVolunteer = { "name": "ayoyo",  "phone": this.messages[0].phone, "email": "haha@ha.ha"};
+
+
     this.postMessage = function () {
         request.post('http://localhost:7999/api/v1/rapid-pro/', {form: this.messages[0]})
     };
@@ -38,11 +43,28 @@ var MessagesPage = function () {
 
     this.getMessageData = function (name, row) {
         return element(by.repeater('message in messages').row(row).column('{[{ message.' + name + ' }]}')).getText();
-    }
+    };
 
     this.clickSecondPagination = function (callback) {
         element(by.repeater("page in showPages").row(1).column('{[{ page }]}')).click();
-    }
+    };
+
+    this.postLocation = function(callback){
+        request.post('http://localhost:7999/api/v1/locations/', {form: this.senderLocation}, function(){
+            callback();
+        });
+    };
+
+    this.postMobileUser = function(callback){
+        var necocVolunteer = this.NecocVolunteer;
+        request.get('http://localhost:7999/api/v1/locations/?format=json', function(error, response, location1){
+                var location = JSON.parse(location1);
+                necocVolunteer["location"] = location[0].id;
+                request.post('http://localhost:7999/api/v1/mobile-users/', {form: necocVolunteer}, function(){
+                    callback();
+                });
+            });
+    };
 
 };
 

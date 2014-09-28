@@ -31,6 +31,9 @@ module.exports = function () {
                 self.expect(messagesPage.getMessageData('time | date:"MMM dd, yyyy - h:mma"', 0)).to.eventually.equal(messagesPage.formattedTime);
             })
             .then(function () {
+                self.expect(messagesPage.getMessageData('location', 0)).to.eventually.equal(messagesPage.senderLocation.name);
+            })
+            .then(function () {
                 self.expect(messagesPage.getMessageData('source', 0)).to.eventually.equal(messagesPage.messages[0].source + ' ('+messagesPage.messages[0].phone+')')
                     .and.notify(next);
             })
@@ -53,6 +56,14 @@ module.exports = function () {
     this.Then(/^I should see (\d+) messages in the second pagination$/, function (numberOfMessages, next) {
         this.expect(messagesPage.numberOfMessages()).to.eventually.equal(parseInt(numberOfMessages))
             .and.notify(next);
+    });
+
+    this.Given(/^I have a location$/, function (next) {
+        messagesPage.postLocation(next);
+    });
+
+    this.Given(/^I have one Necoc Volunteer registered$/, function (next) {
+        messagesPage.postMobileUser(next);
     });
 
 };

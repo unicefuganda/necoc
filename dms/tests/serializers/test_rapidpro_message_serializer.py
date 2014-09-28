@@ -20,9 +20,6 @@ class RapidProMessageSerializerTest(MongoTestCase):
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
         self.mobile_user = MobileUser(**dict(name='timothy', phone=phone_number, location=self.village, email=None)).save()
 
-    def tearDown(self):
-        RapidProMessage.drop_collection()
-
     def test_should_serialize_rapid_pro_message_object(self):
 
         rapid_pro_message = RapidProMessage(**self.message).save()

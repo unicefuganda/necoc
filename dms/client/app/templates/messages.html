@@ -15,20 +15,27 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="message in messages | orderBy: '-time' ">
-            <td>{[{ message.source }]} <span>({[{ message.phone }]})</span></td>
-            <td>{[{ message.text }]}</td>
-            <td>-</td>
-            <td>{[{ message.time | date:"MMM dd, yyyy - h:mma" }]}</td>
-        </tr>
+            <tr ng-repeat="message in messages | orderBy: '-time'">
+                <td>{[{ message.source }]} <span>({[{ message.phone }]})</span></td>
+                <td>{[{ message.text }]}</td>
+                <td>-</td>
+                <td>{[{ message.time | date:"MMM dd, yyyy - h:mma" }]}</td>
+            </tr>
         </tbody>
-
-        <tfoot>
-        <tr>
-            <td colspan="5">
-                <si-table-pagination limit="10"/>
-            </td>
-        </tr>
-        </tfoot>
+        <tbody>
+            <tr ng-repeat="message in messages">
+                <td>{[{ message.source }]} <span>({[{ message.phone }]})</span></td>
+                <td>{[{ message.text }]}</td>
+                <td>{[{ message.location }]}</td>
+                <td>{[{ message.time | date:"MMM dd, yyyy - h:mma" }]}</td>
+            </tr>
+        </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <si-table-pagination limit="10"/>
+                    </td>
+                </tr>
+            </tfoot>
     </table>
 </div>

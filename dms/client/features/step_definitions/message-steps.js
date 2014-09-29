@@ -8,8 +8,7 @@ module.exports = function () {
     });
 
     this.When(/^I POST a message form that Volunteer to the NECOC DMS$/, function (next) {
-        messagesPage.postMessage();
-        next();
+        messagesPage.postMessage(next);
     });
 
     this.When(/^I visit the messages listing page$/, function (next) {

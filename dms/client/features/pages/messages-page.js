@@ -3,7 +3,7 @@ var MessagesPage = function () {
 
     this.messages = [
         { phone: "023020302", time: "2014-02-13T02:00:00", relayer: 2, run: '1', text: "Where are yout",
-            source: "NECOC Volunteer" },
+            source: "NECOC Volunteer" }
     ];
 
     this.formattedTime = 'Feb 13, 2014 - 2:00AM';
@@ -13,8 +13,10 @@ var MessagesPage = function () {
     this.NecocVolunteer = { "name": "ayoyo",  "phone": this.messages[0].phone, "email": "haha@ha.ha"};
 
 
-    this.postMessage = function () {
-        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: this.messages[0]})
+    this.postMessage = function (callback) {
+        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: this.messages[0]}, function(){
+            callback();
+        })
     };
 
     this.postMessages = function (number, next) {

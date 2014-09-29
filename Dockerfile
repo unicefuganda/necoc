@@ -74,6 +74,10 @@ EXPOSE
 EXPOSE 27017
 EXPOSE 28017
 
+# ---MONGO ----
+EXPOSE 27017
+EXPOSE 28017
+
 # --- Nginx ---
 EXPOSE 80 443 7999
 CMD "/scripts/run.sh"

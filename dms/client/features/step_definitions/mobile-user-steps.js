@@ -1,6 +1,6 @@
 module.exports = function () {
     var homePage = require("../pages/home-page");
-    var mobileUsersPage,
+    var mobileUsersPage = require("../pages/mobile-users-page"),
         user = {};
 
     this.World = require("../support/world").World;
@@ -11,8 +11,7 @@ module.exports = function () {
     });
 
     this.When(/^I have "([^"]*)" district already registered$/, function (district, next) {
-        mobileUsersPage.registerLocation(district);
-        next();
+        mobileUsersPage.registerLocation(district, next);
     });
 
     this.When(/^I click the create new user button$/, function (next) {

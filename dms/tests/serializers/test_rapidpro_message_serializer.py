@@ -1,4 +1,4 @@
-from dms.api.rapid_pro_message import RapidProMessageSerializer
+from dms.api.rapid_pro_endpoint import RapidProMessageSerializer
 from dms.models.location import Location
 from dms.models.mobile_user import MobileUser
 from dms.models.rapid_pro_message import RapidProMessage

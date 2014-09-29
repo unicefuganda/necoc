@@ -17,8 +17,11 @@ module.exports = function () {
     });
 
     this.Then(/^I should see my messages$/, function (next) {
-        var self = this;
+        should_see_my_messages(this, next);
+    });
 
+
+    var should_see_my_messages = function (self, next, district){
         messagesPage.numberOfMessages()
             .then(function (noOfMessages) {
                 self.expect(noOfMessages).to.equal(1);
@@ -30,13 +33,13 @@ module.exports = function () {
                 self.expect(messagesPage.getMessageData('time | date:"MMM dd, yyyy - h:mma"', 0)).to.eventually.equal(messagesPage.formattedTime);
             })
             .then(function () {
-                self.expect(messagesPage.getMessageData('location', 0)).to.eventually.equal(messagesPage.senderLocation.name);
+                self.expect(messagesPage.getMessageData('location', 0)).to.eventually.equal(district || messagesPage.senderLocation.name);
             })
             .then(function () {
-                self.expect(messagesPage.getMessageData('source', 0)).to.eventually.equal(messagesPage.messages[0].source + ' ('+messagesPage.messages[0].phone+')')
+                self.expect(messagesPage.getMessageData('source', 0)).to.eventually.equal(messagesPage.messages[0].source + ' (' + messagesPage.messages[0].phone + ')')
                     .and.notify(next);
             })
-    });
+    };
 
     this.When(/^I POST a list of messages to NECOC DMS$/, function (next) {
         messagesPage.postMessages(15, next);
@@ -63,6 +66,14 @@ module.exports = function () {
 
     this.Given(/^I have one Necoc Volunteer registered$/, function (next) {
         messagesPage.postMobileUser(next);
+    });
+
+    this.When(/^I select my location as "([^"]*)"$/, function (district, next) {
+      messagesPage.selectLocation(district).then(next);
+    });
+
+    this.Then(/^I should only see my message in that location$/, function (next) {
+        should_see_my_messages(this, next, "Mukono");
     });
 
 };

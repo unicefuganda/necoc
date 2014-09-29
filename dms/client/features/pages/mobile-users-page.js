@@ -52,13 +52,13 @@ var MobileUsersPage = function () {
     };
 
 
-    this.registerLocation = function (location) {
+    this.registerLocation = function (location, next) {
         request.post('http://localhost:7999/api/v1/locations/', {
             form: {
                 name: location,
                 type: "district"
             }
-        });
+        }, next);
     };
 
     this.registerUserWith = function (email, phone, callback) {

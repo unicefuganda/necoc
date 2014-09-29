@@ -57,6 +57,12 @@ var MessagesPage = function () {
         });
     };
 
+    this.selectLocation = function (location) {
+        return element(by.className('selectize-input')).click().then(function () {
+            element(by.className('option', location)).click()
+        });
+    };
+
     this.postMobileUser = function(callback){
         var necocVolunteer = this.NecocVolunteer;
         request.get('http://localhost:7999/api/v1/locations/?format=json', function(error, response, location1){

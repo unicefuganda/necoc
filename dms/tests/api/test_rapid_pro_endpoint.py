@@ -79,6 +79,7 @@ class RapidProEndPointTest(MongoAPITestCase):
                                                                           'location': str(wakiso)}.items())
 
         bukoto_expected_message = dict(self.expected_message.items() + {'source': 'NECOC Volunteer',
+
                                                                           'location': str(self.village)}.items())
 
         self.assertEqual(200, response.status_code)

@@ -32,7 +32,6 @@ describe('dms.message', function () {
                 $scope = $rootScope.$new();
                 $controller('MessageController', {$scope: $scope});
             }
-
         });
 
     });
@@ -43,6 +42,31 @@ describe('dms.message', function () {
         httpMock.expectGET(baseUrl + '/api/v1/rapid-pro/');
         httpMock.flush();
         expect($scope.messages).toEqual(messagesStub);
+    });
+
+    it('should filter message by location given location id', function () {
+        initController();
+        $scope.location = "location-id";
+        var messageStub = { text:"Some text", phone: "45678909876543"};
+        httpMock.expectGET(baseUrl + '/api/v1/rapid-pro/?location='+$scope.location).respond(messageStub);
+        httpMock.flush();
+        expect($scope.messages).toEqual(messageStub);
+    });
+
+    it('should retrieve all messages when location not supplied', function () {
+        initController();
+        $scope.location = "location-id";
+
+        var messageStub = [{ text:"Some text", phone: "45678909876543"}];
+        httpMock.expectGET(baseUrl + '/api/v1/rapid-pro/?location='+$scope.location).respond(messageStub);
+        httpMock.flush();
+        expect($scope.messages).toEqual(messageStub);
+
+        $scope.location = "";
+        messageStub = [{ text:"Some text", phone: "45678909876543"}, { text:"Other text", phone: "45678909876543"}];
+        httpMock.expectGET(baseUrl + '/api/v1/rapid-pro/').respond(messageStub);
+        httpMock.flush();
+        expect($scope.messages).toEqual(messageStub);
     });
 
 });

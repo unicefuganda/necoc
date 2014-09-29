@@ -4,7 +4,7 @@ from django.conf.urls import patterns, url
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
-from dms.api.rapid_pro_message import RapidProListCreateView
+from dms.api.rapid_pro_endpoint import RapidProListCreateView
 from dms.api.location_endpoint import LocationListCreateView
 from dms.api.mobile_user_endpoint import MobileUserListCreateView
 from dms.views.homepage import HomeView

@@ -6,8 +6,7 @@ module.exports = function () {
     this.World = require("../support/world").World;
 
     this.When(/^I navigate to the Admin Panel$/, function (next) {
-        mobileUsersPage = homePage.navigateToAdminPanel();
-        next();
+        homePage.navigateToAdminPanel().then(next);
     });
 
     this.When(/^I have "([^"]*)" district already registered$/, function (district, next) {
@@ -15,8 +14,11 @@ module.exports = function () {
     });
 
     this.When(/^I click the create new user button$/, function (next) {
-        mobileUsersPage.clickCreateUserButton();
-        next();
+        mobileUsersPage.clickCreateUserButton().then(function () {
+            browser.sleep(500);
+            this.expect(mobileUsersPage.createUserModal.title.getText()).to.eventually.equal('Add Mobile User')
+                .and.notify(next);
+        }.bind(this));
     });
 
     this.When(/^I enter my "([^"]*)" as "([^"]*)"$/, function (field, text, next) {
@@ -26,8 +28,7 @@ module.exports = function () {
 
     this.When(/^I select my "([^"]*)" as "([^"]*)"$/, function (arg1, location, next) {
         user.location = location;
-        mobileUsersPage.createUserModal.selectLocation(location);
-        next();
+        mobileUsersPage.createUserModal.selectLocation(location).then(next);
     });
 
     this.When(/^I click  save and close$/, function (next) {
@@ -59,7 +60,10 @@ module.exports = function () {
     });
 
     this.When(/^I click the save button$/, function (next) {
-        mobileUsersPage.createUserModal.clickSaveButton().then(next);
+        mobileUsersPage.createUserModal.clickSaveButton().then(function () {
+            browser.sleep(200);
+            next();
+        });
     });
 
     this.Then(/^I should see fields required error messages$/, function (next) {
@@ -106,7 +110,6 @@ module.exports = function () {
 
     this.Then(/^I should see other server\-side validation errors$/, function (next) {
         var self = this;
-
         mobileUsersPage.createUserModal.getPhoneFieldErrors(1)
             .then(function (error) {
                 self.expect(error).to.be.equal('Phone number must be unique');

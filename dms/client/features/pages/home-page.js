@@ -4,8 +4,7 @@ var HomePage = function () {
     this.adminPanel = element(by.id('admin-panel'));
 
     this.navigateToAdminPanel = function ()  {
-        this.adminPanel.click();
-        return require('./mobile-users-page');
+        return this.adminPanel.click();
     }
 };
 

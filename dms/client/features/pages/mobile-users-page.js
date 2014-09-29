@@ -1,4 +1,5 @@
 var MobileUsersModal = function () {
+    this.title = element(by.id('mu-modal-title'));
     this.name = element(by.model('user.name'));
     this.phone = element(by.model('user.phone'));
     this.email = element(by.model('user.email'));
@@ -14,8 +15,8 @@ var MobileUsersModal = function () {
     };
 
     this.selectLocation = function (location) {
-        element(by.className('selectize-input')).click().then(function () {
-            element(by.cssContainingText('.selectize-dropdown-content .option', location)).click()
+        return element(by.className('selectize-input')).click().then(function () {
+            return element(by.cssContainingText('.selectize-dropdown-content .option', location)).click()
         });
     };
 

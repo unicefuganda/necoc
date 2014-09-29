@@ -3,12 +3,8 @@ module.exports = function () {
 
     this.World = require("../support/world").World;
 
-    this.registerHandler('AfterFeatures', function (event, next) {
-        next();
-    });
-
     this.registerHandler('BeforeFeatures', function (event, next) {
-        browser.driver.manage().window().setSize(1580, 1380);
+        browser.driver.manage().window().setSize(1280, 1024);
         next();
     });
 

@@ -8,13 +8,13 @@ var MessagesPage = function () {
 
     this.formattedTime = 'Feb 13, 2014 - 2:00AM';
 
-    this.senderLocation = { "name": "Kampala",  "type": "district"};
+    this.senderLocation = { "name": "Kampala", "type": "district"};
 
-    this.NecocVolunteer = { "name": "ayoyo",  "phone": this.messages[0].phone, "email": "haha@ha.ha"};
+    this.NecocVolunteer = { "name": "ayoyo", "phone": this.messages[0].phone, "email": "haha@ha.ha"};
 
 
     this.postMessage = function (callback) {
-        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: this.messages[0]}, function(){
+        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: this.messages[0]}, function () {
             callback();
         })
     };
@@ -23,14 +23,14 @@ var MessagesPage = function () {
         var index = 0;
         postInIntervals();
 
-        function postInIntervals () {
+        function postInIntervals() {
             var message = { phone: "023020302" + index, time: "2014-02-13T02:00:00", relayer: 2, run: String(index),
                 text: "I am message" + index, source: "NECOC Volunteer" };
 
             setTimeout(function () {
                 if (index < number) {
                     request.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
-                    index ++;
+                    index++;
                     postInIntervals();
                 } else {
                     next();
@@ -51,27 +51,27 @@ var MessagesPage = function () {
         element(by.repeater("page in showPages").row(1).column('{[{ page }]}')).click();
     };
 
-    this.postLocation = function(callback){
-        request.post('http://localhost:7999/api/v1/locations/', {form: this.senderLocation}, function(){
+    this.postLocation = function (callback) {
+        request.post('http://localhost:7999/api/v1/locations/', {form: this.senderLocation}, function () {
             callback();
         });
     };
 
     this.selectLocation = function (location) {
         return element(by.className('selectize-input')).click().then(function () {
-            element(by.className('option', location)).click()
+            browser.sleep(200);
+            return element(by.cssContainingText('.selectize-dropdown-content .option', location)).click()
         });
     };
 
-    this.postMobileUser = function(callback){
+    this.postMobileUser = function (callback) {
         var necocVolunteer = this.NecocVolunteer;
-        request.get('http://localhost:7999/api/v1/locations/?format=json', function(error, response, location1){
-                var location = JSON.parse(location1);
-                necocVolunteer["location"] = location[0].id;
-                request.post('http://localhost:7999/api/v1/mobile-users/', {form: necocVolunteer}, function(){
-                    callback();
-                });
+        request.get('http://localhost:7999/api/v1/locations/?format=json', function (error, response, location) {
+            necocVolunteer["location"] = JSON.parse(location)[0].id;
+            request.post('http://localhost:7999/api/v1/mobile-users/', {form: necocVolunteer}, function () {
+                callback();
             });
+        });
     };
 
 };

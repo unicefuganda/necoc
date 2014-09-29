@@ -1,32 +1,32 @@
 Feature: Mobile User
 
   Scenario: Create Mobile User
-    Given I am logged in as a NECOC admin
-    When I navigate to the Admin Panel
-    And I have "Mukono" district already registered
-    And I click the create new user button
-    And I enter my "name" as "Solomon"
-    And I enter my "email" as "solomon@gmail.com"
-    And I enter my "phone" as "0775019449"
-    And I select my "district" as "Mukono"
-    And I click  save and close
-    Then I should see my details in mobile users table
+#    Given I am logged in as a NECOC admin
+#    When I navigate to the Admin Panel
+#    And I have "Mukono" district already registered
+#    And I click the create new user button
+#    And I enter my "name" as "Solomon"
+#    And I enter my "email" as "solomon@gmail.com"
+#    And I enter my "phone" as "0775019449"
+#    And I select my "district" as "Mukono"
+#    And I click  save and close
+#    Then I should see my details in mobile users table
 
 
   Scenario: Create Mobile User -- Validation
-    Given I am logged in as a NECOC admin
-    When I navigate to the Admin Panel
-    And I have "Mukono" district already registered
-    And I click the create new user button
-    And I click the save button
-    Then I should see fields required error messages
-    When I have a Mobile User with email "solomon@gmail.com" and phone "0775019449"
-    And I enter my "name" as "Ayoyo"
-    And I enter my "email" as "solomon@gmail.com"
-    And I enter my "phone" as "0775019449"
-    And I select my "district" as "Mukono"
-    Then I should not see the field required error messages
-    When I click the save button
-    Then I should see other server-side validation errors
+#    Given I am logged in as a NECOC admin
+#    When I navigate to the Admin Panel
+#    And I have "Mukono" district already registered
+#    And I click the create new user button
+#    And I click the save button
+#    Then I should see fields required error messages
+#    When I have a Mobile User with email "solomon@gmail.com" and phone "0775019449"
+#    And I enter my "name" as "Ayoyo"
+#    And I enter my "email" as "solomon@gmail.com"
+#    And I enter my "phone" as "0775019449"
+#    And I select my "district" as "Mukono"
+#    Then I should not see the field required error messages
+#    When I click the save button
+#    Then I should see other server-side validation errors
 
 

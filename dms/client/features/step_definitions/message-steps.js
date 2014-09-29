@@ -4,6 +4,7 @@ module.exports = function () {
     this.World = require("../support/world").World;
 
     this.Given(/^I am logged in as a NECOC admin$/, function (next) {
+        browser.get('/');
         next();
     });
 
@@ -21,7 +22,7 @@ module.exports = function () {
     });
 
 
-    var should_see_my_messages = function (self, next, district){
+    var should_see_my_messages = function (self, next, district) {
         messagesPage.numberOfMessages()
             .then(function (noOfMessages) {
                 self.expect(noOfMessages).to.equal(1);
@@ -60,20 +61,16 @@ module.exports = function () {
             .and.notify(next);
     });
 
-    this.Given(/^I have a location$/, function (next) {
-        messagesPage.postLocation(next);
-    });
-
     this.Given(/^I have one Necoc Volunteer registered$/, function (next) {
         messagesPage.postMobileUser(next);
     });
 
     this.When(/^I select my location as "([^"]*)"$/, function (district, next) {
-      messagesPage.selectLocation(district).then(next);
+        messagesPage.selectLocation(district).then(next);
     });
 
-    this.Then(/^I should only see my message in that location$/, function (next) {
-        should_see_my_messages(this, next, "Mukono");
+    this.Then(/^I should only see my message in "([^"]*)"$/, function (location, next) {
+        should_see_my_messages(this, next, location);
     });
 
 };

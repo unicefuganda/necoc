@@ -68,7 +68,7 @@ RUN chmod +x /scripts/run.sh
 RUN chmod +x /necoc/deployment/scripts/start_uwsgi.sh
 
 # --- SSH ----
-EXPOSE
+EXPOSE 22
 
 # ---MONGO ----
 EXPOSE 27017

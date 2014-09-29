@@ -7,35 +7,69 @@
                         class="sr-only">Close</span></button>
                 <h4 class="modal-title">Add Mobile User</h4>
             </div>
-            <form role="form" ng-submit="saveUser(user)">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" ng-model="user.name" class="form-control"
-                               placeholder="enter name" required="">
+            <div ng-controller="MobileUserModalController">
+                <form role="form" novalidate="" name="mobile_user_form" ng-submit="saveUser(user)">
+                    <div class="modal-body">
+                        <div class="form-group" ng-class="{'has-error': mobile_user_form.name.$invalid && hasErrors }">
+                            <label class="control-label" for="name">Name</label>
+                            <input type="text" id="name" ng-model="user.name" name="name" class="form-control"
+                                   placeholder="enter name" required="">
+
+                            <div id="name-errors" class="error-text" ng-show="mobile_user_form.name.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="mobile_user_form.name.$error.required">
+                                    This field is required
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': mobile_user_form.phone.$invalid && hasErrors }">
+                            <label class="control-label" for="phone-number">Phone Number</label>
+                            <input type="text" id="phone-number" ng-model="user.phone" name="phone" class="form-control"
+                                   placeholder="enter phone number" required="">
+                            <div id="phone-errors" class="error-text" ng-show="mobile_user_form.phone.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="mobile_user_form.phone.$error.required">
+                                    This field is required
+                                </p>
+                                <p class="text-danger" ng-repeat="error in errors.phone">
+                                    {[{ error }]}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': mobile_user_form.email.$invalid && hasErrors }">
+                            <label class="control-label" for="phone">Email</label>
+                            <input type="email" id="email" ng-model="user.email" name="email" class="form-control"
+                                   placeholder="enter email">
+
+                            <div id="email-errors" class="error-text" ng-show="mobile_user_form.email.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="mobile_user_form.email.$error.email">
+                                    Please enter a valid email address
+                                </p>
+                                <p class="text-danger" ng-repeat="error in errors.email">
+                                    {[{ error }]}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': mobile_user_form.location.$invalid && hasErrors}">
+                            <label class="control-label" for="phone">District</label>
+                            <input type="text" id="district" ng-model="user.location" name="location" select-location=""
+                                   class="form-control" placeholder="select location" required="">
+
+                            <div id="location-errors" class="error-text" ng-show="mobile_user_form.location.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="mobile_user_form.location.$error.required">
+                                    This field is required
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="phone-number">Phone Number</label>
-                        <input type="text" id="phone-number" ng-model="user.phone" class="form-control"
-                               placeholder="enter phone number" required="">
+                    <div class="modal-footer">
+                        <button type="button" id="close-mobile-user-modal" class="btn btn-default" data-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="submit" id="save-mobile-user-modal" class="btn btn-primary" save-state=""
+                                data-loading-text="Saving...">Save
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label for="phone">Email</label>
-                        <input type="email" id="email" ng-model="user.email" class="form-control"
-                               placeholder="enter email" >
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">District</label>
-                        <input type="text" id="district" ng-model="user.location" select-location="" class="form-control"
-                               placeholder="select location" required="">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="close-mobile-user-modal" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" id="save-mobile-user-modal" class="btn btn-primary" save-state="" data-loading-text="Saving...">Save
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>

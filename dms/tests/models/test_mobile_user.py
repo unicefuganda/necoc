@@ -1,4 +1,4 @@
-from mongoengine import ValidationError
+from mongoengine import ValidationError, NotUniqueError
 from dms.models.location import Location
 from dms.models.mobile_user import MobileUser
 from dms.tests.base import MongoTestCase
@@ -22,3 +22,10 @@ class TestMobileUserModel(MongoTestCase):
     def test_should_not_save_a_user_without_a_phone_number_and_location(self):
         mobile_user = dict(name='timothy', email=None)
         self.assertRaises(ValidationError, MobileUser(**mobile_user).save)
+
+    def test_should_not_save_a_users_with_the_same_phone_number(self):
+        mobile_user_one = dict(name='timothy', phone='+256775019449', location=self.district, email=None)
+        mobile_user_two = dict(name='James', phone='+256775019449', location=self.district, email=None)
+
+        MobileUser(**mobile_user_one).save()
+        self.assertRaises(NotUniqueError, MobileUser(**mobile_user_two).save)

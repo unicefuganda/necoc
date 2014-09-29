@@ -22,8 +22,7 @@ module.exports = function () {
 
     this.When(/^I enter my "([^"]*)" as "([^"]*)"$/, function (field, text, next) {
         user[field] = text;
-        mobileUsersPage.createUserModal[field].sendKeys(text);
-        next();
+        mobileUsersPage.createUserModal[field].sendKeys(text).then(next);
     });
 
     this.When(/^I select my "([^"]*)" as "([^"]*)"$/, function (arg1, location, next) {
@@ -58,5 +57,70 @@ module.exports = function () {
                     .and.notify(next);
             });
 
+    });
+
+    this.When(/^I click the save button$/, function (next) {
+        mobileUsersPage.createUserModal.clickSaveButton().then(next);
+    });
+
+    this.Then(/^I should see fields required error messages$/, function (next) {
+        var self = this;
+
+        mobileUsersPage.createUserModal.getPhoneFieldErrors()
+            .then(function (error) {
+                self.expect(error).to.equal('This field is required');
+            })
+            .then(function () {
+                self.expect(mobileUsersPage.createUserModal.getEmailFieldErrors()).to.eventually.be.empty;
+            })
+            .then(function () {
+                self.expect(mobileUsersPage.createUserModal.getNameFieldErrors()).to.eventually.equal('This field is required');
+            })
+            .then(function () {
+                self.expect(mobileUsersPage.createUserModal.getLocationFieldErrors()).to.eventually.equal('This field is required')
+                    .and.notify(next);
+            });
+    });
+
+    this.When(/^I have a Mobile User with email "([^"]*)" and phone "([^"]*)"$/, function (email, phone, next) {
+        mobileUsersPage.registerUserWith(email, phone,  next);
+    });
+
+    this.Then(/^I should not see the field required error messages$/, function (next) {
+        var self = this;
+
+        mobileUsersPage.createUserModal.getPhoneFieldErrors()
+            .then(function (error) {
+                self.expect(error).to.be.empty;
+            })
+            .then(function () {
+                self.expect(mobileUsersPage.createUserModal.getEmailFieldErrors()).to.eventually.be.empty;
+            })
+            .then(function () {
+                self.expect(mobileUsersPage.createUserModal.getNameFieldErrors()).to.eventually.be.empty;
+            })
+            .then(function () {
+                self.expect(mobileUsersPage.createUserModal.getLocationFieldErrors()).to.eventually.be.empty
+                    .and.notify(next);
+            });
+    });
+
+    this.Then(/^I should see other server\-side validation errors$/, function (next) {
+        var self = this;
+
+        mobileUsersPage.createUserModal.getPhoneFieldErrors(1)
+            .then(function (error) {
+                self.expect(error).to.be.equal('Phone number must be unique');
+            })
+            .then(function () {
+                self.expect(mobileUsersPage.createUserModal.getEmailFieldErrors(1)).to.eventually.equal('Email must be unique');
+            })
+            .then(function () {
+                self.expect(mobileUsersPage.createUserModal.getNameFieldErrors()).to.eventually.be.empty;
+            })
+            .then(function () {
+                self.expect(mobileUsersPage.createUserModal.getLocationFieldErrors()).to.eventually.be.empty
+                    .and.notify(next);
+            });
     });
 };

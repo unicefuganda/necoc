@@ -1,3 +1,4 @@
+from mongoengine import ValidationError
 from dms.api.mobile_user_endpoint import MobileUserSerializer
 from dms.models.location import Location
 from dms.models.mobile_user import MobileUser
@@ -36,3 +37,30 @@ class MobileUserSerializerTest(MongoTestCase):
         self.assertTrue(isinstance(saved_mobile_user, MobileUser))
         for attribute, value in self.mobile_user.items():
             self.assertEqual(value, getattr(saved_mobile_user, attribute))
+
+    def test_serializer_should_be_invalid_if_phone_number_is_not_unique(self):
+        self.serialized_mobile_user['location'] = self.district.id
+        serializer = MobileUserSerializer(data=self.serialized_mobile_user)
+
+        self.assertTrue(serializer.is_valid())
+        serializer.save()
+
+        serializer = MobileUserSerializer(data=self.serialized_mobile_user)
+        self.assertFalse(serializer.is_valid())
+
+    def test_serializer_should_be_invalid_if_email_is_not_unique(self):
+        self.serialized_mobile_user['location'] = self.district.id
+        serializer = MobileUserSerializer(data=self.serialized_mobile_user)
+
+        self.assertTrue(serializer.is_valid())
+        serializer.save()
+
+        self.serialized_mobile_user['phone'] = '+25632323424'
+        serializer = MobileUserSerializer(data=self.serialized_mobile_user)
+        self.assertFalse(serializer.is_valid())
+
+    def test_serializer_should_be_valid_if_no_email_is_passed(self):
+        self.serialized_mobile_user['location'] = self.district.id
+        del self.serialized_mobile_user['email']
+        serializer = MobileUserSerializer(data=self.serialized_mobile_user)
+        self.assertTrue(serializer.is_valid())

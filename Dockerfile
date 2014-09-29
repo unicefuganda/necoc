@@ -8,14 +8,13 @@ RUN apt-get -qq update
 RUN apt-get -qqy install wget build-essential
 
 # ---- Deploy mongo db server ----
-RUN \
-  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 && \
-  echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' > /etc/apt/sources.list.d/mongodb.list && \
-  apt-get update && \
-  apt-get install -y mongodb-org && \
-  rm -rf /var/lib/apt/lists/*
-VOLUME ["/data/db"]
-WORKDIR /data
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+RUN echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | tee /etc/apt/sources.list.d/10gen.list
+RUN dpkg-divert --local --rename --add /sbin/initctl
+RUN apt-get -qqy update
+RUN apt-get -qqy install mongodb-10gen
+RUN mkdir -p /data/db
+VOLUME /data/db
 
 # ---- Install Bower ----
 RUN apt-get -qq update
@@ -72,7 +71,6 @@ EXPOSE 22
 
 # ---MONGO ----
 EXPOSE 27017
-EXPOSE 28017
 
 # --- Nginx ---
 EXPOSE 80 443 7999

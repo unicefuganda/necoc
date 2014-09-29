@@ -40,5 +40,16 @@ class TestLocationModel(MongoTestCase):
         self.assertEqual('Kampala >> Bukoto', str(bukoto))
 
 
+    def test_should_know_its_children(self):
+        district = Location(**dict(name='Kampala', parent=None, type='district')).save()
+        bukoto = Location(**dict(name='Bukoto', parent=district, type='village')).save()
+        wakiso = Location(**dict(name='Wakiso', parent=district, type='village')).save()
+
+        district_children = district.children()
+
+        self.assertEqual(2, district_children.count())
+        self.assertIn(bukoto, district_children)
+        self.assertIn(wakiso, district_children)
+
 
 

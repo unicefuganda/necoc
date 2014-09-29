@@ -4,7 +4,7 @@ Feature: Messages
     Given I am logged in as a NECOC admin
     And I have a location
     And I have one Necoc Volunteer registered
-    When I POST messages to the NECOC DMS
+    When I POST a message form that Volunteer to the NECOC DMS
     And I visit the messages listing page
     Then I should see my messages
 

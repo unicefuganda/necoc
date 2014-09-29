@@ -11,9 +11,6 @@ class TestLocationEndpoint(MongoAPITestCase):
         self.district = dict(name='Kampala', type='district')
         self.expected_district = dict(name='Kampala', type="district", parent=None)
 
-    def tearDown(self):
-        Location.drop_collection()
-
     def test_should_post_a_location_without_a_parent(self):
         response = self.client.post(self.LOCATION_ENDPOINT, data=self.district_to_post)
         self.assertEqual(201, response.status_code)
@@ -47,6 +44,28 @@ class TestLocationEndpoint(MongoAPITestCase):
         Location(**village).save()
 
         response = self.client.get(self.LOCATION_ENDPOINT + '?type=district', format='json')
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertDictContainsSubset(self.expected_district, response.data[0])
+
+    def test_should_filter_locations_by_parent(self):
+        kampala = Location(**self.district).save()
+        village = dict(name='Wakiso', type='village')
+        Location(parent=kampala, **village).save()
+
+        response = self.client.get(self.LOCATION_ENDPOINT, {"parent": kampala.id, "format":"json"})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertDictContainsSubset(village, response.data[0])
+
+    def test_should_filter_locations_by_no_parent(self):
+        kampala = Location(**self.district).save()
+        village = dict(name='Wakiso', type='village', parent=kampala.id)
+        Location(**village).save()
+
+        response = self.client.get(self.LOCATION_ENDPOINT +"?parent=&format=json")
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, len(response.data))

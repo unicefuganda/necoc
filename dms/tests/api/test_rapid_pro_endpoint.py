@@ -9,11 +9,11 @@ class RapidProEndPointTest(MongoAPITestCase):
     API_ENDPOINT = '/api/v1/rapid-pro/'
 
     def setUp(self):
-        date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
+        self.date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
         phone_number = "+256775019449"
-        self.expected_message = dict(phone=phone_number, text="There is a fire", time=date_time, relayer=234,
+        self.expected_message = dict(phone=phone_number, text="There is a fire", time=self.date_time, relayer=234,
                                      run=23243)
-        self.message = dict(phone_no=phone_number, text="There is a fire", received_at=date_time, relayer_id=234,
+        self.message = dict(phone_no=phone_number, text="There is a fire", received_at=self.date_time, relayer_id=234,
                             run_id=23243)
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
@@ -34,3 +34,54 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(1, len(response.data))
         self.assertDictContainsSubset(self.expected_message, response.data[0])
         self.assertEqual('NECOC Volunteer', response.data[0]['source'])
+        self.assertEqual('Kampala >> Bukoto', response.data[0]['location'])
+
+    def test_should_filter_messages_by_location(self):
+        RapidProMessage(**self.message).save()
+        wakiso = Location(**(dict(name='Wakiso', type='village'))).save()
+
+        response = self.client.get(self.API_ENDPOINT, {"location": wakiso.id, "format":"json"})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(0, len(response.data))
+
+        other_phone_number = '1234'
+        other_message_options = dict(phone_no=other_phone_number, text="There is a fire", received_at=self.date_time,
+                                     relayer_id=234, run_id=23243)
+        MobileUser(**dict(name='timothy', phone=other_phone_number, location=wakiso)).save()
+        RapidProMessage(**other_message_options).save()
+
+        response = self.client.get(self.API_ENDPOINT, {"location": wakiso.id, "format":"json"})
+
+        expected_message = {'phone': other_phone_number, 'time':self.date_time, 'relayer': 234, 'run': 23243,
+                            'text': u'There is a fire'}
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertDictContainsSubset(expected_message, response.data[0])
+        self.assertEqual('NECOC Volunteer', response.data[0]['source'])
+        self.assertEqual(wakiso.name, response.data[0]['location'])
+
+    def test_location_filter_should_return_messages_in_all_children_location(self):
+        RapidProMessage(**self.message).save()
+        wakiso = Location(**(dict(name='Wakiso', type='village', parent=self.district))).save()
+        other_phone_number = '1234'
+        other_message_options = dict(phone_no=other_phone_number, text="There is a fire", received_at=self.date_time,
+                                     relayer_id=234, run_id=23243)
+        MobileUser(**dict(name='timothy', phone=other_phone_number, location=wakiso)).save()
+        RapidProMessage(**other_message_options).save()
+
+        response = self.client.get(self.API_ENDPOINT, {"location": self.district.id, "format":"json"})
+
+        wakiso_expected_message = {'phone': other_phone_number, 'time':self.date_time, 'relayer': 234, 'run': 23243,
+                            'text': u'There is a fire'}
+        wakiso_expected_message = dict(wakiso_expected_message.items() + {'source': 'NECOC Volunteer',
+                                                                          'location': str(wakiso)}.items())
+
+        bukoto_expected_message = dict(self.expected_message.items() + {'source': 'NECOC Volunteer',
+                                                                          'location': str(self.village)}.items())
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(2, len(response.data))
+        self.assertIn(wakiso_expected_message, response.data)
+        self.assertIn(bukoto_expected_message, response.data)

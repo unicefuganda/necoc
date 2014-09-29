@@ -14,8 +14,6 @@ class LocationListCreateView(ListCreateAPIView):
     serializer_class = LocationSerializer
 
     def get_queryset(self):
-        queryset = Location.objects()
-        location_type = self.request.QUERY_PARAMS.get('type', None)
-        if location_type is not None:
-            queryset = Location.objects(type=location_type)
-        return queryset
+        fields = Location._fields_ordered
+        query_params = {key: value or None for key, value in self.request.GET.items() if key in fields}
+        return Location.objects(**query_params)

@@ -11,3 +11,6 @@ class Location(BaseModel):
         if self.parent and self.parent.name:
             return '%s >> %s'%(self.parent.name, self.name)
         return '%s'%self.name
+
+    def children(self):
+        return Location.objects(parent=self)

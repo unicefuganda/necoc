@@ -8,11 +8,14 @@ RUN apt-get -qq update
 RUN apt-get -qqy install wget build-essential
 
 # ---- Deploy mongo db server ----
-RUN mkdir -p /data/db
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-RUN echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | tee /etc/apt/sources.list.d/10gen.list
-RUN apt-get -qq update
-RUN apt-get install -y -q mongodb-org
+RUN \
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 && \
+  echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' > /etc/apt/sources.list.d/mongodb.list && \
+  apt-get update && \
+  apt-get install -y mongodb-org && \
+  rm -rf /var/lib/apt/lists/*
+VOLUME ["/data/db"]
+WORKDIR /data
 
 # ---- Install Bower ----
 RUN apt-get -qq update
@@ -57,8 +60,7 @@ RUN mkdir -p /var/log/nginx
 RUN mkdir -p /var/log/uwsgi
 ADD deployment/configs/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 
-RUN mkdir -p /data/db
-VOLUME ["/data", "/var/log/"]
+VOLUME ["/var/log/"]
 
 # --- Add a starter script ----
 ADD deployment/scripts  /scripts
@@ -66,7 +68,11 @@ RUN chmod +x /scripts/run.sh
 RUN chmod +x /necoc/deployment/scripts/start_uwsgi.sh
 
 # --- SSH ----
-EXPOSE 22
+EXPOSE
+
+# ---MONGO ----
+EXPOSE 27017
+EXPOSE 28017
 
 # --- Nginx ---
 EXPOSE 80 443 7999

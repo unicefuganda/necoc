@@ -15,7 +15,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="message in messages">
+        <tr ng-repeat="message in messages | orderBy: '-time' ">
             <td>{[{ message.source }]} <span>({[{ message.phone }]})</span></td>
             <td>{[{ message.text }]}</td>
             <td>-</td>

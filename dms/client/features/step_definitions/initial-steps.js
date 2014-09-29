@@ -8,7 +8,7 @@ module.exports = function () {
     });
 
     this.registerHandler('BeforeFeatures', function (event, next) {
-        browser.driver.manage().window().setSize(1380, 1380);
+        browser.driver.manage().window().setSize(1580, 1380);
         next();
     });
 

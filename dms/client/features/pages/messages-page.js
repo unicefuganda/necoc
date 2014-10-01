@@ -1,13 +1,15 @@
 var BulkSMSModal = function () {
     this.recipient = element(by.css('.recipient .selectize-input input'));
     this.message = element(by.id('message'));
-    this.notification =  element(by.id('sent-notification'));
+    this.notification =  element(by.css('.sms-toast .growl-item .growl-message'));
 
     this.enterRecipientNumber = function (number) {
         return this.recipient.sendKeys(number).then(function () {
             return element(by.css('.selectize-dropdown-content .create')).click();
         });
     }
+
+    this.sendMessagesButton = element(by.id('send-sms-btn'));
 };
 
 var MessagesPage = function () {
@@ -74,7 +76,7 @@ var MessagesPage = function () {
     };
 
     this.selectLocation = function (location) {
-        return element(by.className('selectize-input')).click().then(function () {
+        return element(by.css('.page-actions .selectize-input')).click().then(function () {
             browser.sleep(200);
             return element(by.cssContainingText('.selectize-dropdown-content .option', location)).click()
         });

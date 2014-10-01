@@ -91,12 +91,20 @@ module.exports = function () {
     });
 
     this.Given(/^I enter the message as "([^"]*)"$/, function (message, next) {
-       messagesPage.bulkSMSModal.message.sendKeys(message).then(next);
+        messagesPage.bulkSMSModal.message.sendKeys(message).then(next);
     });
 
     this.Then(/^I should see message successfully sent$/, function (next) {
-        this.expect(messagesPage.bulkSMSModal.notification.getText()).to.eventually.equal('Message successfully sent.')
+        this.ignoreSync();
+        this.expect(messagesPage.bulkSMSModal.notification.getText()).to.eventually.equal('Message successfully sent')
             .and.notify(next);
+    });
+
+    this.Given(/^I click the send button$/, function (next) {
+        messagesPage.bulkSMSModal.sendMessagesButton.click().then(function () {
+            browser.sleep(500);
+            next();
+        });
     });
 
 };

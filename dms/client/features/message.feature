@@ -32,4 +32,5 @@ Feature: Messages
     And I click send bulk sms button
     And I enter a sender number as "+256775019449"
     And I enter the message as "Hello"
+    And I click the send button
     Then I should see message successfully sent

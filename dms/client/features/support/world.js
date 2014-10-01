@@ -8,9 +8,11 @@ var WorldConstructor = function (callback) {
             var chai = require('chai');
             chai.use(chaiAsPromised);
             return chai.expect;
-        })()
-
-
+        })(),
+        ignoreSync: function () {
+            ptor = protractor.getInstance();
+            ptor.ignoreSynchronization = true;
+        }
     };
 
     callback(world);

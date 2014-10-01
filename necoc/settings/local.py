@@ -1,5 +1,5 @@
+import os
 import sys
-import mongoengine
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -16,4 +16,7 @@ if ('test' in sys.argv) or ('0.0.0.0:7999' in sys.argv):
     connect(MONGODB_NAME, host=MONGODB_DATABASE_HOST)
     connection = get_connection()
     connection.drop_database(MONGODB_NAME)
+
+    API_TOKEN = os.environ['API_TOKEN']
+    API_URL = 'https://whatever.comm'
 

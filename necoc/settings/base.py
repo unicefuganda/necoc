@@ -14,6 +14,9 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
+API_TOKEN = os.environ['API_TOKEN']
+API_URL = 'https://rapidpro.io/api/v1/sms.json'
+
 MANAGERS = ADMINS
 
 DATABASES = {

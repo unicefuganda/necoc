@@ -10,4 +10,14 @@
         };
     });
 
+    module.directive('closeModal', function () {
+        return {
+            link: function (scope, element, attrs) {
+                scope.$watch('successful', function (success) {
+                    return success ? $('#' + attrs['closeModal']).modal('hide') : null;
+                });
+            }
+        }
+    });
+
 })(angular.module('dms.utils', []));

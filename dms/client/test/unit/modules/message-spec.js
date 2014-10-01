@@ -2,7 +2,7 @@ describe('dms.message', function () {
     var $scope;
     var httpMock;
     var messagesStub;
-    var baseUrl;
+    var apiUrl;
     var initController;
 
     beforeEach(function () {
@@ -25,8 +25,8 @@ describe('dms.message', function () {
 
         inject(function ($controller, $rootScope, $httpBackend, Config) {
             httpMock = $httpBackend;
-            baseUrl = Config.baseUrl;
-            httpMock.when('GET', baseUrl + '/api/v1/rapid-pro/').respond(messagesStub);
+            apiUrl = Config.apiUrl;
+            httpMock.when('GET', apiUrl + 'rapid-pro/').respond(messagesStub);
 
             initController = function () {
                 $scope = $rootScope.$new();
@@ -39,7 +39,7 @@ describe('dms.message', function () {
     it('should retrieve messages from the \'/api/v1/rapid-pro/\' endpoint and add them to the scope.', function () {
         initController();
 
-        httpMock.expectGET(baseUrl + '/api/v1/rapid-pro/');
+        httpMock.expectGET(apiUrl + 'rapid-pro/');
         httpMock.flush();
         expect($scope.messages).toEqual(messagesStub);
     });
@@ -47,8 +47,8 @@ describe('dms.message', function () {
     it('should filter message by location given location id', function () {
         initController();
         $scope.location = "location-id";
-        var messageStub = { text:"Some text", phone: "45678909876543"};
-        httpMock.expectGET(baseUrl + '/api/v1/rapid-pro/?location='+$scope.location).respond(messageStub);
+        var messageStub = { text: "Some text", phone: "45678909876543"};
+        httpMock.expectGET(apiUrl + 'rapid-pro/?location=' + $scope.location).respond(messageStub);
         httpMock.flush();
         expect($scope.messages).toEqual(messageStub);
     });
@@ -57,16 +57,57 @@ describe('dms.message', function () {
         initController();
         $scope.location = "location-id";
 
-        var messageStub = [{ text:"Some text", phone: "45678909876543"}];
-        httpMock.expectGET(baseUrl + '/api/v1/rapid-pro/?location='+$scope.location).respond(messageStub);
+        var messageStub = [
+            { text: "Some text", phone: "45678909876543"}
+        ];
+        httpMock.expectGET(apiUrl + 'rapid-pro/?location=' + $scope.location).respond(messageStub);
         httpMock.flush();
         expect($scope.messages).toEqual(messageStub);
 
         $scope.location = "";
-        messageStub = [{ text:"Some text", phone: "45678909876543"}, { text:"Other text", phone: "45678909876543"}];
-        httpMock.expectGET(baseUrl + '/api/v1/rapid-pro/').respond(messageStub);
+        messageStub = [
+            { text: "Some text", phone: "45678909876543"},
+            { text: "Other text", phone: "45678909876543"}
+        ];
+        httpMock.expectGET(apiUrl + 'rapid-pro/').respond(messageStub);
         httpMock.flush();
         expect($scope.messages).toEqual(messageStub);
+    });
+
+    describe('SmsModalController', function () {
+        var initController;
+        var scope;
+        var mockGrowl;
+
+        beforeEach(function () {
+
+            mockGrowl = jasmine.createSpyObj('growl', ['success']);
+
+            inject(function ($controller, $rootScope) {
+                initController = function (isFormValid) {
+                    scope = $rootScope.$new();
+                    scope.send_sms_form = { $valid: isFormValid};
+                    $controller('SmsModalController', {$scope: scope, growl: mockGrowl});
+                }
+            });
+        });
+
+        it('should post the sms to the api endpoint given the sms form has no errors', function () {
+            initController(true);
+            scope.sms= { phone_numbers: "232,4334", text: "message" };
+            scope.sendBulkSms();
+
+            httpMock.expectPOST(apiUrl + 'sent-messages/', {"phone_numbers":["232","4334"],"text":"message"}    ).respond({});
+            expect(scope.saveStatus).toBeTruthy();
+            expect(scope.successful).toBeFalsy();
+
+            httpMock.flush();
+            expect(scope.hasErrors).toBeFalsy();
+            expect(scope.saveStatus).toBeFalsy();
+            expect(scope.successful).toBeTruthy();
+            expect(scope.sms).toBeNull();
+            expect(mockGrowl.success).toHaveBeenCalledWith('Message successfully sent', { ttl : 3000 });
+        });
     });
 
 });

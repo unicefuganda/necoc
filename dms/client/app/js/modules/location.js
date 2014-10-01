@@ -11,7 +11,7 @@
     module.directive('selectLocation', function (LocationService) {
        return {
            link: function (scope, element) {
-                element.selectize({
+                var $select = element.selectize({
                     valueField: 'id',
                     labelField: 'name',
                     searchField: 'name',

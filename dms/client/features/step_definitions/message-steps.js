@@ -107,4 +107,38 @@ module.exports = function () {
         });
     });
 
+    this.Then(/^I should see the sms fields required error messages$/, function (next) {
+        var self = this;
+
+        messagesPage.bulkSMSModal.getRecipientsFieldErrors(0)
+            .then(function (error) {
+                self.expect(error).to.be.equal('This field is required');
+            })
+            .then(function () {
+                self.expect(messagesPage.bulkSMSModal.getTextMessageErrors(0)).to
+                    .eventually.be.equal('This field is required').and.notify(next);
+            });
+    });
+
+    this.Then(/^I enter a more than (\d+) characters message$/, function (arg1, next) {
+        var message = Array(parseInt(arg1) + 2).join("a");
+        messagesPage.bulkSMSModal.message.sendKeys(message).then(next);
+    });
+
+    this.Then(/^I should not see the fields required error messages$/, function (next) {
+        var self = this;
+
+        messagesPage.bulkSMSModal.getRecipientsFieldErrors(0)
+            .then(function (error) {
+                self.expect(error).to.be.empty;
+            })
+            .then(function () {
+                self.expect(messagesPage.bulkSMSModal.getTextMessageErrors(0)).to
+                    .eventually.be.empty.and.notify(next);
+            });
+    });
+
+    this.Then(/^I should see please enter not more that (\d+) characters$/, function (arg1, next) {
+        this.expect(messagesPage.bulkSMSModal.getTextMessageErrors(1)).to.eventually.be.equal('Please enter not more that 160 characters').and.notify(next);
+    });
 };

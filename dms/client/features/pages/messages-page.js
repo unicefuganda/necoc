@@ -2,14 +2,19 @@ var BulkSMSModal = function () {
     this.recipient = element(by.css('.recipient .selectize-input input'));
     this.message = element(by.id('message'));
     this.notification =  element(by.css('.sms-toast .growl-item .growl-message'));
+    this.sendMessagesButton = element(by.id('send-sms-btn'));
 
     this.enterRecipientNumber = function (number) {
-        return this.recipient.sendKeys(number).then(function () {
-            return element(by.css('.selectize-dropdown-content .create')).click();
-        });
-    }
+        return this.recipient.sendKeys(number)
+    };
 
-    this.sendMessagesButton = element(by.id('send-sms-btn'));
+    this.getRecipientsFieldErrors = function(index){
+      return element.all(by.css('#recipient-errors .text-danger')).get(index).getText();
+    };
+
+    this.getTextMessageErrors = function(index){
+      return element.all(by.css('#message-errors .text-danger ')).get(index).getText();
+    };
 };
 
 var MessagesPage = function () {

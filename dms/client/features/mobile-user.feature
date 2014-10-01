@@ -1,6 +1,6 @@
-Feature: Mobile User
-
-  Scenario: Create Mobile User
+#Feature: Mobile User
+#
+#  Scenario: Create Mobile User
 #    Given I am logged in as a NECOC admin
 #    When I navigate to the Admin Panel
 #    And I have "Mukono" district already registered
@@ -11,9 +11,9 @@ Feature: Mobile User
 #    And I select my "district" as "Mukono"
 #    And I click  save and close
 #    Then I should see my details in mobile users table
-
-
-  Scenario: Create Mobile User -- Validation
+#
+#
+#  Scenario: Create Mobile User -- Validation
 #    Given I am logged in as a NECOC admin
 #    When I navigate to the Admin Panel
 #    And I have "Mukono" district already registered
@@ -28,5 +28,5 @@ Feature: Mobile User
 #    Then I should not see the field required error messages
 #    When I click the save button
 #    Then I should see other server-side validation errors
-
-
+#
+#

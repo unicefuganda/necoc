@@ -17,7 +17,7 @@
                             <input type="text" id="recipient" name="recipient" ng-model="sms.phone_numbers"
                                    class="form-control" placeholder="enter recipient e.g +256771234567" recipients required="">
 
-                            <div id="name-errors" class="error-text"
+                            <div id="recipient-errors" class="error-text"
                                  ng-show="send_sms_form.recipient.$invalid && hasErrors">
                                 <p class="text-danger" ng-show="send_sms_form.recipient.$error.required">
                                     This field is required
@@ -30,7 +30,7 @@
                             <textarea id = "message" class="form-control" rows="5" ng-model="sms.text" name="message"
                                       placeholder="enter 160 character message" required ng-maxlength="160"></textarea>
 
-                            <div class="error-text"
+                            <div id="message-errors" class="error-text"
                                  ng-show="send_sms_form.message.$invalid && hasErrors">
                                 <p class="text-danger" ng-show="send_sms_form.message.$error.required">
                                     This field is required

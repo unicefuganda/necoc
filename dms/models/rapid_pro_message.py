@@ -1,9 +1,9 @@
-from dms.models.message import Message
+from dms.models.message import ReceivedMessage
 from mongoengine import *
 from dms.models.mobile_user import MobileUser
 
 
-class RapidProMessage (Message):
+class RapidProMessage (ReceivedMessage):
     SENDER = 'NECOC Volunteer'
     relayer_id = IntField()
     run_id = IntField()

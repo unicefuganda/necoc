@@ -10,7 +10,7 @@
 
     module.directive('selectLocation', function (LocationService) {
        return {
-           link: function (scope, element) {
+           link: function (scope, element, attrs) {
                 var $select = element.selectize({
                     valueField: 'id',
                     labelField: 'name',
@@ -22,6 +22,13 @@
                         LocationService.districts().then(function (response) {
                             callback(response.data)
                         });
+                    }
+                });
+
+               scope.$watch(attrs.selectLocation, function (user) {
+                    if (!user) {
+                        var selectize = $select[0].selectize;
+                        selectize.clear();
                     }
                 });
            }

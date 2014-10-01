@@ -20,7 +20,6 @@
     });
 
     module.controller('MobileUserModalController', function ($scope, MobileUserService) {
-
         $scope.saveUser = function (user) {
             if ($scope.mobile_user_form.$valid) {
                 $scope.saveStatus = true;
@@ -48,6 +47,53 @@
             Object.keys(errors).forEach(function (key) {
                 form[key].$invalid = true;
             });
+        }
+    });
+
+    module.directive('recipients', function (MobileUserService) {
+        return {
+            link: function (scope, element) {
+                var $select = element.selectize({
+                    persist: false,
+                    valueField: 'phone',
+                    labelField: 'name',
+                    searchField: ['name', 'phone'],
+                    maxItems: null,
+                    create: true,
+                    preload: true,
+                    createOnBlur: true,
+                    load: function (query, callback) {
+                        MobileUserService.all().then(function (response) {
+                            callback(response.data);
+                        });
+                    },
+                    render: {
+                        item: function (item, escape) {
+                            return '<div>' +
+                                (item.name ? '<span class="name">' + escape(item.name) + '</span>' : '') +
+                                (item.phone ? '<span class="phone">' + escape(item.phone) + '</span>' : '') +
+                                '</div>';
+                        },
+                        option: function (item, escape) {
+                            var label = item.name || item.phone;
+                            var caption = item.phone ? item.phone : null;
+                            var location = item.location.name ? item.location.name : null;
+                            return '<div>' +
+                                '<span class="list-label">' + escape(label) + '</span>' +
+                                (location ? '<span class="location">' + escape(location) + '</span>' : '') +
+                                (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') +
+                                '</div>';
+                        }
+                    }
+                });
+
+                scope.$watch('sms', function (sms) {
+                    if (!sms) {
+                        var selectize = $select[0].selectize;
+                        selectize.clear();
+                    }
+                });
+            }
         }
     });
 

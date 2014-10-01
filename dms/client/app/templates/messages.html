@@ -1,12 +1,21 @@
+
+
 <div class="container with-margin">
+    <div class="row with-margin">
+        <div class="col-md-2 col-md-offset-5">
+            <button id="send-bulk-sms" type="button" class="btn btn-primary" data-toggle="modal" data-target="#bulk-sms-modal">Send bulk SMS</button>
+        </div>
+    </div>
+
     <div class="page-header">
-        <h4>Disaster SMS report stream</h4>
+        <h4>All received Messages</h4>
     </div>
 
     <div class="page-actions">
         <input type="text" id="district" ng-model="location" name="location" select-location=""
                class="form-control" placeholder="select location" required="">
     </div>
+
     <table si-table="" class="table table-hover table-striped table-bordered">
         <thead>
         <tr>
@@ -32,4 +41,8 @@
             </tr>
         </tfoot>
     </table>
+
+    <div growl></div>
+
+    <ng-include src="'/static/templates/partials/admin/bulk-sms-modal.html'"></ng-include>
 </div>

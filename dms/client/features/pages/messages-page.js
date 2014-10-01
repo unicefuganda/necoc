@@ -1,5 +1,19 @@
+var BulkSMSModal = function () {
+    this.recipient = element(by.css('.recipient .selectize-input input'));
+    this.message = element(by.id('message'));
+    this.notification =  element(by.id('sent-notification'));
+
+    this.enterRecipientNumber = function (number) {
+        return this.recipient.sendKeys(number).then(function () {
+            return element(by.css('.selectize-dropdown-content .create')).click();
+        });
+    }
+};
+
 var MessagesPage = function () {
     var request = require('request');
+
+    this.bulkSMSButton = element(by.id('send-bulk-sms'));
 
     this.messages = [
         { phone: "023020302", time: "2014-02-13T02:00:00", relayer: 2, run: '1', text: "Where are yout",
@@ -18,6 +32,8 @@ var MessagesPage = function () {
             callback();
         })
     };
+
+    this.bulkSMSModal =  new BulkSMSModal();
 
     this.postMessages = function (number, next) {
         var index = 0;

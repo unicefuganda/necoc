@@ -25,3 +25,11 @@ Feature: Messages
     And I visit the messages listing page
     When I select my location as "Kampala"
     Then I should only see my message in "Kampala"
+
+  Scenario: Send Bulk SMS
+    Given I am logged in as a NECOC admin
+    And I visit the dashboard
+    And I click send bulk sms button
+    And I enter a sender number as "+256775019449"
+    And I enter the message as "Hello"
+    Then I should see message successfully sent

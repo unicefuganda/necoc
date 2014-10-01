@@ -73,4 +73,30 @@ module.exports = function () {
         should_see_my_messages(this, next, location);
     });
 
+
+    this.Given(/^I visit the dashboard$/, function (next) {
+        browser.get('/');
+        next();
+    });
+
+    this.Given(/^I click send bulk sms button$/, function (next) {
+        messagesPage.bulkSMSButton.click().then(function () {
+            browser.sleep(500);
+            next();
+        });
+    });
+
+    this.Given(/^I enter a sender number as "([^"]*)"$/, function (number, next) {
+        messagesPage.bulkSMSModal.enterRecipientNumber(number).then(next);
+    });
+
+    this.Given(/^I enter the message as "([^"]*)"$/, function (message, next) {
+       messagesPage.bulkSMSModal.message.sendKeys(message).then(next);
+    });
+
+    this.Then(/^I should see message successfully sent$/, function (next) {
+        this.expect(messagesPage.bulkSMSModal.notification.getText()).to.eventually.equal('Message successfully sent.')
+            .and.notify(next);
+    });
+
 };

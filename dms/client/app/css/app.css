@@ -8,6 +8,25 @@
     border-bottom: 1px dotted #C9C5C5;
 }
 
+.nav-sidebar span.icon {
+    font-size: 20px;
+    margin-right: 10px;
+    margin-top: 3px;
+    display: inline-block;
+}
+
+.nav-sidebar > li > a {
+    position: relative;
+    display: block;
+    padding: 6px 15px;
+}
+
+.bar-content {
+    vertical-align: top;
+    padding-top: 4px;
+    display: inline-block;
+}
+
 .page-actions {
     margin: 15px 0;
 }
@@ -113,7 +132,7 @@
     content: "";
     width: 0;
     height: 0;
-    border-top: 41px solid;
+    border-top: 45px solid;
     border-left: 3px solid;
     position: absolute;
     left: 0;
@@ -125,7 +144,7 @@
     content: "";
     width: 0;
     height: 0;
-    border-top: 41px solid;
+    border-top: 45px solid;
     border-left: 3px solid;
     position: absolute;
     left: 0;

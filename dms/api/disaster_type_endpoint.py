@@ -14,6 +14,3 @@ class DisasterTypeListCreateView(ListCreateAPIView):
     model = DisasterType
     serializer_class = DisasterTypeSerializer
     queryset = DisasterType.objects()
-
-    def post_save(self, obj, created=True):
-        send_bulk_sms.delay(obj)

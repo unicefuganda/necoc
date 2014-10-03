@@ -5,6 +5,7 @@ from django.conf.urls import patterns, url
 # from django.contrib import admin
 # admin.autodiscover()
 from dms.api.bulk_sms_endpoint import SentMessageListCreateView
+from dms.api.disaster_endpoint import DisasterListCreateView
 from dms.api.disaster_type_endpoint import DisasterTypeListCreateView
 from dms.api.rapid_pro_endpoint import RapidProListCreateView
 from dms.api.location_endpoint import LocationListCreateView
@@ -23,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/mobile-users/$', MobileUserListCreateView.as_view()),
     url(r'^api/v1/sent-messages/$', SentMessageListCreateView.as_view()),
     url(r'^api/v1/disaster-types/$', DisasterTypeListCreateView.as_view()),
+    url(r'^api/v1/disasters/$', DisasterListCreateView.as_view()),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

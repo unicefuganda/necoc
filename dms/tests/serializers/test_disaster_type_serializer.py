@@ -10,8 +10,8 @@ class DisasterTypeSerializerTest(MongoTestCase):
         self.disaster_type = dict(name="Fire", description="Fire")
 
     def test_should_serialize_location_object(self):
-        sms = DisasterType(**self.disaster_type).save()
-        serialized_object = DisasterTypeSerializer(sms)
+        disaster_type = DisasterType(**self.disaster_type).save()
+        serialized_object = DisasterTypeSerializer(disaster_type)
         self.assertDictContainsSubset(self.serialized_disaster_type, serialized_object.data)
         self.assertIsNotNone(serialized_object.data['id'])
 

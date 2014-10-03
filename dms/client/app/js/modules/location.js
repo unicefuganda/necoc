@@ -30,7 +30,7 @@
                         var selectize = $select[0].selectize;
                         selectize.clear();
                     }
-                });
+               });
            }
        }
     });

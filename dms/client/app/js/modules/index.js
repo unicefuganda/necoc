@@ -25,6 +25,13 @@
                 templateUrl: '/static/templates/partials/admin/mobile-users.html',
                 controller: 'MobileUserController'
             })
+
+            .state('admin.disasters', {
+                url: '/disasters',
+                templateUrl: '/static/templates/partials/admin/disasters.html',
+                controller: 'DisastersController'
+            })
     });
 
-})(angular.module('dms', ['ui.router', 'siTable', 'dms.message', 'dms.location', 'dms.mobile-user', 'dms.utils']));
+})(angular.module('dms', ['ui.router', 'siTable', 'dms.message', 'dms.location', 'dms.mobile-user',
+    'dms.utils', 'dms.disaster', 'dms.disaster-type']));

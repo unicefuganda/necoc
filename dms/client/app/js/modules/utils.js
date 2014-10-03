@@ -20,4 +20,23 @@
         }
     });
 
+    module.directive('datepicker', function () {
+        return {
+            link: function (scope, element, attrs) {
+                element.datetimepicker();
+            }
+        }
+    });
+
+    module.factory('$moment', function () {
+        return moment;
+    });
+
+    module.filter('duration', function ($moment) {
+        return function (input) {
+            if (!input) return;
+            return $moment(input, "YYYY-MM-DDThh:mm").fromNow();
+        }
+    });
+
 })(angular.module('dms.utils', []));

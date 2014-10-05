@@ -39,6 +39,7 @@ RUN pip install -r /necoc/requirements.txt
 # --- Add Ngnix and uWISG ---
 RUN apt-get -qqy update && apt-get -qqy install nginx uwsgi uwsgi-plugin-python
 ADD deployment/configs/necoc.conf  /etc/nginx/conf.d/necoc.conf
+RUN sed -i "s/# server_names_hash_bucket_size 64/server_names_hash_bucket_size 64/" /etc/nginx/nginx.conf
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 ADD deployment/configs/necoc-uwsgi.ini  /etc/uwsgi/apps-enabled/necoc-uwsgi.ini
 

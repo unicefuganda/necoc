@@ -95,9 +95,10 @@ module.exports = function () {
     });
 
     this.Then(/^I should see message successfully sent$/, function (next) {
-        this.ignoreSync();
+        this.ignoreSync(true);
         this.expect(messagesPage.bulkSMSModal.notification.getText()).to.eventually.equal('Message successfully sent')
             .and.notify(next);
+        this.ignoreSync(false);
     });
 
     this.Given(/^I click the send button$/, function (next) {

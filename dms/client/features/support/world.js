@@ -9,9 +9,9 @@ var WorldConstructor = function (callback) {
             chai.use(chaiAsPromised);
             return chai.expect;
         })(),
-        ignoreSync: function () {
+        ignoreSync: function (state) {
             ptor = protractor.getInstance();
-            ptor.ignoreSynchronization = true;
+            ptor.ignoreSynchronization = state;
         }
     };
 

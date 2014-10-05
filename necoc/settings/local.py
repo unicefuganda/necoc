@@ -17,6 +17,7 @@ if ('test' in sys.argv) or ('0.0.0.0:7999' in sys.argv):
     connection = get_connection()
     connection.drop_database(MONGODB_NAME)
 
-    API_TOKEN = 'hahahahahaffsfsfsfs'
+    API_TOKEN = 'ayoyoyoooooooo'
+    # API_URL = 'http://domaindoesnotexist.commmm'
     API_URL = 'http://localhost:7999/api/v1/mobile-users'
 

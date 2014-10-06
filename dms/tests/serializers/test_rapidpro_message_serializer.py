@@ -18,14 +18,15 @@ class RapidProMessageSerializerTest(MongoTestCase):
 
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
-        self.mobile_user = MobileUser(**dict(name='timothy', phone=phone_number, location=self.village, email=None)).save()
+        self.mobile_user = MobileUser(
+            **dict(name='timothy', phone=phone_number, location=self.village, email=None)).save()
 
     def test_should_serialize_rapid_pro_message_object(self):
-
         rapid_pro_message = RapidProMessage(**self.message).save()
         serialized_object = RapidProMessageSerializer(rapid_pro_message)
         serialized_data_with_source = dict(self.serialized_data.items() +
-                                           {'source': 'NECOC Volunteer', 'location': 'Kampala >> Bukoto'}.items())
+                                           {'id': str(rapid_pro_message.id), 'source': 'NECOC Volunteer',
+                                            'location': 'Kampala >> Bukoto'}.items())
         self.assertEqual(serialized_data_with_source, serialized_object.data)
 
     def test_should_deserialize_rapid_pro_message_object(self):

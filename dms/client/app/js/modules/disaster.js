@@ -59,7 +59,57 @@
                 });
             }
         }
-    })
+    });
 
+    module.directive('disasters', function (DisasterService, $filter) {
+        return function (scope, element, attrs) {
+            var $select = element.selectize({
+                valueField: 'id',
+                labelField: 'name',
+                searchField: ['name', 'location', 'date'],
+                maxItems: 1,
+                preload: true,
+                load: function (query, callback) {
+                    DisasterService.all().then(function (response) {
+                        var disasters = response.data.map(function (disaster) {
+                            return {
+                                id: disaster.id,
+                                name: disaster.name.name,
+                                location: disaster.location.name,
+                                date:  $filter('date')(disaster.date, "MMM dd, yyyy - h:mma")
+                            };
+                        });
+                        callback(disasters);
+                    });
+                },
+                render: {
+                    item: function (item, escape) {
+                        return '<div>' +
+                            (item.name ? '<span class="name">' + escape(item.name) + '</span>' : '') +
+                            (item.location ? '<span class="phone">' + escape(item.location) + '</span>' : '') +
+                            '</div>';
+                    },
+                    option: function (item, escape) {
+                        var label = item.name || item.location;
+                        var caption = item.location ? item.location : null;
+                        var date = item.date ? item.date : null;
+                        return '<div>' +
+                            '<span class="list-label">' + escape(label) + '</span>' +
+                            (date ? '<span class="caption-right">' + escape(date) + '</span>' : '') +
+                            (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') +
+                            '</div>';
+                    }
+                }
+            });
+
+
+            scope.$watch(attrs.disasters, function (disasters) {
+                if (!disasters) {
+                    $select[0].selectize.clear();
+                }
+            });
+        };
+
+    });
 
 })(angular.module('dms.disaster', ['dms.config', 'dms.utils']));

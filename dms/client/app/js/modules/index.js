@@ -33,5 +33,5 @@
             })
     });
 
-})(angular.module('dms', ['ui.router', 'siTable', 'dms.message', 'dms.location', 'dms.mobile-user',
+})(angular.module('dms', ['ui.router', 'siTable', 'checklist-model', 'dms.message', 'dms.location', 'dms.mobile-user',
     'dms.utils', 'dms.disaster', 'dms.disaster-type']));

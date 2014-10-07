@@ -1,0 +1,41 @@
+<div class="modal fade" id="add-to-disaster-modal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog sm-2">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 id="add-to-disaster-modal-title" class="modal-title">Add to disaster</h4>
+            </div>
+            <div ng-controller="AddToDisasterController">
+                <form role="form" novalidate="" name="add_to_disaster_form" ng-submit="addToDisaster()">
+                    <div class="modal-body">
+
+                        <div class="form-group add-to-disaster"
+                             ng-class="{'has-error': add_to_disaster_form.disaster.$invalid && hasErrors }">
+                            <label class="control-label" for="disaster">Disaster</label>
+                            <input type="text" id="disaster" name="disaster" ng-model="disaster"
+                                   class="form-control" placeholder="select disaster" disasters="" required="">
+
+                            <div id="disaster-errors" class="error-text"
+                                 ng-show="add_to_disaster_form.disaster.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="add_to_disaster_form.disaster.$error.required">
+                                    This field is required
+                                </p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="close-add-to-disaster-modal" class="btn btn-default"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="submit" id="add-to-disaster-btn" close-modal="add-to-disaster-modal" class="btn btn-primary" save-state=""
+                                    data-loading-text="Adding...">Add
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,6 @@
 module.exports = function () {
-    var messagesPage = require("../pages/messages-page");
+    var messagesPage = require("../pages/messages-page"),
+        disasterLocation = null;
 
     this.World = require("../support/world").World;
 
@@ -8,7 +9,7 @@ module.exports = function () {
         next();
     });
 
-    this.When(/^I POST a message form that Volunteer to the NECOC DMS$/, function (next) {
+    this.When(/^I POST a message to the NECOC DMS$/, function (next) {
         messagesPage.postMessage(next);
     });
 
@@ -142,4 +143,58 @@ module.exports = function () {
     this.Then(/^I should see please enter not more that (\d+) characters$/, function (arg1, next) {
         this.expect(messagesPage.bulkSMSModal.getTextMessageErrors(1)).to.eventually.be.equal('Please enter not more that 160 characters').and.notify(next);
     });
+
+    this.When(/^I check the message$/, function (next) {
+        messagesPage.checkMessage().then(next);
+    });
+
+    this.When(/^I click on associate to disaster button$/, function (next) {
+        messagesPage.actionsButton.click().then(function () {
+            return messagesPage.associateToDisasterButton.click();
+        }).then(function () {
+            browser.sleep(500);
+            next();
+        });
+    });
+
+    this.When(/^I search disaster by location$/, function (next) {
+        messagesPage.selectDisasterBy(disasterLocation).then(next);
+    });
+
+    this.Then(/^I should see the message associated with the disaster$/, function (next) {
+
+        this.expect(messagesPage.associatedStatus.isDisplayed()).to.eventually.be.true
+            .and.notify(next);
+    });
+
+    this.When(/^I click the add button$/, function (next) {
+        messagesPage.addToDisasterButton.click().then(function () {
+            browser.sleep(500);
+            next();
+        });
+    });
+
+    this.When(/^I have a disaster in "([^"]*)" registered$/, function (location, next) {
+        disasterLocation = location;
+        messagesPage.registerDisaster(location, next);
+    });
+
+    this.Then(/^I should see field required error message$/, function (next) {
+        this.expect(messagesPage.getAddToDisasterErrors()).to
+            .eventually.be.equal('This field is required').and.notify(next);
+    });
+
+    this.Then(/^the error message disappear$/, function (next) {
+        this.expect(messagesPage.getAddToDisasterErrors()).to
+            .eventually.be.equal('').and.notify(next);
+    });
+
+    this.When(/^I click on actions button$/, function (next) {
+        messagesPage.actionsButton.click().then(next);
+    });
+
+    this.Then(/^I should not see the associate to disaster button$/, function (next) {
+        this.expect(messagesPage.associateToDisasterButton.isDisplayed()).to.eventually.be.false.and.notify(next);
+    });
+
 };

@@ -94,10 +94,10 @@ describe('dms.message', function () {
 
         it('should post the sms to the api endpoint given the sms form has no errors', function () {
             initController(true);
-            scope.sms= { phone_numbers: "232,4334", text: "message" };
+            scope.sms = { phone_numbers: "232,4334", text: "message" };
             scope.sendBulkSms();
 
-            httpMock.expectPOST(apiUrl + 'sent-messages/', {"phone_numbers":["232","4334"],"text":"message"}    ).respond({});
+            httpMock.expectPOST(apiUrl + 'sent-messages/', {"phone_numbers": ["232", "4334"], "text": "message"}).respond({});
             expect(scope.saveStatus).toBeTruthy();
             expect(scope.successful).toBeFalsy();
 
@@ -106,8 +106,45 @@ describe('dms.message', function () {
             expect(scope.saveStatus).toBeFalsy();
             expect(scope.successful).toBeTruthy();
             expect(scope.sms).toBeNull();
-            expect(mockGrowl.success).toHaveBeenCalledWith('Message successfully sent', { ttl : 3000 });
+            expect(mockGrowl.success).toHaveBeenCalledWith('Message successfully sent', { ttl: 3000 });
         });
     });
 
+    describe('AddToDisasterController', function () {
+        var initController;
+        var scope;
+
+        beforeEach(function () {
+
+            inject(function ($controller, $rootScope) {
+                initController = function (isFormValid) {
+                    scope = jasmine.createSpyObj('scope', ['setMessages']);
+                    scope.add_to_disaster_form = { $valid: isFormValid};
+                    $controller('AddToDisasterController', {$scope: scope});
+                }
+            });
+        });
+
+        describe('scope.addToDisaster', function () {
+            it('should put a disaster to messages api given form is valid', function () {
+                initController(true);
+                scope.selected = {messages: ['message-id-1', 'message-id-2']};
+                scope.disaster = 'disaster-id';
+                scope.addToDisaster();
+
+                httpMock.expectPOST(apiUrl + 'rapid-pro/message-id-1/', { disaster: 'disaster-id'}).respond({});
+                httpMock.expectPOST(apiUrl + 'rapid-pro/message-id-2/', { disaster: 'disaster-id'}).respond({});
+                httpMock.expectGET(apiUrl + 'rapid-pro/').respond(messagesStub);
+                expect(scope.saveStatus).toBeTruthy();
+                expect(scope.successful).toBeFalsy();
+
+                httpMock.flush();
+                expect(scope.saveStatus).toBeFalsy();
+                expect(scope.hasErrors).toBeFalsy();
+                expect(scope.successful).toBeTruthy();
+                expect(scope.disaster).toBeNull();
+                expect(scope.setMessages).toHaveBeenCalledWith(messagesStub);
+            });
+        })
+    });
 });

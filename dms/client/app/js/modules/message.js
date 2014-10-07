@@ -1,6 +1,10 @@
 (function (module) {
 
-    module.factory('MessageService', function ($http, Config) {
+    module.config(['growlProvider', function (growlProvider) {
+        growlProvider.globalTimeToLive(3000);
+    }]);
+
+    module.factory('MessageService', function ($http, $q, Config) {
         return {
             all: function () {
                 return $http.get(Config.apiUrl + 'rapid-pro/');
@@ -10,11 +14,19 @@
             },
             sendBulkSms: function (sms) {
                 return $http.post(Config.apiUrl + 'sent-messages/', sms);
+            },
+            mapToDisaster: function (disasterId, messageIds) {
+                var messages = messageIds.map(function (messageId) {
+                    return $http.post(Config.apiUrl + 'rapid-pro/' + messageId + '/', {disaster: disasterId});
+                });
+                return $q.all(messages);
             }
         }
     });
 
     module.controller('MessageController', function ($scope, MessageService) {
+
+        $scope.selected = {};
 
         $scope.$watch('location', function (newLocation) {
             if (!newLocation) {
@@ -26,7 +38,6 @@
                     $scope.messages = response.data;
                 });
             }
-
         });
 
         MessageService.all()
@@ -35,11 +46,10 @@
             });
 
 
+        $scope.setMessages = function (messages) {
+            $scope.messages = messages;
+        }
     });
-
-    module.config(['growlProvider', function (growlProvider) {
-          growlProvider.globalTimeToLive(3000);
-    }]);
 
 
     module.controller('SmsModalController', function ($scope, growl, MessageService) {
@@ -59,6 +69,7 @@
                         ttl: 3000
                     });
                 });
+
             } else {
                 $scope.hasErrors = true;
             }
@@ -66,7 +77,7 @@
 
         function formatOptions(options) {
             if (options) {
-                    return options.split(',').map(function (option) {
+                return options.split(',').map(function (option) {
                     return option;
                 });
             }
@@ -75,4 +86,29 @@
 
     });
 
-})(angular.module('dms.message', ['dms.config',  'angular-growl']));
+    module.controller('AddToDisasterController', function ($scope, MessageService) {
+
+        $scope.addToDisaster = function () {
+            if ($scope.add_to_disaster_form.$valid) {
+                $scope.saveStatus = true;
+                $scope.successful = false;
+
+                MessageService.mapToDisaster($scope.disaster, $scope.selected.messages)
+                    .then(function () {
+                        return MessageService.all();
+                    })
+                    .then(function (response) {
+                        $scope.setMessages(response.data);
+                        $scope.saveStatus = false;
+                        $scope.hasErrors = false;
+                        $scope.disaster = null;
+                        $scope.successful = true;
+                    });
+
+            } else {
+                $scope.hasErrors = true;
+            }
+        }
+    });
+
+})(angular.module('dms.message', ['dms.config', 'angular-growl']));

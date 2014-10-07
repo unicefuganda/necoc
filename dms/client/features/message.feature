@@ -4,12 +4,13 @@ Feature: Messages
     Given I am logged in as a NECOC admin
     And I have "Kampala" district already registered
     And I have one Necoc Volunteer registered
-    When I POST a message form that Volunteer to the NECOC DMS
+    When I POST a message to the NECOC DMS
     And I visit the messages listing page
     Then I should see my messages
 
   Scenario: Message Pagination
-    Given I POST a list of messages to NECOC DMS
+    Given I am logged in as a NECOC admin
+    When I POST a list of messages to NECOC DMS
     And I visit the messages listing page
     Then I should see 10 messages in the first pagination
     When I click on the second pagination
@@ -19,7 +20,7 @@ Feature: Messages
     Given I am logged in as a NECOC admin
     And I have "Kampala" district already registered
     And I have one Necoc Volunteer registered
-    When I POST a message form that Volunteer to the NECOC DMS
+    When I POST a message to the NECOC DMS
     When I POST a list of messages to NECOC DMS
     And I visit the messages listing page
     When I select my location as "Kampala"
@@ -44,3 +45,29 @@ Feature: Messages
     And I enter a more than 160 characters message
     Then I should not see the fields required error messages
     And I should see please enter not more that 160 characters
+
+  Scenario: Associate Messages to disaster
+    Given I am logged in as a NECOC admin
+    When I POST a message to the NECOC DMS
+    And I have a disaster in "Mukono" registered
+    And I visit the messages listing page
+    And I check the message
+    When I click on associate to disaster button
+    And I search disaster by location
+    And I click the add button
+    Then I should see the message associated with the disaster
+
+  Scenario: Associate Messages to disaster -- validations
+    Given I am logged in as a NECOC admin
+    When I POST a message to the NECOC DMS
+    And I have a disaster in "Mukono" registered
+    And I visit the messages listing page
+    When I click on actions button
+    Then I should not see the associate to disaster button
+    When I check the message
+    When I click on associate to disaster button
+    And I click the add button
+    Then I should see field required error message
+    When I search disaster by location
+    Then the error message disappear
+

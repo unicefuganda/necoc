@@ -2,6 +2,8 @@ from rest_framework_mongoengine.generics import ListCreateAPIView
 from rest_framework_mongoengine import serializers
 from rest_framework import fields
 from rest_framework import serializers as serialiserzz
+
+from dms.api.retrieve_update_wrapper import MongoRetrieveUpdateView
 from dms.models import MobileUser, Location
 from dms.models.rapid_pro_message import RapidProMessage
 
@@ -16,7 +18,7 @@ class RapidProMessageSerializer(serializers.MongoEngineModelSerializer):
 
     class Meta:
         model = RapidProMessage
-        fields = ('id', 'phone', 'time', 'relayer', 'run', 'text', 'source', 'location')
+        fields = ('id', 'phone', 'time', 'relayer', 'run', 'text', 'source', 'location', 'disaster')
 
 
 class RapidProListCreateView(ListCreateAPIView):
@@ -34,3 +36,9 @@ class RapidProListCreateView(ListCreateAPIView):
         locations.insert(0, location)
         phone_numbers_filtered = MobileUser.objects(location__in=locations).values_list('phone')
         return RapidProMessage.objects(phone_no__in=phone_numbers_filtered)
+
+
+class RapidProRetrieveUpdateView(MongoRetrieveUpdateView):
+    serializer_class = RapidProMessageSerializer
+    queryset = RapidProMessage.objects.all()
+

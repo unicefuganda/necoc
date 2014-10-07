@@ -42,3 +42,7 @@ class RapidProRetrieveUpdateView(MongoRetrieveUpdateView):
     serializer_class = RapidProMessageSerializer
     queryset = RapidProMessage.objects.all()
 
+    def post(self, request, *args, **kwargs):
+        return self.patch(request, *args, **kwargs)
+
+

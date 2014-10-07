@@ -117,3 +117,13 @@ class RapidProEndPointTest(MongoAPITestCase):
         retrieved_message = RapidProMessage.objects(**self.message)
         self.assertEqual(1, retrieved_message.count())
         self.assertEqual(self.disaster, retrieved_message[0].disaster)
+
+    def test_should_update_disaster_field_with_post_is_also_supported_for_phantomjs_sake(self):
+        message = RapidProMessage(**self.message).save()
+
+        response = self.client.post(self._api_url(message.id), data=dict(disaster=self.disaster.id))
+        self.assertEqual(200, response.status_code)
+
+        retrieved_message = RapidProMessage.objects(**self.message)
+        self.assertEqual(1, retrieved_message.count())
+        self.assertEqual(self.disaster, retrieved_message[0].disaster)

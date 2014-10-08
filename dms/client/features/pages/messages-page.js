@@ -39,11 +39,9 @@ var MessagesPage = function () {
 
     this.addToDisasterButton = element(by.id('add-to-disaster-btn'));
 
-    this.associatedStatus =  element(by.css('.status .label-success'));
+    this.associatedStatus = element(by.css('.status .label-success'));
 
     this.bulkSMSModal = new BulkSMSModal();
-
-    this.addToDisasterModalTitle = element(by.id('add-to-disaster-modal-title'));
 
     this.checkMessage = function () {
         return element(by.css('input[type="checkbox"]')).click();
@@ -57,23 +55,12 @@ var MessagesPage = function () {
 
 
     this.postMessages = function (number, next) {
-        var index = 0;
-        postInIntervals();
-
-        function postInIntervals() {
+        for (var index = 0; index < number; index++) {
             var message = { phone: "023020302" + index, time: "2014-02-13T02:00:00", relayer: 2, run: String(index),
                 text: "I am message" + index, source: "NECOC Volunteer" };
-
-            setTimeout(function () {
-                if (index < number) {
-                    request.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
-                    index++;
-                    postInIntervals();
-                } else {
-                    next();
-                }
-            }, 400);
+            request.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
         }
+        next();
     };
 
     this.numberOfMessages = function () {
@@ -95,7 +82,7 @@ var MessagesPage = function () {
     };
 
     this.selectLocation = function (location) {
-        return element(by.css('.page-actions .selectize-input')).click().then(function () {
+        return element(by.css('.district-filter .selectize-input')).click().then(function () {
             browser.sleep(200);
             return element(by.cssContainingText('.selectize-dropdown-content .option', location)).click()
         });
@@ -143,7 +130,7 @@ var MessagesPage = function () {
         });
     }
 
-    this.getAddToDisasterErrors =  function () {
+    this.getAddToDisasterErrors = function () {
         return element(by.css("#disaster-errors .text-danger")).getText();
     }
 };

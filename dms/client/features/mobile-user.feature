@@ -2,8 +2,8 @@ Feature: Mobile User
 
   Scenario: Create Mobile User
     Given I am logged in as a NECOC admin
-    When I navigate to the Admin Panel
     And I have "Mukono" district already registered
+    When I navigate to the users page
     And I click the create new user button
     And I enter my "name" as "Solomon"
     And I enter my "email" as "solomon@gmail.com"
@@ -14,8 +14,8 @@ Feature: Mobile User
 
   Scenario: Create Mobile User -- Validation
     Given I am logged in as a NECOC admin
-    When I navigate to the Admin Panel
     And I have "Mukono" district already registered
+    When I navigate to the users page
     And I click the create new user button
     And I click the save button
     Then I should see fields required error messages

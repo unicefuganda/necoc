@@ -14,9 +14,10 @@ var MobileUsersModal = function () {
         return this.saveButton.click();
     };
 
-    this.selectLocation = function (location) {
-        return element(by.className('selectize-input')).click().then(function () {
-            return element(by.cssContainingText('.selectize-dropdown-content .option', location)).click()
+    this.selectLocation = function (location, next) {
+        return element(by.css('.district .selectize-input')).click().then(function () {
+            browser.sleep(200);
+            return element(by.cssContainingText('.district .selectize-dropdown-content .option', location)).click()
         });
     };
 

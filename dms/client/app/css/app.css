@@ -1,5 +1,37 @@
+body {
+    background-color: #EEEEEE;
+}
+
 .with-margin {
     margin-top: 40px;
+}
+
+.with-btm-margin {
+    margin-bottom: 10px;
+}
+
+.c-well {
+    min-height: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #FFFDFD;
+    border-radius: 2px;
+}
+
+.btn-big {
+    border-radius: 2px;
+}
+
+.btn-big .icon {
+    font-size: 45px;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+.container-fluid {
+    padding-left: 20%;
 }
 
 .page-header {
@@ -8,11 +40,54 @@
     border-bottom: 1px dotted #C9C5C5;
 }
 
+.sub-section-header {
+    color: #3E9CB8;
+}
+
+.sub-section-header .title {
+    font-size: 20px;
+    font-weight: 200;
+    vertical-align: top;
+    display: inline-block;
+    margin: 5px 10px;
+}
+
+.sub-section-header .icon {
+    font-size: 30px;
+}
+
+.sidebar .navbar-brand {
+    color: #fff;
+    padding: 4px 10px;
+}
+
+.sidebar .navbar-brand .icon {
+    font-size: 40px;
+}
+
+.sidebar .navbar-brand .title {
+    vertical-align: top;
+    margin: 10px;
+    display: inline-block;
+}
+
+.sidebar .navbar-brand:hover, .nav-sidebar .navbar-brand:focus {
+    color: #cdcdcd;
+}
+
 .nav-sidebar span.icon {
     font-size: 20px;
     margin-right: 10px;
     margin-top: 3px;
     display: inline-block;
+}
+
+.nav-sidebar {
+    margin-top: 40px;
+}
+
+.sidebar .row.no-margin {
+    background-color: #000;
 }
 
 .nav-sidebar > li > a {
@@ -48,32 +123,122 @@
     color: #2679b5;
 }
 
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+    background-color: #3E9CB8;
+    border-color: #3E9CB8;
+}
+
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+    color: #6B6B6B;
+    border-color: #3E9CB8;
+}
+
+.pagination > li > a, .pagination > li > span {
+    color: #3E9CB8;
+    border: 1px solid #3E9CB8;
+}
+
+.pagination > li > a:hover, .pagination > li > span:hover {
+    border: 1px solid #3E9CB8;
+}
+
+.modal-title {
+    font-weight: 300;
+    color: #3E9CB8;
+}
+
 .navbar {
     margin: 0;
     padding-left: 0;
     padding-right: 0;
     border-width: 0;
     border-radius: 0;
-    -webkit-box-shadow: none;
-    box-shadow: none;
     min-height: 45px;
-    background: rgba(67, 142, 185, 0.92);
+    background: rgba(255, 255, 255, 0.93);
+    box-shadow: 0 0 4px 1px #E9E7E7;
+    -webkit-box-shadow: 0 0 4px 1px #E9E7E7;
+    -moz-box-shadow: 0 0 4px 1px #E9E7E7;
+    -o-box-shadow: 0 0 4px 1px #E9E7E7;
+}
+
+.navbar-header .navbar-brand {
+    font-size: 22px;
+    font-weight: 300;
 }
 
 .navbar .navbar-brand, .navbar-default .navbar-nav > li > a {
-    color: #fff;
+    color: #3E9CB8;
 }
 
 .sidebar {
     position: fixed;
-    top: 51px;
+    top: 0px;
     bottom: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 1040;
     display: block;
-    padding: 40px 0;
+    padding: 0;
+    background-color: rgba(42, 42, 42, 0.93);
+    border-right: 1px solid rgba(42, 42, 42, 0.93);
+}
+
+.btn-default {
+    color: #3E9CB8;
+    background-color: #fff;
+    border-color: #4CADCA;
+}
+
+.btn-default:hover, .btn-default:focus {
+    border-color: #4CADCA;
     background-color: #f5f5f5;
-    border-right: 1px solid #D3D3D3;
+    color: #3E9CB8;
+}
+
+table.style-header thead {
+    background-color: #3E9CB8;
+    color: #fff;
+}
+
+.btn-icon .icon {
+    font-size: 21px;
+}
+
+.btn-icon .value {
+    display: inline-block;
+    vertical-align: top;
+    margin: 3px;
+}
+
+.btn.btn-icon {
+    padding-bottom: 2px;
+}
+
+label {
+    font-weight: 500;
+}
+
+.btn-icon .icon {
+    -webkit-transition: all 0.7s ease-in-out;
+    -moz-transition: all 0.7s ease-in-out;
+    -o-transition: all 0.7s ease-in-out;
+    -ms-transition: all 0.7s ease-in-out;
+}
+
+.btn-icon .icon:hover {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
 }
 
 .section .page-header {
@@ -81,7 +246,7 @@
 }
 
 .section {
-    margin: 0 2%;
+    margin: 3% 2% 0;
 }
 
 .modal-content {
@@ -93,15 +258,32 @@
 }
 
 .nav-sidebar > li {
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid rgba(73, 73, 73, 0.83);
 }
 
 .nav-sidebar > li:first-child {
-    border-top: 1px solid #e5e5e5;
+    border-top: 1px solid rgba(73, 73, 73, 0.83);
+}
+
+.nav-sidebar > li > a {
+    color: #67DBFD;
 }
 
 .nav-sidebar > li > a:hover {
-    background-color: #f9f9f9;
+    background-color: #444444;
+    color: #bbe7ff;
+}
+
+.nav-sidebar > li > a:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 37px solid;
+    border-left: 4px solid;
+    position: absolute;
+    left: 0;
+    top: 3px;
+    color: #4FA7C1;
 }
 
 .nav-sidebar > li.active:before {
@@ -113,7 +295,7 @@
     right: -1px;
     top: 8px;
     border: 12px solid;
-    border-color: transparent rgb(187, 187, 187) transparent transparent;
+    border-color: transparent rgba(42, 42, 42, 0.93) transparent transparent;
 }
 
 .nav-sidebar > li.active:after {
@@ -125,36 +307,36 @@
     right: -1px;
     top: 9px;
     border: 11px solid;
-    border-color: transparent #fff transparent transparent;
+    border-color: transparent #EEEEEE transparent transparent;
 }
 
-.nav-sidebar > li.active > a:before, .nav-sidebar > li:active > a:hover:before {
+.nav-sidebar > li.active > a:before, .nav-sidebar > li.active > a:hover:before {
     content: "";
     width: 0;
     height: 0;
-    border-top: 45px solid;
-    border-left: 3px solid;
+    border-top: 37px solid;
+    border-left: 2px solid;
     position: absolute;
     left: 0;
-    top: -1px;
-    color: #2b7dbc;
+    top: 3px;
+    color: #338BA5;
 }
 
 .nav-sidebar > li > a:hover:before {
     content: "";
     width: 0;
     height: 0;
-    border-top: 45px solid;
-    border-left: 3px solid;
+    border-top: 37px solid;
+    border-left: 4px solid;
     position: absolute;
     left: 0;
-    top: -1px;
-    color: #c8c8c8;
+    top: 3px;
+    color: #bbe7ff;
 }
 
 .nav-sidebar > li.active > a {
     background-color: #fff;
-    color: #2b7dbc;
+    color: #338BA5;
 }
 
 .nav-sidebar > li > a {
@@ -162,7 +344,7 @@
 }
 
 .navbar .navbar-brand:hover, .navbar-default .navbar-nav > li > a:hover {
-    color: #e6e6e6;
+    color: #388399;
 }
 
 .error-text {
@@ -172,7 +354,7 @@
 
 .growl-container.growl-fixed.top-right {
     top: 70px;
-    right: 10%;
+    right: 2%;
 }
 
 .selectize-control .selectize-input [data-value] .phone:before {

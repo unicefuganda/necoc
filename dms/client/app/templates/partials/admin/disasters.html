@@ -1,44 +1,51 @@
 <div class="section">
-    <div class="page-header">
-        <h4>Disasters</h4>
-    </div>
 
     <ng-include src="'/static/templates/partials/admin/disasters-modal.html'"></ng-include>
 
-    <div class="page-actions pull-right">
-        <button type="button" id="add-disaster" class="btn btn-primary" data-toggle="modal" data-target="#disasters-modal">
-            Add Disasters
-        </button>
+    <div class="c-well">
+
+        <div class="row with-btm-margin">
+            <div class="col-md-3 sub-section-header">
+                <span class="icon icon-flash-electric"></span><span class="title">Registered Disasters</span>
+            </div>
+            <div class="col-md-2">
+                <button type="button" id="add-disaster" class="btn btn-default btn-icon" data-toggle="modal"
+                        data-target="#disasters-modal">
+                    <span class="icon icon-plus-circle"></span>
+                    <span class="value">Add Disasters</span>
+                </button>
+            </div>
+        </div>
+
+        <table si-table="" class="table table-hover table-striped style-header">
+            <thead>
+            <tr>
+                <th>Disaster</th>
+                <th>Location</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Duration</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr ng-repeat="disaster in disasters">
+                <td>{[{ disaster.name.name }]}</td>
+                <td>{[{ disaster.location.name }]}</td>
+                <td>{[{ disaster.description }]}</td>
+                <td>{[{ disaster.status }]}</td>
+                <td>{[{ disaster.date | duration }]}</td>
+            </tr>
+            </tbody>
+
+            <tfoot>
+            <tr>
+                <td colspan="5">
+                    <si-table-pagination limit="10"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
     </div>
-
-    <table si-table="" class="table table-hover table-striped table-bordered">
-        <thead>
-        <tr>
-            <th>Disaster</th>
-            <th>Location</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Duration</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <tr ng-repeat="disaster in disasters">
-            <td>{[{ disaster.name.name }]}</td>
-            <td>{[{ disaster.location.name }]}</td>
-            <td>{[{ disaster.description }]}</td>
-            <td>{[{ disaster.status }]}</td>
-            <td>{[{ disaster.date | duration }]}</td>
-        </tr>
-        </tbody>
-
-        <tfoot>
-        <tr>
-            <td colspan="5">
-                <si-table-pagination limit="10"/>
-            </td>
-        </tr>
-        </tfoot>
-    </table>
 
 </div>

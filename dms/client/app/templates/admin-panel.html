@@ -1,33 +1,36 @@
 <div class="with-margin">
     <div class="col-sm-3 col-md-2 sidebar">
-        <ul class="nav nav-sidebar">
-            <li>
-                <a>
-                    <span class="icon icon-keypad-2"></span>
-                    <span class="bar-content">Dashboard</span>
-                </a>
-            </li>
-            <li ui-sref-active="active">
-                <a ui-sref="admin.mobile-users">
-                    <span class="icon icon-contacts-social"></span>
-                    <span class="bar-content">Mobile Users</span>
-                </a>
-            </li>
-
-            <li ui-sref-active="active">
-                <a ui-sref="admin.disasters">
-                    <span class="icon icon-contacts-social"></span>
-                    <span class="bar-content">Disasters</span>
-                </a>
-            </li>
-
-            <li>
-                <a>
-                    <span class="icon icon-bubble-3"></span>
-                    <span class="bar-content">Messages</span>
-                </a>
-            </li>
-        </ul>
+        <div class="row no-margin">
+            <a class="navbar-brand " href="#"><span class="icon icon-navicon-round"></span><span class="title">NECOC DMS</span></a>
+        </div>
+        <div class="">
+            <ul class="nav nav-sidebar">
+                <li>
+                    <a>
+                        <span class="icon icon-keypad-2"></span>
+                        <span class="bar-content">Dashboard</span>
+                    </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="admin.mobile-users" id="users-tab">
+                        <span class="icon icon-contacts-social"></span>
+                        <span class="bar-content">Users</span>
+                    </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="admin.disasters">
+                        <span class="icon icon-flash-electric"></span>
+                        <span class="bar-content">Disasters</span>
+                    </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="admin.messages" id="messages-tab">
+                        <span class="icon icon-bubble-3"></span>
+                        <span class="bar-content">Messages</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

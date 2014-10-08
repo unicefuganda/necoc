@@ -1,5 +1,6 @@
 module.exports = function () {
     var messagesPage = require("../pages/messages-page"),
+        homePage = require("../pages/home-page"),
         disasterLocation = null;
 
     this.World = require("../support/world").World;
@@ -14,7 +15,7 @@ module.exports = function () {
     });
 
     this.When(/^I visit the messages listing page$/, function (next) {
-        browser.get('/');
+        browser.setLocation('/admin/messages');
         next();
     });
 
@@ -195,6 +196,10 @@ module.exports = function () {
 
     this.Then(/^I should not see the associate to disaster button$/, function (next) {
         this.expect(messagesPage.associateToDisasterButton.isDisplayed()).to.eventually.be.false.and.notify(next);
+    });
+
+    this.Given(/^I navigate to messages page$/, function (next) {
+        homePage.messagesTab.click().then(next);
     });
 
 };

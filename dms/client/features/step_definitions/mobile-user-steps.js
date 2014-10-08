@@ -31,6 +31,10 @@ module.exports = function () {
         mobileUsersPage.createUserModal.selectLocation(location).then(next);
     });
 
+    this.When(/^I navigate to the users page$/, function (next) {
+        homePage.usersTab.click().then(next);
+    });
+
     this.When(/^I click  save and close$/, function (next) {
         mobileUsersPage.createUserModal.clickSaveButton()
             .then(function () {
@@ -86,7 +90,7 @@ module.exports = function () {
     });
 
     this.When(/^I have a Mobile User with email "([^"]*)" and phone "([^"]*)"$/, function (email, phone, next) {
-        mobileUsersPage.registerUserWith(email, phone,  next);
+        mobileUsersPage.registerUserWith(email, phone, next);
     });
 
     this.Then(/^I should not see the field required error messages$/, function (next) {

@@ -1,0 +1,77 @@
+<div class="container with-margin">
+
+    <div class="row">
+        <div class="col-md-2 col-md-offset-5 c-well">
+            <button id="send-bulk-sms" type="button" class="btn btn-info btn-big" data-toggle="modal"
+                    data-target="#bulk-sms-modal">
+                <span class="icon icon-mail-letter"></span>
+                <div class="value">Send SMS Alert</div>
+            </button>
+        </div>
+    </div>
+
+    <div class="c-well">
+
+        <div class="row with-btm-margin">
+            <div class="col-md-4 sub-section-header">
+                <span class="icon icon-bubble-3"></span><span class="title">All Received Messages</span>
+                <span class="badge">42</span>
+            </div>
+
+            <div class="col-md-3 district-filter">
+                <input type="text" id="district" ng-model="location" name="location" select-location=""
+                       class="form-control" placeholder="select location" required="">
+            </div>
+
+            <div class="col-md-1">
+                <div class="btn-group">
+                    <button id="actions-btn" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                        Actions <span class="caret"></span>
+                    </button>
+                    <ul ng-show="selected.messages.length" class="dropdown-menu" role="menu">
+                        <li><a id="add-to-disaster" data-toggle="modal"
+                               data-target="#add-to-disaster-modal">Add to disaster</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <table si-table="" class="table table-hover table-striped style-header">
+            <thead>
+            <tr>
+                <th class="xsm-column"></th>
+                <th class="md-column">Source</th>
+                <th>SMS Body</th>
+                <th class="sm-column">Location</th>
+                <th class="sm-column">Date Time</th>
+                <th class="sm-column">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="message in messages | orderBy: '-time'">
+                <td><input type="checkbox" checklist-model="selected.messages" checklist-value="message.id"/></td>
+                <td>{[{ message.source }]} <span>({[{ message.phone }]})</span></td>
+                <td>{[{ message.text }]}</td>
+                <td>{[{ message.location }]}</td>
+                <td>{[{ message.time | date:"MMM dd, yyyy - h:mma" }]}</td>
+                <td class="status">
+                    <span ng-show="message.disaster" class="label label-success">Associated</span>
+                    <span ng-hide="message.disaster" class="label label-warning">Pending</span>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="6">
+                    <si-table-pagination limit="10"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="sms-toast" growl></div>
+
+    <ng-include src="'/static/templates/partials/admin/bulk-sms-modal.html'"></ng-include>
+    <ng-include src="'/static/templates/partials/admin/add-to-disaster-modal.html'"></ng-include>
+</div>

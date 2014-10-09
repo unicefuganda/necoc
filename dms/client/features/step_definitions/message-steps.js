@@ -1,7 +1,8 @@
 module.exports = function () {
     var messagesPage = require("../pages/messages-page"),
         homePage = require("../pages/home-page"),
-        disasterLocation = null;
+        disasterLocation = null,
+        numberOfMassMessages = 15;
 
     this.World = require("../support/world").World;
 
@@ -45,7 +46,7 @@ module.exports = function () {
     };
 
     this.When(/^I POST a list of messages to NECOC DMS$/, function (next) {
-        messagesPage.postMessages(15, next);
+        messagesPage.postMessages(numberOfMassMessages, next);
     });
 
     this.Then(/^I should see (\d+) messages in the first pagination$/, function (paginationLimit, next) {
@@ -200,6 +201,14 @@ module.exports = function () {
 
     this.Given(/^I navigate to messages page$/, function (next) {
         homePage.messagesTab.click().then(next);
+    });
+
+    this.Then(/^I should see the total number of messages displayed$/, function (next) {
+        this.expect(messagesPage.getTextByCss('.container .sub-section-header .badge')).to
+            .eventually.be.equal(numberOfMassMessages.toString());
+
+        this.expect(messagesPage.getTextByCss('.nav-sidebar .badge')).to
+            .eventually.be.equal(numberOfMassMessages.toString()).and.notify(next);
     });
 
 };

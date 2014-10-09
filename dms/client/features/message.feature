@@ -15,6 +15,7 @@ Feature: Messages
     Then I should see 10 messages in the first pagination
     When I click on the second pagination
     Then I should see 5 messages in the second pagination
+    And I should see the total number of messages displayed
 
   Scenario: Message Filter by location
     Given I am logged in as a NECOC admin

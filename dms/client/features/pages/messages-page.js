@@ -63,6 +63,10 @@ var MessagesPage = function () {
         next();
     };
 
+    this.getTextByCss = function(selector){
+        return element(by.css(selector)).getText();
+    };
+
     this.numberOfMessages = function () {
         return element.all(by.repeater("message in messages")).count();
     };

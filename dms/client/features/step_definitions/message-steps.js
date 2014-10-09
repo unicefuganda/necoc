@@ -211,5 +211,16 @@ module.exports = function () {
         this.expect(messagesPage.getTextByCss('.nav-sidebar .badge')).to
             .eventually.be.equal(numberOfMassMessages.toString()).and.notify(next);
     });
+    
+    this.Then(/^I should see one message uncategorized$/, function (next) {
+        this.expect(messagesPage.getTextByCss('#uncategorized-sms .huge-number')).to
+            .eventually.be.equal('1').and.notify(next);
+    });
+    
+    this.Then(/^I should see zero message uncategorized$/, function (next) {
+        browser.driver.navigate().refresh();
+        this.expect(messagesPage.getTextByCss('#uncategorized-sms .huge-number')).to
+            .eventually.be.equal('0').and.notify(next);
+    });    
 
 };

@@ -9,8 +9,8 @@
             all: function () {
                 return $http.get(Config.apiUrl + 'rapid-pro/');
             },
-            filter: function (location_id) {
-                return $http.get(Config.apiUrl + 'rapid-pro/?location=' + location_id);
+            filter: function (filter, filter_id) {
+                return $http.get(Config.apiUrl + 'rapid-pro/?'+filter+'=' + filter_id);
             },
             sendBulkSms: function (sms) {
                 return $http.post(Config.apiUrl + 'sent-messages/', sms);
@@ -34,17 +34,20 @@
                     $scope.messages = response.data;
                 });
             } else {
-                MessageService.filter(newLocation).then(function (response) {
+                MessageService.filter('location', newLocation).then(function (response) {
                     $scope.messages = response.data;
                 });
             }
+        });
+
+        MessageService.filter('disaster', '').then(function (response) {
+                $scope.uncategorizedMessages = response.data;
         });
 
         MessageService.all()
             .then(function (response) {
                 $scope.messages = response.data;
             });
-
 
         $scope.setMessages = function (messages) {
             $scope.messages = messages;

@@ -27,6 +27,7 @@ describe('dms.message', function () {
             httpMock = $httpBackend;
             apiUrl = Config.apiUrl;
             httpMock.when('GET', apiUrl + 'rapid-pro/').respond(messagesStub);
+            httpMock.when('GET', apiUrl + 'rapid-pro/?disaster=').respond(messagesStub);
 
             initController = function () {
                 $scope = $rootScope.$new();
@@ -42,6 +43,14 @@ describe('dms.message', function () {
         httpMock.expectGET(apiUrl + 'rapid-pro/');
         httpMock.flush();
         expect($scope.messages).toEqual(messagesStub);
+    });
+
+    it('should retrieve filtered uncategorized messages', function () {
+        initController();
+
+        httpMock.expectGET(apiUrl + 'rapid-pro/?disaster=');
+        httpMock.flush();
+        expect($scope.uncategorizedMessages).toEqual(messagesStub);
     });
 
     it('should filter message by location given location id', function () {

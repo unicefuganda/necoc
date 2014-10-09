@@ -1,15 +1,25 @@
 <div class="container with-margin">
+    <div class="row page-summary">
+        <ul class="c-well col-md-offset-7">
+            <li>
+                <button id="uncategorized-sms" type="button" class="btn btn-big btn-info">
+                    <span class="huge-number">{[{uncategorizedMessages.length}]}</span>
 
-    <div class="row">
-        <div class="col-md-2 col-md-offset-5 c-well">
-            <button id="send-bulk-sms" type="button" class="btn btn-info btn-big" data-toggle="modal"
-                    data-target="#bulk-sms-modal">
-                <span class="icon icon-mail-letter"></span>
-                <div class="value">Send SMS Alert</div>
-            </button>
-        </div>
+                    <div class="value">Uncategorized</div>
+                    <div class="value">Messages</div>
+                </button>
+
+            </li>
+            <li>
+                <button id="send-bulk-sms" type="button" class="btn btn-info btn-big" data-toggle="modal"
+                        data-target="#bulk-sms-modal">
+                    <span class="icon icon-mail-letter"></span>
+
+                    <div class="value">Send SMS Alert</div>
+                </button>
+            </li>
+        </ul>
     </div>
-
     <div class="c-well">
 
         <div class="row with-btm-margin">

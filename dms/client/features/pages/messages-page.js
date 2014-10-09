@@ -137,6 +137,10 @@ var MessagesPage = function () {
     this.getAddToDisasterErrors = function () {
         return element(by.css("#disaster-errors .text-danger")).getText();
     }
+
+    this.categorizeAmessage = function(callback){
+
+    }
 };
 
 module.exports = new MessagesPage();

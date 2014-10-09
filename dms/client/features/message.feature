@@ -52,11 +52,13 @@ Feature: Messages
     When I POST a message to the NECOC DMS
     And I have a disaster in "Mukono" registered
     And I visit the messages listing page
+    Then I should see one message uncategorized
     And I check the message
     When I click on associate to disaster button
     And I search disaster by location
     And I click the add button
     Then I should see the message associated with the disaster
+    And I should see zero message uncategorized
 
   Scenario: Associate Messages to disaster -- validations
     Given I am logged in as a NECOC admin

@@ -412,3 +412,17 @@ label {
     margin-left: 10px;
     color: white;
 }
+
+.huge-number{
+    font-size: 30px;
+}
+
+.page-summary{
+    display: inline-block
+}
+
+.page-summary ul li{
+    display: inline;
+    list-style-type: none;
+    margin-right: 10px;
+}

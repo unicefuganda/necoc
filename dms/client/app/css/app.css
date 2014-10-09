@@ -390,3 +390,25 @@ label {
 .selectize-control .selectize-dropdown .caption-right {
     float: right;
 }
+
+.badge{
+    border: 1px solid #3E9CB8;
+    border-radius: 20%;
+    background-color: transparent;
+    color: black;
+    padding: 1px 4px;
+    font-size: 15px;
+    font-weight: 400;
+    margin-top: 12px;
+    vertical-align: top;
+}
+
+.nav-sidebar .active .badge{
+    color: black;
+}
+
+.nav-sidebar .badge{
+    margin-top: 5px;
+    margin-left: 10px;
+    color: white;
+}

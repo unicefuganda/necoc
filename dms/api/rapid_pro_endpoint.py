@@ -26,16 +26,22 @@ class RapidProListCreateView(ListCreateAPIView):
     model = RapidProMessage
 
     def get_queryset(self):
+        queryset = self._non_location_queried_messages()
         location_queried = self.request.GET.get('location', None)
         if location_queried:
-            return self._messages_from(location_queried)
-        return RapidProMessage.objects()
+            queryset = self._messages_from(location_queried, queryset)
+        return queryset
 
-    def _messages_from(self, location):
+    def _non_location_queried_messages(self):
+        fields = RapidProMessage._fields_ordered
+        query_params = {key: value or None for key, value in self.request.GET.items() if key in fields}
+        return RapidProMessage.objects(**query_params)
+
+    def _messages_from(self, location, queryset):
         locations = list(Location.objects(parent=location))
         locations.insert(0, location)
         phone_numbers_filtered = MobileUser.objects(location__in=locations).values_list('phone')
-        return RapidProMessage.objects(phone_no__in=phone_numbers_filtered)
+        return queryset.filter(phone_no__in=phone_numbers_filtered)
 
 
 class RapidProRetrieveUpdateView(MongoRetrieveUpdateView):

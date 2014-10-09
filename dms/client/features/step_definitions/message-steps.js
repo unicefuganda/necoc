@@ -204,6 +204,7 @@ module.exports = function () {
     });
 
     this.Then(/^I should see the total number of messages displayed$/, function (next) {
+        browser.driver.navigate().refresh();
         this.expect(messagesPage.getTextByCss('.container .sub-section-header .badge')).to
             .eventually.be.equal(numberOfMassMessages.toString());
 

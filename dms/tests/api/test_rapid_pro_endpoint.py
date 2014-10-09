@@ -127,3 +127,28 @@ class RapidProEndPointTest(MongoAPITestCase):
         retrieved_message = RapidProMessage.objects(**self.message)
         self.assertEqual(1, retrieved_message.count())
         self.assertEqual(self.disaster, retrieved_message[0].disaster)
+
+    def test_should_filter_messages_by_disaster_association(self):
+        uncategorized_message = RapidProMessage(**self.message).save()
+        message_2 = self.message.copy()
+        message_2['text'] = 'some other text'
+        message_2['disaster'] = self.disaster
+
+        categorized_message = RapidProMessage(**message_2).save()
+
+        response = self.client.get(self.API_ENDPOINT, {"disaster": "", "format": "json"})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertEqual(str(uncategorized_message.id), response.data[0]['id'])
+        self.assertDictContainsSubset(self.expected_message, response.data[0])
+
+        response = self.client.get(self.API_ENDPOINT, {"disaster": str(self.disaster.id), "format": "json"})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertEqual(str(categorized_message.id), response.data[0]['id'])
+        expected_message2= self.expected_message.copy()
+        expected_message2['text'] = message_2['text']
+        self.assertDictContainsSubset(expected_message2, response.data[0])
+

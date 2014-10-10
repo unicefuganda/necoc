@@ -426,3 +426,7 @@ label {
     list-style-type: none;
     margin-right: 10px;
 }
+
+#map {
+    height:800px;
+}

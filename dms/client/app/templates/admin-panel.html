@@ -5,8 +5,8 @@
         </div>
         <div class="" ng-controller="AdminPanelController">
             <ul class="nav nav-sidebar">
-                <li>
-                    <a>
+                <li ui-sref-active="active">
+                    <a ui-sref="admin.dashboard" id="dashboard-tab">
                         <span class="icon icon-keypad-2"></span>
                         <span class="bar-content">Dashboard</span>
                     </a>
@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <div ui-view></div>
     </div>
 </div>

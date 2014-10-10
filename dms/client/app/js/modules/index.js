@@ -3,7 +3,7 @@
     module.config(function ($stateProvider, $urlRouterProvider, $interpolateProvider) {
 
         $urlRouterProvider.when('/admin', '/admin/dashboard');
-        $urlRouterProvider.when('/', '/admin/mobile-users');
+        $urlRouterProvider.when('/', '/admin/dashboard');
         $urlRouterProvider.otherwise('/');
 
         $interpolateProvider.startSymbol('{[{');
@@ -12,8 +12,9 @@
         $stateProvider
             .state('admin.dashboard', {
                 url: '/dashboard',
-                templateUrl: '/static/templates/partials/admin/messages.html',
-                controller: 'MessageController'
+                data: { pageTitle: 'Dashboard'},
+                templateUrl: '/static/templates/partials/admin/dashboard.html'
+//                controller: 'MessageController'
             })
 
             .state('admin', {
@@ -49,4 +50,4 @@
     });
 
 })(angular.module('dms', ['ui.router', 'siTable', 'checklist-model', 'dms.message', 'dms.admin-panel',  'dms.location', 'dms.mobile-user',
-    'dms.utils', 'dms.disaster', 'dms.disaster-type']));
+    'dms.utils', 'dms.disaster', 'dms.disaster-type', 'dms.map']));

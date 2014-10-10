@@ -10,7 +10,7 @@
                 return $http.get(Config.apiUrl + 'rapid-pro/');
             },
             filter: function (filter, filter_id) {
-                return $http.get(Config.apiUrl + 'rapid-pro/?'+filter+'=' + filter_id);
+                return $http.get(Config.apiUrl + 'rapid-pro/?' + filter + '=' + filter_id);
             },
             sendBulkSms: function (sms) {
                 return $http.post(Config.apiUrl + 'sent-messages/', sms);
@@ -24,15 +24,15 @@
         }
     });
 
-    module.controller('MessageController', function ($scope, MessageService) {
+    module.controller('MessageController', function ($scope, MessageService, $interval) {
 
         $scope.selected = {};
 
+        getAllMessages();
+
         $scope.$watch('location', function (newLocation) {
             if (!newLocation) {
-                MessageService.all().then(function (response) {
-                    $scope.messages = response.data;
-                });
+                getAllMessages();
             } else {
                 MessageService.filter('location', newLocation).then(function (response) {
                     $scope.messages = response.data;
@@ -41,17 +41,26 @@
         });
 
         MessageService.filter('disaster', '').then(function (response) {
-                $scope.uncategorizedMessages = response.data;
+            $scope.uncategorizedMessages = response.data;
         });
-
-        MessageService.all()
-            .then(function (response) {
-                $scope.messages = response.data;
-            });
 
         $scope.setMessages = function (messages) {
             $scope.messages = messages;
+        };
+
+        $interval(function () {
+            MessageService.all().then(function (response) {
+                $scope.polled = true;
+                $scope.messages = response.data;
+            });
+        }, 15000);
+
+        function getAllMessages() {
+            MessageService.all().then(function (response) {
+                $scope.messages = response.data;
+            });
         }
+
     });
 
 

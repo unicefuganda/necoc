@@ -4,6 +4,7 @@ describe('dms.message', function () {
     var messagesStub;
     var apiUrl;
     var initController;
+    var interval;
 
     beforeEach(function () {
         module('dms.message');
@@ -23,16 +24,17 @@ describe('dms.message', function () {
             }
         ];
 
-        inject(function ($controller, $rootScope, $httpBackend, Config) {
+        inject(function ($controller, $rootScope, $httpBackend, $interval, Config) {
             httpMock = $httpBackend;
+            interval = $interval;
             apiUrl = Config.apiUrl;
             httpMock.when('GET', apiUrl + 'rapid-pro/').respond(messagesStub);
             httpMock.when('GET', apiUrl + 'rapid-pro/?disaster=').respond(messagesStub);
+            $scope = $rootScope.$new();
 
             initController = function () {
-                $scope = $rootScope.$new();
-                $controller('MessageController', {$scope: $scope});
-            }
+                $controller('MessageController', {$scope: $scope });
+            };
         });
 
     });
@@ -43,6 +45,14 @@ describe('dms.message', function () {
         httpMock.expectGET(apiUrl + 'rapid-pro/');
         httpMock.flush();
         expect($scope.messages).toEqual(messagesStub);
+    });
+
+    it('should poll messages from the \'/api/v1/rapid-pro/\' endpoint at an interval of 15 seconds', function () {
+        initController();
+
+        interval.flush(15000);
+        httpMock.flush();
+        expect($scope.polled).toBeTruthy();
     });
 
     it('should retrieve filtered uncategorized messages', function () {

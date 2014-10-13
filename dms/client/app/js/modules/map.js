@@ -59,14 +59,6 @@
         }
     });
 
-    module.factory('GeoJsonService', function ($http, Config) {
-        return {
-            districts: function () {
-                return $http.get(Config.districtsGeoJsonUrl, {cache: true});
-            }
-        }
-    });
-
     module.factory('MapService', function (GeoJsonService, MapConfig, LayerMap) {
         var map;
 
@@ -140,4 +132,4 @@
         }
     });
 
-})(angular.module('dms.map', ['dms.config', 'ui.router']));
+})(angular.module('dms.map', ['dms.config', 'ui.router', 'dms.geojson']));

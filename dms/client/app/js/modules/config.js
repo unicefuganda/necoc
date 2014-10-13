@@ -13,7 +13,11 @@
             fillColor: "#eee",
             fillOpacity: 0.2,
             opacity: 0.7
+        },
+        selectedLayerStyle: {
+            weight: 4,
+            fillOpacity: 0.8
         }
-    })
+    });
 
 })(angular.module('dms.config', []));

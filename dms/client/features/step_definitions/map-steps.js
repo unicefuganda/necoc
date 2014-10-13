@@ -43,4 +43,24 @@ module.exports = function () {
         })
     });
 
+
+    this.When(/^click "([^"]*)" district$/, function (district, next) {
+        browser.executeScript(function (district) {
+            return window.map.clickLayer(district);
+        }, district).then(next);
+    });
+
+    this.Then(/^I should see Uganda map zoomed into "([^"]*)" district$/, function (arg1, next) {
+        var self = this,
+            NORMAL_ZOOM_LEVEL = 7;
+
+        browser.sleep(500);
+        browser.executeScript(function () {
+            return window.map.getZoom();
+        }).then(function (zoomLevel) {
+            self.expect(zoomLevel.toString()).to.be.above(NORMAL_ZOOM_LEVEL);
+            next();
+        });
+    });
+
 };

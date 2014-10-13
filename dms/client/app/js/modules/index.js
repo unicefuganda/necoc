@@ -12,9 +12,14 @@
         $stateProvider
             .state('admin.dashboard', {
                 url: '/dashboard',
+                data: { pageTitle: 'Dashboard' },
+                templateUrl: '/static/templates/partials/admin/dashboard.html',
+            })
+
+            .state('admin.dashboard.district', {
+                url: '/:district',
                 data: { pageTitle: 'Dashboard'},
-                templateUrl: '/static/templates/partials/admin/dashboard.html'
-//                controller: 'MessageController'
+                templateUrl: '/static/templates/partials/admin/dashboard.html',
             })
 
             .state('admin', {
@@ -46,8 +51,8 @@
 
     module.run(function ($rootScope, $state, $stateParams) {
         $rootScope.$state = $state;
-        $rootScope.$stateParams = $stateParams;
+        $rootScope.params = {location: $stateParams};
     });
 
-})(angular.module('dms', ['ui.router', 'siTable', 'checklist-model', 'dms.message', 'dms.admin-panel',  'dms.location', 'dms.mobile-user',
+})(angular.module('dms', ['ui.router', 'siTable', 'checklist-model', 'dms.message', 'dms.admin-panel', 'dms.location', 'dms.mobile-user',
     'dms.utils', 'dms.disaster', 'dms.disaster-type', 'dms.map']));

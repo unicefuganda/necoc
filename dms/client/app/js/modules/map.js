@@ -52,6 +52,9 @@
             },
             selectLayer: function (layerName) {
                 layerList[layerName].highlight();
+            },
+            clickLayer: function (layerName) {
+                layerList[layerName].click();
             }
         }
     });
@@ -80,7 +83,7 @@
         }
 
         function addDistrictsLayer(map) {
-            GeoJsonService.districts().then(function (response) {
+            return GeoJsonService.districts().then(function (response) {
                 L.geoJson(response.data, {
                     style: MapConfig.districtLayerStyle,
                     onEachFeature: function (feature, layer) {
@@ -93,10 +96,13 @@
         }
 
         return {
-            render: function (elementId) {
+            render: function (elementId, layerName) {
                 map = initMap(elementId);
-                addDistrictsLayer(map);
-                return this;
+
+                return addDistrictsLayer(map).then(function () {
+                    layerName && this.clickLayer(layerName);
+                    return this;
+                }.bind(this));
             },
             getZoom: function () {
                 return map.getZoom();
@@ -109,16 +115,29 @@
             },
             getHighlightedLayer: function () {
                 return LayerMap.getSelectedLayer();
+            },
+            clickLayer: function (layerName) {
+                if (layerName) {
+                    LayerMap.clickLayer(layerName.toLowerCase());
+                    this.highlightLayer(layerName);
+                }
             }
         };
     });
 
-    module.directive('map', function (MapService, $window) {
+    module.directive('map', function (MapService, $window, $stateParams) {
         return {
+            scope: false,
             link: function (scope, element, attrs) {
-                $window.map = MapService.render(attrs.id);
+                MapService.render(attrs.id, $stateParams.district).then(function (map) {
+                    $window.map = map;
+
+                    scope.$watch('params.location', function (newLocation) {
+                        newLocation && MapService.clickLayer(newLocation.district);
+                    }, true);
+                });
             }
         }
     });
 
-})(angular.module('dms.map', ['dms.config']));
+})(angular.module('dms.map', ['dms.config', 'ui.router']));

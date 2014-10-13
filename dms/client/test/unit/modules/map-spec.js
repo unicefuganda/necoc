@@ -68,7 +68,7 @@ describe('dms.map', function () {
             layerMap.addLayer(layerA, layerA.name);
             layerMap.addLayer(layerB, layerB.name);
 
-            expect(layerMap.getSelectedLayer()).toEqual({ Bukoto:layerA });
+            expect(layerMap.getSelectedLayer()).toEqual({ Bukoto: layerA });
         });
 
         it('should select a layer', function () {
@@ -78,6 +78,15 @@ describe('dms.map', function () {
             layerMap.addLayer(layer, layer.name);
             layerMap.selectLayer(layer.name);
             expect(layer.highlight).toHaveBeenCalled();
+        });
+
+        it('should click a layer', function () {
+            var layer = jasmine.createSpyObj('layer', ['click']);
+            layer.name = 'Bukoto';
+
+            layerMap.addLayer(layer, layer.name);
+            layerMap.clickLayer(layer.name);
+            expect(layer.click).toHaveBeenCalled();
         });
 
 

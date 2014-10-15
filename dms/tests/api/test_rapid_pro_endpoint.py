@@ -9,10 +9,6 @@ class RapidProEndPointTest(MongoAPITestCase):
 
     def setUp(self):
         self.date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
-        self.expected_message = dict(phone="+256775019449", text="There is a fire", time=self.date_time, relayer=234,
-                                     run=23243)
-        self.message = dict(phone_no="+256775019449", text="There is a fire", received_at=self.date_time,
-                            relayer_id=234, run_id=23243)
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
         self.mobile_user = MobileUser(**dict(name='timothy', phone="+256775019449",
@@ -22,6 +18,13 @@ class RapidProEndPointTest(MongoAPITestCase):
         disaster_attributes = dict(name=disaster_type, location=self.district,
                                    description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
         self.disaster = Disaster(**disaster_attributes).save()
+
+        self.text_format = "NECOC %s There is a fire"
+        text = self.text_format % self.village.name
+        self.expected_message = dict(phone="+256775019449", text=text, time=self.date_time, relayer=234,
+                                     run=23243)
+        self.message = dict(phone_no="+256775019449", text=text, received_at=self.date_time,
+                            relayer_id=234, run_id=23243)
 
     def _api_url(self, id):
         return "%s%s/" % (self.API_ENDPOINT, str(id))
@@ -54,15 +57,14 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(0, len(response.data))
 
         other_phone_number = '1234'
-        other_message_options = dict(phone_no=other_phone_number, text="There is a fire", received_at=self.date_time,
+        other_message_options = dict(phone_no=other_phone_number, text=self.text_format % wakiso.name, received_at=self.date_time,
                                      relayer_id=234, run_id=23243)
-        MobileUser(**dict(name='timothy', phone=other_phone_number, location=wakiso)).save()
         RapidProMessage(**other_message_options).save()
 
         response = self.client.get(self.API_ENDPOINT, {"location": wakiso.id, "format": "json"})
 
         expected_message = {'phone': other_phone_number, 'time': self.date_time, 'relayer': 234, 'run': 23243,
-                            'text': u'There is a fire'}
+                            'text': self.text_format % wakiso.name}
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, len(response.data))
@@ -74,7 +76,7 @@ class RapidProEndPointTest(MongoAPITestCase):
         bukoto_message = RapidProMessage(**self.message).save()
         wakiso = Location(**(dict(name='Wakiso', type='village', parent=self.district))).save()
         other_phone_number = '1234'
-        other_message_options = dict(phone_no=other_phone_number, text="There is a fire", received_at=self.date_time,
+        other_message_options = dict(phone_no=other_phone_number, text=self.text_format % wakiso.name, received_at=self.date_time,
                                      relayer_id=234, run_id=23243)
         MobileUser(**dict(name='timothy', phone=other_phone_number, location=wakiso)).save()
         wakiso_message = RapidProMessage(**other_message_options).save()
@@ -82,7 +84,7 @@ class RapidProEndPointTest(MongoAPITestCase):
         response = self.client.get(self.API_ENDPOINT, {"location": self.district.id, "format": "json"})
 
         wakiso_expected_message = {'phone': other_phone_number, 'time': self.date_time, 'relayer': 234, 'run': 23243,
-                                   'text': u'There is a fire', 'disaster': None}
+                                   'text': self.text_format % wakiso.name, 'disaster': None}
         wakiso_expected_message = dict(wakiso_expected_message.items() + {
             'source': 'NECOC Volunteer', 'id': str(wakiso_message.id), 'location': str(wakiso)}.items())
 

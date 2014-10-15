@@ -22,14 +22,15 @@ var MessagesPage = function () {
 
     this.bulkSMSButton = element(by.id('send-bulk-sms'));
 
+    this.senderLocation = { "name": "Kampala", "type": "district"};
+
     this.messages = [
-        { phone: "023020302", time: "2014-02-13T02:00:00", relayer: 2, run: '1', text: "Where are yout",
+        { phone: "023020302", time: "2014-02-13T02:00:00", relayer: 2, run: '1',
+            text: "NECOC "+ this.senderLocation['name']+" Fire ayoyoooo",
             source: "NECOC Volunteer" }
     ];
 
     this.formattedTime = 'Feb 13, 2014 - 2:00AM';
-
-    this.senderLocation = { "name": "Kampala", "type": "district"};
 
     this.NecocVolunteer = { "name": "ayoyo", "phone": this.messages[0].phone, "email": "haha@ha.ha"};
 

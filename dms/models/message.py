@@ -15,6 +15,7 @@ class ReceivedMessage(Message):
     phone_no = StringField()
     received_at = DateTimeField()
     disaster = ReferenceField('Disaster')
+    location = ReferenceField('Location')
 
     meta = {
         'allow_inheritance': True

@@ -1,4 +1,5 @@
 from mongoengine import *
+
 from dms.models.base import BaseModel
 
 
@@ -12,5 +13,12 @@ class Location(BaseModel):
             return '%s >> %s'%(self.parent.name, self.name)
         return '%s'%self.name
 
-    def children(self):
+    def _children(self):
         return Location.objects(parent=self)
+
+    def children(self, include_self=False):
+        children = list(self._children())
+        if not include_self:
+            return self._children()
+        children.insert(0, self)
+        return children

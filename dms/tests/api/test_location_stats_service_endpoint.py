@@ -24,8 +24,8 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         RapidProMessage(**self.message).save()
         RapidProMessage(**self.message_bukoto).save()
 
-        expected_serialized_data = {'Kampala': {'messages': {'count': 1, 'percentage': 50}},
-                                    'Bukoto': {'messages': {'count': 1, 'percentage': 50}}
+        expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50}},
+                                    'bukoto': {'messages': {'count': 1, 'percentage': 50}}
                                     }
 
         response = self.client.get(self.API_ENDPOINT, format='json')

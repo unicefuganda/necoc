@@ -23,7 +23,7 @@ class MultiLocationStatsSerializer(object):
         self.data = self._serialized_data()
 
     def _serialized_data(self):
-        return {location_name: LocationStatsSerializer(self.stats[location_name]).data for location_name in self.stats.keys()}
+        return {location_name.lower(): LocationStatsSerializer(self.stats[location_name]).data for location_name in self.stats.keys()}
 
 
 class LocationStatsListView(ListAPIView):

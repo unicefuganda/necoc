@@ -68,8 +68,8 @@ class MultiLocationStatsServiceSerializersTest(MongoTestCase):
         multi_location_serializer = MultiLocationStatsSerializer()
         serialized_object = multi_location_serializer
 
-        expected_serialized_data = {'Kampala': {'messages': {'count': 1, 'percentage': 50}},
-                                    'Bukoto': {'messages': {'count': 1, 'percentage': 50}}
+        expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50}},
+                                    'bukoto': {'messages': {'count': 1, 'percentage': 50}}
                                     }
 
         self.assertEqual(expected_serialized_data, serialized_object.data)

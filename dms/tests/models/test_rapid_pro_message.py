@@ -40,17 +40,42 @@ class TestRapidProMessage(MongoTestCase):
     def test_message_gets_the_location_if_it_is_militarily_coded_and_matched(self):
         message = self.message.copy()
         message['text'] = "NECOC Fire Kampala"
-        rapid_pro_message = RapidProMessage(**message)
+        rapid_pro_message = RapidProMessage(**message).save()
 
         message_location = rapid_pro_message.location
 
         self.assertEqual(self.district, message_location)
 
+    @override_settings(MESSAGE_LOCATION_INDEX=3)
+    def test_supplied_location_superseded_militarily_coded_matched_location(self):
+        message = self.message.copy()
+        message['text'] = "NECOC Fire Kampala"
+        message['location'] = self.village
+        rapid_pro_message = RapidProMessage(**message).save()
+
+        message_location = rapid_pro_message.location
+
+        self.assertEqual(self.village, message_location)
+
     @override_settings(MESSAGE_LOCATION_INDEX=2)
     def test_message_has_no_location_if_message_content_does_not_specify_location(self):
         message = self.message.copy()
         message['text'] = "NECOC hahaha Fire"
-        rapid_pro_message = RapidProMessage(**message)
+        rapid_pro_message = RapidProMessage(**message).save()
+
+        self.assertIsNone(rapid_pro_message.location)
+
+    @override_settings(MESSAGE_LOCATION_INDEX=2)
+    def test_message_has_no_location_if_message_is_empty(self):
+        message = self.message.copy()
+        message['text'] = ""
+        rapid_pro_message = RapidProMessage(**message).save()
+
+        self.assertIsNone(rapid_pro_message.location)
+
+    @override_settings(MESSAGE_LOCATION_INDEX=2)
+    def test_message_has_no_location_when_message_object_is_instantiated_with_empty_attributes(self):
+        rapid_pro_message = RapidProMessage()
 
         self.assertIsNone(rapid_pro_message.location)
 
@@ -58,7 +83,7 @@ class TestRapidProMessage(MongoTestCase):
         message = self.message.copy()
         message['text'] = "NECOC Bukoto there are some serious fire over here"
 
-        rapid_pro_message = RapidProMessage(**message)
+        rapid_pro_message = RapidProMessage(**message).save()
 
         self.assertEqual("Kampala >> Bukoto", rapid_pro_message.location_str())
 
@@ -66,7 +91,7 @@ class TestRapidProMessage(MongoTestCase):
         message = self.message.copy()
         message['text'] = "NECOC UnknownLocation there are some serious fire over here"
 
-        rapid_pro_message = RapidProMessage(**message)
+        rapid_pro_message = RapidProMessage(**message).save()
 
         self.assertEqual("", rapid_pro_message.location_str())
 

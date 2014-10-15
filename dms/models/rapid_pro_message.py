@@ -12,9 +12,9 @@ class RapidProMessage (ReceivedMessage):
     relayer_id = IntField()
     run_id = IntField()
 
-    def __init__(self, *args, **kwargs):
-        super(RapidProMessage, self).__init__(*args, **kwargs)
-        self.location = self._assign_location()
+    def save(self, *args, **kwargs):
+        self.location = self.location or self._assign_location()
+        return super(RapidProMessage, self).save(*args, **kwargs)
 
     def source(self):
         return self.SENDER
@@ -23,8 +23,10 @@ class RapidProMessage (ReceivedMessage):
         return MobileUser.objects(phone=self.phone_no).first()
 
     def _assign_location(self):
-        text = clean_text(self.text)
-        return find_location_match(text[settings.MESSAGE_LOCATION_INDEX-1])
+        if self.text:
+            text = clean_text(self.text)
+            if len(text) > settings.MESSAGE_LOCATION_INDEX-1:
+                return find_location_match(text[settings.MESSAGE_LOCATION_INDEX-1])
 
     def location_str(self):
         if self.location:

@@ -1,0 +1,92 @@
+<div class="modal fade" id="new-poll-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog sm-2">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 id="new-poll-title" class="modal-title">New Poll</h4>
+            </div>
+            <div ng-controller="NewPollController">
+                <form role="form" novalidate="" name="new_poll_form" ng-submit="sendPoll()">
+                    <div class="modal-body">
+                        <div id="poll-name-field" class="form-group"
+                             ng-class="{'has-error': new_poll_form.name.$invalid && hasErrors }">
+                            <label class="control-label">Poll Name</label>
+                            <input type="text" ng-model="poll.name" name="name" class="form-control"
+                                   placeholder="enter poll name" required="">
+
+                            <div id="poll-name-errors" class="error-text"
+                                 ng-show="new_poll_form.name.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="new_poll_form.name.$error.required">
+                                    This field is required
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="poll-question-field" class="form-group"
+                             ng-class="{'has-error': new_poll_form.question.$invalid && hasErrors }">
+                            <label class="control-label">Poll Question</label>
+                            <textarea class="form-control" rows="3" ng-model="poll.question" name="question"
+                                      placeholder="enter 130 character poll question" ng-maxlength="130"></textarea>
+
+                            <div id="poll-question-errors" class="error-text"
+                                 ng-show="new_poll_form.question.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="new_poll_form.question.$error.required">
+                                    This field is required
+                                </p>
+                                <p class="text-danger" ng-show="new_poll_form.question.$error.maxlength">
+                                    Please enter not more than 130 characters
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="poll-keyword-field" class="form-group"
+                             ng-class="{'has-error': new_poll_form.keyword.$invalid && hasErrors }">
+                            <label class="control-label">Poll Keyword</label>
+                            <input type="text" ng-model="poll.keyword" name="keyword" class="form-control"
+                                   placeholder="enter 10 character poll keyword" required="" ng-maxlength="10">
+
+                            <div id="poll-keyword-errors" class="error-text"
+                                 ng-show="new_poll_form.keyword.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="new_poll_form.keyword.$error.required">
+                                    This field is required
+                                </p>
+                                <p class="text-danger" ng-show="new_poll_form.keyword.$error.maxlength">
+                                    Please enter not more than 10 characters
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="poll-location-field" class="form-group"
+                             ng-class="{'has-error': new_poll_form.location.$invalid && hasErrors }">
+                            <label class="control-label">Location</label>
+                            <input type="text" ng-model="poll.location" name="location" class="form-control"
+                                   placeholder="select poll location" select-location="poll" required="">
+
+                            <div id="poll-location-errors" class="error-text"
+                                 ng-show="new_poll_form.location.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="new_poll_form.location.$error.required">
+                                    This field is required
+                                </p>
+                                <p class="text-danger" ng-show="new_poll_form.location.$error.maxlength">
+                                    Please enter not more than 10 characters
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="close-disaster-modal" class="btn btn-default"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="submit" id="send-poll-modal" class="btn btn-info" save-state=""
+                                    data-loading-text="Send...">Send
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

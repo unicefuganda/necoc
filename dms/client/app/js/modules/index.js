@@ -38,6 +38,7 @@
                 url: '/polls',
                 data: { pageTitle: 'Polls'},
                 templateUrl: '/static/templates/partials/admin/polls.html',
+                controller: 'NewPollController'
             })
 
             .state('admin.disasters', {
@@ -61,4 +62,4 @@
     });
 
 })(angular.module('dms', ['ui.router', 'siTable', 'checklist-model', 'dms.message', 'dms.admin-panel', 'dms.location', 'dms.mobile-user',
-    'dms.utils', 'dms.disaster', 'dms.disaster-type', 'dms.map']));
+    'dms.utils', 'dms.disaster', 'dms.disaster-type', 'dms.map', 'dms.polls']));

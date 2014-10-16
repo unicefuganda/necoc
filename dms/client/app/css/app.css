@@ -37,6 +37,7 @@ body > .ng-scope, .main .ng-scope {
 
 .btn-big {
     border-radius: 2px;
+    min-width: 125px;
 }
 
 .btn-big .icon {
@@ -133,11 +134,12 @@ body > .ng-scope, .main .ng-scope {
 }
 
 .sm-column {
-    width: 15%
+    width: 15%;
 }
 
 .xsm-column {
-    width: 2%
+    width : 3%;
+    min-width: 30px;
 }
 
 .page-header h3, .page-header h4 {

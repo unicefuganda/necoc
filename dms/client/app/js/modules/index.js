@@ -34,6 +34,12 @@
                 controller: 'MobileUserController'
             })
 
+            .state('admin.polls', {
+                url: '/polls',
+                data: { pageTitle: 'Polls'},
+                templateUrl: '/static/templates/partials/admin/polls.html',
+            })
+
             .state('admin.disasters', {
                 url: '/disasters',
                 data: { pageTitle: 'Disasters'},

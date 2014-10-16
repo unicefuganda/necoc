@@ -22,6 +22,7 @@ class CeleryTasksTest(MongoAPITestCase):
     def test_should_send_message(self, mock_requests):
         sent_message_obj = SentMessage(**self.bulk_sms_to_post).save()
         some_id = 1234
+        success_log = '201: rapid_pro_id = 1234'
         request_post = MagicMock()
         request_post.status_code = 201
         request_post.json.return_value = {"messages": [some_id], "sms": [some_id]}
@@ -33,8 +34,7 @@ class CeleryTasksTest(MongoAPITestCase):
 
         retrieved_sms = SentMessage.objects(**self.bulk_sms_to_post)
         self.assertEqual(1, retrieved_sms.count())
-        self.assertEqual(some_id, retrieved_sms[0].rapid_pro_id)
-        self.assertIsNone(retrieved_sms[0].error_message)
+        self.assertEqual(success_log, retrieved_sms[0].log)
 
     @patch('dms.tasks.requests')
     def test_non_201_responses_are_logged(self, mock_requests):
@@ -51,8 +51,7 @@ class CeleryTasksTest(MongoAPITestCase):
 
         retrieved_sms = SentMessage.objects(**self.bulk_sms_to_post)
         self.assertEqual(1, retrieved_sms.count())
-        self.assertIsNone(retrieved_sms[0].rapid_pro_id)
-        self.assertEqual("400: {'text': 'This field is required.'}", retrieved_sms[0].error_message)
+        self.assertEqual("400: {'text': 'This field is required.'}", retrieved_sms[0].log)
 
     @patch('dms.tasks.requests')
     def test_invalid_token(self, mock_requests):
@@ -69,8 +68,7 @@ class CeleryTasksTest(MongoAPITestCase):
 
         retrieved_sms = SentMessage.objects(**self.bulk_sms_to_post)
         self.assertEqual(1, retrieved_sms.count())
-        self.assertIsNone(retrieved_sms[0].rapid_pro_id)
-        self.assertEqual("403: {u'detail': u'Invalid token'}", retrieved_sms[0].error_message)
+        self.assertEqual("403: {u'detail': u'Invalid token'}", retrieved_sms[0].log)
 
     @patch('dms.tasks.requests')
     def test_rapid_pro_api_server_down_is_logged(self, mock_requests):
@@ -84,8 +82,7 @@ class CeleryTasksTest(MongoAPITestCase):
 
         retrieved_sms = SentMessage.objects(**self.bulk_sms_to_post)
         self.assertEqual(1, retrieved_sms.count())
-        self.assertIsNone(retrieved_sms[0].rapid_pro_id)
-        self.assertEqual("ConnectTimeout: %s" % network_error, retrieved_sms[0].error_message)
+        self.assertEqual("ConnectTimeout: %s" % network_error, retrieved_sms[0].log)
 
     @patch('dms.tasks.requests')
     def test_domain_name_does_not_exists_is_logged(self, mock_requests):
@@ -99,5 +96,4 @@ class CeleryTasksTest(MongoAPITestCase):
 
         retrieved_sms = SentMessage.objects(**self.bulk_sms_to_post)
         self.assertEqual(1, retrieved_sms.count())
-        self.assertIsNone(retrieved_sms[0].rapid_pro_id)
-        self.assertEqual("ConnectionError: %s" % connection_error, retrieved_sms[0].error_message)
+        self.assertEqual("ConnectionError: %s" % connection_error, retrieved_sms[0].log)

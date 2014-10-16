@@ -1,5 +1,3 @@
-import datetime
-from dms.models import RapidProMessage
 from dms.models.location import Location
 from dms.tests.base import MongoTestCase
 

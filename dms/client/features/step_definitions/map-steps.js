@@ -1,5 +1,7 @@
 module.exports = function () {
 
+    var mapPage = require("../pages/map-page");
+
     this.World = require("../support/world").World;
 
     this.Then(/^I should see a map of Uganda centered at latitude "([^"]*)" and longitude "([^"]*)"$/,
@@ -46,7 +48,7 @@ module.exports = function () {
 
     this.When(/^click "([^"]*)" district$/, function (district, next) {
         browser.executeScript(function (district) {
-            return window.map.clickLayer(district);
+            return window.map.selectLayer(district);
         }, district).then(next);
     });
 
@@ -61,6 +63,32 @@ module.exports = function () {
             self.expect(zoomLevel.toString()).to.be.above(NORMAL_ZOOM_LEVEL);
             next();
         });
+    });
+
+    this.Then(/^I should see a messages bubble with (\d+) incoming messages$/, function (numberOfMessages, next) {
+        this.expect(mapPage.messagesBubble.getText()).to.eventually.equal(numberOfMessages)
+            .and.notify(next);
+    });
+
+    this.Then(/^I should see the map title as "([^"]*)"$/, function (mapTitle, next) {
+        this.expect(mapPage.mapTitle.getText()).to.eventually.equal(mapTitle)
+            .and.notify(next);
+    });
+
+    this.Then(/^I should see "([^"]*)" district with layer color "([^"]*)"$/, function (district, color, next) {
+        var self = this;
+
+        browser.executeScript(function (district) {
+            return window.map.getHighlightedLayer()[district].getStyle().fillColor
+        }, district).then(function (style) {
+            self.expect(String(style)).to.equal(color);
+            next();
+        });
+    });
+
+    this.Then(/^I should see map legend displayed$/, function (next) {
+        this.expect(mapPage.mapLegend.isDisplayed()).to.eventually.be.true
+            .and.notify(next);
     });
 
 };

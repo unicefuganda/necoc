@@ -5,51 +5,58 @@ describe('dms.map', function () {
     });
 
     describe('LayerMap', function () {
-        var layerMap;
+        var layerMap,
+            layer,
+            mapMock,
+            mapLayerMock,
+            mockBounds = [2, 4];
+
         beforeEach(function () {
-            inject(function (LayerMap) {
+            mapMock = jasmine.createSpyObj('mapMock', ['fitBounds']);
+            mapLayerMock = jasmine.createSpyObj('mapLayerMock', ['on', 'setStyle', 'getBounds']);
+            mapLayerMock.on.andReturn(mapLayerMock);
+            mapLayerMock.getBounds.andReturn(mockBounds);
+
+            inject(function (LayerMap, Layer) {
                 layerMap = LayerMap;
+                layer = Layer;
             });
         });
 
         it('should add a layer to the layerlist', function () {
-            var layer = {'name': "Bukoto"};
-            layerMap.addLayer(layer, layer.name);
-            expect(layerMap.getLayer(layer.name)).toEqual(layer);
+            var builtLayer = layer.build('lira', mapMock, mapLayerMock, {});
+            layerMap.addLayer(builtLayer);
+            expect(layerMap.getLayer(builtLayer.getName())).toEqual(builtLayer);
         });
 
         it('should get selected layer from layersList', function () {
-            var layerA = {'name': "Bukoto", isHighlighted: function () {
-                return true;
-            }};
+            var layerA = layer.build('bukoto', mapMock, mapLayerMock, {style: {}});
+            layerA.highlight();
 
-            var layerB = {'name': "Naguru", isHighlighted: function () {
-                return false;
-            }};
+            var layerB = layer.build('naguru', mapMock, mapLayerMock, {});
 
-            layerMap.addLayer(layerA, layerA.name);
-            layerMap.addLayer(layerB, layerB.name);
+            layerMap.addLayer(layerA);
+            layerMap.addLayer(layerB);
 
-            expect(layerMap.getSelectedLayer()).toEqual({ Bukoto: layerA });
+            expect(layerMap.getSelectedLayer()).toEqual({ bukoto: layerA });
         });
 
-        it('should select a layer', function () {
-            var layer = jasmine.createSpyObj('layer', ['highlight']);
-            layer.name = 'Bukoto';
+        it('should highlight a layer', function () {
+            var builtLayer = layer.build('lira', mapMock, mapLayerMock, {style: {}});
+            layerMap.addLayer(builtLayer);
 
-            layerMap.addLayer(layer, layer.name);
-            layerMap.selectLayer(layer.name);
-            expect(layer.highlight).toHaveBeenCalled();
+            layerMap.highlightLayer(builtLayer.getName());
+            expect(builtLayer.isHighlighted()).toBeTruthy();
         });
 
         it('should click a layer', function () {
-            var layer = jasmine.createSpyObj('layer', ['click']);
-            layer.name = 'Bukoto';
+            var mockOptions = jasmine.createSpyObj('mockOptions', ['onClickHandler']);
+            var builtLayer = layer.build('lira', mapMock, mapLayerMock, mockOptions);
+            layerMap.addLayer(builtLayer);
 
-            layerMap.addLayer(layer, layer.name);
-            layerMap.clickLayer(layer.name);
-            expect(layer.click).toHaveBeenCalled();
+            layerMap.clickLayer(builtLayer.getName());
+            expect(mockOptions.onClickHandler).toHaveBeenCalledWith('lira');
+            expect(mapMock.fitBounds).toHaveBeenCalledWith(mockBounds);
         });
-
     });
 });

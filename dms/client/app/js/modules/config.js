@@ -20,6 +20,7 @@
     });
 
     module.constant('MapConfig', {
+        legendPosition: 'bottomleft',
         districtLayerStyle: {
             weight: 2,
             color: "#3E9CB8",

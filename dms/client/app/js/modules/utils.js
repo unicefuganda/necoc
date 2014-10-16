@@ -48,4 +48,22 @@
         }
     });
 
+    module.factory('helpers', function () {
+        return {
+            stringToArray: function (string, seperator) {
+                if (string) {
+                    return string.split(seperator).map(function (option) {
+                        return option;
+                    });
+                }
+                return undefined;
+            },
+            invalidate: function (form, errors) {
+                Object.keys(errors).forEach(function (key) {
+                    form[key].$invalid = true;
+                });
+            }
+        }
+    });
+
 })(angular.module('dms.utils', []));

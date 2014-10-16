@@ -26,7 +26,7 @@
                              ng-class="{'has-error': disasters_form.location.$invalid && hasErrors }">
                             <label class="control-label">Location</label>
                             <input type="text" ng-model="disaster.location" name="location" class="form-control"
-                                   placeholder="select disaster location" select-location="disaster" required="">
+                                   placeholder="select disaster location" select-location="disaster" data-max-locations="1" required="">
 
                             <div id="district-errors" class="error-text"
                                  ng-show="disasters_form.location.$invalid && hasErrors">

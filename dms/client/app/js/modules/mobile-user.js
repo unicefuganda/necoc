@@ -19,7 +19,7 @@
         });
     });
 
-    module.controller('MobileUserModalController', function ($scope, MobileUserService) {
+    module.controller('MobileUserModalController', function ($scope, MobileUserService, helpers) {
         $scope.saveUser = function (user) {
             if ($scope.mobile_user_form.$valid) {
                 $scope.saveStatus = true;
@@ -32,7 +32,7 @@
                         $scope.users.push(response.data);
                     }, function (error) {
                         $scope.errors = error.data;
-                        invalidate($scope.mobile_user_form, $scope.errors);
+                        helpers.invalidate($scope.mobile_user_form, $scope.errors);
                         $scope.saveStatus = false;
                         $scope.hasErrors = true;
                     });
@@ -41,13 +41,6 @@
                 $scope.hasErrors = true;
             }
         };
-
-
-        function invalidate(form, errors) {
-            Object.keys(errors).forEach(function (key) {
-                form[key].$invalid = true;
-            });
-        }
     });
 
     module.directive('recipients', function (MobileUserService) {
@@ -98,4 +91,4 @@
     });
 
 
-})(angular.module('dms.mobile-user', ['dms.config']));
+})(angular.module('dms.mobile-user', ['dms.config', 'dms.utils']));

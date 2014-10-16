@@ -27,6 +27,7 @@ class TestPollEndpoint(MongoAPITestCase):
         mock_response = MagicMock()
         mock_response.status_code = 201
         mock_response.json.return_value = {"messages": [some_id], "sms": [some_id]}
+
         mock_requests.post.return_value = mock_response
 
         response = self.client.post(self.POLL_ENDPOINT, data=json.dumps(self.poll_to_post),

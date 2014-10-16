@@ -7,7 +7,7 @@ from dms.tasks import send_bulk_sms
 class SentMessageSerializer(serializers.MongoEngineModelSerializer):
     class Meta:
         model = SentMessage
-        exclude = ('created_at',)
+        exclude = ('created_at', 'log')
 
 
 class SentMessageListCreateView(ListCreateAPIView):

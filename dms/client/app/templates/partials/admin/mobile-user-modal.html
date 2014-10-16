@@ -51,7 +51,7 @@
                         <div class="form-group district"  ng-class="{'has-error': mobile_user_form.location.$invalid && hasErrors}">
                             <label class="control-label" for="district">District</label>
                             <input type="text" id="district" ng-model="user.location" name="location" select-location="user"
-                                   class="form-control" placeholder="select location" required="">
+                                   class="form-control" data-max-locations="1" placeholder="select location" required="">
 
                             <div id="location-errors" class="error-text" ng-show="mobile_user_form.location.$invalid && hasErrors">
                                 <p class="text-danger" ng-show="mobile_user_form.location.$error.required">

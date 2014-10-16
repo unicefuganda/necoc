@@ -15,7 +15,7 @@
                     valueField: 'id',
                     labelField: 'name',
                     searchField: 'name',
-                    maxItems: 1,
+                    maxItems: parseInt(attrs.maxLocations) || null,
                     create: false,
                     preload: true,
                     load: function (query, callback) {

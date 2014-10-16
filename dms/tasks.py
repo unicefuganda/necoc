@@ -6,11 +6,11 @@ from necoc.settings import API_URL, API_TOKEN
 
 
 @task
-def send_bulk_sms(obj, phone_numbers=[], text='', ):
+def send_bulk_sms(obj, phone_numbers=[], text=""):
+
     try:
         phone_numbers = phone_numbers or getattr(obj, 'phone_numbers', [])
         text = text or getattr(obj, 'text', '')
-
         response = _send(phone_numbers, text)
         _log(response, obj)
     except RequestException as e:

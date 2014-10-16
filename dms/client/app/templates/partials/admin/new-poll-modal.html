@@ -28,7 +28,7 @@
                              ng-class="{'has-error': new_poll_form.question.$invalid && hasErrors }">
                             <label class="control-label">Poll Question</label>
                             <textarea class="form-control" rows="3" ng-model="poll.question" name="question"
-                                      placeholder="enter 130 character poll question" ng-maxlength="130"></textarea>
+                                      placeholder="enter 130 character poll question" ng-maxlength="130" required=""></textarea>
 
                             <div id="poll-question-errors" class="error-text"
                                  ng-show="new_poll_form.question.$invalid && hasErrors">
@@ -55,13 +55,16 @@
                                 <p class="text-danger" ng-show="new_poll_form.keyword.$error.maxlength">
                                     Please enter not more than 10 characters
                                 </p>
+                                <p class="text-danger" ng-repeat="error in errors.keyword">
+                                    {[{ error }]}
+                                </p>
                             </div>
                         </div>
 
                         <div id="poll-location-field" class="form-group"
                              ng-class="{'has-error': new_poll_form.location.$invalid && hasErrors }">
                             <label class="control-label">Location</label>
-                            <input type="text" ng-model="poll.location" name="location" class="form-control"
+                            <input type="text" ng-model="poll.target_locations" name="location" class="form-control"
                                    placeholder="select poll location" select-location="poll" required="">
 
                             <div id="poll-location-errors" class="error-text"
@@ -80,7 +83,7 @@
                                     data-dismiss="modal">
                                 Close
                             </button>
-                            <button type="submit" id="send-poll-modal" class="btn btn-info" save-state=""
+                            <button type="submit" id="send-poll-modal" close-modal="new-poll-modal" class="btn btn-info" save-state=""
                                     data-loading-text="Send...">Send
                             </button>
                         </div>

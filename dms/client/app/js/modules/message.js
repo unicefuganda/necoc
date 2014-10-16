@@ -64,11 +64,11 @@
     });
 
 
-    module.controller('SmsModalController', function ($scope, growl, MessageService) {
+    module.controller('SmsModalController', function ($scope, growl, MessageService, helpers) {
 
         $scope.sendBulkSms = function () {
             if ($scope.send_sms_form.$valid) {
-                $scope.sms.phone_numbers = formatOptions($scope.sms.phone_numbers);
+                $scope.sms.phone_numbers = helpers.stringToArray($scope.sms.phone_numbers, ',');
                 $scope.saveStatus = true;
                 $scope.successful = false;
 
@@ -86,16 +86,6 @@
                 $scope.hasErrors = true;
             }
         };
-
-        function formatOptions(options) {
-            if (options) {
-                return options.split(',').map(function (option) {
-                    return option;
-                });
-            }
-            return undefined;
-        }
-
     });
 
     module.controller('AddToDisasterController', function ($scope, MessageService) {
@@ -123,4 +113,4 @@
         }
     });
 
-})(angular.module('dms.message', ['dms.config', 'angular-growl']));
+})(angular.module('dms.message', ['dms.config', 'angular-growl', 'dms.utils']));

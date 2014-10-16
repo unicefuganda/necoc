@@ -38,7 +38,7 @@
                 url: '/polls',
                 data: { pageTitle: 'Polls'},
                 templateUrl: '/static/templates/partials/admin/polls.html',
-                controller: 'NewPollController'
+                controller: 'PollsController'
             })
 
             .state('admin.disasters', {

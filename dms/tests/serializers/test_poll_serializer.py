@@ -20,6 +20,7 @@ class PollSerializerTest(MongoTestCase):
 
         self.assertDictContainsSubset(self.serialized_poll, serialized_object.data)
         self.assertIsNotNone(serialized_object.data['id'])
+        self.assertIsNotNone(serialized_object.data['created_at'])
 
     def test_should_deserialize_location_object(self):
         serializer = PollSerializer(data=self.serialized_poll)

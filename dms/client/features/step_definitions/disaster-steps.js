@@ -66,7 +66,7 @@ module.exports = function () {
                 self.expect(disasterPage.getDisasterData(0, 'description')).to.eventually.equal(disaster.description);
             })
             .then(function () {
-                self.expect(disasterPage.getDisasterData(0, 'date | duration')).to.eventually.exit
+                self.expect(disasterPage.getDisasterData(0, 'date | duration')).to.eventually.exist
             })
             .then(function () {
                 self.expect(disasterPage.getDisasterData(0, 'status')).to.eventually.equal(disaster.status)

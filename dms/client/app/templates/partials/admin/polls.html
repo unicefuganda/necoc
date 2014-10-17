@@ -32,7 +32,7 @@
             </thead>
 
             <tbody>
-            <tr ng-repeat="poll in polls">
+            <tr ng-repeat="poll in polls | orderBy: 'created_at': true">
                 <td>{[{ poll.name }]}</td>
                 <td>{[{ poll.question }]}</td>
                 <td>0</td>
@@ -50,7 +50,7 @@
         </table>
     </div>
 
-    <div class="sms-toast" growl></div>
+    <div class="poll-toast" growl></div>
 
     <ng-include src="'/static/templates/partials/admin/new-poll-modal.html'"></ng-include>
 </div>

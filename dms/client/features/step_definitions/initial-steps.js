@@ -11,4 +11,9 @@ module.exports = function () {
     this.After(function (callback) {
         dbUtils.dropDB(callback);
     });
+
+    this.Before(function (callback) {
+        this.ignoreSync(false);
+        callback();
+    });
 };

@@ -12,7 +12,7 @@ var AddDisasterModel = function () {
         return element(by.css('#' + id + ' .selectize-input')).click().then(function () {
             return element(by.cssContainingText('.selectize-dropdown-content .option', value)).click()
         });
-    }
+    };
 
     this.get = function (errorId) {
         return element(by.css('#'+ errorId +' .text-danger')).getText();

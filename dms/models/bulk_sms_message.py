@@ -1,7 +1,7 @@
-from mongoengine import ListField, IntField, StringField
+import mongoengine
 from dms.models.message import Message
 
 
 class SentMessage(Message):
-    phone_numbers = ListField()
-    log = StringField()
+    phone_numbers = mongoengine.ListField()
+    log = mongoengine.StringField()

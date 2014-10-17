@@ -1,5 +1,6 @@
 import datetime
 from django.test import override_settings
+from dms.models import DisasterType, Disaster
 from dms.models.location import Location
 from dms.models.mobile_user import MobileUser
 
@@ -20,21 +21,24 @@ class TestRapidProMessage(MongoTestCase):
         self.message = dict(phone_no=phone_number, text="NECOC There is a fire", received_at=date_time, relayer_id=234,
                         run_id=23243)
 
+    def test_fields(self):
+        expected_fields = ['text', 'created_at', 'phone_no', 'received_at', 'location', 'disaster']
+        rapidpro_message = RapidProMessage()
+        for field in expected_fields:
+            self.assertTrue(hasattr(rapidpro_message, field))
+
     def test_save_rapid_pro_message(self):
+        self.message['location'] = self.village
+        disaster_type = DisasterType(**dict(name="Fire", description="Fire")).save()
+        disaster_attributes = dict(name=disaster_type, location=self.village,
+                                   description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
+        disaster = Disaster(**disaster_attributes).save()
+        self.message['disaster'] = disaster
 
         RapidProMessage(**self.message).save()
+
         rp_messages = RapidProMessage.objects(**self.message)
         self.assertEqual(1, rp_messages.count())
-
-    def test_message_source(self):
-        rapid_pro_message = RapidProMessage(**self.message)
-
-        self.assertEqual('NECOC Volunteer', rapid_pro_message.source())
-
-    def test_message_knows_its_mobile_user(self):
-        rapid_pro_message = RapidProMessage(**self.message)
-
-        self.assertEqual(self.mobile_user, rapid_pro_message.mobile_user())
 
     @override_settings(MESSAGE_LOCATION_INDEX=3)
     def test_message_gets_the_location_if_it_is_militarily_coded_and_matched(self):

@@ -138,7 +138,7 @@ body > .ng-scope, .main .ng-scope {
 }
 
 .xsm-column {
-    width : 3%;
+    width: 3%;
     min-width: 30px;
 }
 
@@ -511,4 +511,11 @@ div[class*="-aggregate-marker-icon"] div {
     float: left;
     margin-right: 8px;
     opacity: 0.7;
+}
+
+.legend-title {
+    padding: 3px 10px;
+    border-bottom: 1px dotted #3E9CB8;
+    margin-bottom: 8px;
+    color: #3E9CB8;
 }

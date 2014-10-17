@@ -132,11 +132,12 @@
 
             legend.onAdd = function () {
                 var div = L.DomUtil.create('div', 'info legend'),
-                    scale = [0, 2, 5, 20, 50, 90];
+                    scale = [0, 20, 40, 60, 80, 100];
+                div.innerHTML += '<div class="legend-title">Legend</div>';
 
-                for (var i = 0; i < scale.length; i++) {
+                for (var i = 0; i < scale.length - 1 ; i++) {
                     div.innerHTML += '<i style="background:' + MapConfig.heatMapStyle.messages(scale[i] + 1).fillColor + '"></i> ' +
-                        scale[i] + (scale[i + 1] ? '&ndash;' + scale[i + 1] + '<br>' : '+');
+                        scale[i] + (scale[i + 1] ? '&ndash;' + scale[i + 1] + ' % <br>' : '+');
                 }
                 return div;
             };

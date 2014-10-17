@@ -1,13 +1,12 @@
 (function (module) {
 
     function messagesHeatMapColor(p) {
-        return p > 90 ? '#800026' :
-                p > 50 ? '#BD0026' :
-                p > 20 ? '#E31A1C' :
-                p > 10 ? '#FC4E2A' :
-                p > 5 ? '#FD8D3C' :
-                p > 2 ? '#FEB24C' :
-                p > 1 ? '#FED976' :
+        return p > 100 ? '#BD0026' :
+                p > 80 ? '#E31A1C' :
+                p > 60 ? '#FC4E2A' :
+                p > 40 ? '#FD8D3C' :
+                p > 20 ? '#FEB24C' :
+                p > 0 ? '#FED976' :
             '#FFEDA0';
     }
 

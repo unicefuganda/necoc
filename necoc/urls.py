@@ -9,6 +9,7 @@ from dms.api.disaster_endpoint import DisasterListCreateView
 from dms.api.disaster_type_endpoint import DisasterTypeListCreateView
 from dms.api.location_stats_service_endpoint import LocationStatsListView
 from dms.api.poll_endpoint import PollListCreateView
+from dms.api.poll_response_endpoint import PollResponseListCreateView
 from dms.api.rapid_pro_endpoint import RapidProListCreateView, RapidProRetrieveUpdateView
 from dms.api.location_endpoint import LocationListCreateView
 from dms.api.mobile_user_endpoint import MobileUserListCreateView
@@ -22,6 +23,7 @@ urlpatterns = patterns('',
 
     # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/v1/rapid-pro/$', RapidProListCreateView.as_view()),
+    url(r'^api/v1/poll-responses/$', PollResponseListCreateView.as_view()),
     url(r'^api/v1/rapid-pro/(?P<id>[0-9a-z]+)/$', RapidProRetrieveUpdateView.as_view()),
     url(r'^api/v1/locations/$', LocationListCreateView.as_view()),
     url(r'^api/v1/polls/$', PollListCreateView.as_view()),

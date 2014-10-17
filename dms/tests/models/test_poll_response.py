@@ -33,7 +33,7 @@ class PollResponseTest(MongoTestCase):
         self.poll_response['poll'] = poll
 
         PollResponse(**self.poll_response).save()
-        
+
         poll_response = PollResponse.objects(**self.poll_response)
         self.assertEqual(1, poll_response.count())
 

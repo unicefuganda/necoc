@@ -91,4 +91,11 @@ module.exports = function () {
             .and.notify(next);
     });
 
+    this.When(/^I search for "([^"]*)" district$/, function (district, next) {
+        mapPage.searchMapField.sendKeys(district).then(next);
+    });
+
+    this.When(/^I clear the text I entered in the district field$/, function (next) {
+        mapPage.searchMapField.clear().then(next);
+    });
 };

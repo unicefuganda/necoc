@@ -84,11 +84,14 @@
                 return highlightedLayer;
             },
             highlightLayer: function (layerName) {
-                layerList[layerName].highlight();
+                layerList[layerName] && layerList[layerName].highlight();
             },
             clickLayer: function (layerName) {
-                layerList[layerName].click();
-                layerList[layerName].zoomIn();
+                layerList[layerName] && layerList[layerName].click();
+                layerList[layerName] && layerList[layerName].zoomIn();
+            },
+            hasLayer: function (layerName) {
+                return layerList[layerName] ? true : false;
             },
             getLayers: function () {
                 return layerList;
@@ -135,7 +138,7 @@
                     scale = [0, 20, 40, 60, 80, 100];
                 div.innerHTML += '<div class="legend-title">Legend</div>';
 
-                for (var i = 0; i < scale.length - 1 ; i++) {
+                for (var i = 0; i < scale.length - 1; i++) {
                     div.innerHTML += '<i style="background:' + MapConfig.heatMapStyle.messages(scale[i] + 1).fillColor + '"></i> ' +
                         scale[i] + (scale[i + 1] ? '&ndash;' + scale[i + 1] + ' % <br>' : '+');
                 }
@@ -234,6 +237,9 @@
             getCenter: function () {
                 return map.getCenter();
             },
+            hasLayer: function (layerName) {
+                return LayerMap.hasLayer(layerName);
+            },
             highlightLayer: function (layerName) {
                 LayerMap.highlightLayer(layerName.toLowerCase());
             },
@@ -267,6 +273,25 @@
                     map.onClickDistrict(function (district) {
                         $state.go('admin.dashboard.district', {district: district});
                     })
+                });
+            }
+        }
+    });
+
+    module.directive('searchMap', function ($state, MapService) {
+        return {
+            scope: false,
+            link: function (scope, element, attrs) {
+
+                scope.$watch(attrs.ngModel, function (district) {
+                    if(district == undefined) return;
+
+                    if (district) {
+                        MapService.hasLayer(district.toLowerCase()) &&
+                        $state.go('admin.dashboard.district', {district: district.toLowerCase()});
+                    } else {
+                        $state.go('admin.dashboard', {}, {reload: true});
+                    }
                 });
             }
         }

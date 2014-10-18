@@ -12,6 +12,7 @@ Feature: Map
     When I navigate to "/admin/dashboard"
     And hover over "Lira"
     Then "Lira" should be highlighted
+    Then I should see map legend displayed
 
   Scenario: Zoom into districts on click
     Given I am logged in as a NECOC admin
@@ -41,8 +42,13 @@ Feature: Map
     And I navigate to "/admin/dashboard/kampala"
     Then I should see "kampala" district with layer color "#800026"
 
-  Scenario: View Messages Legend
+  Scenario: Search location on the map
     Given I am logged in as a NECOC admin
     When I navigate to "/admin/dashboard"
-    Then I should see map legend displayed
+    And I search for "lira" district
+    Then I should see Uganda map zoomed into "Lira" district
+    When I clear the text I entered in the district field
+    Then I should see a map of Uganda zoomed at level "7"
+
+
 

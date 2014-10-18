@@ -6,7 +6,7 @@ from dms.utils.location_utils import find_location_match
 from dms.utils.rapidpro_message_utils import clean_text
 
 
-class RapidProMessage (RapidProMessageBase):
+class RapidProMessage(RapidProMessageBase):
     disaster = ReferenceField('Disaster')
 
     def _assign_location(self):

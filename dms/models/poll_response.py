@@ -1,8 +1,9 @@
-from dms.models import RapidProMessage
 from mongoengine import *
 
+from dms.models.message import RapidProMessageBase
 
-class PollResponse(RapidProMessage):
+
+class PollResponse(RapidProMessageBase):
     poll = ReferenceField('Poll')
 
     def _assign_location(self):

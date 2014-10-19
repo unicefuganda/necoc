@@ -14,6 +14,19 @@ Feature: Disasters
     And I click save and close
     Then I should see the disaster in the disasters table
 
+  Scenario: Add Disaster with un registered Disaster Type
+    Given I am logged in as a NECOC admin
+    And I have "Mukono" district already registered
+    When I navigate to "/admin/disasters"
+    And I click add disaster button
+    And I enter the disaster type as "Fire"
+    And I select district as "Mukono"
+    And I enter disaster description as "Big flood"
+    And I select disaster status as "Assessment"
+    And I enter disaster date as "2014/10/08 00:03"
+    And I click save and close
+    Then I should see the disaster in the disasters table
+
   Scenario: Add Disaster --Validation
     Given I am logged in as a NECOC admin
     When I navigate to "/admin/disasters"

@@ -14,8 +14,18 @@ var AddDisasterModel = function () {
         });
     };
 
+    this.enterInput = function (id, value) {
+        return element(by.css('#' + id + ' .selectize-input')).click()
+            .then(function () {
+                return element(by.css('#' + id + ' .selectize-input input')).sendKeys(value)
+            })
+            .then(function () {
+                return element(by.css('.selectize-dropdown-content .create')).click();
+            });
+    };
+
     this.get = function (errorId) {
-        return element(by.css('#'+ errorId +' .text-danger')).getText();
+        return element(by.css('#' + errorId + ' .text-danger')).getText();
     };
 };
 

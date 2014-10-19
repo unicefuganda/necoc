@@ -60,7 +60,7 @@
                     options: [
                         {value: 'Assessment', name: 'Assessment'},
                         {value: 'Response Team Deployed', name: 'Response Team Deployed'},
-                        {value: 'Closed', name: 'Closed'},
+                        {value: 'Closed', name: 'Closed'}
                     ]
                 });
 
@@ -113,7 +113,6 @@
                     }
                 }
             });
-
 
             scope.$watch(attrs.disasters, function (disasters) {
                 if (!disasters) {

@@ -23,17 +23,36 @@ describe('dms.disaster-type', function () {
 
     describe('DisasterTypeService', function () {
 
-        it('should get all disasters from the api', function () {
-            var disastersPromise = disasterTypeService.all()
-            httpMock.expectGET(apiUrl + 'disaster-types/');
-            httpMock.flush();
+        describe('METHOD: all', function () {
+            it('should get all disasters from the api', function () {
+                var disastersPromise = disasterTypeService.all();
+                httpMock.expectGET(apiUrl + 'disaster-types/');
+                httpMock.flush();
 
-            disastersPromise.then(function (response) {
-                var retrievedDisasterTypes = response.data;
-                expect(retrievedDisasterTypes).toEqual(disasterTypes)
+                disastersPromise.then(function (response) {
+                    var retrievedDisasterTypes = response.data;
+                    expect(retrievedDisasterTypes).toEqual(disasterTypes)
+                });
+
+                scope.$apply();
             });
-
-            scope.$apply();
         });
+
+        describe('METHOD: create', function () {
+            it('should create a new disaster type', function () {
+                var disasterType = {name: 'Flood'};
+                var disastersPromise = disasterTypeService.create(disasterType);
+                httpMock.expectPOST(apiUrl + 'disaster-types/', disasterType).respond(disasterType);
+                httpMock.flush();
+
+                disastersPromise.then(function (response) {
+                    var retrievedDisasterType = response.data;
+                    expect(retrievedDisasterType).toEqual(disasterType)
+                });
+
+                scope.$apply();
+            });
+        });
+
     });
 });

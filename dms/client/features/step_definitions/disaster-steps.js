@@ -25,7 +25,7 @@ module.exports = function () {
     });
 
     this.When(/^I select the disaster type as "([^"]*)"$/, function (disasterType, next) {
-        disaster.type = disasterType
+        disaster.type = disasterType;
         disasterPage.addDisasterModal.selectInput("disaster-type-field", disasterType).then(next);
     });
 
@@ -43,6 +43,11 @@ module.exports = function () {
     this.When(/^I select disaster status as "([^"]*)"$/, function (status, next) {
         disaster.status = status;
         disasterPage.addDisasterModal.selectInput("status-field", status).then(next);
+    });
+
+    this.When(/^I enter the disaster type as "([^"]*)"$/, function (disasterType, next) {
+        disaster.type = disasterType;
+        disasterPage.addDisasterModal.enterInput("disaster-type-field", disasterType).then(next);
     });
 
     this.When(/^I enter disaster date as "([^"]*)"$/, function (date, next) {

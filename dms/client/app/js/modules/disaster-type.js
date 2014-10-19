@@ -5,6 +5,9 @@
         return {
             all: function () {
                 return $http.get(Config.apiUrl + 'disaster-types/');
+            },
+            create: function (disasterType) {
+                return $http.post(Config.apiUrl + 'disaster-types/', disasterType);
             }
         }
     });
@@ -17,12 +20,19 @@
                     labelField: 'name',
                     searchField: 'name',
                     maxItems: 1,
-                    create: false,
                     preload: true,
                     load: function (query, callback) {
                         DisasterTypeService.all().then(function (response) {
                             callback(response.data)
                         });
+                    },
+                    create: function (input, callback) {
+                        DisasterTypeService.create({name: input})
+                            .then(function (response) {
+                                callback(response.data)
+                            }, function () {
+                                callback(false);
+                            });
                     }
                 });
 

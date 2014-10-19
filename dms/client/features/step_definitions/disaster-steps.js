@@ -1,6 +1,10 @@
 module.exports = function () {
     var disasterPage = require("../pages/disaster-page"),
+        messagesPage = require("../pages/messages-page"),
+        associatedMessage = messagesPage.messages[0],
         disaster = {};
+    associatedMessage.formattedTime = messagesPage.formattedTime;
+
 
     this.World = require("../support/world").World;
 
@@ -81,7 +85,7 @@ module.exports = function () {
     this.Then(/^I should see required fields error messages$/, function (next) {
         var self = this;
 
-         disasterPage.addDisasterModal.get('name-errors')
+        disasterPage.addDisasterModal.get('name-errors')
             .then(function (error) {
                 self.expect(error).to.equal('This field is required');
             })
@@ -98,5 +102,37 @@ module.exports = function () {
                 self.expect(disasterPage.addDisasterModal.get('date-errors')).to.eventually.equal('This field is required')
                     .and.notify(next);
             });
+    });
+
+    this.When(/^I click the disaster in "([^"]*)"$/, function (arg1, next) {
+        disasterPage.clickDisaster(0, 'name.name').then(next);
+    });
+
+    this.Then(/^I should see the associated message$/, function (next) {
+        var self = this;
+
+        disasterPage.associatedMessages(0, 'source')
+            .then(function (source) {
+                self.expect(source).to.equal(associatedMessage.source + " (" + associatedMessage.phone + ")");
+            })
+            .then(function () {
+                self.expect(disasterPage.associatedMessages(0, 'text')).to.eventually.equal(associatedMessage.text);
+            })
+            .then(function () {
+                self.expect(disasterPage.associatedMessages(0, 'location')).to.eventually.equal('');
+            })
+            .then(function () {
+                self.expect(disasterPage.associatedMessages(0, 'time | date:"MMM dd, yyyy - h:mma"')).to.eventually.equal(associatedMessage.formattedTime);
+            })
+            .then(next);
+    });
+
+    this.When(/^I click the back button$/, function (next) {
+        disasterPage.backToDisastersButton.click().then(next);
+    });
+
+    this.Then(/^I should see the disasters listing page$/, function (next) {
+        this.expect(disasterPage.sectionTitle.getText()).to.eventually.equal('Registered Disasters')
+            .and.notify(next);
     });
 };

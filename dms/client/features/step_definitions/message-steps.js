@@ -24,7 +24,6 @@ module.exports = function () {
         should_see_my_messages(this, next);
     });
 
-
     var should_see_my_messages = function (self, next, district) {
         messagesPage.numberOfMessages()
             .then(function (noOfMessages) {

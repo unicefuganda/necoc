@@ -45,7 +45,7 @@ describe('dms.disaster', function () {
             scope.disasters = [];
 
             scope.saveDisaster();
-            httpMock.expectPOST(apiUrl + 'disasters/', {name:"Flood", date:"2014-10-02T19:13"});
+            httpMock.expectPOST(apiUrl + 'disasters/', {name: "Flood", date: "2014-10-02T19:13"});
             expect(scope.saveStatus).toBeTruthy();
             httpMock.flush();
 
@@ -66,11 +66,13 @@ describe('dms.disaster', function () {
         var initController;
         var scope;
         beforeEach(function () {
+
             inject(function ($controller, $rootScope) {
                 scope = $rootScope.$new();
 
                 httpMock.when('GET', apiUrl + 'disasters/').respond(disastersStub);
                 initController = function () {
+                    scope.associatedMessages = [];
                     $controller('DisastersController', { $scope: scope });
                 };
             });
@@ -83,5 +85,29 @@ describe('dms.disaster', function () {
 
             expect(scope.disasters).toEqual(disastersStub);
         });
+
+        describe('showAssociatedMessages()', function () {
+            it('should add messages associated to a disaster to the scope', function () {
+                initController();
+                var mockAssociatedMessages = [{name: "mockMessages"}],
+                    disasterStub = {id: "disaster_id"};
+
+                scope.showAssociatedMessages(disasterStub);
+                httpMock.expectGET(apiUrl + 'rapid-pro/?disaster=disaster_id').respond(mockAssociatedMessages);
+
+                httpMock.flush();
+                expect(scope.associatedMessages).toEqual(mockAssociatedMessages);
+                expect(scope.showMessageList).toBeTruthy();
+            });
+        });
+
+        describe('backToDisasters()', function () {
+            it('should set scope.showMessageList to false', function () {
+                initController();
+                scope.backToDisasters();
+                expect(scope.showMessageList).toBeFalsy();
+            });
+        });
+
     });
 });

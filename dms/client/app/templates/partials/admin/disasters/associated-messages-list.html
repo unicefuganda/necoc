@@ -1,0 +1,41 @@
+<div class="c-well">
+
+    <div class="row with-btm-margin">
+        <div class="col-md-2">
+            <button id="back-to-disasters-btn" type="button" class="btn btn-default btn-icon" ng-click="backToDisasters()">
+                <span class="icon icon-arrow-line-left"></span>
+                <span class="value">Back</span>
+            </button>
+        </div>
+        <div class="col-md-4 sub-section-header">
+            <span class="icon icon-mail-letter-2"></span><span class="title">Associated Messages</span>
+        </div>
+    </div>
+
+    <table si-table="" class="table table-hover table-striped style-header">
+        <thead>
+        <tr>
+            <th class="md-column">Source</th>
+            <th>SMS Body</th>
+            <th class="sm-column">Location</th>
+            <th>Date Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="message in associatedMessages | orderBy: '-time'">
+            <td>{[{ message.source }]} <span>({[{ message.phone }]})</span></td>
+            <td>{[{ message.text }]}</td>
+            <td>{[{ message.location }]}</td>
+            <td>{[{ message.time | date:"MMM dd, yyyy - h:mma" }]}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="6">
+                <si-table-pagination limit="10"/>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+

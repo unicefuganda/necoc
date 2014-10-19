@@ -233,6 +233,10 @@ table.style-header thead {
     color: #fff;
 }
 
+table.table-clickable tbody td {
+    cursor: pointer;
+}
+
 .btn-icon .icon {
     font-size: 21px;
 }
@@ -520,5 +524,5 @@ div[class*="-aggregate-marker-icon"] div {
     color: #3E9CB8;
     font-size: 18px;
     font-weight: 300;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif";
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif ";
 }

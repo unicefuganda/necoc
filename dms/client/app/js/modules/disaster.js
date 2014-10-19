@@ -12,10 +12,22 @@
         };
     });
 
-    module.controller('DisastersController', function ($scope, DisasterService) {
+    module.controller('DisastersController', function ($scope, DisasterService, MessageService) {
         DisasterService.all().then(function (response) {
             $scope.disasters = response.data;
         });
+
+        $scope.showAssociatedMessages = function (disaster) {
+            MessageService.filter('disaster', disaster.id)
+                .then(function (response) {
+                    $scope.associatedMessages = response.data;
+                    $scope.showMessageList = true;
+                });
+        };
+
+        $scope.backToDisasters = function () {
+            $scope.showMessageList = false;
+        };
     });
 
     module.controller('DisastersModalController', function ($scope, DisasterService) {
@@ -112,4 +124,4 @@
 
     });
 
-})(angular.module('dms.disaster', ['dms.config', 'dms.utils']));
+})(angular.module('dms.disaster', ['dms.config', 'dms.utils', 'dms.message']));

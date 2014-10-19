@@ -59,8 +59,13 @@ Feature: Messages
     And I click the add button
     Then I should see the message associated with the disaster
     And I should see zero message uncategorized
+    When I navigate to "/admin/disasters"
+    And I click the disaster in "Mukono"
+    Then I should see the associated message
+    When I click the back button
+    Then I should see the disasters listing page
 
-  Scenario: Associate Messages to disaster -- validations
+  Scenario: Associate Messages to disaster -- Validations
     Given I am logged in as a NECOC admin
     When I POST a message to the NECOC DMS
     And I have a disaster in "Mukono" registered

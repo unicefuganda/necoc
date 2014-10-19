@@ -44,7 +44,7 @@
             .state('admin.disasters', {
                 url: '/disasters',
                 data: { pageTitle: 'Disasters'},
-                templateUrl: '/static/templates/partials/admin/disasters.html',
+                templateUrl: '/static/templates/partials/admin/disasters/disasters.html',
                 controller: 'DisastersController'
             })
 

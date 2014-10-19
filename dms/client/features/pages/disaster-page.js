@@ -24,10 +24,22 @@ var DisasterPage = function () {
 
     this.addDisasterButton = element(by.id('add-disaster'));
 
+    this.sectionTitle = element.all(by.css('.sub-section-header .title')).get(0);
+
     this.addDisasterModal = new AddDisasterModel();
+
+    this.backToDisastersButton = element(by.id('back-to-disasters-btn'));
 
     this.getDisasterData = function (row, key) {
         return element(by.repeater('disaster in disasters').row(row).column('{[{ disaster.' + key + ' }]}')).getText();
+    };
+
+    this.clickDisaster = function (row, key) {
+        return element(by.repeater('disaster in disasters').row(row).column('{[{ disaster.' + key + ' }]}')).click();
+    };
+
+    this.associatedMessages = function (row, key) {
+        return element(by.repeater('message in associatedMessages').row(row).column('{[{ message.' + key + ' }]}')).getText();
     };
 
     this.registerDisasterType = function (disasterType, next) {

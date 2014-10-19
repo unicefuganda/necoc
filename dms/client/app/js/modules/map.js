@@ -78,7 +78,7 @@
             });
         }
 
-        function addHeatMapLayer(map) {
+        function addHeatMapLayer() {
             return StatsService.getAggregates().then(function (response) {
                 var aggregateStats = response.data;
 
@@ -89,8 +89,6 @@
                         layer.setStyle(MapConfig.heatMapStyle.messages(0));
                     }
                 });
-
-                addHeatMapLegend(map);
             });
         }
 
@@ -118,7 +116,8 @@
                 return addDistrictsLayer(map).then(function () {
                     layerName && map.setZoom(7) && this.selectLayer(layerName);
                 }.bind(this)).then(function () {
-                    addHeatMapLayer(map);
+                    addHeatMapLayer();
+                    addHeatMapLegend(map);
                 }).then(function () {
                     return this;
                 }.bind(this));
@@ -150,11 +149,14 @@
             },
             onClickDistrict: function (handler) {
                 self.districtlayerOptions.onClickHandler = handler;
+            },
+            refreshHeatMap: function () {
+                addHeatMapLayer();
             }
         };
     });
 
-    module.directive('map', function (MapService, $window, $stateParams, $state) {
+    module.directive('map', function (MapService, $window, $stateParams, $state, $interval) {
         return {
             scope: false,
             link: function (scope, element, attrs) {
@@ -168,6 +170,10 @@
                     map.onClickDistrict(function (district) {
                         $state.go('admin.dashboard.district', {district: district});
                     })
+
+                    $interval(function () {
+                        map.refreshHeatMap();
+                    }, 15000);
                 });
             }
         }

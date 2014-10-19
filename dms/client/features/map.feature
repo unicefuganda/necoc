@@ -40,7 +40,7 @@ Feature: Map
     When I have "Kampala" district already registered
     When I POST a message to the NECOC DMS
     And I navigate to "/admin/dashboard/kampala"
-    Then I should see "kampala" district with layer color "#800026"
+    Then I should see "kampala" district with layer color "#FFEDA0"
 
   Scenario: Search location on the map
     Given I am logged in as a NECOC admin

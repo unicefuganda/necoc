@@ -8,7 +8,8 @@ module.exports = function () {
 
     this.Given(/^I am logged in as a NECOC admin$/, function (next) {
         browser.get('/');
-        next();
+        this.expect(browser.wait(homePage.title.getText)).to.eventually.equal('NECOC DMS')
+            .and.notify(next);
     });
 
     this.When(/^I POST a message to the NECOC DMS$/, function (next) {

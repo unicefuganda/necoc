@@ -1,7 +1,7 @@
-describe('dms.map', function () {
+describe('dms.layer', function () {
 
     beforeEach(function () {
-        module('dms.map');
+        module('dms.layer');
     });
 
     describe('LayerMap', function () {
@@ -31,13 +31,11 @@ describe('dms.map', function () {
 
         it('should get selected layer from layersList', function () {
             var layerA = layer.build('bukoto', mapMock, mapLayerMock, {style: {}});
-            layerA.highlight();
-
             var layerB = layer.build('naguru', mapMock, mapLayerMock, {});
+            layerA.highlight();
 
             layerMap.addLayer(layerA);
             layerMap.addLayer(layerB);
-
             expect(layerMap.getSelectedLayer()).toEqual({ bukoto: layerA });
         });
 
@@ -57,6 +55,29 @@ describe('dms.map', function () {
             layerMap.clickLayer(builtLayer.getName());
             expect(mockOptions.onClickHandler).toHaveBeenCalledWith('lira');
             expect(mapMock.fitBounds).toHaveBeenCalledWith(mockBounds);
+        });
+
+        it('should check if a layer exists', function () {
+            var builtLayer = layer.build('lira', mapMock, mapLayerMock, {});
+            layerMap.addLayer(builtLayer);
+
+            expect(layerMap.hasLayer('lira')).toBeTruthy();
+            expect(layerMap.hasLayer('gulu')).toBeFalsy();
+        });
+
+        it('should get layers hash', function () {
+            expect(layerMap.getLayers()).toEqual({});
+
+            var builtLayer = layer.build('lira', mapMock, mapLayerMock, {});
+            layerMap.addLayer(builtLayer);
+
+            expect(layerMap.getLayers()).toEqual({lira: builtLayer});
+        });
+
+        it('should add a layer and retrieve group', function () {
+            var stubLayerGroup = { name: 'layer-group'};
+            layerMap.addLayerGroup(stubLayerGroup.name, stubLayerGroup);
+            expect(layerMap.getLayerGroup(stubLayerGroup.name)).toEqual(stubLayerGroup);
         });
     });
 });

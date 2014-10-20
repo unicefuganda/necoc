@@ -1,3 +1,6 @@
 ---
   - name: Copy the code base to destination
-    synchronize: src=/var/snap-ci/repo dest=/
+    synchronize: src=/var/snap-ci/repo dest=/sites
+
+  - name: Rename directory repo to necoc
+    command: mv /sites/repo /sites/necoc

@@ -1,9 +1,10 @@
 ---
-  - name: Clean up project directory
-    file: path=/sites state=absent
+  - name: Clean up old project directory
+    file: path=/repo state=absent
 
   - name: Create project root directory
-    file: path=/sites state=directory
+    file: path=/repo state=directory
+    when: local
 
   - name: Clean up mongodb directory
     file: path=/data/db state=absent
@@ -22,10 +23,10 @@
   - name: Install bower packages
     command: bower install --allow-root --quiet
     args:
-      chdir: /sites/necoc/dms/client/app
+      chdir: /repo/necoc/dms/client/app
 
   - name: Build docker image
-    docker_image: path="/sites/necoc" name="necoc/dms" state=build
+    docker_image: path="/repo/necoc" name="necoc/dms" state=build
 
   - name: Stop docker container if exists
     docker: image=necoc/dms name=necoc state=absent

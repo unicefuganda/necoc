@@ -1,0 +1,24 @@
+---
+  - name: Update Repositories cache
+    apt: update-cache=yes cache_valid_time=3600
+
+  - name: Install packages
+    apt: pkg={{item}} state=latest
+    with_items:
+      - git
+      - python-dev
+      - python-pip
+      - nodejs
+      - nodejs-legacy
+      - npm
+
+  - name: Install pip packages
+    pip: name={{item}} state=present
+    with_items:
+      - virtualenv
+      - docker-py
+
+  - name: Install bower globally
+    npm: name=bower global=yes state=present
+
+

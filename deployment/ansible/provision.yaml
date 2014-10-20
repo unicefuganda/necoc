@@ -1,0 +1,8 @@
+---
+  - name: Provision and deploy to the web server
+    hosts: webservers
+    remote_user: root
+#    sudo: yes
+    roles:
+      - provision
+      - deploy

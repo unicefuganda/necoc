@@ -1,0 +1,6 @@
+---
+  - name: Provision and deploy to the web server
+    hosts: webservers
+    remote_user: root
+    roles:
+      - deploy

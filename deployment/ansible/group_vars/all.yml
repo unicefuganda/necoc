@@ -1,0 +1,6 @@
+---
+project_name: necoc
+project_repo: https://github.com/unicefuganda/necoc.git
+local: false
+clean_db: false
+load_data: false

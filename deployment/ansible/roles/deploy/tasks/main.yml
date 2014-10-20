@@ -1,0 +1,43 @@
+---
+  - name: Clean up project directory
+    file: path=/sites state=absent
+
+  - name: Create project root directory
+    file: path=/sites state=directory
+
+  - name: Clean up mongodb directory
+    file: path=/data/db state=absent
+    when: clean_db
+
+  - name: Create mongodb directory
+    file: path=/data/db state=directory
+    when: clean_db
+
+  - include: local.yml
+    when: local
+
+  - include: staging.yml
+    when: not local
+
+  - name: Install bower packages
+    command: bower install --allow-root --quiet
+    args:
+      chdir: /sites/necoc/dms/client/app
+
+  - name: Build docker image
+    docker_image: path="/sites/necoc" name="necoc/dms" state=build
+
+  - name: Stop docker container if exists
+    docker: image=necoc/dms name=necoc state=absent
+
+  - name: Start docker container
+    docker:
+      image: necoc/dms
+      name: necoc
+      ports: "80:80,7555:22"
+      volumes: "/data/db:/data/db"
+      env: "LOAD_DATA={{load_data}},NGINX_SERVER_NAME={{server_name}},API_TOKEN={{api_token}}"
+      command: /scripts/run.sh
+
+  - name: Clean up old docker image
+    shell: docker rmi $(docker images -q --filter 'dangling=true')

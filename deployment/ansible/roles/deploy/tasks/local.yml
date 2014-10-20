@@ -1,0 +1,5 @@
+---
+  - name: Clone necoc repository
+    git: repo={{project_repo}} dest=/sites/necoc  accept_hostkey=yes force=yes
+    tags:
+      - gitpull

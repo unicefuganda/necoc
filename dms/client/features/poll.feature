@@ -32,4 +32,3 @@ Feature: Poll
     And I enter a more than 10 characters "pollKeywordField"
     Then I should see character limit errors
 
-

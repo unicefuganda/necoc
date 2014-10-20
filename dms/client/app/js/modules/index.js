@@ -13,13 +13,13 @@
             .state('admin.dashboard', {
                 url: '/dashboard',
                 data: { pageTitle: 'Dashboard' },
-                templateUrl: '/static/templates/partials/admin/dashboard.html',
+                templateUrl: '/static/templates/partials/admin/dashboard.html'
             })
 
             .state('admin.dashboard.district', {
                 url: '/:district',
                 data: { pageTitle: 'Dashboard'},
-                templateUrl: '/static/templates/partials/admin/dashboard.html',
+                templateUrl: '/static/templates/partials/admin/dashboard.html'
             })
 
             .state('admin', {
@@ -39,6 +39,13 @@
                 data: { pageTitle: 'Polls'},
                 templateUrl: '/static/templates/partials/admin/polls.html',
                 controller: 'PollsController'
+            })
+
+            .state('admin.poll-responses', {
+                url: '/poll-responses/:poll',
+                data: { pageTitle: 'Poll Responses'},
+                templateUrl: '/static/templates/partials/admin/poll-responses.html',
+                controller: 'PollResponsesController'
             })
 
             .state('admin.disasters', {
@@ -62,4 +69,4 @@
     });
 
 })(angular.module('dms', ['ui.router', 'siTable', 'checklist-model', 'dms.message', 'dms.admin-panel', 'dms.location', 'dms.mobile-user',
-    'dms.utils', 'dms.disaster', 'dms.disaster-type', 'dms.map', 'dms.polls']));
+    'dms.utils', 'dms.disaster', 'dms.disaster-type', 'dms.map', 'dms.polls', 'dms.poll-responses']));

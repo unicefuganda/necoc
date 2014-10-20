@@ -46,3 +46,28 @@ class PollResponseEndPointTest(MongoAPITestCase):
         self.assertEqual('NECOC Volunteer', response.data[0]['source'])
         self.assertEqual('Kampala >> Bukoto', response.data[0]['location'])
         self.assertIsNotNone(response.data[0]['id'])
+
+    def test_should_filter_poll_responses_by_poll_id(self):
+
+        poll_response = self.poll_response.copy()
+        poll_response['text'] = 'some text that does not have the keyword'
+        PollResponse(**poll_response).save()
+
+        response = self.client.get(self.API_ENDPOINT, {"poll": self.poll.id, "format": "json"})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(0, len(response.data))
+
+        other_poll_response_attr = self.poll_response.copy()
+        other_poll_response_attr['poll'] = self.poll
+
+        PollResponse(**other_poll_response_attr).save()
+
+        response = self.client.get(self.API_ENDPOINT, {"poll": self.poll.id, "format": "json"})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertDictContainsSubset(self.expected_poll_response, response.data[0])
+        self.assertEqual('NECOC Volunteer', response.data[0]['source'])
+        self.assertEqual('Kampala >> Bukoto', response.data[0]['location'])
+        self.assertIsNotNone(response.data[0]['id'])

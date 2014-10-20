@@ -11,10 +11,15 @@
         }
     });
 
-    module.controller('PollsController', function ($scope, PollService) {
+    module.controller('PollsController', function ($scope, PollService, PollResponsesService, $state) {
         PollService.all().then(function (response) {
             $scope.polls = response.data;
         });
+
+        $scope.showPollResponses = function (poll) {
+            $state.go('admin.poll-responses', {poll: poll.id});
+        };
+
     });
 
     module.controller('NewPollController', function ($scope, PollService, growl, helpers) {
@@ -33,8 +38,8 @@
                         growl.success('Poll successfully sent', {
                             ttl: 3000
                         });
-                    }, function(error) {
-                        $scope.errors =  error.data;
+                    }, function (error) {
+                        $scope.errors = error.data;
                         helpers.invalidate($scope.new_poll_form, $scope.errors);
                         $scope.saveStatus = false;
                         $scope.hasErrors = true;
@@ -46,4 +51,4 @@
         }
     });
 
-})(angular.module('dms.polls', ['dms.config', 'angular-growl', 'dms.utils']));
+})(angular.module('dms.polls', ['dms.config', 'angular-growl', 'dms.utils', 'dms.poll-responses']));

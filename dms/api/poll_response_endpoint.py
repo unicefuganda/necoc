@@ -22,4 +22,8 @@ class PollResponseSerializer(serializers.MongoEngineModelSerializer):
 class PollResponseListCreateView(ListCreateAPIView):
     serializer_class = PollResponseSerializer
     model = PollResponse
-    queryset = PollResponse.objects()
+
+    def get_queryset(self):
+        fields = PollResponse._fields_ordered
+        query_params = {key: value or None for key, value in self.request.GET.items() if key in fields}
+        return PollResponse.objects(**query_params)

@@ -6,8 +6,10 @@ module.exports = function () {
 
     this.World = require("../support/world").World;
 
+    this.sectionTitle = element.all(by.css('.sub-section-header .title')).get(0);
+
     this.Given(/^I navigate to polls page$/, function (next) {
-        homePage.pollsTab.click().then(next)
+        homePage.pollsTab.click().then(next);
     });
 
     this.Given(/^I click new poll button$/, function (next) {
@@ -113,5 +115,10 @@ module.exports = function () {
                 self.expect(pollsPage.getPollData(0, 'created_at | date:"MMM dd, yyyy - h:mma"')).to.eventually.exist;
             }).then(next);
     });
+
+    this.When(/^I click the poll in "([^"]*)"$/, function (arg1, next) {
+        pollsPage.clickPoll(0, 'name').then(next);
+    });
+
 
 };

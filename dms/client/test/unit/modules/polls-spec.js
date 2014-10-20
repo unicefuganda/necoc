@@ -80,8 +80,10 @@ describe('dms.polls', function () {
 
     describe('PollsController', function () {
         var scope,
+            mockState,
             pollsStub = [
                 {
+                    id: 'poll_id',
                     name: "Number of disasters",
                     question: "How many disasters do you have in your area?",
                     keyword: "frvaa",
@@ -96,7 +98,8 @@ describe('dms.polls', function () {
 
             inject(function ($controller, $rootScope) {
                 scope = $rootScope.$new();
-                $controller('PollsController', {$scope: scope});
+                mockState = jasmine.createSpyObj('mockState', ['go']);
+                $controller('PollsController', {$scope: scope, $state: mockState});
             });
         });
 
@@ -104,6 +107,13 @@ describe('dms.polls', function () {
             httpMock.expectGET(apiUrl + 'polls/');
             httpMock.flush();
             expect(scope.polls).toEqual(pollsStub);
+        });
+
+        describe('ShowPollResponses', function () {
+            it('should go to the corresponding poll responses page', function () {
+                scope.showPollResponses(pollsStub);
+                expect(mockState.go).toHaveBeenCalledWith('admin.poll-responses', {poll: pollsStub.id})
+            });
         });
 
     });

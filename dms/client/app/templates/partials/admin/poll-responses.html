@@ -6,6 +6,7 @@
                     <button id="new-poll-btn" type="button" class="btn btn-info btn-big" data-toggle="modal"
                             data-target="#new-poll-modal">
                         <span class="icon icon-pie-2"></span>
+
                         <div class="value">New Poll</div>
                     </button>
                 </li>
@@ -16,27 +17,35 @@
     <div class="c-well">
 
         <div class="row with-btm-margin">
-            <div class="col-md-5 sub-section-header">
-                <span class="icon icon-pie-2"></span><span class="title">All Polls</span>
+            <div class="col-md-2">
+                <button id="back-to-polls-btn" type="button" class="btn btn-default btn-icon"
+                        ng-click="backToPolls()">
+                    <span class="icon icon-arrow-line-left"></span>
+                    <span class="value">Back</span>
+                </button>
+            </div>
+
+            <div class="col-md-4 sub-section-header">
+                <span class="icon icon-pie-2"></span><span class="title">All Poll Responses</span>
             </div>
         </div>
 
         <table si-table="" class="table table-hover table-striped style-header">
             <thead>
             <tr>
-                <th>Poll</th>
-                <th>Question</th>
-                <th>Responses</th>
-                <th>Created</th>
+                <th>Respondent</th>
+                <th>Answer</th>
+                <th>Location</th>
+                <th>Responded on</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr ng-repeat="poll in polls | orderBy: 'created_at': true" ng-click="showPollResponses(poll)">
-                <td>{[{ poll.name }]}</td>
-                <td>{[{ poll.question }]}</td>
-                <td>0</td>
-                <td>{[{ poll.created_at | date:"MMM dd, yyyy - h:mma" }]}</td>
+            <tr ng-repeat="poll_response in poll_responses | orderBy: 'created_at': true">
+                <td>{[{ poll_response.source }]} <span>({[{ poll_response.phone }]})</span></td>
+                <td>{[{ poll_response.text }]}</td>
+                <td>{[{ poll_response.location }]}</td>
+                <td>{[{ poll_response.created_at | date:"MMM dd, yyyy - h:mma" }]}</td>
             </tr>
             </tbody>
 

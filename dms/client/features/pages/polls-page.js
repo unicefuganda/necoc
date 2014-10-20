@@ -16,7 +16,7 @@ var NewPollModal = function () {
     };
 
     this.getFieldErrors = function (id, index) {
-        return element.all(by.css('#'+id+ ' .text-danger')).get(index).getText();
+        return element.all(by.css('#' + id + ' .text-danger')).get(index).getText();
     };
 };
 
@@ -29,9 +29,16 @@ var PollsPage = function () {
 
     this.notification = element(by.css('.growl-message'));
 
+    this.sectionTitle = element.all(by.css('.sub-section-header .title')).get(0);
+
     this.getPollData = function (row, key) {
         return element(by.repeater('poll in polls').row(row).column('{[{ poll.' + key + ' }]}')).getText();
     };
+
+    this.clickPoll = function (row, key) {
+        return element(by.repeater('poll in polls').row(row).column('{[{ poll.' + key + ' }]}')).click();
+    };
+
 };
 
 module.exports = new PollsPage();

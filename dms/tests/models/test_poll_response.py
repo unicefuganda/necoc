@@ -1,4 +1,5 @@
 import datetime
+from django.test import override_settings
 from dms.models import Poll
 
 from dms.models.location import Location
@@ -20,6 +21,10 @@ class PollResponseTest(MongoTestCase):
         self.poll_response = dict(phone_no=phone_number, text="NECOC There is a fire", received_at=date_time, relayer_id=234,
                         run_id=23243)
 
+        poll_attr = dict(name="Disaster", question="How many disasters are in your area?", keyword="some_word",
+                         target_locations=[str(self.village.id)])
+        self.poll = Poll(**poll_attr).save()
+
     def test_fields(self):
         expected_fields = ['text', 'created_at', 'phone_no', 'received_at', 'location', 'poll']
         rapidpro_message = PollResponse()
@@ -27,10 +32,7 @@ class PollResponseTest(MongoTestCase):
             self.assertTrue(hasattr(rapidpro_message, field))
 
     def test_save_poll_response(self):
-        poll_attr = dict(name="Disaster", question="How many disasters are in your area?", keyword="some word",
-                         target_locations=[str(self.village.id)])
-        poll = Poll(**poll_attr).save()
-        self.poll_response['poll'] = poll
+        self.poll_response['poll'] = self.poll
 
         PollResponse(**self.poll_response).save()
 
@@ -51,8 +53,19 @@ class PollResponseTest(MongoTestCase):
         rapid_pro_poll_response = PollResponse(**self.poll_response).save()
         self.assertEqual(self.village, rapid_pro_poll_response.location)
 
-    def test_message_location_is_none_if_mobile_user_not_registered(self):
+    def test_response_location_is_none_if_mobile_user_not_registered(self):
         some_non_registered_number = '1234'
         self.poll_response['phone_no'] = some_non_registered_number
         poll_response = PollResponse(**self.poll_response).save()
         self.assertIsNone(poll_response.location)
+
+    @override_settings(POLL_RESPONSE_LOCATION_INDEX=3)
+    def test_responses_with_keyword_is_automatically_associated_to_poll(self):
+        poll_response_attr = self.poll_response.copy()
+        poll_response_attr['text'] = "NECOCPoll haha %s she no want designer" % self.poll.keyword
+
+        self.assertNotIn('poll', poll_response_attr.keys())
+
+        poll_response = PollResponse(**poll_response_attr).save()
+
+        self.assertEqual(self.poll, poll_response.poll)

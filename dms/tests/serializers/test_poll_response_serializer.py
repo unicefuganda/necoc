@@ -1,3 +1,4 @@
+from dms.api.poll_endpoint import PollSerializer
 from dms.api.poll_response_endpoint import PollResponseSerializer
 from dms.models import Poll
 from dms.models.location import Location
@@ -32,10 +33,20 @@ class PollResponseSerializerTest(MongoTestCase):
     def test_should_serialize_poll_response_object(self):
         poll_response = PollResponse(**self.poll_response).save()
         serialized_object = PollResponseSerializer(poll_response)
+        serialized_poll = PollSerializer(self.poll)
         serialized_data_with_source = dict(self.serialized_data.items() +
                                            {'id': str(poll_response.id), 'source': 'NECOC Volunteer',
-                                            'poll': None, 'location': 'Kampala >> Bukoto'}.items())
-        self.assertEqual(serialized_data_with_source, serialized_object.data)
+                                            'poll': serialized_poll.data, 'location': 'Kampala >> Bukoto'}.items())
+
+        expected_response_fields = ['text', 'relayer', 'phone', 'time', 'location', 'run', 'id']
+        expected_poll_fields = ['name', 'keyword', 'question', 'id', 'target_locations']
+
+        for field in expected_response_fields:
+            self.assertEqual(serialized_data_with_source[field], serialized_object.data[field])
+
+        for field in expected_poll_fields:
+            self.assertEqual(serialized_data_with_source['poll'][field], serialized_object.data['poll'][field])
+
 
     def test_should_deserialize_poll_response_object(self):
         serializer = PollResponseSerializer(data=self.serialized_data)

@@ -13,18 +13,28 @@
 
     module.controller('PollResponsesController', function ($scope, PollResponsesService, $stateParams, $state) {
         var poll_id = $stateParams.poll;
+        var processAllPolls = function(){
+            PollResponsesService.all().then(function (response) {
+                $scope.poll_responses = response.data;
+                $scope.poll_text = 'All Poll';
+            });
+        };
+
         if (poll_id) {
             PollResponsesService.filter('poll', poll_id).then(function (response) {
                 $scope.poll_responses = response.data;
+                $scope.poll_text = $scope.poll_responses[0].poll.name
             });
         } else {
-            PollResponsesService.all().then(function (response) {
-                $scope.poll_responses = response.data;
-            });
+            processAllPolls();
         }
 
-        $scope.backToPolls = function(){
+        $scope.backToPolls = function () {
             $state.go('admin.polls');
+        };
+
+        $scope.allPollResponses = function () {
+            processAllPolls();
         };
     });
 

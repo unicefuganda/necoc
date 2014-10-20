@@ -47,7 +47,6 @@ class PollResponseSerializerTest(MongoTestCase):
         for field in expected_poll_fields:
             self.assertEqual(serialized_data_with_source['poll'][field], serialized_object.data['poll'][field])
 
-
     def test_should_deserialize_poll_response_object(self):
         serializer = PollResponseSerializer(data=self.serialized_data)
 

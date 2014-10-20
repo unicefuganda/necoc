@@ -1,5 +1,6 @@
 from rest_framework_mongoengine import serializers
 from rest_framework import fields
+from rest_framework import serializers as serialiserzz
 from rest_framework_mongoengine.generics import ListCreateAPIView
 from rest_framework import serializers as rest_serializers
 from dms.models import Poll, Location, MobileUser
@@ -8,6 +9,7 @@ from dms.tasks import send_bulk_sms
 
 class PollSerializer(serializers.MongoEngineModelSerializer):
     created_at = fields.DateTimeField(source='created_at', required=False)
+    number_of_responses = serialiserzz.Field(source='number_of_responses')
 
     def validate_keyword(self, attrs, source):
         if len(Poll.objects(keyword=attrs[source])):

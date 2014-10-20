@@ -35,6 +35,8 @@ var PollResponsesPage = function () {
 
     this.backToPollsPageButton = element(by.id('back-to-polls-btn'));
 
+    this.allPollResponseButton = element(by.id('all-poll-responses-btn'));
+
 };
 
 module.exports = new PollResponsesPage();

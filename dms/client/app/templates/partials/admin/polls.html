@@ -35,7 +35,7 @@
             <tr ng-repeat="poll in polls | orderBy: 'created_at': true" ng-click="showPollResponses(poll)">
                 <td>{[{ poll.name }]}</td>
                 <td>{[{ poll.question }]}</td>
-                <td>0</td>
+                <td>{[{ poll.number_of_responses }]}</td>
                 <td>{[{ poll.created_at | date:"MMM dd, yyyy - h:mma" }]}</td>
             </tr>
             </tbody>

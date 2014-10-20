@@ -1,9 +1,9 @@
 from django.conf import settings
 from mongoengine import *
-from dms.models import Poll
+from dms.models.poll import Poll
 
 from dms.models.message import RapidProMessageBase
-from dms.utils.rapidpro_message_utils import clean_text
+from dms.utils.rapidpro_message_utils import split_text
 
 
 class PollResponse(RapidProMessageBase):
@@ -19,7 +19,7 @@ class PollResponse(RapidProMessageBase):
         return super(PollResponse, self).save(*args, **kwargs)
 
     def _assign_poll(self):
-        text = clean_text(self.text)
+        text = split_text(self.text)
         if len(text) > settings.POLL_RESPONSE_LOCATION_INDEX-1:
             keyword = text[settings.POLL_RESPONSE_LOCATION_INDEX - 1]
             return Poll.objects(keyword=keyword).first()

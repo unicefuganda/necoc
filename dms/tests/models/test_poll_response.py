@@ -69,3 +69,26 @@ class PollResponseTest(MongoTestCase):
         poll_response = PollResponse(**poll_response_attr).save()
 
         self.assertEqual(self.poll, poll_response.poll)
+
+    @override_settings(POLL_RESPONSE_LOCATION_INDEX=2)
+    def test_responses_with_no_matching_keyword_is_do_not_get_poll(self):
+        poll_response_attr = self.poll_response.copy()
+        poll_response_attr['text'] = "NECOCPoll not_keyword haha she no want designer"
+
+        self.assertNotIn('poll', poll_response_attr.keys())
+
+        poll_response = PollResponse(**poll_response_attr).save()
+
+        self.assertIsNone(poll_response.poll)
+
+    @override_settings(POLL_RESPONSE_LOCATION_INDEX=3)
+    def test_responses_get_both_poll_and_location(self):
+        poll_response_attr = self.poll_response.copy()
+        poll_response_attr['text'] = "NECOCPoll haha %s she no want designer" % self.poll.keyword
+
+        poll_response = PollResponse(**poll_response_attr).save()
+
+        self.assertEqual(self.poll, poll_response.poll)
+        self.assertEqual(self.village, poll_response.location)
+        self.assertEqual('Kampala >> Bukoto', poll_response.location_str())
+

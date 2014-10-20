@@ -12,7 +12,8 @@ describe('dms.polls-response', function () {
                 text: "NECOCPoll keyword whatever",
                 time: "2014-02-13T02:00:00",
                 relayer: 234,
-                run: "23243"
+                run: "23243",
+                poll: {name: 'haha'}
             }
         ];
 
@@ -50,6 +51,7 @@ describe('dms.polls-response', function () {
             httpMock.expectGET(apiUrl + 'poll-responses/?poll=' + poll_id).respond(pollResponseStub);
             httpMock.flush();
             expect(scope.poll_responses).toEqual(pollResponseStub);
+            expect(scope.poll_text).toEqual('haha');
         });
 
         it('should retrieve all poll responses and add to scope when poll id not supplied.', function () {
@@ -58,6 +60,7 @@ describe('dms.polls-response', function () {
             httpMock.expectGET(apiUrl + 'poll-responses/');
             httpMock.flush();
             expect(scope.poll_responses).toEqual(pollResponseStub);
+            expect(scope.poll_text).toEqual('All Poll');
         });
 
         describe('backToPolls', function () {
@@ -65,6 +68,17 @@ describe('dms.polls-response', function () {
                 initController();
                 scope.backToPolls();
                 expect(stateMock.go).toHaveBeenCalledWith('admin.polls');
+            });
+        });
+
+        describe('allPollResponses', function () {
+            it('should add all poll responses to the scope ', function () {
+                initController();
+                scope.allPollResponses();
+                httpMock.expectGET(apiUrl + 'poll-responses/');
+                httpMock.flush();
+                expect(scope.poll_responses).toEqual(pollResponseStub);
+                expect(scope.poll_text).toEqual('All Poll');
             });
         });
     });

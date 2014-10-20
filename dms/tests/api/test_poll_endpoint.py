@@ -1,6 +1,6 @@
 import json
 from mock import patch, MagicMock
-from dms.models import Poll, Location, MobileUser
+from dms.models import Poll, Location, MobileUser, PollResponse
 from dms.tests.base import MongoAPITestCase
 from necoc.settings import API_URL, API_TOKEN
 
@@ -39,9 +39,16 @@ class TestPollEndpoint(MongoAPITestCase):
         self.assertEqual(1, retrieved_poll.count())
 
     def test_should_get_a_list_of_polls(self):
-        Poll(**self.poll_to_post).save()
+        poll = Poll(**self.poll_to_post).save()
+        poll_response_attr = dict(phone_no='123455', text="NECOC There is a fire", relayer_id=234,
+                        run_id=23243, poll=poll)
+
+        PollResponse(**poll_response_attr).save()
+
         response = self.client.get(self.POLL_ENDPOINT, format='json')
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, len(response.data))
-        self.assertDictContainsSubset(self.poll_to_post, response.data[0])
+        expected_poll = self.poll_to_post.copy()
+        expected_poll['number_of_responses'] = 1
+        self.assertDictContainsSubset(expected_poll, response.data[0])

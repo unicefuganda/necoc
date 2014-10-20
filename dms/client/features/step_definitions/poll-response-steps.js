@@ -37,7 +37,7 @@ module.exports = function () {
                 self.expect(pollResponsesPage.getPollResponseData(0, 'location')).to.eventually.equal(poll_response_location);
             })
             .then(function () {
-                self.expect(pollResponsesPage.getPollResponseData(0, 'created_at | date:"MMM dd, yyyy - h:mma"')).to.eventually.exist;
+                self.expect(pollResponsesPage.getPollResponseData(0, 'time | date:"MMM dd, yyyy - h:mma"')).to.eventually.exist;
             }).then(next);
     };
 
@@ -54,9 +54,11 @@ module.exports = function () {
     });
 
     this.Then(/^I should see the poll listing page$/, function (next) {
-        this.expect(pollsPage.sectionTitle.getText()).to.eventually.equal('All Polls')
-            .and.notify(next);
+        var self = this;
+        self.expect(pollsPage.sectionTitle.getText()).to.eventually.equal('All Polls')
+            .then(function () {
+                self.expect(pollsPage.getPollData(0, 'number_of_responses')).to.eventually.equal('1');
+            }).
+            then(next);
     });
-
-
 };

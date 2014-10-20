@@ -1,5 +1,5 @@
 from mongoengine import NotUniqueError, ValidationError
-from dms.models import Location
+from dms.models import Location, PollResponse
 from dms.models.poll import Poll
 from dms.tests.base import MongoTestCase
 
@@ -34,3 +34,13 @@ class TestPoll(MongoTestCase):
     def test_should_not_save_a_poll_if_question_is_more_than_160_characters(self):
         self.poll['question'] = "l"*161
         self.assertRaises(ValidationError, Poll(**self.poll).save)
+
+    def test_should_know_its_number_of_responses(self):
+        poll = Poll(**self.poll).save()
+        poll_response_attr = dict(phone_no='123455', text="NECOC There is a fire", relayer_id=234,
+                        run_id=23243, poll=poll)
+
+        poll_response = PollResponse(**poll_response_attr).save()
+
+        self.assertEqual(1, poll.number_of_responses())
+        self.assertIn(poll_response, poll.responses())

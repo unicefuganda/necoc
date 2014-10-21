@@ -1,9 +1,13 @@
+from rest_framework import fields
 from rest_framework_mongoengine.generics import ListCreateAPIView
 from rest_framework_mongoengine import serializers
 from dms.models.location import Location
 
 
 class LocationSerializer(serializers.MongoEngineModelSerializer):
+
+    type = fields.ChoiceField(source='type', choices=Location.TYPE_CHOICES)
+
     class Meta:
         model = Location
         exclude = ('created_at',)

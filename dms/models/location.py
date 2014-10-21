@@ -4,8 +4,11 @@ from dms.models.base import BaseModel
 
 
 class Location(BaseModel):
+    TYPE_CHOICES = (('district', 'district'), ('county', 'county'), ('subcounty', 'subcounty'),
+                    ('parish', 'parish'), ('village', 'village'))
+
     name = StringField(required=True)
-    type = StringField(required=True)
+    type = StringField(required=True, choices=TYPE_CHOICES)
     parent = ReferenceField('self', required=False)
 
     def __unicode__(self):

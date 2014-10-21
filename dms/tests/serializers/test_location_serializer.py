@@ -26,3 +26,11 @@ class LocationSerializerTest(MongoTestCase):
         self.assertTrue(isinstance(saved_location, Location))
         for attribute, value in self.location.items():
             self.assertEqual(value, getattr(saved_location, attribute))
+
+    def test_invalid_type_cannot_be_serialized(self):
+        location_attr = self.location.copy()
+        location_attr['type'] = 'invalid_type'
+
+        serializer = LocationSerializer(data=location_attr)
+
+        self.assertFalse(serializer.is_valid())

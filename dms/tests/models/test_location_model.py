@@ -1,3 +1,4 @@
+from mongoengine import ValidationError
 from dms.models.location import Location
 from dms.tests.base import MongoTestCase
 
@@ -58,3 +59,7 @@ class TestLocationModel(MongoTestCase):
         self.assertIn(bukoto, district_children)
         self.assertIn(wakiso, district_children)
         self.assertIn(district, district_children)
+
+    def test_should_throw_validation_exception_when_type_is_not_valid(self):
+        invalid_type_location = Location(**dict(name='Kampala', parent=None, type='mazrui'))
+        self.assertRaises(ValidationError, invalid_type_location.save)

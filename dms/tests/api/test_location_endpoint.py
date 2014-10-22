@@ -71,3 +71,66 @@ class TestLocationEndpoint(MongoAPITestCase):
         self.assertEqual(1, len(response.data))
         self.assertDictContainsSubset(self.expected_district, response.data[0])
 
+
+class TestLocationChildrenEndpoint(MongoAPITestCase):
+
+    LOCATION_ENDPOINT = '/api/v1/locations/'
+
+    def setUp(self):
+        self.district_to_post = dict(name='Kampala', type='district')
+        self.district = dict(name='Kampala', type='district')
+
+        self.kampala = Location(**self.district).save()
+        self.wakiso_attr = dict(name='Wakiso', type='county', parent=self.kampala.id)
+        self.masaka_attr = dict(name='masaka', type='county')
+
+        self.wakiso = Location(**self.wakiso_attr).save()
+        self.masaka = Location(**self.masaka_attr).save()
+
+    def test_should_filter_location_children_by_district_location_type(self):
+        response = self.client.get(self.LOCATION_ENDPOINT + "?district=%s&type=county&format=json" % self.kampala.id)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+
+        self.wakiso_attr['id'] = str(self.wakiso.id)
+
+        for key in ['id', 'name', 'type']:
+            self.assertEqual(self.wakiso_attr[key], response.data[0][key])
+
+    def test_should_filter_location_children_by_county_location_type(self):
+        wakiso_subcounty_attr = dict(name='Wakiso Subcounty', type='subcounty', parent=self.wakiso.id)
+        masaka_subcounty_attr = dict(name='masaka Subcounty', type='subcounty', parent=self.masaka.id)
+        wakiso_subcounty = Location(**wakiso_subcounty_attr).save()
+        masaka_subcounty = Location(**masaka_subcounty_attr).save()
+
+        response = self.client.get(self.LOCATION_ENDPOINT + "?county=%s&type=subcounty&format=json" % self.wakiso.id)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+
+        wakiso_subcounty_attr['id'] = str(wakiso_subcounty.id)
+
+        for key in ['id', 'name', 'type']:
+            self.assertEqual(wakiso_subcounty_attr[key], response.data[0][key])
+
+    def test_county_cannot_be_parent_of_district(self):
+        response = self.client.get(self.LOCATION_ENDPOINT + "?county=%s&type=district&format=json" % self.wakiso.id)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(0, len(response.data))
+
+    def test_all_location_type(self):
+
+        response = self.client.get(self.LOCATION_ENDPOINT + "?county=%s&type=subcounty&format=json" % self.wakiso.id)
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(0, len(response.data))
+
+        response = self.client.get(self.LOCATION_ENDPOINT + "?subcounty=%s&type=parish&format=json" % self.wakiso.id)
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(0, len(response.data))
+
+        response = self.client.get(self.LOCATION_ENDPOINT + "?parish=%s&type=village&format=json" % self.wakiso.id)
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(0, len(response.data))
+

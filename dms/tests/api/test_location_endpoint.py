@@ -121,7 +121,6 @@ class TestLocationChildrenEndpoint(MongoAPITestCase):
         self.assertEqual(0, len(response.data))
 
     def test_all_location_type(self):
-
         response = self.client.get(self.LOCATION_ENDPOINT + "?county=%s&type=subcounty&format=json" % self.wakiso.id)
         self.assertEqual(200, response.status_code)
         self.assertEqual(0, len(response.data))
@@ -133,4 +132,3 @@ class TestLocationChildrenEndpoint(MongoAPITestCase):
         response = self.client.get(self.LOCATION_ENDPOINT + "?parish=%s&type=village&format=json" % self.wakiso.id)
         self.assertEqual(200, response.status_code)
         self.assertEqual(0, len(response.data))
-

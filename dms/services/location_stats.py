@@ -37,6 +37,16 @@ class StatsDetails(object):
 
 class MultiLocationStatsService(object):
 
+    def __init__(self, location=None):
+        self.location_name = location
+        self.locations = self.set_locations()
+
     def stats(self):
-        districts = Location.objects(parent=None)
-        return {location.name: LocationStatsService(location).aggregate_stats() for location in districts}
+        return {location.name: LocationStatsService(location).aggregate_stats() for location in self.locations}
+
+    def set_locations(self):
+        if self.location_name:
+            location = Location.objects.filter(name__iexact=self.location_name).first()
+            return location.children()
+        return Location.objects(parent=None)
+

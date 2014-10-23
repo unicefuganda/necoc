@@ -7,7 +7,7 @@ from django.conf.urls import patterns, url
 from dms.api.bulk_sms_endpoint import SentMessageListCreateView
 from dms.api.disaster_endpoint import DisasterListCreateView
 from dms.api.disaster_type_endpoint import DisasterTypeListCreateView
-from dms.api.location_stats_service_endpoint import LocationStatsListView
+from dms.api.location_stats_service_endpoint import LocationStatsListView, DistrictStatsListView
 from dms.api.poll_endpoint import PollListCreateView
 from dms.api.poll_response_endpoint import PollResponseListCreateView
 from dms.api.rapid_pro_endpoint import RapidProListCreateView, RapidProRetrieveUpdateView
@@ -32,6 +32,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/disaster-types/$', DisasterTypeListCreateView.as_view()),
     url(r'^api/v1/disasters/$', DisasterListCreateView.as_view()),
     url(r'^api/v1/location-stats/$', LocationStatsListView.as_view()),
+    url(r'^api/v1/location-stats/(?P<district>[0-9a-z]+)/$', DistrictStatsListView.as_view()),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

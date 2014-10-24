@@ -1,10 +1,11 @@
 import datetime
 from dms.api.location_stats_service_endpoint import LocationStatsSerializer, StatsDetailsSerializer, \
     MultiLocationStatsSerializer
+from dms.models import DisasterType, Disaster
 
 from dms.models.location import Location
 from dms.models.rapid_pro_message import RapidProMessage
-from dms.services.location_stats import LocationStatsService, StatsDetails,  LocationStats
+from dms.services.location_stats import LocationStatsService, StatsDetails, LocationStats
 from dms.tests.base import MongoTestCase
 
 
@@ -29,26 +30,35 @@ class LocationStatsServiceSerializersTest(MongoTestCase):
 
         self.assertEqual(serialized_data, serialized_object.data)
 
-    def test_should_serialize_message_stats(self):
+    def test_should_serialize_disaster_and_message_stats(self):
         stats = StatsDetails(1, 50)
-        message_stats = LocationStats(stats)
+        location_stats = LocationStats(stats, stats)
 
-        serialized_object = LocationStatsSerializer(message_stats)
-        serialized_data = {'messages': {'count': 1, 'percentage': 50}}
+        serialized_object = LocationStatsSerializer(location_stats)
+        serialized_data = {'messages': {'count': 1, 'percentage': 50},
+                           'disasters': {'count': 1, 'percentage': 50}}
 
         self.assertEqual(serialized_data, serialized_object.data)
 
     def test_should_serialize_location_stats_service_integration(self):
+        disaster_type = DisasterType(**dict(name='Flood', description="Some flood"))
+        disaster_type.save()
+
+        disaster_attr = dict(name=disaster_type, location=self.district, description="Big Flood", date="2014-12-01",
+                             status="Assessment")
+
+        Disaster(**disaster_attr).save()
+
         location_stats_service = LocationStatsService(self.district)
         queryset = location_stats_service.aggregate_stats()
         serialized_object = LocationStatsSerializer(queryset)
-        serialized_data = {'messages': {'count': 1, 'percentage': 50}}
+        serialized_data = {'messages': {'count': 1, 'percentage': 50},
+                           'disasters': {'count': 1, 'percentage': 100}}
 
         self.assertEqual(serialized_data, serialized_object.data)
 
 
 class MultiLocationStatsServiceSerializersTest(MongoTestCase):
-
     def setUp(self):
         self.location_name = 'Kampala'
         text = "NECOC %s fire baba fire" % self.location_name
@@ -59,17 +69,28 @@ class MultiLocationStatsServiceSerializersTest(MongoTestCase):
         self.bukoto_name = 'Bukoto'
         self.bukoto = Location(**dict(name=self.bukoto_name, parent=None, type='district')).save()
         text = "NECOC %s flood" % self.bukoto_name
-        self.message_bukoto = dict(phone_no=phone_number, text=text, received_at=date_time, relayer_id=234, run_id=23243)
+        self.message_bukoto = dict(phone_no=phone_number, text=text, received_at=date_time, relayer_id=234,
+                                   run_id=23243)
+
+        disaster_type = DisasterType(**dict(name='Flood', description="Some flood"))
+        disaster_type.save()
+
+        self.disaster_attr = dict(name=disaster_type, location=self.district, description="Big Flood",
+                                  date="2014-12-01",
+                                  status="Assessment")
 
     def test_should_retrieve_message_stats_in_all_locations(self):
         RapidProMessage(**self.message).save()
         RapidProMessage(**self.message_bukoto).save()
+        Disaster(**self.disaster_attr).save()
 
         multi_location_serializer = MultiLocationStatsSerializer()
         serialized_object = multi_location_serializer
 
-        expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50}},
-                                    'bukoto': {'messages': {'count': 1, 'percentage': 50}}
-                                    }
+        expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50},
+                                                'disasters': {'count': 1, 'percentage': 100}},
+                                    'bukoto': {'messages': {'count': 1, 'percentage': 50},
+                                               'disasters': {'count': 0, 'percentage': 0}}
+                                   }
 
         self.assertEqual(expected_serialized_data, serialized_object.data)

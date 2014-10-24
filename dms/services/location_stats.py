@@ -1,30 +1,38 @@
-from dms.models import RapidProMessage, Location
+from dms.models import RapidProMessage, Location, Disaster
 from dms.utils.general_helpers import percentize
+
+
+class LocationStatsAttribute(object):
+
+    def __init__(self, location, object_class):
+        self.location = location
+        self.attribute_class = object_class
+
+    def stats(self):
+        attribute_count = self.attribute_count()
+        total_attribute_count = self.attribute_class.objects.count()
+        percentage = percentize(attribute_count, total_attribute_count)
+        return StatsDetails(attribute_count, percentage)
+
+    def attribute_count(self):
+        if self.location:
+            return self.attribute_class.from_(self.location).count()
+        return 0
 
 
 class LocationStatsService(object):
 
     def __init__(self, location):
         self.location = location
-        self.total_message_count = RapidProMessage.objects.count()
 
     def aggregate_stats(self):
-        message_stats = self.message_stats()
-        return LocationStats(message_stats)
-
-    def message_stats(self):
-        message_count = self.message_count()
-        percentage = percentize(message_count, self.total_message_count)
-        return StatsDetails(message_count, percentage)
-
-    def message_count(self):
-        if self.location:
-            return RapidProMessage.from_(self.location).count()
-        return 0
+        message_stats = LocationStatsAttribute(self.location, RapidProMessage).stats()
+        disaster_stats = LocationStatsAttribute(self.location, Disaster).stats()
+        return LocationStats(message_stats, disaster_stats)
 
 
 class LocationStats(object):
-    def __init__(self, messages, disasters=None):
+    def __init__(self, messages=None, disasters=None):
         self.messages = messages
         self.disasters = disasters
 

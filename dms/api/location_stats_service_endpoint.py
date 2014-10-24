@@ -14,6 +14,7 @@ class StatsDetailsSerializer(serializers.Serializer):
 class LocationStatsSerializer(serializers.Serializer):
 
     messages = StatsDetailsSerializer(many=False)
+    disasters = StatsDetailsSerializer(many=False)
 
 
 class MultiLocationStatsSerializer(object):

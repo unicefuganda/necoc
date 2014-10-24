@@ -18,3 +18,33 @@ class TestDisasterModel(MongoTestCase):
         disasters = Disaster.objects(**attributes)
 
         self.assertEqual(1, disasters.count())
+
+    def test_get_messages_from_a_location(self):
+        attributes = dict(name=self.disaster_type, location=self.district, description="Big Flood", date="2014-12-01",
+                          status="Assessment")
+        disaster1 = Disaster(**attributes).save()
+
+        attr2 = attributes.copy()
+        attr2["location"] = Location(**dict(name='Some other location', type='district', parent=None)).save()
+        disaster2 = Disaster(**attr2).save()
+
+        location_disasters = Disaster.from_(self.district)
+
+        self.assertEqual(1, location_disasters.count())
+        self.assertIn(disaster1, location_disasters)
+        self.assertNotIn(disaster2, location_disasters)
+
+    def test_get_messages_from_children_are_also_added(self):
+        attributes = dict(name=self.disaster_type, location=self.district, description="Big Flood", date="2014-12-01",
+                          status="Assessment")
+        disaster1 = Disaster(**attributes).save()
+
+        attr2 = attributes.copy()
+        attr2["location"] = Location(**dict(name='Kampala subcounty', type='subcounty', parent=self.district)).save()
+        disaster2 = Disaster(**attr2).save()
+
+        location_disasters = Disaster.from_(self.district)
+
+        self.assertEqual(2, location_disasters.count())
+        self.assertIn(disaster1, location_disasters)
+        self.assertIn(disaster2, location_disasters)

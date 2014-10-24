@@ -117,7 +117,6 @@ class TestRapidProMessage(MongoTestCase):
         self.assertIn(message, location_messages)
         self.assertNotIn(message1, location_messages)
 
-
     def test_get_messages_from_children_are_also_added(self):
         location_name = 'Abim'
         text = "NECOC %s fire baba fire" % location_name

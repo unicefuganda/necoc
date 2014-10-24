@@ -14,3 +14,8 @@ class Disaster(BaseModel):
     description = StringField()
     status = StringField(choices=DISASTER_STATUS)
     date = DateTimeField(required=True)
+
+    @classmethod
+    def from_(cls, location):
+        locations = location.children(include_self=True)
+        return cls.objects.filter(location__in=locations)

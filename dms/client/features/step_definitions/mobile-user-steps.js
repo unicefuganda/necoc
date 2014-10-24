@@ -1,13 +1,9 @@
 module.exports = function () {
     var homePage = require("../pages/home-page");
-    var dataSetupPage = require("../pages/data-setup-page"),
+    var mobileUsersPage = require("../pages/mobile-users-page"),
         user = {};
 
     this.World = require("../support/world").World;
-
-    this.When(/^I navigate to the Admin Panel$/, function (next) {
-        homePage.navigateToAdminPanel().then(next);
-    });
 
     this.When(/^I click the create new user button$/, function (next) {
         mobileUsersPage.clickCreateUserButton().then(function () {
@@ -22,9 +18,9 @@ module.exports = function () {
         mobileUsersPage.createUserModal[field].sendKeys(text).then(next);
     });
 
-    this.When(/^I select my "([^"]*)" as "([^"]*)"$/, function (arg1, location, next) {
+    this.When(/^I select my "([^"]*)" as "([^"]*)"$/, function (className, location, next) {
         user.location = location;
-        mobileUsersPage.createUserModal.selectLocation(location).then(next);
+        mobileUsersPage.createUserModal.selectLocation(className, location).then(next);
     });
 
     this.When(/^I navigate to the users page$/, function (next) {
@@ -80,7 +76,7 @@ module.exports = function () {
                 self.expect(mobileUsersPage.createUserModal.getNameFieldErrors()).to.eventually.equal('This field is required');
             })
             .then(function () {
-                self.expect(mobileUsersPage.createUserModal.getLocationFieldErrors()).to.eventually.equal('This field is required')
+                self.expect(mobileUsersPage.createUserModal.getDistrictFieldErrors()).to.eventually.equal('This field is required')
                     .and.notify(next);
             });
     });
@@ -103,9 +99,11 @@ module.exports = function () {
                 self.expect(mobileUsersPage.createUserModal.getNameFieldErrors()).to.eventually.be.empty;
             })
             .then(function () {
-                self.expect(mobileUsersPage.createUserModal.getLocationFieldErrors()).to.eventually.be.empty
-                    .and.notify(next);
-            });
+                self.expect(mobileUsersPage.createUserModal.getDistrictFieldErrors()).to.eventually.be.empty
+            })
+            .then(function () {
+                self.expect(mobileUsersPage.createUserModal.getSubcountyFieldErrors()).to.eventually.be.empty
+            }).then(next);
     });
 
     this.Then(/^I should see other server\-side validation errors$/, function (next) {
@@ -121,7 +119,7 @@ module.exports = function () {
                 self.expect(mobileUsersPage.createUserModal.getNameFieldErrors()).to.eventually.be.empty;
             })
             .then(function () {
-                self.expect(mobileUsersPage.createUserModal.getLocationFieldErrors()).to.eventually.be.empty
+                self.expect(mobileUsersPage.createUserModal.getDistrictFieldErrors()).to.eventually.be.empty
                     .and.notify(next);
             });
     });

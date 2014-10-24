@@ -25,14 +25,14 @@ describe('dms.stats', function () {
                 httpMock = $httpBackend;
                 statsService = StatsService;
                 apiUrl = Config.apiUrl;
-                httpMock.when('GET', apiUrl + 'location-stats').respond(aggregateStats);
+                httpMock.when('GET', apiUrl + 'location-stats/').respond(aggregateStats);
             });
         });
 
         describe('.getAggregates()', function () {
             it('should fetch aggregate stats', function () {
                 var obtainedStats = statsService.getAggregates();
-                httpMock.expectGET(apiUrl + 'location-stats');
+                httpMock.expectGET(apiUrl + 'location-stats/');
                 httpMock.flush();
                 expect(obtainedStats).toBeDefined();
             });

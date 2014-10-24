@@ -14,10 +14,10 @@ var MobileUsersModal = function () {
         return this.saveButton.click();
     };
 
-    this.selectLocation = function (location, next) {
-        return element(by.css('.district .selectize-input')).click().then(function () {
+    this.selectLocation = function (className, location) {
+        return element(by.css('.' + className + ' .selectize-input')).click().then(function () {
             browser.sleep(200);
-            return element(by.cssContainingText('.district .selectize-dropdown-content .option', location)).click()
+            return element(by.cssContainingText('.' + className + ' .selectize-dropdown-content .option', location)).click()
         });
     };
 
@@ -35,8 +35,12 @@ var MobileUsersModal = function () {
         return element.all(by.css('#email-errors .text-danger')).get(i).getText();
     };
 
-    this.getLocationFieldErrors = function () {
-        return element(by.css('#location-errors .text-danger')).getText();
+    this.getDistrictFieldErrors = function () {
+        return element(by.css('#district-errors .text-danger')).getText();
+    };
+
+    this.getSubcountyFieldErrors = function () {
+        return element(by.css('#subcounty-errors .text-danger')).getText();
     };
 };
 

@@ -101,7 +101,8 @@ module.exports = function () {
 
     this.When(/^I navigate to map location "([^"]*)"$/, function (url, next) {
         browser.get('#' + url);
-        next();
+        this.expect(browser.wait(mapPage.mapLegend.isDisplayed)).to.eventually.equal(true)
+            .and.notify(next);
     });
 
     this.When(/^I zoom out to zoom level (\d+)$/, function (level, next) {

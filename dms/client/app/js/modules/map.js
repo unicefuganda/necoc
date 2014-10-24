@@ -174,6 +174,7 @@
             },
             selectLayer: function (layerName) {
                 if (layerName) {
+                    layerName = layerName.toLowerCase();
                     LayerMap.zoomIn(layerName);
                     this.highlightLayer(layerName);
                     this.addSubCountyLayer(layerName).then(function() {
@@ -225,7 +226,11 @@
 
                     if (district) {
                         MapService.hasLayer(district.toLowerCase()) &&
-                        $state.go('admin.dashboard.district', {district: district.toLowerCase()});
+                        $state.go('admin.dashboard.district', {district: district.toLowerCase()}, {reload: true})
+                            .then(function () {
+                                MapService.selectLayer(district);
+                            });
+
                     } else {
                         $state.go('admin.dashboard', {}, {reload: true});
                     }

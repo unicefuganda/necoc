@@ -10,9 +10,11 @@
             <div ng-controller="DisastersModalController">
                 <form role="form" novalidate="" name="disasters_form" ng-submit="saveDisaster()">
                     <div class="modal-body">
-                        <div id="disaster-type-field" class="form-group" ng-class="{'has-error': disasters_form.type.$invalid && hasErrors }">
+                        <div id="disaster-type-field" class="form-group"
+                             ng-class="{'has-error': disasters_form.type.$invalid && hasErrors }">
                             <label class="control-label">Type</label>
-                            <input type="text" ng-model="disaster.name" disaster-types="disaster" name="type" class="form-control"
+                            <input type="text" ng-model="disaster.name" disaster-types="disaster" name="type"
+                                   class="form-control"
                                    placeholder="select disaster type" required="">
 
                             <div id="name-errors" class="error-text"
@@ -23,17 +25,25 @@
                             </div>
                         </div>
                         <div id="district-field" class="form-group"
-                             ng-class="{'has-error': disasters_form.location.$invalid && hasErrors }">
-                            <label class="control-label">Location</label>
-                            <input type="text" ng-model="disaster.location" name="location" class="form-control"
-                                   placeholder="select disaster location" select-location="disaster" data-max-locations="1" required="">
+                             ng-class="{'has-error': disasters_form.district.$invalid && hasErrors}">
+                            <label class="control-label" for="district">District</label>
+                            <input type="text" id="district" name="district" class="form-control" data-parent="true"
+                                   location-cascade="districts" ng-model="disaster.district" data-max-locations="1"
+                                   placeholder="select district" data-child="subcounties" data-set="disaster" required="">
 
                             <div id="district-errors" class="error-text"
-                                 ng-show="disasters_form.location.$invalid && hasErrors">
-                                <p class="text-danger" ng-show="disasters_form.location.$error.required">
+                                 ng-show="disasters_form.district.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="disasters_form.district.$error.required">
                                     This field is required
                                 </p>
                             </div>
+                        </div>
+                        <div class="form-group subcounty"
+                             ng-class="{'has-error': disasters_form.subcounty.$invalid && hasErrors}">
+                            <label class="control-label" for="subcounty">Sub-County</label>
+                            <input type="text" id="subcounty" ng-model="disaster.subcounty" name="subcounty"
+                                   location-cascade="subcounties" class="form-control" data-max-locations="1"
+                                   placeholder="select sub-county" data-set="disaster">
                         </div>
                         <div class="form-group"
                              ng-class="{'has-error': disasters_form.description.$invalid && hasErrors }">

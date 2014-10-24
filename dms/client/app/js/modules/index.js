@@ -69,8 +69,9 @@
             })
     });
 
-    module.run(function ($rootScope, $state) {
+    module.run(function ($rootScope, $state, $stateParams) {
         $rootScope.$state = $state;
+        $rootScope.params = {location : $stateParams};
     });
 
 })(angular.module('dms', ['ui.router', 'siTable', 'checklist-model', 'dms.message', 'dms.admin-panel', 'dms.location', 'dms.mobile-user',

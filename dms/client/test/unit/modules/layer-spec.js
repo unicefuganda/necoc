@@ -168,14 +168,5 @@ describe('dms.layer', function () {
             });
         });
 
-        describe('METHOD: remove', function () {
-            it('should remove layer from the map', function () {
-                var districtLayer = layer.build('lira-district', mockMap, mockMapLayer, {});
-
-                districtLayer.remove();
-                expect(mockMap.removeLayer).toHaveBeenCalledWith(mockMapLayer);
-            });
-        });
-
     });
 });

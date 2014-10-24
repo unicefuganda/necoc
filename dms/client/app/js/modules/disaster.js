@@ -35,6 +35,10 @@
             if ($scope.disasters_form.$valid) {
                 $scope.saveStatus = true;
 
+                $scope.disaster.location  = $scope.disaster.subcounty || $scope.disaster.district;
+                delete $scope.disaster.district;
+                delete $scope.disaster.subcounty;
+
                 DisasterService.create($scope.disaster).then(function (response) {
                     $scope.disaster = null;
                     $scope.saveStatus = false;

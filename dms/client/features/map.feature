@@ -21,7 +21,7 @@ Feature: Map
 
   Scenario: Navigate to district
     Given I am logged in as a NECOC admin
-    When I navigate to "/admin/dashboard/lira"
+    When I navigate to map location "/admin/dashboard/lira"
     Then I should see Uganda map zoomed into "Lira" district
     Then I should see the map title as "Uganda / Lira"
 
@@ -34,17 +34,18 @@ Feature: Map
 
   Scenario: View Messages HeatMap
     Given I am logged in as a NECOC admin
-    When I navigate to "/admin/dashboard/lira"
+    When I navigate to "/admin/dashboard"
+    And click "Lira" district
     Then I should see "lira" district with layer color "#FFEDA0"
     Given I am logged in as a NECOC admin
     When I have "Kampala" district already registered
     When I POST a message to the NECOC DMS
-    And I navigate to "/admin/dashboard/kampala"
+    And click "Kampala" district
     Then I should see "kampala" district with layer color "#FFEDA0"
 
   Scenario: Search location on the map
     Given I am logged in as a NECOC admin
-    When I navigate to "/admin/dashboard"
+    When I navigate to map location "/admin/dashboard"
     And I search for "lira" district
     Then I should see Uganda map zoomed into "Lira" district
     When I clear the text I entered in the district field

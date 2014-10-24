@@ -59,6 +59,29 @@ describe('dms.disaster', function () {
             scope.saveDisaster();
             expect(scope.hasErrors).toBeTruthy();
         });
+
+        it('should post disaster with location as subcounty if it is given', function () {
+            initController(true);
+            scope.disaster = { name: "Flood", date: "2014/10/02 19:13",
+                district: {name: 'district-name'}, subcounty: {name: 'sub-county-name'}};
+            scope.disasters = [];
+
+            scope.saveDisaster();
+            httpMock.expectPOST(apiUrl + 'disasters/', { name: "Flood", date: "2014-10-02T19:13",
+                location: {name: 'sub-county-name'} });
+            httpMock.flush();
+        });
+
+        it('should post disaster with location as district if no subcounty is given', function () {
+            initController(true);
+            scope.disaster = { name: "Flood", date: "2014/10/02 19:13", district: {name: 'district-name'}};
+            scope.disasters = [];
+
+            scope.saveDisaster();
+            httpMock.expectPOST(apiUrl + 'disasters/', {name: "Flood", date: "2014-10-02T19:13",
+                location: {name: 'district-name'}});
+            httpMock.flush();
+        });
     });
 
 
@@ -89,7 +112,9 @@ describe('dms.disaster', function () {
         describe('showAssociatedMessages()', function () {
             it('should add messages associated to a disaster to the scope', function () {
                 initController();
-                var mockAssociatedMessages = [{name: "mockMessages"}],
+                var mockAssociatedMessages = [
+                        {name: "mockMessages"}
+                    ],
                     disasterStub = {id: "disaster_id"};
 
                 scope.showAssociatedMessages(disasterStub);

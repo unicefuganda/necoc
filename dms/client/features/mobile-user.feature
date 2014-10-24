@@ -2,19 +2,20 @@ Feature: Mobile User
 
   Scenario: Create Mobile User
     Given I am logged in as a NECOC admin
-    And I have "Mukono" district already registered
+    And I have "Mukono" district and "Nabbaale" subcounty already registered
     When I navigate to the users page
     And I click the create new user button
     And I enter my "name" as "Solomon"
     And I enter my "email" as "solomon@gmail.com"
     And I enter my "phone" as "0775019449"
     And I select my "district" as "Mukono"
+    And I select my "subcounty" as "Nabbaale"
     And I click  save and close
     Then I should see my details in mobile users table
 
   Scenario: Create Mobile User -- Validation
     Given I am logged in as a NECOC admin
-    And I have "Mukono" district already registered
+    And I have "Mukono" district and "Nabbaale" subcounty already registered
     When I navigate to the users page
     And I click the create new user button
     And I click the save button
@@ -24,6 +25,7 @@ Feature: Mobile User
     And I enter my "email" as "solomon@gmail.com"
     And I enter my "phone" as "0775019449"
     And I select my "district" as "Mukono"
+    And I select my "subcounty" as "Nabbaale"
     Then I should not see the field required error messages
     When I click the save button
     Then I should see other server-side validation errors

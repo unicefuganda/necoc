@@ -53,9 +53,9 @@ var MessagesPage = function () {
     };
 
     this.postMessageWithText = function (text, next) {
-        var message = this.messages[0];
-        message.text = text;
-        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: message}, next);
+        var clonedMessage = JSON.parse( JSON.stringify( this.messages[0] ) );
+        clonedMessage.text = text;
+        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: clonedMessage}, next);
     };
 
     this.postMessages = function (number, next) {

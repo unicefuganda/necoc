@@ -1,3 +1,4 @@
+import csv
 from rest_framework.test import APITestCase
 from django.test import TestCase
 from dms import models as ALL_MODELS
@@ -24,3 +25,12 @@ class MongoTestCase(TestCase):
 
 class MongoAPITestCase(MongoTestCase, APITestCase):
     pass
+
+
+class MongoTestWithCSV(MongoTestCase):
+
+    def write_to_csv(self, mode, data, csvfilename='test.csv'):
+        with open(csvfilename, mode) as fp:
+            file = csv.writer(fp, delimiter=',')
+            file.writerows(data)
+            fp.close()

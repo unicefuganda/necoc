@@ -1,6 +1,6 @@
 (function (module) {
 
-    module.factory('GeoJsonService', function ($http, Config) {
+    module.factory('GeoJsonService', function ($http, Config, $q) {
 
         function filterQuery(filter) {
             var query = '<Filter xmlns="http://www.opengis.net/ogc">';
@@ -17,7 +17,7 @@
         function geoServerUrlFilter(dataset, filter, propertyNames) {
             var url = Config.geoServerUrl + '&typeName=geonode:' + dataset;
             url += propertyNames ? '&propertyName=' + propertyNames.join(',') : '';
-            url += filter ? '&filter=' + filterQuery(filter) + '&callback=JSON_CALLBACK' : '';
+            url += filter ? '&filter=' + filterQuery(filter) + '&format_options=callback:JSONPCallback' : '';
             return url;
         }
 
@@ -28,9 +28,17 @@
             },
 
             subCounties: function (district) {
-                var propertyNames = ['the_geom', "DNAME_2010", 'SNAME_2010'];
-                var filter = { 'DNAME_2010': district.toUpperCase() };
-                return $http.jsonp(geoServerUrlFilter('subcounties_2011_0005', filter, propertyNames), {cache: true});
+                var deferred = $q.defer();
+                JSONPCallback = function (data) {
+                    deferred.resolve(data);
+                };
+                var propertyNames = ['the_geom', "DNAME_2010", 'SNAME_2010'],
+                    filter = { 'DNAME_2010': district.toUpperCase() },
+                    url = geoServerUrlFilter('subcounties_2011_0005', filter, propertyNames);
+
+                $http.jsonp(url, {cache: true});
+
+                return deferred.promise;
             }
         }
     });

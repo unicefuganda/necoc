@@ -53,16 +53,6 @@ var MobileUsersPage = function () {
         return element(by.repeater('user in users').row(row).column('{[{ user.' + key + ' }]}')).getText();
     };
 
-
-    this.registerLocation = function (location, next) {
-        request.post('http://localhost:7999/api/v1/locations/', {
-            form: {
-                name: location,
-                type: "district"
-            }
-        }, next);
-    };
-
     this.registerUserWith = function (email, phone, callback) {
         request.post('http://localhost:7999/api/v1/locations/', {
             form: {

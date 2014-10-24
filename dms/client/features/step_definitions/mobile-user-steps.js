@@ -1,16 +1,12 @@
 module.exports = function () {
     var homePage = require("../pages/home-page");
-    var mobileUsersPage = require("../pages/mobile-users-page"),
+    var dataSetupPage = require("../pages/data-setup-page"),
         user = {};
 
     this.World = require("../support/world").World;
 
     this.When(/^I navigate to the Admin Panel$/, function (next) {
         homePage.navigateToAdminPanel().then(next);
-    });
-
-    this.When(/^I have "([^"]*)" district already registered$/, function (district, next) {
-        mobileUsersPage.registerLocation(district, next);
     });
 
     this.When(/^I click the create new user button$/, function (next) {

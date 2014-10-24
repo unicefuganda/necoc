@@ -22,6 +22,12 @@
                 templateUrl: '/static/templates/partials/admin/dashboard.html'
             })
 
+            .state('admin.dashboard.district.subcounty', {
+                url: '/:subcounty',
+                data: { pageTitle: 'Dashboard'},
+                templateUrl: '/static/templates/partials/admin/dashboard.html'
+            })
+
             .state('admin', {
                 url: '/admin',
                 templateUrl: '/static/templates/admin-panel.html'
@@ -63,9 +69,8 @@
             })
     });
 
-    module.run(function ($rootScope, $state, $stateParams) {
+    module.run(function ($rootScope, $state) {
         $rootScope.$state = $state;
-        $rootScope.params = {location: $stateParams};
     });
 
 })(angular.module('dms', ['ui.router', 'siTable', 'checklist-model', 'dms.message', 'dms.admin-panel', 'dms.location', 'dms.mobile-user',

@@ -7,6 +7,8 @@
                 layerStyle,
                 name = layerName.toLowerCase();
 
+            var children = {};
+
             function init(self) {
                 layer
                     .on('mouseover', self.highlight)
@@ -53,6 +55,14 @@
                 return layer.getBounds().getCenter();
             };
 
+            this.addChildLayer = function (layer) {
+                children[layer.getName()] = layer
+            };
+
+            this.getChildLayer = function (layerName) {
+                return children[layerName];
+            };
+
             init(this);
         }
 
@@ -87,8 +97,16 @@
                 layerList[layerName] && layerList[layerName].highlight();
             },
             clickLayer: function (layerName) {
-                layerList[layerName] && layerList[layerName].click();
-                layerList[layerName] && layerList[layerName].zoomIn();
+                var layer = layerList[layerName];
+                if (layer) {
+                    layer.click();
+                }
+            },
+            zoomIn: function (layerName) {
+                var layer = layerList[layerName];
+                if (layer) {
+                    layer.zoomIn();
+                }
             },
             hasLayer: function (layerName) {
                 return layerList[layerName] ? true : false;

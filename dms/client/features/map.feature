@@ -6,7 +6,6 @@ Feature: Map
     Then I should see a map of Uganda centered at latitude "1.436" and longitude "32.884"
     Then I should see a map of Uganda zoomed at level "7"
 
-
   Scenario: Highlight district
     Given I am logged in as a NECOC admin
     When I navigate to "/admin/dashboard"
@@ -26,11 +25,12 @@ Feature: Map
     Then I should see Uganda map zoomed into "Lira" district
     Then I should see the map title as "Uganda / Lira"
 
-  Scenario: View Messages bubble
+  Scenario: View Messages bubble on each Subcounty
     Given I am logged in as a NECOC admin
-    And I have "Lira" district already registered
-    When I navigate to "/admin/dashboard/lira"
-    Then I should see a messages bubble with 0 incoming messages
+    And I have "Gulu" district and "Awach" subcounty already registered
+    And I POST "NECOC Awach Flood" to the NECOC DMS
+    When I navigate to map location "/admin/dashboard/gulu"
+    Then I should see a messages bubble with 1 incoming messages
 
   Scenario: View Messages HeatMap
     Given I am logged in as a NECOC admin

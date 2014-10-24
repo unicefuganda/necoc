@@ -36,6 +36,13 @@ describe('dms.stats', function () {
                 httpMock.flush();
                 expect(obtainedStats).toBeDefined();
             });
+
+            it('should felt aggregate stats of a particular location', function () {
+                var obtainedStats = statsService.getAggregates('gulu');
+                httpMock.expectGET(apiUrl + 'location-stats/gulu/').respond({});
+                httpMock.flush();
+                expect(obtainedStats).toBeDefined();
+            });
         });
     });
 });

@@ -26,7 +26,7 @@ var MessagesPage = function () {
 
     this.messages = [
         { phone: "023020302", time: "2014-02-13T02:00:00", relayer: 2, run: '1',
-            text: "NECOC "+ this.senderLocation['name']+" Fire ayoyoooo",
+            text: "NECOC " + this.senderLocation['name'] + " Fire ayoyoooo",
             source: "NECOC Volunteer" }
     ];
 
@@ -48,12 +48,15 @@ var MessagesPage = function () {
         return element(by.css('input[type="checkbox"]')).click();
     };
 
-    this.postMessage = function (callback) {
-        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: this.messages[0]}, function () {
-            callback();
-        })
+    this.postMessage = function (next) {
+        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: this.messages[0]}, next);
     };
 
+    this.postMessageWithText = function (text, next) {
+        var message = this.messages[0];
+        message.text = text;
+        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: message}, next);
+    };
 
     this.postMessages = function (number, next) {
         for (var index = 0; index < number; index++) {
@@ -65,7 +68,7 @@ var MessagesPage = function () {
         next();
     };
 
-    this.getTextByCss = function(selector){
+    this.getTextByCss = function (selector) {
         return element(by.css(selector)).getText();
     };
 
@@ -140,7 +143,7 @@ var MessagesPage = function () {
         return element(by.css("#disaster-errors .text-danger")).getText();
     }
 
-    this.categorizeAmessage = function(callback){
+    this.categorizeAmessage = function (callback) {
 
     }
 };

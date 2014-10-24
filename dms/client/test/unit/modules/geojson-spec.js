@@ -35,7 +35,7 @@ describe('dms.geojson', function () {
                     '&typeName=geonode:subcounties_2011_0005&propertyName=the_geom,DNAME_2010,SNAME_2010' +
                     '&filter=<Filter xmlns="http://www.opengis.net/ogc"><PropertyIsEqualTo>' +
                     '<PropertyName>DNAME_2010</PropertyName><Literal>GULU</Literal></PropertyIsEqualTo></Filter>' +
-                    '&callback=JSON_CALLBACK';
+                    '&format_options=callback:JSONPCallback';
 
 
         beforeEach(function () {

@@ -2,9 +2,13 @@
 
 
     module.factory('StatsService', function ($http, Config) {
+
         return {
-            getAggregates: function () {
-                return $http.get(Config.apiUrl + 'location-stats')
+            getAggregates: function (locationName) {
+                if (locationName) {
+                    return $http.get(Config.apiUrl + 'location-stats/' + locationName + '/');
+                }
+                return $http.get(Config.apiUrl + 'location-stats/');
             }
         };
     });

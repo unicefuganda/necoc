@@ -54,7 +54,6 @@ describe('dms.layer', function () {
 
             layerMap.clickLayer(builtLayer.getName());
             expect(mockOptions.onClickHandler).toHaveBeenCalledWith('lira');
-            expect(mapMock.fitBounds).toHaveBeenCalledWith(mockBounds);
         });
 
         it('should check if a layer exists', function () {
@@ -79,5 +78,104 @@ describe('dms.layer', function () {
             layerMap.addLayerGroup(stubLayerGroup.name, stubLayerGroup);
             expect(layerMap.getLayerGroup(stubLayerGroup.name)).toEqual(stubLayerGroup);
         });
+    });
+
+
+    describe('Layer', function () {
+        var mockMapLayer,
+            mockMap,
+            layer;
+
+        beforeEach(function () {
+            mockMap = jasmine.createSpyObj('mockMap', ['fitBounds', 'removeLayer']);
+            mockMapLayer = jasmine.createSpyObj('mockMapLayer', ['on', 'setStyle', 'getBounds']);
+            mockMapLayer.on.andReturn(mockMapLayer);
+
+            inject(function (LayerMap, Layer) {
+                layer = Layer;
+            });
+        });
+
+        describe('METHOD: addChildLayer', function () {
+            it('should add child layer to a parent layer', function () {
+                var subCountyLayer = layer.build('lira-sub-county', mockMap, mockMapLayer, {});
+                var districtLayer = layer.build('lira-district', mockMap, mockMapLayer, {});
+
+                districtLayer.addChildLayer(subCountyLayer);
+                expect(districtLayer.getChildLayer('lira-sub-county')).toEqual(subCountyLayer);
+            });
+        });
+
+        describe('METHOD: getName', function () {
+            it('should return a layer name', function () {
+                var districtLayer = layer.build('lira-district', mockMap, mockMapLayer, {});
+                expect(districtLayer.getName()).toEqual('lira-district');
+            });
+        });
+
+        describe('METHOD: setStyle', function () {
+            it('should set a layer style', function () {
+                var style = {color: 'red'};
+                var districtLayer = layer.build('lira-district', mockMap, mockMapLayer, {});
+                districtLayer.setStyle(style);
+                expect(mockMapLayer.setStyle).toHaveBeenCalledWith(style);
+                expect(districtLayer.getStyle()).toEqual(style);
+            });
+        });
+
+        describe('METHOD: zoomIn', function () {
+            it('should zoom into a certain layer', function () {
+                var mockBounds = [12.3, 23.4];
+                mockMapLayer.getBounds.andReturn(mockBounds);
+                var districtLayer = layer.build('lira-district', mockMap, mockMapLayer, {});
+
+                districtLayer.zoomIn();
+                expect(mockMap.fitBounds).toHaveBeenCalledWith(mockBounds);
+            });
+        });
+
+        describe('METHOD: click', function () {
+            it('should call the on click handler of a layer', function () {
+                var optionsMock = jasmine.createSpyObj('optionsMock', ['onClickHandler']),
+                    districtLayer = layer.build('lira-district', mockMap, mockMapLayer, optionsMock);
+
+                districtLayer.click();
+                expect(optionsMock.onClickHandler).toHaveBeenCalledWith('lira-district');
+            });
+        });
+
+        describe('METHOD: highlight', function () {
+            it('should highlight layer', function () {
+                var optionsMock = jasmine.createSpyObj('optionsMock', ['onClickHandler']);
+                optionsMock.style = { selectedLayerStyle: { color: 'red'} };
+                var districtLayer = layer.build('lira-district', mockMap, mockMapLayer, optionsMock);
+
+                districtLayer.highlight();
+                expect(mockMapLayer.setStyle).toHaveBeenCalledWith({ color: 'red'});
+                expect(districtLayer.isHighlighted()).toBeTruthy();
+            });
+        });
+
+        describe('METHOD: getCenter', function () {
+            it('should get the center of a layer', function () {
+                var mockBounds = jasmine.createSpyObj('mockBounds', ['getCenter']);
+                mockMapLayer.getBounds.andReturn(mockBounds);
+                var districtLayer = layer.build('lira-district', mockMap, mockMapLayer, {});
+
+                districtLayer.getCenter();
+                expect(mockMapLayer.getBounds).toHaveBeenCalled();
+                expect(mockBounds.getCenter).toHaveBeenCalled();
+            });
+        });
+
+        describe('METHOD: remove', function () {
+            it('should remove layer from the map', function () {
+                var districtLayer = layer.build('lira-district', mockMap, mockMapLayer, {});
+
+                districtLayer.remove();
+                expect(mockMap.removeLayer).toHaveBeenCalledWith(mockMapLayer);
+            });
+        });
+
     });
 });

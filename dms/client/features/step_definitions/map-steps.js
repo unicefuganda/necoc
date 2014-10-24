@@ -98,4 +98,24 @@ module.exports = function () {
     this.When(/^I clear the text I entered in the district field$/, function (next) {
         mapPage.searchMapField.clear().then(next);
     });
+
+    this.When(/^I navigate to map location "([^"]*)"$/, function (url, next) {
+        browser.get('#' + url);
+        next();
+    });
+
+    this.When(/^I zoom out to zoom level (\d+)$/, function (level, next) {
+        browser.executeScript(function (level) {
+            return window.map.setZoom(level);
+        }, parseInt(level)).then(function () {
+            self.expect(true).to.equal(true);
+            next();
+        });
+    });
+
+    this.Then(/^I should not see the messages bubble$/, function (next) {
+        this.expect(mapPage.messagesBubble.isDisplayed()).to.eventually.be.false
+            .and.notify(next);
+    });
+
 };

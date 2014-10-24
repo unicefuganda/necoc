@@ -4,6 +4,9 @@
         var map,
             self = this;
 
+        self.subCountyLayerOptions = { style: MapConfig };
+        self.districtlayerOptions = { style: MapConfig };
+
         function initMap(elementId) {
             var map = L.map(elementId).setView([1.436, 32.884], 7);
 
@@ -14,16 +17,25 @@
                 minZoom: 7
             }).addTo(map);
 
-            map.on('zoomend', function () {
-                var layerGroup = LayerMap.getLayerGroup('aggregate_stats');
-                if (map.getZoom() < 9 && map.hasLayer(layerGroup)) {
-                    map.removeLayer(layerGroup);
-                } else if (map.getZoom() >= 9 && !map.hasLayer(layerGroup)) {
-                    layerGroup && map.addLayer(layerGroup);
-                }
-            });
-
+            initMapEvents(map);
             return map;
+        }
+
+        function initMapEvents(map) {
+            map.on('zoomend', function () {
+                toggleLayerGroupOnZoom('aggregate_stats', 9);
+                toggleLayerGroupOnZoom('sub_counties', 9);
+            });
+        }
+
+        function toggleLayerGroupOnZoom(layerGroupName, zoomLevel) {
+            var layerGroup = LayerMap.getLayerGroup(layerGroupName);
+
+            if (map.getZoom() < zoomLevel && map.hasLayer(layerGroup)) {
+                map.removeLayer(layerGroup);
+            } else if (map.getZoom() >= zoomLevel && !map.hasLayer(layerGroup)) {
+                layerGroup && map.addLayer(layerGroup);
+            }
         }
 
         function addHeatMapLegend(map) {
@@ -43,39 +55,43 @@
             legend.addTo(map);
         }
 
-        function circleMarkerIcon(type, content) {
+        function circleMarkerIcon(type, content, classPrefix) {
             return L.divIcon({
-                iconSize: new L.Point(50, 50),
-                className: type + '-aggregate-marker-icon',
+                iconSize: new L.Point(40, 40),
+                className: classPrefix + '-aggregate-marker-icon',
                 html: '<div>' + content + '</div>'
             });
         }
 
-        function aggregateMarker(layer, aggregrateType, aggregateValue) {
+        function aggregateMarker(layer, aggregrateName, aggregateValue, classPrefix) {
             return new L.Marker(layer.getCenter(), {
-                icon: circleMarkerIcon(aggregrateType, aggregateValue)
-            })
+                icon: circleMarkerIcon(aggregrateName, aggregateValue, classPrefix)
+            });
+        }
+
+        function messagesAggregateMarker(layer, aggregateName, count) {
+            return aggregateMarker(layer, aggregateName, count, 'messages');
         }
 
         function addAggregateLayer(map, parentLayerName) {
             var layerGroup = L.layerGroup();
 
-            return StatsService.getAggregates().then(function (response) {
-                var aggregateStats = response.data;
-                var layer = LayerMap.getLayer(parentLayerName);
+            return StatsService.getAggregates(parentLayerName).then(function (response) {
+                var aggregateStats = response.data,
+                    layer = LayerMap.getLayer(parentLayerName);
 
-                if (aggregateStats[parentLayerName]) {
-
-                    angular.forEach(aggregateStats[parentLayerName], function (aggregateValue, aggregateType) {
-                        var marker = aggregateMarker(layer, aggregateType, aggregateValue.count);
+                angular.forEach(aggregateStats, function (aggregateValue, aggregateName) {
+                    var childLayer = layer.getChildLayer(aggregateName);
+                    if (childLayer) {
+                        var marker = messagesAggregateMarker(childLayer, aggregateName, aggregateValue.messages.count);
                         layerGroup.addLayer(marker);
-                    });
+                    }
+                });
 
-                    var savedGroup = LayerMap.getLayerGroup('aggregate_stats');
-                    savedGroup && map.removeLayer(savedGroup);
-                    LayerMap.addLayerGroup('aggregate_stats', layerGroup);
-                    map.addLayer(layerGroup);
-                }
+                var savedGroup = LayerMap.getLayerGroup('aggregate_stats');
+                savedGroup && map.removeLayer(savedGroup);
+                LayerMap.addLayerGroup('aggregate_stats', layerGroup);
+                map.addLayer(layerGroup);
             });
         }
 
@@ -94,10 +110,6 @@
         }
 
         function addDistrictsLayer(map) {
-            self.districtlayerOptions = {
-                style: MapConfig
-            };
-
             return GeoJsonService.districts().then(function (response) {
                 L.geoJson(response.data, {
                     style: MapConfig.districtLayerStyle,
@@ -107,6 +119,25 @@
                         LayerMap.addLayer(districtLayer);
                     }
                 }).addTo(map);
+            });
+        }
+
+        function addSubCountyLayer(district) {
+            var layerGroup = L.layerGroup();
+
+            return GeoJsonService.subCounties(district).then(function (data) {
+                L.geoJson(data, {
+                    style: MapConfig.districtLayerStyle,
+                    onEachFeature: function (feature, layer) {
+                        var subCountyName = feature.properties.SNAME_2010 || 'unknown',
+                            subCountyLayer = Layer.build(subCountyName, map, layer, self.subCountyLayerOptions);
+                        LayerMap.getLayer(district).addChildLayer(subCountyLayer);
+                        layerGroup.addLayer(layer);
+                        console.log(subCountyName);
+                    }
+                });
+                LayerMap.addLayerGroup('sub_counties', layerGroup);
+                map.addLayer(layerGroup);
             });
         }
 
@@ -143,10 +174,17 @@
             },
             selectLayer: function (layerName) {
                 if (layerName) {
-                    LayerMap.clickLayer(layerName.toLowerCase());
+                    LayerMap.zoomIn(layerName);
                     this.highlightLayer(layerName);
-                    addAggregateLayer(map, layerName);
+                    this.addSubCountyLayer(layerName).then(function() {
+                        addAggregateLayer(map, layerName.toLowerCase());
+                    });
                 }
+            },
+            addSubCountyLayer: function (district) {
+                var layerGroup = LayerMap.getLayerGroup('sub_counties');
+                map.hasLayer(layerGroup) && map.removeLayer(layerGroup);
+                return addSubCountyLayer(district);
             },
             onClickDistrict: function (handler) {
                 self.districtlayerOptions.onClickHandler = handler;
@@ -164,13 +202,10 @@
                 MapService.render(attrs.id, $stateParams.district).then(function (map) {
                     $window.map = map;
 
-                    scope.$watch('params.location', function (newLocation) {
-                        newLocation && MapService.selectLayer(newLocation.district);
-                    }, true);
-
                     map.onClickDistrict(function (district) {
-                        $state.go('admin.dashboard.district', {district: district});
-                    })
+                        $state.go('admin.dashboard.district', {district: district}, {reload: false});
+                        MapService.selectLayer(district);
+                    });
 
                     $interval(function () {
                         map.refreshHeatMap();
@@ -186,7 +221,7 @@
             link: function (scope, element, attrs) {
 
                 scope.$watch(attrs.ngModel, function (district) {
-                    if(district == undefined) return;
+                    if (district == undefined) return;
 
                     if (district) {
                         MapService.hasLayer(district.toLowerCase()) &&

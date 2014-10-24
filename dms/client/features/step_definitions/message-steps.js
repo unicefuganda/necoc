@@ -16,6 +16,10 @@ module.exports = function () {
         messagesPage.postMessage(next);
     });
 
+    this.When(/^I POST "([^"]*)" to the NECOC DMS$/, function (text, next) {
+        messagesPage.postMessageWithText(text, next);
+    });
+
     this.When(/^I visit the messages listing page$/, function (next) {
         browser.setLocation('/admin/messages');
         next();

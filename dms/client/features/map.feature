@@ -16,7 +16,7 @@ Feature: Map
   Scenario: Zoom into districts on click
     Given I am logged in as a NECOC admin
     When I navigate to "/admin/dashboard"
-    And click "Lira" district
+    And I click "Lira" district
     Then I should see Uganda map zoomed into "Lira" district
 
   Scenario: Navigate to district
@@ -25,22 +25,23 @@ Feature: Map
     Then I should see Uganda map zoomed into "Lira" district
     Then I should see the map title as "Uganda / Lira"
 
-  Scenario: View Messages bubble on each Subcounty
+  Scenario: View Messages and Disasters bubble on each Subcounty
     Given I am logged in as a NECOC admin
     And I have "Gulu" district and "Awach" subcounty already registered
     And I POST "NECOC Awach Flood" to the NECOC DMS
     When I navigate to map location "/admin/dashboard/gulu"
     Then I should see a messages bubble with 1 incoming messages
+    Then I should see a disasters bubble with 0 disasters
 
   Scenario: View Messages HeatMap
     Given I am logged in as a NECOC admin
     When I navigate to "/admin/dashboard"
-    And click "Lira" district
+    And I click "Lira" district
     Then I should see "lira" district with layer color "#FFEDA0"
     Given I am logged in as a NECOC admin
     When I have "Kampala" district already registered
     When I POST a message to the NECOC DMS
-    And click "Kampala" district
+    And I click "Kampala" district
     Then I should see "kampala" district with layer color "#FFEDA0"
 
   Scenario: Search location on the map
@@ -51,5 +52,10 @@ Feature: Map
     When I clear the text I entered in the district field
     Then I should see a map of Uganda zoomed at level "7"
 
-
-
+  Scenario: View Disasters Bubbles on the map
+    Given I am logged in as a NECOC admin
+    And I have a "Flood" disaster in "Gulu" district, "Awach" subcounty already registered
+    When I navigate to map location "/admin/dashboard"
+    Then I see should see 1 disasters bubble on the map
+    When I click "Gulu" district
+    Then I should see a disasters bubble with 1 disasters

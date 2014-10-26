@@ -19,6 +19,13 @@
     });
 
     module.constant('MapConfig', {
+        maxBubbleRadius: 50,
+        disasterBubbleStyle: {
+            radius: 0,
+            color: '#FC4F55',
+            fillOpacity: 0.4,
+            weight: 1
+        },
         legendPosition: 'bottomleft',
         districtLayerStyle: {
             weight: 2,

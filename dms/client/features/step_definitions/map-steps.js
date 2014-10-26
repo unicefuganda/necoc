@@ -46,7 +46,7 @@ module.exports = function () {
     });
 
 
-    this.When(/^click "([^"]*)" district$/, function (district, next) {
+    this.When(/^I click "([^"]*)" district$/, function (district, next) {
         browser.executeScript(function (district) {
             return window.map.selectLayer(district);
         }, district).then(next);
@@ -117,6 +117,22 @@ module.exports = function () {
     this.Then(/^I should not see the messages bubble$/, function (next) {
         this.expect(mapPage.messagesBubble.isDisplayed()).to.eventually.be.false
             .and.notify(next);
+    });
+
+    this.Then(/^I should see a disasters bubble with (\d+) disasters$/, function (numberOfDisasters, next) {
+        this.expect(mapPage.disastersBubble.getText()).to.eventually.equal(numberOfDisasters)
+            .and.notify(next);
+    });
+
+    this.Then(/^I see should see (\d+) disasters bubble on the map$/, function (disasters, next) {
+        var self =  this;
+
+        browser.executeScript(function () {
+            return window.map.numberOfLayersIn('disaster_bubbles');
+        }).then(function (number) {
+            self.expect(number).to.equal(parseInt(disasters));
+            next();
+        });
     });
 
 };

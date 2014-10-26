@@ -10,4 +10,10 @@ module.exports = function () {
     this.Given(/^I have "([^"]*)" district and "([^"]*)" subcounty already registered$/, function (district, subcounty, next) {
         dataSetupPage.registerSubCounty(district, subcounty, next);
     });
+
+    this.Given(/^I have a "([^"]*)" disaster in "([^"]*)" district, "([^"]*)" subcounty already registered$/,
+        function (disaster, district, subcounty, next) {
+            dataSetupPage.registerDisaster(disaster, district, subcounty, next);
+        });
+
 };

@@ -1,5 +1,6 @@
 var DataSetupPage = function () {
-    var request = require('request');
+    var request = require('request'),
+        self = this;
 
     this.registerDistrict = function (location, next) {
         request.post('http://localhost:7999/api/v1/locations/', {
@@ -26,6 +27,31 @@ var DataSetupPage = function () {
             }, next);
         });
     };
+
+    this.registerDisasterType = function (disasterType, next) {
+        request.post('http://localhost:7999/api/v1/disaster-types/', {
+            form: {
+                name: disasterType
+            }
+        }, next);
+    };
+
+    this.registerDisaster = function (disasterType, district, subcounty, next) {
+        self.registerSubCounty(district, subcounty, function (err, httpResponse, locationBody) {
+            self.registerDisasterType(disasterType, function (err, httpResponse, disasterTypeBody) {
+                request.post('http://localhost:7999/api/v1/disasters/', {
+                    form: {
+                        name: JSON.parse(disasterTypeBody).id,
+                        status: "Assessment",
+                        date: "2014-10-24T17:00:00",
+                        description: "big disaster",
+                        type: "subcounty",
+                        location: JSON.parse(locationBody).id
+                    }
+                }, next);
+            });
+        });
+    }
 };
 
 module.exports = new DataSetupPage();

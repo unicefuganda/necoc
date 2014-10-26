@@ -1,6 +1,6 @@
 (function (module) {
 
-    module.factory('MapService', function (GeoJsonService, MapConfig, LayerMap, StatsService, Layer) {
+    module.factory('MapService', function (GeoJsonService, MapConfig, LayerMap, StatsService, Layer, $interval) {
         var map,
             self = this;
 
@@ -12,7 +12,6 @@
 
             L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
                 attribution: 'Map data Tiles &copy; <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" />',
-                subdomains: '1234',
                 maxZoom: 13,
                 minZoom: 7
             }).addTo(map);
@@ -23,18 +22,29 @@
 
         function initMapEvents(map) {
             map.on('zoomend', function () {
-                toggleLayerGroupOnZoom('aggregate_stats', 9);
-                toggleLayerGroupOnZoom('sub_counties', 9);
+                addLayerGroupOnZoom('aggregate_stats', 9);
+                addLayerGroupOnZoom('sub_counties', 9);
+                removeLayerGroupOnZoom('disaster_bubbles', 9);
             });
         }
 
-        function toggleLayerGroupOnZoom(layerGroupName, zoomLevel) {
+        function addLayerGroupOnZoom(layerGroupName, zoomLevel) {
             var layerGroup = LayerMap.getLayerGroup(layerGroupName);
 
             if (map.getZoom() < zoomLevel && map.hasLayer(layerGroup)) {
-                map.removeLayer(layerGroup);
+                layerGroup && map.removeLayer(layerGroup);
             } else if (map.getZoom() >= zoomLevel && !map.hasLayer(layerGroup)) {
                 layerGroup && map.addLayer(layerGroup);
+            }
+        }
+
+        function removeLayerGroupOnZoom(layerGroupName, zoomLevel) {
+            var layerGroup = LayerMap.getLayerGroup(layerGroupName);
+
+            if (map.getZoom() < zoomLevel && !map.hasLayer(layerGroup)) {
+                layerGroup && map.addLayer(layerGroup);
+            } else if (map.getZoom() >= zoomLevel && map.hasLayer(layerGroup)) {
+                layerGroup && map.removeLayer(layerGroup);
             }
         }
 
@@ -55,7 +65,7 @@
             legend.addTo(map);
         }
 
-        function circleMarkerIcon(type, content, classPrefix) {
+        function circleMarkerIcon(content, classPrefix) {
             return L.divIcon({
                 iconSize: new L.Point(40, 40),
                 className: classPrefix + '-aggregate-marker-icon',
@@ -63,14 +73,18 @@
             });
         }
 
-        function aggregateMarker(layer, aggregrateName, aggregateValue, classPrefix) {
+        function aggregateMarker(layer, aggregateValue, classPrefix) {
             return new L.Marker(layer.getCenter(), {
-                icon: circleMarkerIcon(aggregrateName, aggregateValue, classPrefix)
+                icon: circleMarkerIcon(aggregateValue, classPrefix)
             });
         }
 
-        function messagesAggregateMarker(layer, aggregateName, count) {
-            return aggregateMarker(layer, aggregateName, count, 'messages');
+        function messagesAggregateMarker(layer, count) {
+            return aggregateMarker(layer, count, 'messages');
+        }
+
+        function disastersAggregateMarker(layer, count) {
+            return aggregateMarker(layer, count, 'disasters');
         }
 
         function addAggregateLayer(map, parentLayerName) {
@@ -83,8 +97,10 @@
                 angular.forEach(aggregateStats, function (aggregateValue, aggregateName) {
                     var childLayer = layer.getChildLayer(aggregateName);
                     if (childLayer) {
-                        var marker = messagesAggregateMarker(childLayer, aggregateName, aggregateValue.messages.count);
-                        layerGroup.addLayer(marker);
+                        var messageMarker = messagesAggregateMarker(childLayer, aggregateValue.messages.count);
+                        var disasterMarker = disastersAggregateMarker(childLayer, aggregateValue.disasters.count);
+                        layerGroup.addLayer(messageMarker);
+                        layerGroup.addLayer(disasterMarker);
                     }
                 });
 
@@ -95,17 +111,50 @@
             });
         }
 
+        function animate(circleMarker, percentage) {
+            var radius = 0,
+                maxRadius = parseInt((percentage * MapConfig.maxBubbleRadius) / 100);
+
+            $interval(function () {
+                radius < maxRadius ? radius += (maxRadius / MapConfig.maxBubbleRadius) : radius = 0;
+                circleMarker.setRadius(radius);
+            }, 50);
+        }
+
+        function disasterBubble(latLng, percentage) {
+            var circleMarker = new L.CircleMarker(latLng, MapConfig.disasterBubbleStyle);
+            animate(circleMarker, percentage);
+            return circleMarker;
+        }
+
+        function addDisasterBubbles(map, aggregateStats) {
+            var layerGroup = L.layerGroup();
+
+            angular.forEach(aggregateStats, function (aggregateValue, aggregateName) {
+                var layer = LayerMap.getLayer(aggregateName);
+                if (layer && aggregateValue.disasters.percentage) {
+                    var bubble = disasterBubble(layer.getCenter(), aggregateValue.disasters.percentage);
+                    layerGroup.addLayer(bubble);
+                }
+            });
+
+            LayerMap.addLayerGroup('disaster_bubbles', layerGroup);
+            map.addLayer(layerGroup);
+        }
+
         function addHeatMapLayer() {
             return StatsService.getAggregates().then(function (response) {
                 var aggregateStats = response.data;
 
                 angular.forEach(LayerMap.getLayers(), function (layer, layerName) {
                     if (aggregateStats[layerName]) {
+
                         layer.setStyle(MapConfig.heatMapStyle.messages(aggregateStats[layerName].messages.percentage));
                     } else {
                         layer.setStyle(MapConfig.heatMapStyle.messages(0));
                     }
                 });
+                return aggregateStats;
             });
         }
 
@@ -133,7 +182,6 @@
                             subCountyLayer = Layer.build(subCountyName, map, layer, self.subCountyLayerOptions);
                         LayerMap.getLayer(district).addChildLayer(subCountyLayer);
                         layerGroup.addLayer(layer);
-                        console.log(subCountyName);
                     }
                 });
                 LayerMap.addLayerGroup('sub_counties', layerGroup);
@@ -148,7 +196,7 @@
                 return addDistrictsLayer(map).then(function () {
                     layerName && map.setZoom(7) && this.selectLayer(layerName);
                 }.bind(this)).then(function () {
-                    addHeatMapLayer();
+                    addHeatMapLayer().then(addDisasterBubbles.bind({}, map));
                     addHeatMapLegend(map);
                 }).then(function () {
                     return this;
@@ -177,7 +225,7 @@
                     layerName = layerName.toLowerCase();
                     LayerMap.zoomIn(layerName);
                     this.highlightLayer(layerName);
-                    this.addSubCountyLayer(layerName).then(function() {
+                    this.addSubCountyLayer(layerName).then(function () {
                         addAggregateLayer(map, layerName.toLowerCase());
                     });
                 }
@@ -189,6 +237,9 @@
             },
             onClickDistrict: function (handler) {
                 self.districtlayerOptions.onClickHandler = handler;
+            },
+            numberOfLayersIn: function (layerGroupName) {
+                return LayerMap.getLayerGroup(layerGroupName).getLayers().length;
             },
             refreshHeatMap: function () {
                 addHeatMapLayer();

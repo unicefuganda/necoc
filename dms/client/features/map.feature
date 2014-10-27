@@ -25,6 +25,13 @@ Feature: Map
     Then I should see Uganda map zoomed into "Lira" district
     Then I should see the map title as "Uganda / Lira"
 
+  Scenario: Navigate to subcounty
+    Given I am logged in as a NECOC admin
+    When I navigate to map location "/admin/dashboard/gulu"
+    And I click "Awach" subcounty in "Gulu" district
+    Then I should see the map title as "Uganda / Gulu / Awach"
+    And the map zooms into "Awach"
+
   Scenario: View Messages and Disasters bubble on each Subcounty
     Given I am logged in as a NECOC admin
     And I have "Gulu" district and "Awach" subcounty already registered

@@ -193,11 +193,16 @@
         }
 
         return {
-            render: function (elementId, layerName) {
+            render: function (elementId, district, subcounty) {
                 map = initMap(elementId);
 
                 return addDistrictsLayer(map).then(function () {
-                    layerName && map.setZoom(7) && this.selectLayer(layerName);
+                    var options = {animate: false};
+                    if (district) {
+                        this.selectDistrict(district, options).then(function () {
+                            this.selectSubcounty(district, subcounty);
+                        }.bind(this));
+                    }
                 }.bind(this)).then(function () {
                     addHeatMapLayer().then(addDisasterBubbles.bind({}, map));
                     addHeatMapLegend(map);
@@ -223,15 +228,20 @@
             getHighlightedLayer: function () {
                 return LayerMap.getSelectedLayer();
             },
-            selectLayer: function (layerName) {
+            selectDistrict: function (layerName, options) {
                 if (layerName) {
                     layerName = layerName.toLowerCase();
-                    LayerMap.zoomIn(layerName);
+                    LayerMap.zoomIn(layerName, options);
                     this.highlightLayer(layerName);
-                    this.addSubCountyLayer(layerName).then(function () {
-                        addAggregateLayer(map, layerName.toLowerCase());
-                    });
                 }
+
+                return this.addSubCountyLayer(layerName).then(function () {
+                    addAggregateLayer(map, layerName.toLowerCase());
+                });
+            },
+            selectSubcounty: function (district, subcounty) {
+                var subCountyLayer = LayerMap.getLayer(district.toLowerCase()).getChildLayer(subcounty.toLowerCase());
+                subCountyLayer && subCountyLayer.zoomIn();
             },
             addSubCountyLayer: function (district) {
                 return addSubCountyLayer(district);
@@ -239,11 +249,17 @@
             onClickDistrict: function (handler) {
                 self.districtlayerOptions.onClickHandler = handler;
             },
+            onClickSubcounty: function (handler) {
+                self.subCountyLayerOptions.onClickHandler = handler;
+            },
             numberOfLayersIn: function (layerGroupName) {
                 return LayerMap.getLayerGroup(layerGroupName).getLayers().length;
             },
             refreshHeatMap: function () {
                 addHeatMapLayer();
+            },
+            clickSubCounty: function (district, subcounty) {
+                return LayerMap.getLayer(district.toLowerCase()).getChildLayer(subcounty.toLowerCase()).click();
             }
         };
     });
@@ -252,12 +268,19 @@
         return {
             scope: false,
             link: function (scope, element, attrs) {
-                MapService.render(attrs.id, $stateParams.district).then(function (map) {
+                MapService.render(attrs.id, $stateParams.district, $stateParams.subcounty).then(function (map) {
                     $window.map = map;
 
                     map.onClickDistrict(function (district) {
                         $state.go('admin.dashboard.district', {district: district}, {reload: false}).then(function () {
-                            MapService.selectLayer(district);
+                            MapService.selectDistrict(district);
+                        });
+                    });
+
+                    map.onClickSubcounty(function (subcounty) {
+                        $state.go('admin.dashboard.district.subcounty', {subcounty: subcounty}, {reload: false}).then(function () {
+                            var district = $stateParams.district;
+                            MapService.selectSubcounty(district, subcounty);
                         });
                     });
 
@@ -281,7 +304,7 @@
                         MapService.hasLayer(district.toLowerCase()) &&
                         $state.go('admin.dashboard.district', {district: district.toLowerCase()}, {reload: true})
                             .then(function () {
-                                MapService.selectLayer(district);
+                                MapService.selectDistrict(district);
                             });
 
                     } else {

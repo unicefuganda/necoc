@@ -2,8 +2,9 @@
 
     module.factory('Layer', function () {
 
-        function Layer(layerName, map, layer, options) {
+        function Layer(layerName, map, mapLayer, options) {
             var selected = false,
+                layer = mapLayer,
                 layerStyle,
                 name = layerName.toLowerCase();
 
@@ -24,8 +25,8 @@
                 return layerStyle;
             };
 
-            this.zoomIn = function () {
-                map.fitBounds(layer.getBounds());
+            this.zoomIn = function (options) {
+                map.fitBounds(layer.getBounds(), options);
             };
 
             this.click = function () {
@@ -102,10 +103,10 @@
                     layer.click();
                 }
             },
-            zoomIn: function (layerName) {
+            zoomIn: function (layerName, options) {
                 var layer = layerList[layerName];
                 if (layer) {
-                    layer.zoomIn();
+                    layer.zoomIn(options);
                 }
             },
             hasLayer: function (layerName) {

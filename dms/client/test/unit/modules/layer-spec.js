@@ -130,7 +130,7 @@ describe('dms.layer', function () {
                 var districtLayer = layer.build('lira-district', mockMap, mockMapLayer, {});
 
                 districtLayer.zoomIn();
-                expect(mockMap.fitBounds).toHaveBeenCalledWith(mockBounds);
+                expect(mockMap.fitBounds).toHaveBeenCalledWith(mockBounds, undefined);
             });
         });
 

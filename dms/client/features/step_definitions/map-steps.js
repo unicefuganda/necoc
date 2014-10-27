@@ -1,5 +1,7 @@
 module.exports = function () {
 
+    var zoomLevels = {};
+
     var mapPage = require("../pages/map-page");
 
     this.World = require("../support/world").World;
@@ -28,6 +30,30 @@ module.exports = function () {
         });
     });
 
+    this.When(/^I click "([^"]*)" subcounty in "([^"]*)" district$/, function (subcounty, district, next) {
+        browser.executeScript(function () {
+            return window.map.getZoom();
+        }).then(function (zoomLevel) {
+            zoomLevels.district = zoomLevel;
+        }).then(function () {
+            browser.executeScript(function (district, subcounty) {
+                window.map.clickSubCounty(district, subcounty);
+            }, district, subcounty);
+        }).then(next);
+    });
+
+    this.Then(/^the map zooms into "([^"]*)"$/, function (subcounty, next) {
+        var self = this;
+
+        //Remove me once the UI changes when selecting a subcounty, giving us something to wait for
+        browser.sleep(500);
+        browser.executeScript(function () {
+            return window.map.getZoom();
+        }).then(function (zoomLevel) {
+            self.expect(zoomLevel).to.be.above(zoomLevels.district);
+        }).then(next);
+    });
+
     this.When(/^hover over "([^"]*)"$/, function (district, next) {
         browser.executeScript(function (district) {
             return window.map.highlightLayer(district);
@@ -48,7 +74,7 @@ module.exports = function () {
 
     this.When(/^I click "([^"]*)" district$/, function (district, next) {
         browser.executeScript(function (district) {
-            return window.map.selectLayer(district);
+            window.map.selectDistrict(district);
         }, district).then(next);
     });
 
@@ -56,13 +82,20 @@ module.exports = function () {
         var self = this,
             NORMAL_ZOOM_LEVEL = 7;
 
-        browser.sleep(500);
-        browser.executeScript(function () {
-            return window.map.getZoom();
-        }).then(function (zoomLevel) {
-            self.expect(zoomLevel.toString()).to.be.above(NORMAL_ZOOM_LEVEL);
-            next();
+        browser.wait(mapPage.mapLegend.isDisplayed).then(function () {
+            browser.executeScript(function () {
+                return window.map.getZoom();
+            }).then(function (zoomLevel) {
+                self.expect(zoomLevel.toString()).to.be.above(NORMAL_ZOOM_LEVEL);
+                next();
+            });
         });
+    });
+
+    this.Then(/^clicking "([^"]*)" subcounty zooms in$/, function (subcounty, next) {
+        browser.executeScript(function (subcounty) {
+            return window.map.selectSubcounty(district, subcounty);
+        }, district).then(next);
     });
 
     this.Then(/^I should see a messages bubble with (\d+) incoming messages$/, function (numberOfMessages, next) {
@@ -71,7 +104,7 @@ module.exports = function () {
     });
 
     this.Then(/^I should see the map title as "([^"]*)"$/, function (mapTitle, next) {
-        this.expect(mapPage.mapTitle.getText()).to.eventually.equal(mapTitle)
+        this.expect(browser.wait(mapPage.mapTitle.getText)).to.eventually.equal(mapTitle)
             .and.notify(next);
     });
 
@@ -125,7 +158,7 @@ module.exports = function () {
     });
 
     this.Then(/^I see should see (\d+) disasters bubble on the map$/, function (disasters, next) {
-        var self =  this;
+        var self = this;
 
         browser.executeScript(function () {
             return window.map.numberOfLayersIn('disaster_bubbles');

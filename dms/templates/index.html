@@ -36,7 +36,9 @@
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right navbar-title" ng-show="$state.current.data.pageTitle == 'Dashboard'">
-                <li><a href="">Uganda / {[{ params.location.district | capitalize }]}</a></li>
+                <li><a href="">Uganda
+                    {[{ params.location.district | capitalize | prependSlash }]}
+                    {[{ params.location.subcounty | capitalize | prependSlash }]}</a></li>
             </ul>
         </div>
     </div>

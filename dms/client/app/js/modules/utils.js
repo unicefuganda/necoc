@@ -39,6 +39,13 @@
         }
     });
 
+    module.filter('prependSlash', function() {
+        return function (input) {
+            if (!input) return;
+            return ' / ' + input;
+        }
+    });
+
     module.filter('capitalize', function () {
         return function (input) {
             if (!input) return;

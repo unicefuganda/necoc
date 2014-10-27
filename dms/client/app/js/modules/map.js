@@ -106,7 +106,7 @@
                 });
 
                 var savedGroup = LayerMap.getLayerGroup('aggregate_stats');
-                savedGroup && map.removeLayer(savedGroup);
+                map.hasLayer(savedGroup) && map.removeLayer(savedGroup);
                 LayerMap.addLayerGroup('aggregate_stats', layerGroup);
                 map.addLayer(layerGroup);
             });
@@ -185,6 +185,8 @@
                         layerGroup.addLayer(layer);
                     }
                 });
+                var existingLayerGroup = LayerMap.getLayerGroup('sub_counties');
+                map.hasLayer(existingLayerGroup) && map.removeLayer(existingLayerGroup);
                 LayerMap.addLayerGroup('sub_counties', layerGroup);
                 map.addLayer(layerGroup);
             });
@@ -232,8 +234,6 @@
                 }
             },
             addSubCountyLayer: function (district) {
-                var layerGroup = LayerMap.getLayerGroup('sub_counties');
-                map.hasLayer(layerGroup) && map.removeLayer(layerGroup);
                 return addSubCountyLayer(district);
             },
             onClickDistrict: function (handler) {
@@ -256,8 +256,9 @@
                     $window.map = map;
 
                     map.onClickDistrict(function (district) {
-                        $state.go('admin.dashboard.district', {district: district}, {reload: false});
-                        MapService.selectLayer(district);
+                        $state.go('admin.dashboard.district', {district: district}, {reload: false}).then(function () {
+                            MapService.selectLayer(district);
+                        });
                     });
 
                     $interval(function () {

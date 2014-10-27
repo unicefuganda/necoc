@@ -24,7 +24,8 @@
             radius: 0,
             color: '#FC4F55',
             fillOpacity: 0.4,
-            weight: 1
+            weight: 1,
+            clickable : false
         },
         legendPosition: 'bottomleft',
         districtLayerStyle: {

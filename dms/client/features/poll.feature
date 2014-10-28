@@ -1,6 +1,5 @@
 Feature: Poll
 
-  @dev
   Scenario: Send Poll
     Given I am logged in as a NECOC admin
     And I have "Gulu" district and "Awach" subcounty already registered
@@ -10,8 +9,8 @@ Feature: Poll
     And I enter a poll name as "NECOC POLL"
     And I enter a poll question as "How many disasters have you had in your area"
     And I enter a poll keyword as "polls"
-    And I select the districts as "Lira" and "Gulu"
-    And I select the subcounties as "Ogur" and "Awach"
+    And I select poll districts as "Lira" and "Gulu"
+    And I select poll subcounties as "Ogur" and "Awach"
     And I click the send poll button
     Then I should see poll successfully sent
     And I should see the poll in the poll-list
@@ -19,7 +18,7 @@ Feature: Poll
     And I enter a poll name as "NECOC POLL"
     And I enter a poll question as "How many disasters have you had in your area"
     And I enter a poll keyword as "polls"
-    And I select the target location as "Mukono"
+    And I select poll districts as "Lira" and "Gulu"
     And I click the send poll button
     Then I should see key word must me unique
 

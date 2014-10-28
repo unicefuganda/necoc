@@ -10,8 +10,8 @@ var NewPollModal = function () {
     this.sendPollsButton = element(by.id('send-poll-btn'));
 
     this.selectLocation = function (type_id, location) {
-        return element(by.css('#'+type_id+'.selectize-input')).click().then(function () {
-            return element(by.cssContainingText('.selectize-dropdown-content .option', location)).click()
+        return element(by.css('#' + type_id + ' .selectize-input')).click().then(function () {
+            return element(by.cssContainingText('#' + type_id + ' .selectize-dropdown-content .option', location)).click()
         });
     };
 
@@ -27,7 +27,7 @@ var PollsPage = function () {
 
     this.newPollModal = new NewPollModal();
 
-    this.notification = element(by.css('.growl-message'));
+    this.notification = element(by.css('.poll-toast .growl-message'));
 
     this.sectionTitle = element.all(by.css('.sub-section-header .title')).get(0);
 

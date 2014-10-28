@@ -22,6 +22,7 @@ module.exports = function () {
 
     this.Given(/^I enter a poll name as "([^"]*)"$/, function (pollName, next) {
         poll.name = pollName;
+        this.ignoreSync(false);
         pollsPage.newPollModal.pollNameField.sendKeys(pollName).then(next);
     });
 
@@ -116,12 +117,16 @@ module.exports = function () {
         pollsPage.clickPoll(0, 'name').then(next);
     });
 
-    this.Given(/^I select the districts as "([^"]*)" and "([^"]*)"$/, function (district1, district2, callback) {
-        pollsPage.newPollModal.selectLocation(location).then(next);
+    this.Given(/^I select poll districts as "([^"]*)" and "([^"]*)"$/, function (district1, district2, next) {
+        pollsPage.newPollModal.selectLocation('poll-districts-field', district1).then(function () {
+            pollsPage.newPollModal.selectLocation('poll-districts-field', district2).then(next);
+        });
     });
 
-    this.Given(/^I select the subcounties as "([^"]*)" and "([^"]*)"$/, function (arg1, arg2, callback) {
-      callback.pending();
+    this.Given(/^I select poll subcounties as "([^"]*)" and "([^"]*)"$/, function (subcounty1, subcounty2, next) {
+        pollsPage.newPollModal.selectLocation('poll-subcounties-field', subcounty1).then(function () {
+            pollsPage.newPollModal.selectLocation('poll-subcounties-field', subcounty2).then(next);
+        });
     });
 
 

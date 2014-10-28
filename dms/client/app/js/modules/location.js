@@ -90,7 +90,7 @@
 
                 scope.select[attrs.locationCascade] = $select[0].selectize;
 
-                scope.$watch(attrs.dataSet, function (dataSet) {
+                scope.$watch(attrs.dataset, function (dataSet) {
                     if (!dataSet) {
                         scope.select[attrs.locationCascade].clear();
                     }

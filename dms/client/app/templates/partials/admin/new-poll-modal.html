@@ -65,12 +65,12 @@
                             </div>
                         </div>
 
-                        <div id="poll-district-field" class="form-group"
+                        <div id="poll-districts-field" class="form-group"
                              ng-class="{'has-error': new_poll_form.districts.$invalid && hasErrors}">
                             <label class="control-label" for="district">District</label>
                             <input type="text" id="district" ng-model="poll.districts"
                                    name="districts" class="form-control" placeholder="select poll districts"
-                                   location-cascade="districts" data-child="subcounties" data-set="poll"
+                                   location-cascade="districts" data-child="subcounties" data-dataset="poll"
                                    data-parent="true" required="">
 
                             <div id="poll-location-errors" class="error-text"
@@ -81,12 +81,12 @@
                             </div>
                         </div>
 
-                        <div class="form-group subcounty"
+                        <div id="poll-subcounties-field" class="form-group subcounty"
                              ng-class="{'has-error': new_poll_form.subcounties.$invalid && hasErrors}">
                             <label class="control-label" for="subcounty">Sub-County</label>
                             <input type="text" id="subcounty" ng-model="poll.subcounties" name="subcounties"
                                    location-cascade="subcounties" class="form-control"
-                                   placeholder="select sub-counties" data-set="poll">
+                                   placeholder="select sub-counties" data-dataset="poll">
                         </div>
 
                         <div class="modal-footer">

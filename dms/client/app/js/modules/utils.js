@@ -63,7 +63,7 @@
                         return option;
                     });
                 }
-                return undefined;
+                return [];
             },
             invalidate: function (form, errors) {
                 Object.keys(errors).forEach(function (key) {

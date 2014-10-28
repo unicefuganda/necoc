@@ -35,10 +35,6 @@ module.exports = function () {
         pollsPage.newPollModal.pollKeywordField.sendKeys(pollKeyword).then(next);
     });
 
-    this.Given(/^I select the target location as "([^"]*)"$/, function (location, next) {
-        pollsPage.newPollModal.selectLocation(location).then(next);
-    });
-
     this.Given(/^I click the send poll button$/, function (next) {
         pollsPage.newPollModal.sendPollsButton.click().then(next);
     });
@@ -118,6 +114,14 @@ module.exports = function () {
 
     this.When(/^I click the poll in "([^"]*)"$/, function (arg1, next) {
         pollsPage.clickPoll(0, 'name').then(next);
+    });
+
+    this.Given(/^I select the districts as "([^"]*)" and "([^"]*)"$/, function (district1, district2, callback) {
+        pollsPage.newPollModal.selectLocation(location).then(next);
+    });
+
+    this.Given(/^I select the subcounties as "([^"]*)" and "([^"]*)"$/, function (arg1, arg2, callback) {
+      callback.pending();
     });
 
 

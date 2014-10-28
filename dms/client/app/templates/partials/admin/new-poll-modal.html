@@ -28,13 +28,15 @@
                              ng-class="{'has-error': new_poll_form.question.$invalid && hasErrors }">
                             <label class="control-label">Poll Question</label>
                             <textarea class="form-control" rows="3" ng-model="poll.question" name="question"
-                                      placeholder="enter 130 character poll question" ng-maxlength="130" required=""></textarea>
+                                      placeholder="enter 130 character poll question" ng-maxlength="130"
+                                      required=""></textarea>
 
                             <div id="poll-question-errors" class="error-text"
                                  ng-show="new_poll_form.question.$invalid && hasErrors">
                                 <p class="text-danger" ng-show="new_poll_form.question.$error.required">
                                     This field is required
                                 </p>
+
                                 <p class="text-danger" ng-show="new_poll_form.question.$error.maxlength">
                                     Please enter not more than 130 characters
                                 </p>
@@ -52,30 +54,39 @@
                                 <p class="text-danger" ng-show="new_poll_form.keyword.$error.required">
                                     This field is required
                                 </p>
+
                                 <p class="text-danger" ng-show="new_poll_form.keyword.$error.maxlength">
                                     Please enter not more than 10 characters
                                 </p>
+
                                 <p class="text-danger" ng-repeat="error in errors.keyword">
                                     {[{ error }]}
                                 </p>
                             </div>
                         </div>
 
-                        <div id="poll-location-field" class="form-group"
-                             ng-class="{'has-error': new_poll_form.location.$invalid && hasErrors }">
-                            <label class="control-label">Location</label>
-                            <input type="text" ng-model="poll.target_locations" name="location" class="form-control"
-                                   placeholder="select poll location" select-location="poll" required="">
+                        <div id="poll-district-field" class="form-group"
+                             ng-class="{'has-error': new_poll_form.districts.$invalid && hasErrors}">
+                            <label class="control-label" for="district">District</label>
+                            <input type="text" id="district" ng-model="poll.districts"
+                                   name="districts" class="form-control" placeholder="select poll districts"
+                                   location-cascade="districts" data-child="subcounties" data-set="poll"
+                                   data-parent="true" required="">
 
                             <div id="poll-location-errors" class="error-text"
-                                 ng-show="new_poll_form.location.$invalid && hasErrors">
-                                <p class="text-danger" ng-show="new_poll_form.location.$error.required">
+                                 ng-show="new_poll_form.districts.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="new_poll_form.districts.$error.required">
                                     This field is required
                                 </p>
-                                <p class="text-danger" ng-show="new_poll_form.location.$error.maxlength">
-                                    Please enter not more than 10 characters
-                                </p>
                             </div>
+                        </div>
+
+                        <div class="form-group subcounty"
+                             ng-class="{'has-error': new_poll_form.subcounties.$invalid && hasErrors}">
+                            <label class="control-label" for="subcounty">Sub-County</label>
+                            <input type="text" id="subcounty" ng-model="poll.subcounties" name="subcounties"
+                                   location-cascade="subcounties" class="form-control"
+                                   placeholder="select sub-counties" data-set="poll">
                         </div>
 
                         <div class="modal-footer">
@@ -83,7 +94,8 @@
                                     data-dismiss="modal">
                                 Close
                             </button>
-                            <button type="submit" id="send-poll-btn" close-modal="new-poll-modal" class="btn btn-info" save-state=""
+                            <button type="submit" id="send-poll-btn" close-modal="new-poll-modal" class="btn btn-info"
+                                    save-state=""
                                     data-loading-text="Send...">Send
                             </button>
                         </div>

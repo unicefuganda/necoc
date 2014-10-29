@@ -54,7 +54,7 @@ var MobileUsersPage = function () {
     };
 
     this.getMobileUsersData = function (row, key) {
-        return element(by.repeater('user in users').row(row).column('{[{ user.' + key + ' }]}')).getText();
+        return element(by.repeater('user in users').row(row).column('{[{ ' + key + ' }]}')).getText();
     };
 
     this.registerUserWith = function (email, phone, callback) {

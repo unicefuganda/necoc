@@ -1,7 +1,7 @@
 module.exports = function () {
     var homePage = require("../pages/home-page");
     var mobileUsersPage = require("../pages/mobile-users-page"),
-        user = {};
+        user = { location: {}};
 
     this.World = require("../support/world").World;
 
@@ -19,7 +19,7 @@ module.exports = function () {
     });
 
     this.When(/^I select my "([^"]*)" as "([^"]*)"$/, function (className, location, next) {
-        user.location = location;
+        user.location[className] = location;
         mobileUsersPage.createUserModal.selectLocation(className, location).then(next);
     });
 
@@ -38,19 +38,19 @@ module.exports = function () {
     this.Then(/^I should see my details in mobile users table$/, function (next) {
         var self = this;
 
-        mobileUsersPage.getMobileUsersData(0, 'name')
+        mobileUsersPage.getMobileUsersData(0, 'user.name')
             .then(function (name) {
                 self.expect(name).to.equal(user.name);
             })
             .then(function () {
-                self.expect(mobileUsersPage.getMobileUsersData(0, 'phone')).to.eventually.equal(user.phone);
+                self.expect(mobileUsersPage.getMobileUsersData(0, 'user.phone')).to.eventually.equal(user.phone);
             })
             .then(function () {
-                self.expect(mobileUsersPage.getMobileUsersData(0, 'email')).to.eventually.equal(user.email);
+                self.expect(mobileUsersPage.getMobileUsersData(0, 'user.email')).to.eventually.equal(user.email);
             })
             .then(function () {
-                self.expect(mobileUsersPage.getMobileUsersData(0, 'location.name')).to.eventually.equal(user.location)
-                    .and.notify(next);
+                self.expect(mobileUsersPage.getMobileUsersData(0, '[user.location.parent, user.location] | joinNames'))
+                    .to.eventually.equal(user.location.district + ', ' + user.location.subcounty).and.notify(next);
             });
 
     });

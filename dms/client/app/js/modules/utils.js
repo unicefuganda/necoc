@@ -32,29 +32,6 @@
         return moment;
     });
 
-    module.filter('duration', function ($moment) {
-        return function (input) {
-            if (!input) return;
-            return $moment(input, "YYYY-MM-DDThh:mm").fromNow();
-        }
-    });
-
-    module.filter('prependSlash', function() {
-        return function (input) {
-            if (!input) return;
-            return ' / ' + input;
-        }
-    });
-
-    module.filter('capitalize', function () {
-        return function (input) {
-            if (!input) return;
-            return input.replace(/\w\S*/g, function (txt) {
-                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
-        }
-    });
-
     module.factory('helpers', function () {
         return {
             stringToArray: function (string, seperator) {

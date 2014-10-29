@@ -16,7 +16,7 @@ exports.config = {
 
     cucumberOpts: {
         require: 'features/step_definitions/',
-        format: 'pretty'
-//        tags: '@dev'
+        format: 'pretty',
+        tags: '@dev'
     }
 };

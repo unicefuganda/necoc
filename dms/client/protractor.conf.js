@@ -1,6 +1,6 @@
 exports.config = {
-    seleniumServerJar: 'node_modules/selenium-standalone/.selenium/2.43.1/server.jar',
-    chromeDriver: 'node_modules/selenium-standalone/.selenium/2.43.1/chromedriver',
+    seleniumServerJar: 'node_modules/selenium-standalone/.selenium/2.44.0/server.jar',
+    chromeDriver: 'node_modules/selenium-standalone/.selenium/2.44.0/chromedriver',
 
     framework: 'cucumber',
 

@@ -4,7 +4,7 @@ module.exports = function () {
     this.World = require("../support/world").World;
 
     this.When(/^I click the messages panel chevron$/, function (next) {
-        var animationLength = 800;
+        var animationLength = 1000;
         dashboardPage.sliderButton.click().then(function () {
             browser.sleep(animationLength);
             next();

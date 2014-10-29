@@ -13,7 +13,8 @@
             .state('admin.dashboard', {
                 url: '/dashboard',
                 data: { pageTitle: 'Dashboard' },
-                templateUrl: '/static/templates/partials/admin/dashboard.html'
+                templateUrl: '/static/templates/partials/admin/dashboard.html',
+//                controller: 'DashboardController'
             })
 
             .state('admin.dashboard.district', {
@@ -75,4 +76,4 @@
     });
 
 })(angular.module('dms', ['ui.router', 'siTable', 'checklist-model', 'dms.message', 'dms.admin-panel', 'dms.location', 'dms.mobile-user',
-    'dms.utils', 'dms.disaster', 'dms.disaster-type', 'dms.map', 'dms.polls', 'dms.poll-responses', 'dms.filters']));
+    'dms.utils', 'dms.disaster', 'dms.disaster-type', 'dms.map', 'dms.polls', 'dms.poll-responses', 'dms.filters', 'dms.dashboard']));

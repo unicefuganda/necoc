@@ -1,1 +1,12 @@
 <div map="" id="map"></div>
+
+<div id="message-overlay" sliding-panel="back-arrow">
+    <span class="back-arrow icon icon-chevron-left"></span>
+
+    <div class="message-container">
+        <div class="col-md-4 sub-section-header">
+            <span class="icon icon-bubble-3"></span><span class="title">Messages</span>
+        </div>
+        <ng-include src="'/static/templates/partials/admin/messages-table.html'"></ng-include>
+    </div>
+</div>

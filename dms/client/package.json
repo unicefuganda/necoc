@@ -27,13 +27,13 @@
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "^0.1.4",
     "grunt-protractor-runner": "^1.1.4",
-    "protractor": "^1.2.0",
-    "cucumber": "^0.4.4",
-    "chai": "^1.9.1",
+    "protractor": "~1.2.0",
+    "cucumber": "~0.4.4",
+    "chai": "~1.9.1",
     "chai-as-promised": "^4.1.1",
     "grunt-run": "^0.2.4",
     "request": "^2.44.0",
     "mongodb": "^1.4.12",
-    "selenium-standalone": "^2.44.0"
+    "selenium-standalone": "~2.43.1"
   }
 }

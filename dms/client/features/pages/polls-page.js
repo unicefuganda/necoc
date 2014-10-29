@@ -9,8 +9,8 @@ var NewPollModal = function () {
 
     this.sendPollsButton = element(by.id('send-poll-btn'));
 
-    this.selectLocation = function (type_id, location) {
-        return element(by.css('#'+type_id+'.selectize-input')).click().then(function () {
+    this.selectLocation = function (location) {
+        return element(by.css('.selectize-input')).click().then(function () {
             return element(by.cssContainingText('.selectize-dropdown-content .option', location)).click()
         });
     };

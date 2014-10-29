@@ -38,7 +38,7 @@
         }
     });
 
-    module.directive('locationCascade', function (LocationService, helpers, $q) {
+    module.directive('locationCascade', function (LocationService) {
         return {
             scope: false,
             controller: function ($scope) {
@@ -57,33 +57,20 @@
                     preload: true,
                     load: function (query, callback) {
                         if (attrs.parent) {
-                            loadParentOptions(attrs.locationCascade, query, callback);
+                            loadOptions(attrs.locationCascade, query, callback);
                         }
                     },
                     onChange: function (value) {
                         if (attrs.child && value) {
-                            scope.select[attrs.child].load(loadChildOptions.bind({}, attrs.child, value));
+                            console.log(attrs.child);
+                            scope.select[attrs.child].load(loadOptions.bind({}, attrs.child, value));
                         }
                     }
                 });
 
-                function loadChildOptions(type, input, callback) {
-                    var locationIds = helpers.stringToArray(input, ','),
-                        locationPromises = locationIds.map(function (id) {
-                            return LocationService[type](id);
-                        });
-
-                    $q.all(locationPromises).then(function (responses) {
-                        var options = responses.reduce(function (accumulator, response) {
-                            return accumulator.concat(response.data);
-                        }, []);
-                        scope.select[type].clearOptions();
-                        callback(options);
-                    });
-                }
-
-                function loadParentOptions (type, input, callback) {
+                function loadOptions(type, input, callback) {
                     LocationService[type](input).then(function (response) {
+                        scope.select[type].clearOptions();
                         callback(response.data);
                     });
                 }
@@ -99,4 +86,4 @@
         }
     });
 
-})(angular.module('dms.location', ['dms.config', 'dms.utils']));
+})(angular.module('dms.location', ['dms.config']));

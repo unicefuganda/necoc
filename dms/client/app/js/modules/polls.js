@@ -27,10 +27,7 @@
         $scope.sendPoll = function () {
             if ($scope.new_poll_form.$valid) {
                 $scope.saveStatus = true;
-                $scope.poll.target_locations = ($scope.poll.subcounties && $scope.poll.subcounties.length > 0) ?
-                    helpers.stringToArray($scope.poll.subcounties, ',') : helpers.stringToArray($scope.poll.districts, ',');
-                delete $scope.poll.districts;
-                delete $scope.poll.subcounties;
+                $scope.poll.target_locations = helpers.stringToArray($scope.poll.target_locations, ',');
 
                 PollService.sendPoll($scope.poll)
                     .then(function (response) {

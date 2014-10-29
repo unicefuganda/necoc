@@ -1,5 +1,5 @@
 import json
-from mock import patch, MagicMock, ANY
+from mock import patch, MagicMock
 from dms.models import Poll, Location, MobileUser, PollResponse
 from dms.tests.base import MongoAPITestCase
 from necoc.settings import API_URL, API_TOKEN
@@ -9,19 +9,11 @@ class TestPollEndpoint(MongoAPITestCase):
     POLL_ENDPOINT = '/api/v1/polls/'
 
     def setUp(self):
-        self.kampala = Location(name='Kampala', parent=None, type='district').save()
-        gulu = Location(**(dict(name='Gulu', parent=None, type='district'))).save()
-        user_attr = dict(name='timothy', phone='+256775019449', location=gulu, email=None)
-        MobileUser(**(user_attr)).save()
+        kampala = Location(**dict(name='Kampala', parent=None, type='district')).save()
+        gulu = Location(**dict(name='Gulu', parent=None, type='district')).save()
+        MobileUser(**(dict(name='timothy', phone='+256775019449', location=gulu, email=None))).save()
 
-        self.bukoto = Location(name='Bukoto', parent=self.kampala, type='subcounty').save()
-        bukoto_user_attr = dict(name='timothy', phone='+250775019449', location=self.bukoto, email=None)
-        MobileUser(**bukoto_user_attr).save()
-        bukoto_user_attr2 = bukoto_user_attr.copy()
-        bukoto_user_attr2['phone'] = '+4343245552'
-        MobileUser(**bukoto_user_attr2).save()
-
-        self.target_locations = [str(self.kampala.id), str(gulu.id)]
+        self.target_locations = [str(kampala.id), str(gulu.id)]
         self.poll_to_post = dict(name="Disaster", question="How many disasters are in your area?", keyword="some_word",
                                  target_locations=self.target_locations)
         self.headers = {'Authorization': 'Token ' + API_TOKEN, 'content-type': 'application/json'}
@@ -46,24 +38,10 @@ class TestPollEndpoint(MongoAPITestCase):
         retrieved_poll = Poll.objects(**self.poll_to_post)
         self.assertEqual(1, retrieved_poll.count())
 
-    @patch('dms.tasks.send_bulk_sms.delay')
-    def test_should_post_to_all_contacts_in_sub_counties_under_district(self, mock_send_bulk_sms):
-        poll_to_post_payload = self.poll_to_post.copy()
-        poll_to_post_payload['target_locations'] = [str(self.kampala.id)]
-        self.client.post(self.POLL_ENDPOINT, data=json.dumps(self.poll_to_post), content_type="application/json")
-        mock_send_bulk_sms.assert_called_with(ANY, [u'+250775019449', u'+4343245552'], ANY)
-
-    @patch('dms.tasks.send_bulk_sms.delay')
-    def test_should_post_to_all_contacts_in_sub_counties(self, mock_send_bulk_sms):
-        poll_to_post_payload = self.poll_to_post.copy()
-        poll_to_post_payload['target_locations'] = [str(self.bukoto.id)]
-        self.client.post(self.POLL_ENDPOINT, data=json.dumps(self.poll_to_post), content_type="application/json")
-        mock_send_bulk_sms.assert_called_with(ANY, [u'+250775019449', u'+4343245552'], ANY)
-
     def test_should_get_a_list_of_polls(self):
         poll = Poll(**self.poll_to_post).save()
         poll_response_attr = dict(phone_no='123455', text="NECOC There is a fire", relayer_id=234,
-                                  run_id=23243, poll=poll)
+                        run_id=23243, poll=poll)
 
         PollResponse(**poll_response_attr).save()
 

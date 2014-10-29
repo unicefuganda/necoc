@@ -5,6 +5,10 @@ module.exports = function () {
         disaster = {};
     associatedMessage.formattedTime = messagesPage.formattedTime;
 
+    this.Before(function (callback) {
+        disaster = {};
+        callback();
+    });
 
     this.World = require("../support/world").World;
 
@@ -33,6 +37,11 @@ module.exports = function () {
     this.When(/^I select district as "([^"]*)"$/, function (district, next) {
         disaster.district = district;
         disasterPage.addDisasterModal.selectInput("district-field", district).then(next);
+    });
+
+    this.When(/^I select subcounty as "([^"]*)"$/, function (subcounties, next) {
+        disaster.subcounties = subcounties;
+        disasterPage.addDisasterModal.selectInput("subcounty-field", subcounties).then(next);
     });
 
     this.When(/^I enter disaster description as "([^"]*)"$/, function (description, next) {
@@ -69,13 +78,22 @@ module.exports = function () {
                 self.expect(name).to.equal(disaster.type);
             })
             .then(function () {
-                self.expect(disasterPage.getDisasterData(0, 'location.name')).to.eventually.equal(disaster.district);
+                if(disaster.subcounties) {
+                    self.expect(disasterPage.getDisasterData(0, 'locations[0].parent.name')).to.eventually.equal(disaster.district);
+                } else {
+                    self.expect(disasterPage.getDisasterData(0, 'locations | joinNames | capitalize')).to.eventually.equal(disaster.district);
+                }
+            })
+            .then(function () {
+                if(disaster.subcounties) {
+                    self.expect(disasterPage.getDisasterData(0, 'locations | joinNames | capitalize')).to.eventually.equal(disaster.subcounties);
+                }
             })
             .then(function () {
                 self.expect(disasterPage.getDisasterData(0, 'description')).to.eventually.equal(disaster.description);
             })
             .then(function () {
-                self.expect(disasterPage.getDisasterData(0, 'date | duration')).to.eventually.exist
+                self.expect(disasterPage.getDisasterData(0, 'date | duration')).to.eventually.exist;
             })
             .then(function () {
                 self.expect(disasterPage.getDisasterData(0, 'status')).to.eventually.equal(disaster.status)
@@ -110,7 +128,7 @@ module.exports = function () {
     });
 
     this.When(/^I click the disaster in "([^"]*)"$/, function (arg1, next) {
-        disasterPage.clickDisaster(0, 'name.name').then(next);
+        disasterPage.clickDisaster(0, 'locations[0].parent.name').then(next);
     });
 
     this.Then(/^I should see the associated message$/, function (next) {

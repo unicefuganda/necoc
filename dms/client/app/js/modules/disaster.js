@@ -30,14 +30,16 @@
         };
     });
 
-    module.controller('DisastersModalController', function ($scope, DisasterService) {
+    module.controller('DisastersModalController', function ($scope, DisasterService, helpers) {
         $scope.saveDisaster = function () {
             if ($scope.disasters_form.$valid) {
                 $scope.saveStatus = true;
 
-                $scope.disaster.location  = $scope.disaster.subcounty || $scope.disaster.district;
+                $scope.disaster.locations  = $scope.disaster.subcounties ?
+                    helpers.stringToArray($scope.disaster.subcounties, ',') : [ $scope.disaster.district ];
+
                 delete $scope.disaster.district;
-                delete $scope.disaster.subcounty;
+                delete $scope.disaster.subcounties;
 
                 DisasterService.create($scope.disaster).then(function (response) {
                     $scope.disaster = null;
@@ -91,7 +93,7 @@
                             return {
                                 id: disaster.id,
                                 name: disaster.name.name,
-                                location: disaster.location.name,
+                                location:  disaster.locations[0].parent ? disaster.locations[0].parent.name : disaster.locations[0].name,
                                 date:  $filter('date')(disaster.date, "MMM dd, yyyy - h:mma")
                             };
                         });
@@ -127,4 +129,4 @@
 
     });
 
-})(angular.module('dms.disaster', ['dms.config', 'dms.utils', 'dms.message']));
+})(angular.module('dms.disaster', ['dms.config', 'dms.utils', 'dms.message', 'dms.utils']));

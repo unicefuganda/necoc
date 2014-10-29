@@ -39,14 +39,17 @@ var DataSetupPage = function () {
     this.registerDisaster = function (disasterType, district, subcounty, next) {
         self.registerSubCounty(district, subcounty, function (err, httpResponse, locationBody) {
             self.registerDisasterType(disasterType, function (err, httpResponse, disasterTypeBody) {
-                request.post('http://localhost:7999/api/v1/disasters/', {
-                    form: {
+                request({
+                    url: 'http://localhost:7999/api/v1/disasters/',
+                    method: 'post',
+                    json: true,
+                    body: {
                         name: JSON.parse(disasterTypeBody).id,
                         status: "Assessment",
                         date: "2014-10-24T17:00:00",
                         description: "big disaster",
                         type: "subcounty",
-                        location: JSON.parse(locationBody).id
+                        locations: [JSON.parse(locationBody).id]
                     }
                 }, next);
             });

@@ -27,7 +27,10 @@
         <tbody>
         <tr ng-repeat="disaster in disasters" ng-click="showAssociatedMessages(disaster)">
             <td>{[{ disaster.name.name }]}</td>
-            <td>{[{ disaster.location.name }]}</td>
+            <td>
+                <div>{[{ disaster.locations[0].parent.name }]}</div>
+                <span>{[{ disaster.locations | joinNames | capitalize }]}</span>
+            </td>
             <td>{[{ disaster.description }]}</td>
             <td>{[{ disaster.status }]}</td>
             <td>{[{ disaster.date | duration }]}</td>

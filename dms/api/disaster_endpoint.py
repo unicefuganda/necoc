@@ -11,6 +11,7 @@ class DisasterSerializer(serializers.MongoEngineModelSerializer):
 
     class Meta:
         model = Disaster
+        depth = 4
         exclude = ('created_at',)
 
 

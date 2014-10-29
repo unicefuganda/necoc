@@ -50,7 +50,7 @@ Feature: Messages
   Scenario: Associate Messages to disaster
     Given I am logged in as a NECOC admin
     When I POST a message to the NECOC DMS
-    And I have a disaster in "Mukono" registered
+    And I have a "Fire" disaster in "Mukono" district, "goma" subcounty already registered
     And I visit the messages listing page
     Then I should see one message uncategorized
     And I check the message
@@ -68,7 +68,7 @@ Feature: Messages
   Scenario: Associate Messages to disaster -- Validations
     Given I am logged in as a NECOC admin
     When I POST a message to the NECOC DMS
-    And I have a disaster in "Mukono" registered
+    And I have a "Fire" disaster in "Mukono" district, "goma" subcounty already registered
     And I visit the messages listing page
     When I click on actions button
     Then I should not see the associate to disaster button

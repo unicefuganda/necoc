@@ -1,6 +1,7 @@
 module.exports = function () {
     var messagesPage = require("../pages/messages-page"),
         homePage = require("../pages/home-page"),
+        dataSetupPage = require("../pages/data-setup-page"),
         disasterLocation = null,
         numberOfMassMessages = 15;
 
@@ -187,6 +188,13 @@ module.exports = function () {
         disasterLocation = location;
         messagesPage.registerDisaster(location, next);
     });
+
+    this.Given(/^I have a "([^"]*)" disaster in "([^"]*)" district, "([^"]*)" subcounty already registered$/,
+        function (disaster, district, subcounty, next) {
+            disasterLocation = district;
+            dataSetupPage.registerDisaster(disaster, district, subcounty, next);
+        }
+    );
 
     this.Then(/^I should see field required error message$/, function (next) {
         this.expect(messagesPage.getAddToDisasterErrors()).to

@@ -29,7 +29,7 @@
                             <label class="control-label" for="district">District</label>
                             <input type="text" id="district" name="district" class="form-control" data-parent="true"
                                    location-cascade="districts" ng-model="disaster.district" data-max-locations="1"
-                                   placeholder="select district" data-child="subcounties" data-set="disaster" required="">
+                                   placeholder="select district" data-child="subcounties" data-dataset="disaster" required="">
 
                             <div id="district-errors" class="error-text"
                                  ng-show="disasters_form.district.$invalid && hasErrors">
@@ -38,12 +38,12 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="form-group subcounty"
+                        <div id="subcounty-field" class="form-group subcounty"
                              ng-class="{'has-error': disasters_form.subcounty.$invalid && hasErrors}">
                             <label class="control-label" for="subcounty">Sub-County</label>
-                            <input type="text" id="subcounty" ng-model="disaster.subcounty" name="subcounty"
-                                   location-cascade="subcounties" class="form-control" data-max-locations="1"
-                                   placeholder="select sub-county" data-set="disaster">
+                            <input type="text" id="subcounty" ng-model="disaster.subcounties" name="subcounty"
+                                   location-cascade="subcounties" class="form-control"
+                                   placeholder="select sub-county" data-dataset="disaster">
                         </div>
                         <div class="form-group"
                              ng-class="{'has-error': disasters_form.description.$invalid && hasErrors }">

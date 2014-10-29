@@ -123,7 +123,7 @@ var MessagesPage = function () {
                     form: {
                         name: JSON.parse(disasterType).id,
                         status: "Assessment",
-                        location: JSON.parse(location).id,
+                        locations: [JSON.parse(location).id],
                         date: "2014-10-02T19:08:00",
                         description: "Flood"
                     }

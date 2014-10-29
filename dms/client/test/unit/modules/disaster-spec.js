@@ -41,11 +41,11 @@ describe('dms.disaster', function () {
 
         it('should post disaster given the form is valid', function () {
             initController(true);
-            scope.disaster = { name: "Flood", date: "2014/10/02 19:13"};
+            scope.disaster = { name: "Flood", date: "2014/10/02 19:13", subcounties: 'subcounty_id'};
             scope.disasters = [];
 
             scope.saveDisaster();
-            httpMock.expectPOST(apiUrl + 'disasters/', {name: "Flood", date: "2014-10-02T19:13"});
+            httpMock.expectPOST(apiUrl + 'disasters/', {name: "Flood", date: "2014-10-02T19:13", locations: ['subcounty_id'] });
             expect(scope.saveStatus).toBeTruthy();
             httpMock.flush();
 
@@ -63,23 +63,23 @@ describe('dms.disaster', function () {
         it('should post disaster with location as subcounty if it is given', function () {
             initController(true);
             scope.disaster = { name: "Flood", date: "2014/10/02 19:13",
-                district: {name: 'district-name'}, subcounty: {name: 'sub-county-name'}};
+                district: {name: 'district-name'}, subcounties: 'sub-county-id1,sub-county-id2' };
             scope.disasters = [];
 
             scope.saveDisaster();
             httpMock.expectPOST(apiUrl + 'disasters/', { name: "Flood", date: "2014-10-02T19:13",
-                location: {name: 'sub-county-name'} });
+                locations: ['sub-county-id1', 'sub-county-id2'] });
             httpMock.flush();
         });
 
         it('should post disaster with location as district if no subcounty is given', function () {
             initController(true);
-            scope.disaster = { name: "Flood", date: "2014/10/02 19:13", district: {name: 'district-name'}};
+            scope.disaster = { name: "Flood", date: "2014/10/02 19:13", district: 'district-id' };
             scope.disasters = [];
 
             scope.saveDisaster();
             httpMock.expectPOST(apiUrl + 'disasters/', {name: "Flood", date: "2014-10-02T19:13",
-                location: {name: 'district-name'}});
+                locations: ['district-id'] });
             httpMock.flush();
         });
     });

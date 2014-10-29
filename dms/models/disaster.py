@@ -1,4 +1,4 @@
-from mongoengine import ReferenceField, StringField, DateTimeField
+from mongoengine import ReferenceField, StringField, DateTimeField, ListField
 from dms.models.disaster_type import DisasterType
 from dms.models.location import Location
 from dms.models.base import BaseModel
@@ -10,7 +10,7 @@ class Disaster(BaseModel):
                        ('Closed', 'Closed'))
 
     name = ReferenceField(DisasterType, required=True)
-    location = ReferenceField(Location, required=True)
+    locations = ListField(ReferenceField(Location))
     description = StringField()
     status = StringField(choices=DISASTER_STATUS)
     date = DateTimeField(required=True)
@@ -18,4 +18,4 @@ class Disaster(BaseModel):
     @classmethod
     def from_(cls, location):
         locations = location.children(include_self=True)
-        return cls.objects.filter(location__in=locations)
+        return cls.objects.filter(locations__in=locations)

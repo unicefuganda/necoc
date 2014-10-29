@@ -19,10 +19,10 @@ class DisasterSerializerTest(MongoTestCase):
         self.serialized_disaster_type = dict(created_at=self.disaster_type.created_at, name=self.disaster_type.name,
                                              description=self.disaster_type.description, id=str(self.disaster_type.id))
 
-        self.disaster = dict(name=self.disaster_type, location=self.district, description="Big Flood",
+        self.disaster = dict(name=self.disaster_type, locations=[self.district], description="Big Flood",
                              date=datetime.datetime(2014, 12, 1, 11, 3), status="Assessment")
 
-        self.serialized_disaster = dict(name=self.serialized_disaster_type, location=self.serialized_location,
+        self.serialized_disaster = dict(name=self.serialized_disaster_type, locations=[self.serialized_location],
                                         description="Big Flood", date="2014-12-01T11:03", status="Assessment")
 
     def test_should_serialize_location_object(self):
@@ -35,7 +35,7 @@ class DisasterSerializerTest(MongoTestCase):
 
     def test_should_deserialize_location_object(self):
         self.serialized_disaster['name'] = self.disaster_type.id
-        self.serialized_disaster['location'] = self.district.id
+        self.serialized_disaster['locations'] = [self.district.id]
 
         serializer = DisasterSerializer(data=self.serialized_disaster)
         self.assertTrue(serializer.is_valid())

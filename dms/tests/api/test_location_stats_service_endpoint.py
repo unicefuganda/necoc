@@ -18,16 +18,18 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         self.bukoto_name = 'Bukoto'
         self.bukoto = Location(**dict(name=self.bukoto_name, parent=None, type='district')).save()
         text = "NECOC %s flood" % self.bukoto_name
-        self.message_bukoto = dict(phone_no=phone_number, text=text, received_at=self.date_time, relayer_id=234, run_id=23243)
+        self.message_bukoto = dict(phone_no=phone_number, text=text, received_at=self.date_time, relayer_id=234,
+                                   run_id=23243)
 
         self.disaster_type = DisasterType(**dict(name='Flood', description="Some flood"))
         self.disaster_type.save()
 
-        self.disaster_attr = dict(name=self.disaster_type, location=self.kampala, description="Big Flood", date="2014-12-01",
-                          status="Assessment")
+        self.disaster_attr = dict(name=self.disaster_type, locations=[self.kampala], description="Big Flood",
+                                  date="2014-12-01",
+                                  status="Assessment")
 
         self.disaster_attr_bukoto = self.disaster_attr.copy()
-        self.disaster_attr_bukoto["location"] = self.bukoto
+        self.disaster_attr_bukoto["locations"] = [self.bukoto]
 
     def test_should_retrieve_message_stats_in_all_locations(self):
         RapidProMessage(**self.message).save()
@@ -39,19 +41,17 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
                                                 'disasters': {'count': 1, 'percentage': 50}},
                                     'bukoto': {'messages': {'count': 1, 'percentage': 50},
                                                'disasters': {'count': 1, 'percentage': 50}}
-                                    }
+        }
 
         response = self.client.get(self.API_ENDPOINT, format='json')
         self.assertEqual(200, response.status_code)
-
-
         self.assertEqual(expected_serialized_data, response.data)
 
-    def test_should_retrieve_message_stats_in_subcounties_in_distrcit(self):
+    def test_should_retrieve_message_stats_in_subcounties_in_district(self):
         RapidProMessage(**self.message).save()
 
         bugolobi_name = 'Bugolobi'
-        bugolobi = Location(**dict(name=  bugolobi_name, parent=self.kampala, type='subcounty')).save()
+        bugolobi = Location(**dict(name=bugolobi_name, parent=self.kampala, type='subcounty')).save()
         text = "NECOC %s flood" % bugolobi_name
         message_bugolobi = dict(phone_no='123444', text=text, received_at=self.date_time, relayer_id=234, run_id=23243)
 
@@ -59,7 +59,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
 
         Disaster(**self.disaster_attr).save()
         disaster_attr_bugolobi = self.disaster_attr.copy()
-        disaster_attr_bugolobi["location"] = bugolobi
+        disaster_attr_bugolobi["locations"] = [bugolobi]
         Disaster(**disaster_attr_bugolobi).save()
 
         expected_serialized_data = {'bugolobi': {'messages': {'count': 1, 'percentage': 50},

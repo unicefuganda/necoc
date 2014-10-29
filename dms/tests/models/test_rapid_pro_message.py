@@ -30,7 +30,7 @@ class TestRapidProMessage(MongoTestCase):
     def test_save_rapid_pro_message(self):
         self.message['location'] = self.village
         disaster_type = DisasterType(**dict(name="Fire", description="Fire")).save()
-        disaster_attributes = dict(name=disaster_type, location=self.village,
+        disaster_attributes = dict(name=disaster_type, locations=[self.village],
                                    description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
         disaster = Disaster(**disaster_attributes).save()
         self.message['disaster'] = disaster

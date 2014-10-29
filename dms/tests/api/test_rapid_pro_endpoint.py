@@ -15,7 +15,7 @@ class RapidProEndPointTest(MongoAPITestCase):
                                              location=self.village, email=None)).save()
 
         disaster_type = DisasterType(**dict(name="Fire", description="Fire")).save()
-        disaster_attributes = dict(name=disaster_type, location=self.district,
+        disaster_attributes = dict(name=disaster_type, locations=[self.district],
                                    description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
         self.disaster = Disaster(**disaster_attributes).save()
 

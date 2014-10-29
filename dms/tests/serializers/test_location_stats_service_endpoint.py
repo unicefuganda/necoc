@@ -44,7 +44,7 @@ class LocationStatsServiceSerializersTest(MongoTestCase):
         disaster_type = DisasterType(**dict(name='Flood', description="Some flood"))
         disaster_type.save()
 
-        disaster_attr = dict(name=disaster_type, location=self.district, description="Big Flood", date="2014-12-01",
+        disaster_attr = dict(name=disaster_type, locations=[self.district], description="Big Flood", date="2014-12-01",
                              status="Assessment")
 
         Disaster(**disaster_attr).save()
@@ -75,7 +75,7 @@ class MultiLocationStatsServiceSerializersTest(MongoTestCase):
         disaster_type = DisasterType(**dict(name='Flood', description="Some flood"))
         disaster_type.save()
 
-        self.disaster_attr = dict(name=disaster_type, location=self.district, description="Big Flood",
+        self.disaster_attr = dict(name=disaster_type, locations=[self.district], description="Big Flood",
                                   date="2014-12-01",
                                   status="Assessment")
 

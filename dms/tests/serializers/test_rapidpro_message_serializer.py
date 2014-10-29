@@ -44,7 +44,7 @@ class RapidProMessageSerializerTest(MongoTestCase):
         district = Location(**dict(name='Kampala', type='district', parent=None)).save()
         disaster_type = DisasterType(**dict(name="Fire", description="Fire")).save()
 
-        disaster_attributes = dict(name=disaster_type, location=district,
+        disaster_attributes = dict(name=disaster_type, locations=[district],
                              description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
         disaster = Disaster(**disaster_attributes).save()
 

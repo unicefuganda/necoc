@@ -60,7 +60,7 @@ class LocationDisasterStatsTest(MongoTestCase):
         self.district = Location(**dict(name='Kampala', type='district', parent=None))
         self.district.save()
 
-        self.disaster_attr = dict(name=self.disaster_type, location=self.district, description="Big Flood", date="2014-12-01",
+        self.disaster_attr = dict(name=self.disaster_type, locations=[self.district], description="Big Flood", date="2014-12-01",
                           status="Assessment")
 
     def test_should_retrieve_message_count_in_a_location(self):
@@ -79,7 +79,7 @@ class LocationDisasterStatsTest(MongoTestCase):
     def test_should_retrieve_disasters_percentage_in_a_location(self):
         Disaster(**self.disaster_attr).save()
         attr2 = self.disaster_attr.copy()
-        attr2["location"] = Location(**dict(name='Location that is not Kampala', type='district')).save()
+        attr2["locations"] = [Location(**dict(name='Location that is not Kampala', type='district')).save()]
         Disaster(**attr2).save()
 
 
@@ -117,11 +117,11 @@ class MultiLocationStatsTest(MongoTestCase):
         self.disaster_type = DisasterType(**dict(name='Flood', description="Some flood"))
         self.disaster_type.save()
 
-        self.disaster_attr = dict(name=self.disaster_type, location=self.kampala, description="Big Flood", date="2014-12-01",
+        self.disaster_attr = dict(name=self.disaster_type, locations=[self.kampala], description="Big Flood", date="2014-12-01",
                           status="Assessment")
 
         self.disaster_attr_bukoto = self.disaster_attr.copy()
-        self.disaster_attr_bukoto["location"] = self.bukoto
+        self.disaster_attr_bukoto["locations"] = [self.bukoto]
 
     def test_should_retrieve_message_stats_in_all_locations(self):
         RapidProMessage(**self.message).save()
@@ -154,7 +154,7 @@ class MultiLocationStatsTest(MongoTestCase):
 
         Disaster(**self.disaster_attr).save()
         disaster_attr_bugolobi = self.disaster_attr.copy()
-        disaster_attr_bugolobi["location"] = bugolobi
+        disaster_attr_bugolobi["locations"] = [bugolobi]
         Disaster(**disaster_attr_bugolobi).save()
 
         multi_location_stats_service = MultiLocationStatsService(self.kampala.name)

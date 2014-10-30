@@ -11,14 +11,8 @@ module.exports = function () {
     });
 
     this.Then(/^I should see the messages panel (.*)/, function(stateText, next) {
-        var state = stateText == 'open' ? 'true' : 'false';
-        this.expect(dashboardPage.messagesTitle.isDisplayed()).to.eventually.be[state]
+        var state = stateText == 'open';
+        this.expect(dashboardPage.messagesTitle.isDisplayed()).to.eventually.be[state.toString()]
             .and.notify(next);
-    })
-
-    this.When(/^I load the dashboard$/, function (next) {
-        browser.navigate('admin/dashboard')
-        browser.refresh();
-        next();
     });
 }

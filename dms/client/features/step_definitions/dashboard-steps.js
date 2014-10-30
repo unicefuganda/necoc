@@ -12,7 +12,10 @@ module.exports = function () {
 
     this.Then(/^I should see the messages panel (.*)/, function(stateText, next) {
         var state = stateText == 'open';
-        this.expect(dashboardPage.messagesTitle.isDisplayed()).to.eventually.be[state.toString()]
-            .and.notify(next);
+        var self = this;
+        browser.wait(dashboardPage.sliderButton.isDisplayed).then(function () {
+            self.expect(dashboardPage.messagesTitle.isDisplayed()).to.eventually.be[state.toString()]
+                .and.notify(next);
+        });
     });
 }

@@ -1,6 +1,7 @@
 ---
   - name: Provision and deploy to the web server
     hosts: webservers
-    remote_user: root
+    remote_user: necoc
+    sudo: yes
     roles:
       - deploy

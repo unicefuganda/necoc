@@ -23,8 +23,7 @@ module.exports = function () {
 
     this.When(/^I click add disaster button$/, function (next) {
         disasterPage.addDisasterButton.click().then(function () {
-            browser.sleep(500);
-            next();
+            browser.sleep(500).then(next);
         });
     });
 

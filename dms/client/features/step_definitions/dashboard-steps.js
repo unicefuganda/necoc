@@ -6,8 +6,7 @@ module.exports = function () {
     this.When(/^I click the messages panel chevron$/, function (next) {
         var animationLength = 1000;
         dashboardPage.sliderButton.click().then(function () {
-            browser.sleep(animationLength);
-            next();
+            browser.sleep(animationLength).then(next);
         });
     });
 
@@ -16,4 +15,10 @@ module.exports = function () {
         this.expect(dashboardPage.messagesTitle.isDisplayed()).to.eventually.be[state]
             .and.notify(next);
     })
+
+    this.When(/^I load the dashboard$/, function (next) {
+        browser.navigate('admin/dashboard')
+        browser.refresh();
+        next();
+    });
 }

@@ -13,8 +13,7 @@
             .state('admin.dashboard', {
                 url: '/dashboard',
                 data: { pageTitle: 'Dashboard' },
-                templateUrl: '/static/templates/partials/admin/dashboard.html',
-//                controller: 'DashboardController'
+                templateUrl: '/static/templates/partials/admin/dashboard.html'
             })
 
             .state('admin.dashboard.district', {

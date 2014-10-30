@@ -544,7 +544,7 @@ div[class*="-aggregate-marker-icon"] div {
     bottom: 0;
     background-color: rgba(255, 255, 255, 0.69);
     width: 74%;
-    left: 26%;
+    left: 97%;
     z-index: 1000;
 }
 
@@ -560,5 +560,13 @@ div[class*="-aggregate-marker-icon"] div {
     position: absolute;
     padding: 65px 5px;
     cursor: pointer;
+}
+
+#message-overlay td {
+    padding-left: 15px;
+}
+
+#message-overlay th {
+    padding-left: 15px;
 }
 

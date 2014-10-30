@@ -1,4 +1,12 @@
 (function (module) {
+
+    module.controller('DashboardController',    ['$scope', 'MessageService', function($scope, MessageService) {
+        MessageService.all().then(function (response) {
+           $scope.messages = response.data;
+        });
+        $scope.showMessageCheckboxes = false;
+    }]);
+
     module.directive('slidingPanel', function () {
         return {
             link: function (scope, element, attrs) {
@@ -24,4 +32,4 @@
         }
     })
 
-})(angular.module('dms.dashboard', []));
+})(angular.module('dms.dashboard', ['dms.message']));

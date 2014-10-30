@@ -93,6 +93,11 @@ describe('dms.message', function () {
         expect($scope.messages).toEqual(messageStub);
     });
 
+    it('should tell the scope to show messages', function () {
+        initController();
+        expect($scope.showMessageCheckboxes).toBeTruthy();
+    });
+
     describe('SmsModalController', function () {
         var initController;
         var scope;

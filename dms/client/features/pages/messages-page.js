@@ -64,8 +64,7 @@ var MessagesPage = function () {
                 text: "I am message" + index, source: "NECOC Volunteer" };
             request.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
         }
-        browser.sleep(800);
-        next();
+        browser.sleep(800).then(next);
     };
 
     this.getTextByCss = function (selector) {

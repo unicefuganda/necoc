@@ -1,11 +1,11 @@
 (function (module) {
 
-    module.controller('DashboardController',    ['$scope', 'MessageService', function($scope, MessageService) {
+    module.controller('DashboardMessagesController', function($scope, MessageService) {
         MessageService.all().then(function (response) {
            $scope.messages = response.data;
         });
         $scope.showMessageCheckboxes = false;
-    }]);
+    });
 
     module.directive('slidingPanel', function () {
         return {

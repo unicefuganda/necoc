@@ -456,8 +456,9 @@ label {
 }
 
 #map {
-    width: 100%;
-    height: 100%;
+    width: 84%;
+    height: 93%;
+    position: fixed;
 }
 
 .disasters-aggregate-marker-icon {
@@ -544,6 +545,7 @@ div[class*="-aggregate-marker-icon"] div {
     bottom: 0;
     background-color: rgba(255, 255, 255, 0.69);
     width: 74%;
+    max-height: 60%;
     left: 97%;
     z-index: 1000;
 }
@@ -568,5 +570,11 @@ div[class*="-aggregate-marker-icon"] div {
 
 #message-overlay th {
     padding-left: 15px;
+}
+
+.messages-table {
+    max-height: 350px;
+    overflow-y: auto;
+    height: auto;
 }
 

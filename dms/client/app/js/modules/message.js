@@ -27,7 +27,7 @@
     module.controller('MessageController', function ($scope, MessageService, $interval) {
 
         $scope.selected = {};
-        $scope.showMessageCheckboxes  = true;
+        $scope.showMessageCheckboxes = true;
         getAllMessages();
 
         $scope.$watch('location', function (newLocation) {

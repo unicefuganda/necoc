@@ -59,7 +59,7 @@
                             <label class="control-label" for="district">District</label>
                             <input type="text" id="district"  name="district" class="form-control" data-parent="true"
                                    location-cascade="districts" ng-model="user.district"  data-max-locations="1"
-                                   placeholder="select district" data-child="subcounties" data-set="user" required="">
+                                   placeholder="select district" data-child="subcounties" data-dataset="user" required="">
 
                             <div id="district-errors" class="error-text"
                                  ng-show="mobile_user_form.district.$invalid && hasErrors">
@@ -73,7 +73,7 @@
                             <label class="control-label" for="subcounty">Sub-County</label>
                             <input type="text" id="subcounty" ng-model="user.location" name="subcounty"
                                    location-cascade="subcounties" class="form-control" data-max-locations="1"
-                                   placeholder="select sub-county" data-set="user" required="">
+                                   placeholder="select sub-county" data-dataset="user" required="">
 
                             <div id="subcounty-errors" class="error-text"
                                  ng-show="mobile_user_form.subcounty.$invalid && hasErrors">

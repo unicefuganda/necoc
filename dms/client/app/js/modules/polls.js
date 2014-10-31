@@ -38,6 +38,7 @@
                         $scope.successful = true;
                         $scope.poll = null;
                         $scope.polls.push(response.data);
+                        $scope.hasErrors = false;
                         growl.success('Poll successfully sent', {
                             ttl: 3000
                         });

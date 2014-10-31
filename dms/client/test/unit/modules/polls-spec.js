@@ -76,6 +76,21 @@ describe('dms.polls', function () {
             expect(scope.saveStatus).toBeFalsy();
             expect(scope.errors).toEqual(errorMessage);
         });
+
+        it('should reset hasErrors after a successful send', function () {
+            httpMock.expectPOST(apiUrl + 'polls/').respond(400, errorMessage);
+            initController(true);
+            scope.poll = stubPoll;
+            scope.polls = [];
+            scope.sendPoll();
+            httpMock.flush();
+            expect(scope.hasErrors).toBeTruthy();
+
+            httpMock.expectPOST(apiUrl + 'polls/').respond(200, '');
+            scope.sendPoll();
+            httpMock.flush();
+            expect(scope.hasErrors).toBeFalsy();
+        });
     });
 
     describe('PollsController', function () {

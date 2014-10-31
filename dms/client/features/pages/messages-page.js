@@ -48,23 +48,25 @@ var MessagesPage = function () {
         return element(by.css('input[type="checkbox"]')).click();
     };
 
-    this.postMessage = function (next) {
-        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: this.messages[0]}, next);
+    this.postMessage = function (callback) {
+        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: this.messages[0]}, callback.bind({}, this.messages[0]));
     };
 
-    this.postMessageWithText = function (text, next) {
+    this.postMessageWithText = function (text, callback) {
         var clonedMessage = JSON.parse( JSON.stringify( this.messages[0] ) );
         clonedMessage.text = text;
-        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: clonedMessage}, next);
+        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: clonedMessage}, callback.bind({}, clonedMessage));
     };
 
-    this.postMessages = function (number, next) {
+    this.postMessages = function (number, callback) {
+        var messages = [];
         for (var index = 0; index < number; index++) {
             var message = { phone: "023020302" + index, time: "2014-02-13T02:00:00", relayer: 2, run: String(index),
                 text: "I am message" + index, source: "NECOC Volunteer" };
             request.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
+            messages.push(message);
         }
-        browser.sleep(800).then(next);
+        browser.sleep(800).then(callback.bind({},messages))
     };
 
     this.getTextByCss = function (selector) {
@@ -142,8 +144,8 @@ var MessagesPage = function () {
         return element(by.css("#disaster-errors .text-danger")).getText();
     }
 
-    this.categorizeAmessage = function (callback) {
-
+    this.getMessage = function (district) {
+        messages
     }
 };
 

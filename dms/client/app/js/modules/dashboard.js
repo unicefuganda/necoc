@@ -1,9 +1,16 @@
 (function (module) {
 
-    module.controller('DashboardMessagesController', function($scope, MessageService) {
+    module.controller('DashboardMessagesController', function ($scope, MessageService) {
+
+        $scope.$watch('params.location', function (location) {
+            $scope.district = (location && location.district) ? location.district : '';
+            $scope.subcounty = (location && location.subcounty) ? location.subcounty : '';
+        }, true);
+
         MessageService.all().then(function (response) {
-           $scope.messages = response.data;
+            $scope.messages = response.data;
         });
+
         $scope.showMessageCheckboxes = false;
     });
 

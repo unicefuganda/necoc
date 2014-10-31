@@ -110,6 +110,10 @@ var DataSetupPage = function () {
             pollResponseAttr.location, pollResponseAttr.text, callback);
     };
 
+    this.createMessage = function(messageText) {
+
+    }
+
 }
 
 module.exports = new DataSetupPage();

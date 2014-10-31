@@ -11,14 +11,48 @@ describe('dms.dashboard', function () {
             messagesStub = [
                 {
                     phone: "023020302",
-                    time: "2014-02-13T02:00:00",
-                    relayer: 2,
-                    sms: 1,
                     text: "Where are you?",
-                    relayer_phone: "2939829949",
-                    status: "2",
-                    direction: "43",
-                    event: "43"
+                    event: "43",
+                    disaster: {
+                        locations: [
+                            {
+                                name: "LIRA PALWO",
+                                parent: {
+                                    name: "AGAGO"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    phone: "023020301",
+                    text: "Fire??",
+                    event: "44",
+                    disaster: {
+                        locations: [
+                            {
+                                name: "AWACH",
+                                parent: {
+                                    name: "GULU"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    phone: "023020303",
+                    text: "Fire??",
+                    event: "45",
+                    disaster: {
+                        locations: [
+                            {
+                                name: "PALARO",
+                                parent: {
+                                    name: "GULU"
+                                }
+                            }
+                        ]
+                    }
                 }
             ];
 
@@ -40,6 +74,32 @@ describe('dms.dashboard', function () {
 
         it('should tell the scope not to show checkboxes', function () {
             expect(scope.showMessageCheckboxes).toBeFalsy();
+        });
+
+        it('should set district to an empty string by default', function () {
+            scope.params = {location: {district: undefined, subcounty: undefined}};
+            scope.$apply();
+            expect(scope.district).toEqual('');
+        });
+
+        it('should set subcounty to an empty string by default', function () {
+            scope.params = {location: {district: undefined, subcounty: undefined}};
+            scope.$apply();
+            expect(scope.subcounty).toEqual('');
+        });
+
+        it('should update district on location changes', function () {
+            scope.params = {location: {district: 'gulu', subcounty: undefined}};
+            scope.$apply();
+            expect(scope.district).toEqual('gulu');
+            expect(scope.subcounty).toEqual('');
+        });
+
+        it('should update subcounty on location changes', function () {
+            scope.params = {location: {district: 'gulu', subcounty: 'awach'}};
+            scope.$apply();
+            expect(scope.district).toEqual('gulu');
+            expect(scope.subcounty).toEqual('awach');
         });
     });
 });

@@ -6,11 +6,11 @@
         <th>SMS Body</th>
         <th class="sm-column">Location</th>
         <th>Date Time</th>
-        <th class="sm-column">Status</th>
+        <th class="sm-column">Status {[{ filter.location }]}</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="message in messages | orderBy: '-time'">
+    <tr ng-repeat="message in messages | orderBy: '-time' | filter: district | filter: subcounty">
         <td ng-show="showMessageCheckboxes"><input type="checkbox" checklist-model="selected.messages" checklist-value="message.id"/></td>
         <td>{[{ message.source }]} <span>({[{ message.phone }]})</span></td>
         <td>{[{ message.text }]}</td>

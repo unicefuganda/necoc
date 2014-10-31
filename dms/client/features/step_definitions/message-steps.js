@@ -3,7 +3,13 @@ module.exports = function () {
         homePage = require("../pages/home-page"),
         dataSetupPage = require("../pages/data-setup-page"),
         disasterLocation = null,
-        numberOfMassMessages = 15;
+        numberOfMassMessages = 15,
+        messages = [];
+
+    this.Before(function(next) {
+        messages = [];
+        next();
+    });
 
     this.World = require("../support/world").World;
 
@@ -14,11 +20,17 @@ module.exports = function () {
     });
 
     this.When(/^I POST a message to the NECOC DMS$/, function (next) {
-        messagesPage.postMessage(next);
+        messagesPage.postMessage(function (message) {
+            messages.push(message);
+            next();
+        });
     });
 
     this.When(/^I POST "([^"]*)" to the NECOC DMS$/, function (text, next) {
-        messagesPage.postMessageWithText(text, next);
+        messagesPage.postMessageWithText(text, function(message) {
+            messages.push(message);
+            next();
+        });
     });
 
     this.When(/^I visit the messages listing page$/, function (next) {
@@ -30,28 +42,32 @@ module.exports = function () {
         should_see_my_messages(this, next);
     });
 
-    var should_see_my_messages = function (self, next, district) {
+    var should_see_my_messages = function (self, next, location) {
+        var message = messages[0];
         messagesPage.numberOfMessages()
             .then(function (noOfMessages) {
                 self.expect(noOfMessages).to.equal(1);
             })
             .then(function () {
-                self.expect(messagesPage.getMessageData('text', 0)).to.eventually.equal(messagesPage.messages[0].text);
+                self.expect(messagesPage.getMessageData('text', 0)).to.eventually.equal(message.text);
             })
             .then(function () {
                 self.expect(messagesPage.getMessageData('time | date:"MMM dd, yyyy - h:mma"', 0)).to.eventually.equal(messagesPage.formattedTime);
             })
             .then(function () {
-                self.expect(messagesPage.getMessageData('location', 0)).to.eventually.equal(district || messagesPage.senderLocation.name);
+                self.expect(messagesPage.getMessageData('location', 0)).to.eventually.equal(location || messagesPage.senderLocation.name);
             })
             .then(function () {
-                self.expect(messagesPage.getMessageData('source', 0)).to.eventually.equal(messagesPage.messages[0].source + ' (' + messagesPage.messages[0].phone + ')')
+                self.expect(messagesPage.getMessageData('source', 0)).to.eventually.equal(message.source + ' (' + message.phone + ')')
                     .and.notify(next);
             })
     };
 
     this.When(/^I POST a list of messages to NECOC DMS$/, function (next) {
-        messagesPage.postMessages(numberOfMassMessages, next);
+        messagesPage.postMessages(numberOfMassMessages, function(postMessages) {
+            messages.concat(postMessages);
+            next();
+        });
     });
 
     this.Then(/^I should see (\d+) messages in the first pagination$/, function (paginationLimit, next) {
@@ -81,6 +97,9 @@ module.exports = function () {
         should_see_my_messages(this, next, location);
     });
 
+    this.Then(/^I should see my message with location "([^"]*)"$/, function (location, next) {
+        should_see_my_messages(this, next, location);
+    });
 
     this.Given(/^I visit the dashboard$/, function (next) {
         browser.get('/');

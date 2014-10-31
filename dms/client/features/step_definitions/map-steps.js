@@ -152,6 +152,14 @@ module.exports = function () {
             .and.notify(next);
     });
 
+    this.Then(/^I should not see a disasters bubble$/, function (next) {
+        var self = this;
+        browser.isElementPresent(by.css('.disasters-aggregate-marker-icon div')).then(function (elementPresent) {
+            self.expect(elementPresent).to.be.false;
+            next();
+        })
+    });
+
     this.Then(/^I see should see (\d+) disasters bubble on the map$/, function (disasters, next) {
         var self = this;
 

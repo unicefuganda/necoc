@@ -35,7 +35,7 @@
             if ($scope.disasters_form.$valid) {
                 $scope.saveStatus = true;
 
-                $scope.disaster.locations  = $scope.disaster.subcounties ?
+                $scope.disaster.locations = $scope.disaster.subcounties ?
                     helpers.stringToArray($scope.disaster.subcounties, ',') : [ $scope.disaster.district ];
 
                 delete $scope.disaster.district;
@@ -80,6 +80,14 @@
     });
 
     module.directive('disasters', function (DisasterService, $filter) {
+        function locationNameFromDisaster(disaster) {
+            var disasterLocation = '';
+            if (disaster.locations && disaster.locations[0]) {
+                disasterLocation = disaster.locations[0].parent ? disaster.locations[0].parent.name : disaster.locations[0].name
+            }
+            return disasterLocation;
+        }
+
         return function (scope, element, attrs) {
             var $select = element.selectize({
                 valueField: 'id',
@@ -93,8 +101,8 @@
                             return {
                                 id: disaster.id,
                                 name: disaster.name.name,
-                                location:  disaster.locations[0].parent ? disaster.locations[0].parent.name : disaster.locations[0].name,
-                                date:  $filter('date')(disaster.date, "MMM dd, yyyy - h:mma")
+                                location: locationNameFromDisaster(disaster),
+                                date: $filter('date')(disaster.date, "MMM dd, yyyy - h:mma")
                             };
                         });
                         callback(disasters);

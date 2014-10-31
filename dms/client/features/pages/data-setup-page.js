@@ -77,7 +77,7 @@ var DataSetupPage = function () {
                 url: 'http://localhost:7999/api/v1/polls/',
                 method: 'post',
                 body: {
-                    name: "Disaster",
+                    name: "Disaster Poll",
                     question: "How many disasters are in your area?",
                     keyword: keyword,
                     target_locations: [JSON.parse(location).id]

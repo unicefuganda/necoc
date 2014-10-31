@@ -48,7 +48,7 @@
             })
 
             .state('admin.poll-responses', {
-                url: '/poll-responses/:poll',
+                url: '/poll-responses/:poll?pollName',
                 data: { pageTitle: 'Poll Responses'},
                 templateUrl: '/static/templates/partials/admin/poll-responses.html',
                 controller: 'PollResponsesController'

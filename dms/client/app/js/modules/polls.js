@@ -17,7 +17,7 @@
         });
 
         $scope.showPollResponses = function (poll) {
-            $state.go('admin.poll-responses', {poll: poll.id});
+            $state.go('admin.poll-responses', {poll: poll.id, pollName: poll.name});
         };
 
     });

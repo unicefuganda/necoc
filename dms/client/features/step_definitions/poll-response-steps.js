@@ -4,6 +4,7 @@ module.exports = function () {
         pollResponsesPage = require("../pages/poll-responses-page"),
         dataSetupPage = require("../pages/data-setup-page"),
         pollId,
+        pollName,
         pollResponseAttr = {};
 
     this.World = require("../support/world").World;
@@ -14,16 +15,15 @@ module.exports = function () {
         pollResponseAttr.keyword = keyword;
         pollResponseAttr.phone = '+234567';
 
-        var callback = function(poll){
-            pollId=poll.id;
+        dataSetupPage.createPollAndResponseFrom(pollResponseAttr, function(poll){
+            pollId = poll.id;
+            pollName = poll.name;
             next();
-        };
-
-        dataSetupPage.createPollAndResponseFrom(pollResponseAttr, callback);
+        });
     });
 
     this.When(/^I visit the poll responses listing page$/, function (next) {
-        browser.setLocation('/admin/poll-responses/');
+        browser.setLocation('/admin/polls/');
         next();
     });
 
@@ -42,6 +42,9 @@ module.exports = function () {
             })
             .then(function () {
                 self.expect(pollResponsesPage.getPollResponseData(0, 'time | date:"MMM dd, yyyy - h:mma"')).to.eventually.exist;
+            })
+            .then(function () {
+                self.expect(pollResponsesPage.title.getText()).to.eventually.equal(pollName + ' Responses');
             }).then(next);
     };
 

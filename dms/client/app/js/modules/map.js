@@ -118,7 +118,9 @@
                 });
 
                 var savedGroup = LayerMap.getLayerGroup('aggregate_stats');
-                map.hasLayer(savedGroup) && map.removeLayer(savedGroup);
+                try {
+                    map.hasLayer(savedGroup) && map.removeLayer(savedGroup);
+                } catch(err) {m}
                 LayerMap.addLayerGroup('aggregate_stats', layerGroup);
                 map.addLayer(layerGroup);
             });
@@ -252,8 +254,10 @@
                 });
             },
             selectSubcounty: function (district, subcounty) {
-                var subCountyLayer = LayerMap.getLayer(district.toLowerCase()).getChildLayer(subcounty.toLowerCase());
-                subCountyLayer && subCountyLayer.zoomIn();
+                if(subcounty) {
+                    var subCountyLayer = LayerMap.getLayer(district.toLowerCase()).getChildLayer(subcounty.toLowerCase());
+                    subCountyLayer && subCountyLayer.zoomIn();
+                }
             },
             addSubCountyLayer: function (district) {
                 return addSubCountyLayer(district);

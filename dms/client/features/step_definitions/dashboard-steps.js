@@ -12,7 +12,7 @@ module.exports = function () {
 
     this.Then(/^I should see the messages panel open/, function(next) {
         var self = this;
-        browser.wait(dashboardPage.sliderButton.isDisplayed).then(function () {
+        browser.sleep(1000).then(function () {
             self.expect(dashboardPage.messagesTitle.isDisplayed()).to.eventually.be.true
                 .and.notify(next);
         });
@@ -20,7 +20,7 @@ module.exports = function () {
 
     this.Then(/^I should see the messages panel closed/, function(next) {
         var self = this;
-        browser.wait(dashboardPage.sliderButton.isDisplayed).then(function () {
+        browser.sleep(1000).then(function () {
             self.expect(dashboardPage.messagesTitle.isDisplayed()).to.eventually.be.false
                 .and.notify(next);
         });

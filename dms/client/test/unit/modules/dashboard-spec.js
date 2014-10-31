@@ -102,4 +102,46 @@ describe('dms.dashboard', function () {
             expect(scope.subcounty).toEqual('awach');
         });
     });
+
+    describe('slidingPanel', function () {
+        var compile,
+            scope,
+            element,
+            ngElement,
+            html = "<div sliding-panel='back-arrow'>" +
+                "<span class='back-arrow icon icon-chevron-right-1'></span>" +
+                "</div>";
+
+        beforeEach(module('dms.dashboard'));
+
+        beforeEach(inject(function ($compile, $rootScope) {
+            scope = $rootScope;
+            ngElement = angular.element(html);
+            element = $compile(ngElement)(scope);
+            scope.$digest();
+        }));
+
+        it('should default to left chevron', function () {
+            expect(element.html()).toContain("icon-chevron-left");
+        });
+
+        it('should change to right chevron on click', function () {
+            expect(element.html()).toContain("icon-chevron-left");
+            element.find('.back-arrow').trigger('click');
+            expect(element.html()).toContain("icon-chevron-right-1");
+        });
+
+        it('should animate opening on click', function () {
+            spyOn($.fn, 'animate').andCallThrough();
+            element.find('.back-arrow').trigger('click');
+            expect($.fn.animate).toHaveBeenCalledWith({left: '26%'});
+        });
+
+        it('should animate closing on click', function () {
+            element.find('.back-arrow').trigger('click');
+            spyOn($.fn, 'animate').andCallThrough();
+            element.find('.back-arrow').trigger('click');
+            expect($.fn.animate).toHaveBeenCalledWith({left: '97%'});
+        });
+    });
 });

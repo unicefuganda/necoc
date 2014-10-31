@@ -18,7 +18,7 @@
         return {
             link: function (scope, element, attrs) {
                 var showing = true,
-                    chevron = $('.' + attrs.slidingPanel);
+                    chevron = element.find('.' + attrs.slidingPanel);
 
                 togglePanel();
                 chevron.on('click', togglePanel);

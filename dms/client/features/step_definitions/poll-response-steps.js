@@ -2,20 +2,24 @@ module.exports = function () {
 
     var pollsPage = require("../pages/polls-page"),
         pollResponsesPage = require("../pages/poll-responses-page"),
-        poll_response = {phone: "+256775019449", text: "", time: "2014-02-13T02:00:00", relayer: 234,
-            run: "23243"},
-        poll_payload = {name: "Disaster", question: "How many disasters are in your area?", keyword: "",
-            target_locations: []},
-        poll_response_location;
+        dataSetupPage = require("../pages/data-setup-page"),
+        pollId,
+        pollResponseAttr = {};
 
     this.World = require("../support/world").World;
 
     this.Given(/^I have a poll and response with keyword "([^"]*)" in "([^"]*)"$/, function (keyword, location, next) {
-        poll_response.text = 'NECOCPoll ' + keyword + ' It has been very slow.';
-        poll_response_location = location;
-        poll_payload.keyword = keyword;
+        pollResponseAttr.text = 'NECOCPoll ' + keyword + ' It has been very slow.';
+        pollResponseAttr.location = location;
+        pollResponseAttr.keyword = keyword;
+        pollResponseAttr.phone = '+234567';
 
-        pollResponsesPage.createPollAndResponse(poll_response, poll_payload, location, next);
+        var callback = function(poll){
+            pollId=poll.id;
+            next();
+        };
+
+        dataSetupPage.createPollAndResponseFrom(pollResponseAttr, callback);
     });
 
     this.When(/^I visit the poll responses listing page$/, function (next) {
@@ -28,13 +32,13 @@ module.exports = function () {
 
         pollResponsesPage.getPollResponseData(0, 'source')
             .then(function (source) {
-                self.expect(source).to.equal('NECOC Volunteer (' + poll_response.phone + ')');
+                self.expect(source).to.equal('NECOC Volunteer (' + pollResponseAttr.phone + ')');
             })
             .then(function () {
-                self.expect(pollResponsesPage.getPollResponseData(0, 'text')).to.eventually.equal(poll_response.text);
+                self.expect(pollResponsesPage.getPollResponseData(0, 'text')).to.eventually.equal(pollResponseAttr.text);
             })
             .then(function () {
-                self.expect(pollResponsesPage.getPollResponseData(0, 'location')).to.eventually.equal(poll_response_location);
+                self.expect(pollResponsesPage.getPollResponseData(0, 'location')).to.eventually.equal(pollResponseAttr.location);
             })
             .then(function () {
                 self.expect(pollResponsesPage.getPollResponseData(0, 'time | date:"MMM dd, yyyy - h:mma"')).to.eventually.exist;
@@ -61,4 +65,9 @@ module.exports = function () {
             }).
             then(next);
     });
+
+    this.Then(/^I should see the export poll button$/, function (next) {
+        this.expect(pollResponsesPage.exportPollResponseButton(pollId).isDisplayed()).to.eventually.be.true.and.notify(next);
+    });
+
 };

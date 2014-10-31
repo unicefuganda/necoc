@@ -11,9 +11,12 @@
         }
     });
 
-    module.controller('PollResponsesController', function ($scope, PollResponsesService, $stateParams, $state) {
+    module.controller('PollResponsesController', function ($scope, PollResponsesService, $stateParams, $state, Config) {
         var poll_id = $stateParams.poll;
-        var processAllPolls = function(){
+
+        $scope.export_poll_response_url = Config.exportPollUrl;
+
+        var processAllPolls = function () {
             PollResponsesService.all().then(function (response) {
                 $scope.poll_responses = response.data;
                 $scope.poll_text = 'All Poll';
@@ -25,6 +28,7 @@
                 $scope.poll_responses = response.data;
                 $scope.poll_text = $scope.poll_responses[0].poll.name
             });
+            $scope.export_poll_response_url += poll_id + '/';
         } else {
             processAllPolls();
         }
@@ -36,6 +40,7 @@
         $scope.allPollResponses = function () {
             processAllPolls();
         };
+
     });
 
 })(angular.module('dms.poll-responses', ['dms.config', 'ui.router']));

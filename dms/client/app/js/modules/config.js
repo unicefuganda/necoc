@@ -15,7 +15,8 @@
         apiUrl: window.location.origin + "/api/v1/",
         districtsGeoJsonUrl: window.location.origin + '/static/map_data/uganda_districts_2011_geo.json',
         geoServerUrl: 'http://ec2-54-218-182-219.us-west-2.compute.amazonaws.com/geoserver/geonode/ows' +
-            '?service=WFS&version=1.0.0&request=GetFeature&outputFormat=json'
+            '?service=WFS&version=1.0.0&request=GetFeature&outputFormat=json',
+        exportPollUrl: window.location.origin + '/export/poll-responses/'
     });
 
     module.constant('MapConfig', {

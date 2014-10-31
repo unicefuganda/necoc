@@ -29,6 +29,9 @@ class MongoAPITestCase(MongoTestCase, APITestCase):
 
 class MongoTestWithCSV(MongoTestCase):
 
+    def get_poll_response_csv_row(self, response):
+        return "%s; %s; %s; %s" % (response.source(), response.text, response.location_str(), response.received_at)
+
     def write_to_csv(self, mode, data, csvfilename='test.csv'):
         with open(csvfilename, mode) as fp:
             file = csv.writer(fp, delimiter=',')

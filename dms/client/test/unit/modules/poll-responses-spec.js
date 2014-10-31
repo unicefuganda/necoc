@@ -52,6 +52,7 @@ describe('dms.polls-response', function () {
             httpMock.flush();
             expect(scope.poll_responses).toEqual(pollResponseStub);
             expect(scope.poll_text).toEqual('haha');
+            expect(scope.export_poll_response_url).toEqual(window.location.origin + "/export/poll-responses/" + poll_id + '/');
         });
 
         it('should retrieve all poll responses and add to scope when poll id not supplied.', function () {
@@ -61,6 +62,8 @@ describe('dms.polls-response', function () {
             httpMock.flush();
             expect(scope.poll_responses).toEqual(pollResponseStub);
             expect(scope.poll_text).toEqual('All Poll');
+
+            expect(scope.export_poll_response_url).toEqual(window.location.origin + "/export/poll-responses/");
         });
 
         describe('backToPolls', function () {

@@ -19,7 +19,6 @@
             PollResponsesService.filter('poll', poll_id).then(function (response) {
                 $scope.poll_responses = response.data;
                 $scope.poll_text = $stateParams.pollName;
-                console.log($stateParams.pollName);
             });
             $scope.export_poll_response_url += poll_id + '/';
         }

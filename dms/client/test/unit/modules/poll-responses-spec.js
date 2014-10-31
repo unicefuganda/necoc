@@ -37,7 +37,7 @@ describe('dms.polls-response', function () {
                 stateMock = jasmine.createSpyObj('stateMock', ['go']);
 
                 initController = function (pollId) {
-                    var mockStateParams = { poll: pollId };
+                    var mockStateParams = { poll: pollId, pollName: 'Some poll' };
                     $controller('PollResponsesController', {$scope: scope, $stateParams: mockStateParams,
                         $state: stateMock});
                 };
@@ -51,19 +51,8 @@ describe('dms.polls-response', function () {
             httpMock.expectGET(apiUrl + 'poll-responses/?poll=' + poll_id).respond(pollResponseStub);
             httpMock.flush();
             expect(scope.poll_responses).toEqual(pollResponseStub);
-            expect(scope.poll_text).toEqual('haha');
+            expect(scope.poll_text).toEqual('Some poll');
             expect(scope.export_poll_response_url).toEqual(window.location.origin + "/export/poll-responses/" + poll_id + '/');
-        });
-
-        it('should retrieve all poll responses and add to scope when poll id not supplied.', function () {
-            initController();
-
-            httpMock.expectGET(apiUrl + 'poll-responses/');
-            httpMock.flush();
-            expect(scope.poll_responses).toEqual(pollResponseStub);
-            expect(scope.poll_text).toEqual('All Poll');
-
-            expect(scope.export_poll_response_url).toEqual(window.location.origin + "/export/poll-responses/");
         });
 
         describe('backToPolls', function () {
@@ -71,17 +60,6 @@ describe('dms.polls-response', function () {
                 initController();
                 scope.backToPolls();
                 expect(stateMock.go).toHaveBeenCalledWith('admin.polls');
-            });
-        });
-
-        describe('allPollResponses', function () {
-            it('should add all poll responses to the scope ', function () {
-                initController();
-                scope.allPollResponses();
-                httpMock.expectGET(apiUrl + 'poll-responses/');
-                httpMock.flush();
-                expect(scope.poll_responses).toEqual(pollResponseStub);
-                expect(scope.poll_text).toEqual('All Poll');
             });
         });
     });

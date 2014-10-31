@@ -147,11 +147,6 @@ module.exports = function () {
         });
     });
 
-    this.Then(/^I should not see the messages bubble$/, function (next) {
-        this.expect(mapPage.messagesBubble.isDisplayed()).to.eventually.be.false
-            .and.notify(next);
-    });
-
     this.Then(/^I should see a disasters bubble with (\d+) disasters$/, function (numberOfDisasters, next) {
         this.expect(mapPage.disastersBubble.getText()).to.eventually.equal(numberOfDisasters)
             .and.notify(next);

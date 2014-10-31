@@ -88,6 +88,20 @@
             return aggregateMarker(layer, count, 'disasters');
         }
 
+        function addDisasterCountMarker(aggregateValue, layerGroup, childLayer) {
+            if (aggregateValue.disasters.count > 0) {
+                var disasterMarker = disastersAggregateMarker(childLayer, aggregateValue.disasters.count);
+                layerGroup.addLayer(disasterMarker);
+            }
+        }
+
+        function addMessagesCountMarker(aggregateValue, layerGroup, childLayer) {
+            if (aggregateValue.messages.count > 0) {
+                var messageMarker = messagesAggregateMarker(childLayer, aggregateValue.messages.count);
+                layerGroup.addLayer(messageMarker);
+            }
+        }
+
         function addAggregateLayer(map, parentLayerName) {
             var layerGroup = L.layerGroup();
 
@@ -98,10 +112,8 @@
                 angular.forEach(aggregateStats, function (aggregateValue, aggregateName) {
                     var childLayer = layer.getChildLayer(aggregateName);
                     if (childLayer) {
-                        var messageMarker = messagesAggregateMarker(childLayer, aggregateValue.messages.count);
-                        var disasterMarker = disastersAggregateMarker(childLayer, aggregateValue.disasters.count);
-                        layerGroup.addLayer(messageMarker);
-                        layerGroup.addLayer(disasterMarker);
+                        addMessagesCountMarker(aggregateValue, layerGroup, childLayer);
+                        addDisasterCountMarker(aggregateValue, layerGroup, childLayer);
                     }
                 });
 

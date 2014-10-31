@@ -38,7 +38,6 @@ Feature: Map
     And I POST "NECOC Awach Flood" to the NECOC DMS
     When I navigate to map location "/admin/dashboard/gulu"
     Then I should see a messages bubble with 1 incoming messages
-    Then I should see a disasters bubble with 0 disasters
 
   Scenario: View Messages HeatMap
     Given I am logged in as a NECOC admin

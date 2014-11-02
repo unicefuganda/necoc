@@ -120,7 +120,7 @@
                 var savedGroup = LayerMap.getLayerGroup('aggregate_stats');
                 try {
                     map.hasLayer(savedGroup) && map.removeLayer(savedGroup);
-                } catch(err) {m}
+                } catch(err) {}
                 LayerMap.addLayerGroup('aggregate_stats', layerGroup);
                 map.addLayer(layerGroup);
             });

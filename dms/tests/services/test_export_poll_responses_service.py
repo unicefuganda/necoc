@@ -24,6 +24,7 @@ class ExportPollResponseServiceTest(MongoTestWithCSV):
         self.poll_response_attr = dict(phone_no=phone_number, text="NECOCPoll %s whatever"%self.poll['keyword'],
                                        received_at=date_time, relayer_id=234, run_id=23243, poll=self.poll)
 
+        self.delimiter_line = 'sep=;'
         self.headings = "Respondent;Answer;Location;Responded on"
 
     def test_exports_poll_responses(self):
@@ -32,7 +33,7 @@ class ExportPollResponseServiceTest(MongoTestWithCSV):
         poll_response_attr2['text'] = "NECOCPoll %s whatever2"%self.poll['keyword']
         response2 = PollResponse(**poll_response_attr2).save()
 
-        expected_data = [self.headings, self.get_poll_response_csv_row(response), self.get_poll_response_csv_row(response2)]
+        expected_data = [self.delimiter_line, self.headings, self.get_poll_response_csv_row(response), self.get_poll_response_csv_row(response2)]
 
         export_poll_service = ExportPollResponsesService(self.poll)
         actual_data = export_poll_service.get_formatted_responses()

@@ -40,6 +40,6 @@ class ExportPollResponseViewTest(MongoTestWithCSV):
         file_name = "disaster_space_responses.csv"
         self.assertEquals(response.get('Content-Disposition'), 'attachment; filename="%s"' % file_name)
 
-        contents = "%s\r\n%s\r\n%s" % ("".join(self.headings), "".join(self.get_poll_response_csv_row(poll_response)),
+        contents = "%s\r\n%s\r\n%s\r\n%s" % ("".join('sep=;'), "".join(self.headings), "".join(self.get_poll_response_csv_row(poll_response)),
                                        "".join(self.get_poll_response_csv_row(poll_response2)))
         self.assertEqual(contents, response.content)

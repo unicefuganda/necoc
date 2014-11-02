@@ -55,6 +55,7 @@ class MultiLocationStatsService(object):
     def set_locations(self):
         if self.location_name:
             location = Location.objects.filter(name__iexact=self.location_name).first()
-            return location.children()
+            if location:
+                return location.children()
         return Location.objects(parent=None)
 

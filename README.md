@@ -9,6 +9,9 @@ Coding Standards
 
 SETTING UP NECOC ON YOUR MACHINE
 -----------------------------------
+* Install Python
+* Install MongoDB
+* Add API_TOKEN environment variable (for the development variable, any string can work.)
 * mongodb should be running and after cloning the repo (see below), adjust db settings in settings/base.py or settings/local.py
 
 ##Git
@@ -17,7 +20,9 @@ SETTING UP NECOC ON YOUR MACHINE
 
         cd necoc
 
-        mkvirtualenv necoc
+        virtualenv .necoc --no-site-packages
+
+        source .necoc/bin/activate
 
         pip install -r requirements.txt
 

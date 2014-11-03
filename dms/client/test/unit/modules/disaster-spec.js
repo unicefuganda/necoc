@@ -43,6 +43,7 @@ describe('dms.disaster', function () {
             initController(true);
             scope.disaster = { name: "Flood", date: "2014/10/02 19:13", subcounties: 'subcounty_id'};
             scope.disasters = [];
+            scope.hasErrors = true;
 
             scope.saveDisaster();
             httpMock.expectPOST(apiUrl + 'disasters/', {name: "Flood", date: "2014-10-02T19:13", locations: ['subcounty_id'] });
@@ -51,6 +52,7 @@ describe('dms.disaster', function () {
 
             expect(scope.saveStatus).toBeFalsy();
             expect(scope.disaster).toBeNull();
+            expect(scope.hasErrors).toBeFalsy();
             expect(scope.disasters).toEqual([disastersStub]);
         });
 

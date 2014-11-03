@@ -44,6 +44,7 @@
                 DisasterService.create($scope.disaster).then(function (response) {
                     $scope.disaster = null;
                     $scope.saveStatus = false;
+                    $scope.hasErrors = false;
                     $scope.disasters.push(response.data);
                 });
 

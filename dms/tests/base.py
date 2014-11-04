@@ -2,12 +2,15 @@ import csv
 from rest_framework.test import APITestCase
 from django.test import TestCase
 from dms import models as ALL_MODELS
+import warnings
+from django.utils.deprecation import RemovedInDjango18Warning
 
 
 class MongoTestCase(TestCase):
     all_models = ALL_MODELS.__all__
 
     def _fixture_setup(self):
+        warnings.filterwarnings("ignore", category=RemovedInDjango18Warning)
         pass
 
     def _fixture_teardown(self):

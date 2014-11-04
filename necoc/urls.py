@@ -15,6 +15,7 @@ from dms.api.location_endpoint import LocationListCreateView
 from dms.api.mobile_user_endpoint import MobileUserListCreateView
 from dms.views.export_poll_responses import ExportPollResponsesView
 from dms.views.homepage import HomeView
+from dms.views.login import Login
 
 
 urlpatterns = patterns('',
@@ -24,6 +25,7 @@ urlpatterns = patterns('',
 
     # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/v1/rapid-pro/$', RapidProListCreateView.as_view()),
+    url(r'^login/$', Login.as_view()),
     url(r'^api/v1/poll-responses/$', PollResponseListCreateView.as_view()),
     url(r'^api/v1/rapid-pro/(?P<id>[0-9a-z]+)/$', RapidProRetrieveUpdateView.as_view()),
     url(r'^api/v1/locations/$', LocationListCreateView.as_view()),

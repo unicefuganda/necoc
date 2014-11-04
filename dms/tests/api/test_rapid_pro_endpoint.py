@@ -154,3 +154,20 @@ class RapidProEndPointTest(MongoAPITestCase):
         expected_message2['text'] = message_2['text']
         self.assertDictContainsSubset(expected_message2, response.data[0])
 
+    def test_should_filter_messages_by_disaster_type(self):
+        message_attr = self.message.copy()
+        message_attr['disaster'] = self.disaster
+        fire_message = RapidProMessage(**message_attr).save()
+        DisasterType(**dict(name="Flood", description="Flood")).save()
+
+        response = self.client.get(self.API_ENDPOINT, {"disaster_type": "fire", "format": "json"})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertEqual(str(fire_message.id), response.data[0]['id'])
+        self.assertDictContainsSubset(self.expected_message, response.data[0])
+
+        response = self.client.get(self.API_ENDPOINT, {"disaster_type": "flood", "format": "json"})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(0, len(response.data))

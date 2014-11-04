@@ -578,3 +578,12 @@ div[class*="-aggregate-marker-icon"] div {
     height: auto;
 }
 
+.time-filter {
+    background-color: #f1f1f1;
+    padding: 35px 24px 0px 24px;
+    min-height: 600px;
+}
+
+.time-filter .form-group {
+    margin-bottom: 10px;
+}

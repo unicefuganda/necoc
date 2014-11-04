@@ -35,11 +35,19 @@ class RapidProListCreateView(ListCreateAPIView):
         disaster_type = self.request.GET.get('disaster_type', None)
         if disaster_type:
             queryset = self.query_by_disaster_type(disaster_type, queryset)
+
         return queryset
 
+    def _get_param_conversion(self, fields):
+        converted = {field: field for field in fields}
+        converted['to'] = 'received_at__lte'
+        converted['from'] = 'received_at__gte'
+        return converted
+
     def _non_location_queried_messages(self):
-        fields = RapidProMessage._fields_ordered
-        query_params = {key: value or None for key, value in self.request.GET.items() if key in fields}
+        fields = RapidProMessage.get_fields()
+        converted_params = self._get_param_conversion(fields)
+        query_params = {converted_params[key]: value or None for key, value in self.request.GET.items() if key in converted_params}
         return RapidProMessage.objects(**query_params)
 
     def query_by_disaster_type(self, disaster_type, queryset=None):

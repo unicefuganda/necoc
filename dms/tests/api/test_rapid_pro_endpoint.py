@@ -171,3 +171,37 @@ class RapidProEndPointTest(MongoAPITestCase):
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(0, len(response.data))
+
+    def test_should_filter_messages_by_date_range(self):
+        message_attr = self.message.copy()
+        date_1_jan = datetime.datetime(2014, 01, 01)
+        message_attr['received_at'] = date_1_jan
+        message_now = RapidProMessage(**message_attr).save()
+
+        message_attr2 = self.message.copy()
+        date_3_jan = datetime.datetime(2014, 01, 03)
+        message_attr2['received_at'] = date_3_jan
+        message_2days_later = RapidProMessage(**message_attr2).save()
+
+        response = self.client.get(self.API_ENDPOINT, {"to": "2014-01-02", "format": "json"})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertEqual(str(message_now.id), response.data[0]['id'])
+        expected_message = self.expected_message.copy()
+        expected_message['time'] = date_1_jan
+        self.assertDictContainsSubset(expected_message, response.data[0])
+
+        response = self.client.get(self.API_ENDPOINT, {"from": "2014-01-02", "format": "json"})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertEqual(str(message_2days_later.id), response.data[0]['id'])
+        expected_message2 = self.expected_message.copy()
+        expected_message2['time'] = date_3_jan
+        self.assertDictContainsSubset(expected_message2, response.data[0])
+
+        response = self.client.get(self.API_ENDPOINT, {"from": "2014-01-02", "to": "2014-01-02",  "format": "json"})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(0, len(response.data))

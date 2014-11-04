@@ -14,3 +14,7 @@ class RapidProMessage(RapidProMessageBase):
             text = split_text(self.text)
             if len(text) > settings.MESSAGE_LOCATION_INDEX-1:
                 return find_location_match(text[settings.MESSAGE_LOCATION_INDEX-1])
+
+    @classmethod
+    def get_fields(cls):
+        return cls._fields_ordered

@@ -578,3 +578,9 @@ div[class*="-aggregate-marker-icon"] div {
     height: auto;
 }
 
+#login-form-container {
+    margin: 15% auto 0;
+    width: 337px;
+    padding: 10px 30px;
+}
+

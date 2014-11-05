@@ -56,26 +56,6 @@ var MobileUsersPage = function () {
     this.getMobileUsersData = function (row, key) {
         return element(by.repeater('user in users').row(row).column('{[{ ' + key + ' }]}')).getText();
     };
-
-    this.registerUserWith = function (email, phone, callback) {
-        request.post('http://localhost:7999/api/v1/locations/', {
-            form: {
-                name: "Kampala",
-                type: "district"
-            }
-        }, function (err, httpResponse, body) {
-            request.post('http://localhost:7999/api/v1/mobile-users/', {
-                form: {
-                    name: "Timothy Akampa",
-                    phone: phone,
-                    location: JSON.parse(body).id,
-                    email: email
-                }
-            }, function () {
-                callback();
-            });
-        });
-    }
 };
 
 module.exports = new MobileUsersPage();

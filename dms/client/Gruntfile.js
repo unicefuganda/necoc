@@ -30,6 +30,19 @@ module.exports = function (grunt) {
                     wait: false,
                     quite: true
                 }
+            },
+            createUser: {
+                cmd: '../../manage.py',
+                args: [
+                    'create_super_user',
+                    'test_user',
+                    'password',
+                    'test_user@nothing.com'
+                ],
+                options: {
+                    wait: false,
+                    quite: true
+                }
             }
         }
     });
@@ -40,6 +53,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('ft', function () {
         grunt.task.run('run:runserver');
+        grunt.task.run('run:createUser');
         grunt.task.run('protractor');
     });
 

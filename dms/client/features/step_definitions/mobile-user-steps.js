@@ -1,6 +1,7 @@
 module.exports = function () {
     var homePage = require("../pages/home-page");
     var mobileUsersPage = require("../pages/mobile-users-page"),
+        dataSetUpPage = require("../pages/data-setup-page"),
         user = { location: {}};
 
     this.World = require("../support/world").World;
@@ -82,7 +83,7 @@ module.exports = function () {
     });
 
     this.When(/^I have a Mobile User with email "([^"]*)" and phone "([^"]*)"$/, function (email, phone, next) {
-        mobileUsersPage.registerUserWith(email, phone, next);
+        dataSetUpPage.registerMobileUser(phone, 'Mukono', email,  next);
     });
 
     this.Then(/^I should not see the field required error messages$/, function (next) {

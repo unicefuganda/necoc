@@ -4,7 +4,10 @@ import sys
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-if ('test' in sys.argv) or ('0.0.0.0:7999' in sys.argv):
+if 'test' in sys.argv:
+    REST_FRAMEWORK = {}
+
+if ('test' in sys.argv) or ('0.0.0.0:7999' in sys.argv) or ('test_user' in sys.argv):
     TEST_RUNNER = 'dms.tests.runner.NoSQLTestRunner'
 
     MESSAGE_LOCATION_INDEX = 2

@@ -1,5 +1,6 @@
 module.exports = function () {
     var disasterPage = require("../pages/disaster-page"),
+        dataSetUpPage = require("../pages/data-setup-page"),
         messagesPage = require("../pages/messages-page"),
         associatedMessage = messagesPage.messages[0],
         disaster = {};
@@ -13,7 +14,7 @@ module.exports = function () {
     this.World = require("../support/world").World;
 
     this.Given(/^I have "([^"]*)" registered as a disaster type$/, function (disasterType, next) {
-        disasterPage.registerDisasterType(disasterType, next);
+        dataSetUpPage.registerDisasterType(disasterType, next);
     });
 
     this.When(/^I navigate to "([^"]*)"$/, function (url, next) {

@@ -165,6 +165,7 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'rest_framework',
     'djcelery',
+    'mongoengine.django.mongo_auth',
 )
 
 LOCAL_APPS = (
@@ -183,6 +184,9 @@ REST_FRAMEWORK = {
        'rest_framework.permissions.IsAuthenticated',
    )
 }
+
+AUTH_USER_MODEL = 'mongo_auth.MongoUser'
+MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # TEST_RUNNER = 'dms.tests.runner.NoSQLTestRunner'

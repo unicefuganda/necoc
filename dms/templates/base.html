@@ -1,22 +1,61 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="dms">
 
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Disaster management system">
-    <title>{% block  page_title %}{% endblock %}</title>
+    <title>{% block page_title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ STATIC_URL }}bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}bower_components/selectize/dist/css/selectize.bootstrap3.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}bower_components/angular-growl-v2/build/angular-growl.min.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}bower_components/datetimepicker/jquery.datetimepicker.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}bower_components/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/app.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/fonts.css"/>
     {% block styles %}{% endblock %}
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </head>
+</head>
 
-  <body>
-    {% block body %}{% endblock %}
-    {% block scripts %}{% endblock %}
-  </body>
+<body>
+{% block body %}{% endblock %}
+<!-- Libs -->
+<script src="{{ STATIC_URL }}bower_components/jquery/dist/jquery.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/angular/angular.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/si-table/dist/si-table.js"></script>
+<script src="{{ STATIC_URL }}bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/sifter/sifter.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/microplugin/src/microplugin.js"></script>
+<script src="{{ STATIC_URL }}bower_components/selectize/dist/js/selectize.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/angular-growl-v2/build/angular-growl.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/datetimepicker/jquery.datetimepicker.js"></script>
+<script src="{{ STATIC_URL }}bower_components/moment/min/moment.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/checklist-model/checklist-model.js"></script>
+<script src="{{ STATIC_URL }}bower_components/leaflet/dist/leaflet.js"></script>
+<!-- Custom files -->
+<script src="{{ STATIC_URL }}js/modules/index.js"></script>
+<script src="{{ STATIC_URL }}js/modules/config.js"></script>
+<script src="{{ STATIC_URL }}js/modules/message.js"></script>
+<script src="{{ STATIC_URL }}js/modules/location.js"></script>
+<script src="{{ STATIC_URL }}js/modules/mobile-user.js"></script>
+<script src="{{ STATIC_URL }}js/modules/utils.js"></script>
+<script src="{{ STATIC_URL }}js/modules/disaster.js"></script>
+<script src="{{ STATIC_URL }}js/modules/disaster-type.js"></script>
+<script src="{{ STATIC_URL }}js/modules/admin-panel.js"></script>
+<script src="{{ STATIC_URL }}js/modules/map.js"></script>
+<script src="{{ STATIC_URL }}js/modules/layer.js"></script>
+<script src="{{ STATIC_URL }}js/modules/geojson.js"></script>
+<script src="{{ STATIC_URL }}js/modules/stats.js"></script>
+<script src="{{ STATIC_URL }}js/modules/filters.js"></script>
+<script src="{{ STATIC_URL }}js/modules/polls.js"></script>
+<script src="{{ STATIC_URL }}js/modules/poll-responses.js"></script>
+<script src="{{ STATIC_URL }}js/modules/dashboard.js"></script>
+{% block scripts %}{% endblock %}
+</body>
 
 </html>

@@ -1,6 +1,8 @@
 (function (module) {
 
-    module.config(function ($stateProvider, $urlRouterProvider, $interpolateProvider) {
+    module.config(function ($stateProvider, $urlRouterProvider, $interpolateProvider, $httpProvider) {
+        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
 
         $urlRouterProvider.when('/admin', '/admin/dashboard');
         $urlRouterProvider.when('/', '/admin/dashboard');

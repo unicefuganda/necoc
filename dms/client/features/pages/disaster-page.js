@@ -51,14 +51,6 @@ var DisasterPage = function () {
     this.associatedMessages = function (row, key) {
         return element(by.repeater('message in associatedMessages').row(row).column('{[{ message.' + key + ' }]}')).getText();
     };
-
-    this.registerDisasterType = function (disasterType, next) {
-        request.post('http://localhost:7999/api/v1/disaster-types/', {
-            form: {
-                name: disasterType
-            }
-        }, next);
-    };
 };
 
 module.exports = new DisasterPage();

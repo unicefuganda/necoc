@@ -18,7 +18,24 @@ var BulkSMSModal = function () {
 };
 
 var MessagesPage = function () {
-    var request = require('request');
+    var request = require('request'),
+        baseRequest;
+
+    (function () {
+        request({
+            url: 'http://localhost:7999/api-token-auth/',
+            method: 'post',
+            json: true,
+            body: {
+                username: "test_user",
+                password: "password"
+            }
+        }, function (error, response, body) {
+            baseRequest = request.defaults({
+                headers: {'Authorization': 'Token '+ body.token}
+            });
+        });
+    })();
 
     this.bulkSMSButton = element(by.id('send-bulk-sms'));
 
@@ -49,13 +66,13 @@ var MessagesPage = function () {
     };
 
     this.postMessage = function (callback) {
-        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: this.messages[0]}, callback.bind({}, this.messages[0]));
+        baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {form: this.messages[0]}, callback.bind({}, this.messages[0]));
     };
 
     this.postMessageWithText = function (text, callback) {
         var clonedMessage = JSON.parse( JSON.stringify( this.messages[0] ) );
         clonedMessage.text = text;
-        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: clonedMessage}, callback.bind({}, clonedMessage));
+        baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {form: clonedMessage}, callback.bind({}, clonedMessage));
     };
 
     this.postMessages = function (number, callback) {
@@ -63,7 +80,7 @@ var MessagesPage = function () {
         for (var index = 0; index < number; index++) {
             var message = { phone: "023020302" + index, time: "2014-02-13T02:00:00", relayer: 2, run: String(index),
                 text: "I am message" + index, source: "NECOC Volunteer" };
-            request.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
+            baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
             messages.push(message);
         }
         browser.sleep(800).then(callback.bind({},messages))
@@ -86,7 +103,7 @@ var MessagesPage = function () {
     };
 
     this.postLocation = function (callback) {
-        request.post('http://localhost:7999/api/v1/locations/', {form: this.senderLocation}, function () {
+        baseRequest.post('http://localhost:7999/api/v1/locations/', {form: this.senderLocation}, function () {
             callback();
         });
     };
@@ -100,35 +117,10 @@ var MessagesPage = function () {
 
     this.postMobileUser = function (callback) {
         var necocVolunteer = this.NecocVolunteer;
-        request.get('http://localhost:7999/api/v1/locations/?format=json', function (error, response, location) {
+        baseRequest.get('http://localhost:7999/api/v1/locations/?format=json', function (error, response, location) {
             necocVolunteer["location"] = JSON.parse(location)[0].id;
-            request.post('http://localhost:7999/api/v1/mobile-users/', {form: necocVolunteer}, function () {
+            baseRequest.post('http://localhost:7999/api/v1/mobile-users/', {form: necocVolunteer}, function () {
                 callback();
-            });
-        });
-    };
-
-    this.registerDisaster = function (location, callback) {
-        request.post('http://localhost:7999/api/v1/locations/', {
-            form: {
-                name: location,
-                type: "district"
-            }
-        }, function (err, httpResponse, location) {
-            request.post('http://localhost:7999/api/v1/disaster-types/', {
-                form: {
-                    name: "Flood"
-                }
-            }, function (err, httpResponse, disasterType) {
-                request.post('http://localhost:7999/api/v1/disasters/', {
-                    form: {
-                        name: JSON.parse(disasterType).id,
-                        status: "Assessment",
-                        locations: [JSON.parse(location).id],
-                        date: "2014-10-02T19:08:00",
-                        description: "Flood"
-                    }
-                }, callback);
             });
         });
     };
@@ -138,15 +130,12 @@ var MessagesPage = function () {
             browser.sleep(200);
             return element(by.cssContainingText('.selectize-dropdown-content .caption   ', location)).click()
         });
-    }
+    };
 
     this.getAddToDisasterErrors = function () {
         return element(by.css("#disaster-errors .text-danger")).getText();
-    }
+    };
 
-    this.getMessage = function (district) {
-        messages
-    }
 };
 
 module.exports = new MessagesPage();

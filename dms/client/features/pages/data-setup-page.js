@@ -1,9 +1,34 @@
 var DataSetupPage = function () {
     var request = require('request'),
+        baseRequest,
         self = this;
 
+    (function () {
+        request({
+            url: 'http://localhost:7999/api-token-auth/',
+            method: 'post',
+            json: true,
+            body: {
+                username: "test_user",
+                password: "password"
+            }
+        }, function (error, response, body) {
+            baseRequest = request.defaults({
+                headers: {'Authorization': 'Token '+ body.token}
+            });
+        });
+    })();
+
+    this.registerDisasterType = function (disasterType, next) {
+        baseRequest.post('http://localhost:7999/api/v1/disaster-types/', {
+            form: {
+                name: disasterType
+            }
+        }, next);
+    };
+
     this.registerDistrict = function (location, next) {
-        request.post('http://localhost:7999/api/v1/locations/', {
+        baseRequest.post('http://localhost:7999/api/v1/locations/', {
             form: {
                 name: location,
                 type: "district"
@@ -12,13 +37,13 @@ var DataSetupPage = function () {
     };
 
     this.registerSubCounty = function (district, subcounty, next) {
-        request.post('http://localhost:7999/api/v1/locations/', {
+        baseRequest.post('http://localhost:7999/api/v1/locations/', {
             form: {
                 name: district,
                 type: "district"
             }
         }, function (err, httpResponse, body) {
-            request.post('http://localhost:7999/api/v1/locations/', {
+            baseRequest.post('http://localhost:7999/api/v1/locations/', {
                 form: {
                     name: subcounty,
                     type: "subcounty",
@@ -29,7 +54,7 @@ var DataSetupPage = function () {
     };
 
     this.registerDisasterType = function (disasterType, next) {
-        request.post('http://localhost:7999/api/v1/disaster-types/', {
+        baseRequest.post('http://localhost:7999/api/v1/disaster-types/', {
             form: {
                 name: disasterType
             }
@@ -39,7 +64,7 @@ var DataSetupPage = function () {
     this.registerDisaster = function (disasterType, district, subcounty, next) {
         self.registerSubCounty(district, subcounty, function (err, httpResponse, locationBody) {
             self.registerDisasterType(disasterType, function (err, httpResponse, disasterTypeBody) {
-                request({
+                baseRequest({
                     url: 'http://localhost:7999/api/v1/disasters/',
                     method: 'post',
                     json: true,
@@ -56,24 +81,24 @@ var DataSetupPage = function () {
         });
     };
 
-    this.registerMobileUser = function (phoneNumber, locationName, callback) {
+    this.registerMobileUser = function (phoneNumber, locationName, email, callback) {
         self.registerDistrict(locationName, function (err, httpResponse, location) {
-            request.post('http://localhost:7999/api/v1/mobile-users/', {
+            baseRequest.post('http://localhost:7999/api/v1/mobile-users/', {
                 form: {
                     phone: phoneNumber,
                     name: "Somename",
-                    email: "haha@ha.ha",
+                    email: email,
                     location: JSON.parse(location).id
                 }
-            }, function(err, httpResponse, mobileUser){
+            }, function (err, httpResponse, mobileUser) {
                 callback(err, httpResponse, location);
             });
         });
     };
 
     this.registerPoll = function (phoneNumber, keyword, locationName, callback) {
-        self.registerMobileUser(phoneNumber, locationName, function (err, httpResponse, location) {
-            request({
+        self.registerMobileUser(phoneNumber, locationName, 'some@email.com', function (err, httpResponse, location) {
+            baseRequest({
                 url: 'http://localhost:7999/api/v1/polls/',
                 method: 'post',
                 body: {
@@ -90,7 +115,7 @@ var DataSetupPage = function () {
 
     this.createPollAndResponse = function (phoneNumber, keyword, location, pollText, callback) {
         self.registerPoll(phoneNumber, keyword, location, function (err, httpResponse, poll) {
-            request.post('http://localhost:7999/api/v1/poll-responses/', {
+            baseRequest.post('http://localhost:7999/api/v1/poll-responses/', {
                 form: {
                     phone: phoneNumber,
                     text: pollText,
@@ -99,21 +124,17 @@ var DataSetupPage = function () {
                     run: "23243",
                     poll: poll.id
                 }
-            }, function(err, httpResponse, pollResponse){
+            }, function (err, httpResponse, pollResponse) {
                 callback(poll);
             });
         });
     };
 
     this.createPollAndResponseFrom = function (pollResponseAttr, callback) {
-       return self.createPollAndResponse(pollResponseAttr.phone, pollResponseAttr.keyword,
+        return self.createPollAndResponse(pollResponseAttr.phone, pollResponseAttr.keyword,
             pollResponseAttr.location, pollResponseAttr.text, callback);
     };
 
-    this.createMessage = function(messageText) {
-
-    }
-
-}
+};
 
 module.exports = new DataSetupPage();

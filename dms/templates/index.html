@@ -1,84 +1,45 @@
 {% extends "base.html" %}
 {% block page_title %} NECOC DMS {% endblock %}
 
-{% block styles %}
-<link rel="stylesheet" href="{{ STATIC_URL }}bower_components/bootstrap/dist/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="{{ STATIC_URL }}bower_components/selectize/dist/css/selectize.bootstrap3.css"/>
-<link rel="stylesheet" href="{{ STATIC_URL }}bower_components/angular-growl-v2/build/angular-growl.min.css"/>
-<link rel="stylesheet" href="{{ STATIC_URL }}bower_components/datetimepicker/jquery.datetimepicker.css"/>
-<link rel="stylesheet" href="{{ STATIC_URL }}bower_components/leaflet/dist/leaflet.css"/>
-<link rel="stylesheet" href="{{ STATIC_URL }}css/app.css"/>
-<link rel="stylesheet" href="{{ STATIC_URL }}css/fonts.css"/>
-{% endblock %}
-
 {% block body %}
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" ng-bind="$state.current.data.pageTitle">a</a>
-        </div>
+<div>
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" ng-bind="$state.current.data.pageTitle">a</a>
+            </div>
 
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="" class="dropdown-toggle" data-toggle="dropdown"><span
-                            class="glyphicon glyphicon-user"></span>&nbsp;{{ request.user.username }}<span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Account</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <form class="navbar-form navbar-right" role="search" ng-show="$state.current.data.pageTitle == 'Dashboard'">
-                <div class="form-group">
-                    <input type="text" search-map="" ng-model="map.search" class="form-control" placeholder="Search">
-                </div>
-            </form>
-            <ul class="nav navbar-nav navbar-right navbar-title" ng-show="$state.current.data.pageTitle == 'Dashboard'">
-                <li><a href="">Uganda
-                    {[{ params.location.district | capitalize | prependSlash }]}
-                    {[{ params.location.subcounty | capitalize | prependSlash }]}</a></li>
-            </ul>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="" class="dropdown-toggle" data-toggle="dropdown" id="logged-in-user"><span
+                                class="glyphicon glyphicon-user"></span>&nbsp;{{ request.user.username }}<span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Account</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-right" role="search"
+                      ng-show="$state.current.data.pageTitle == 'Dashboard'">
+                    <div class="form-group">
+                        <input type="text" search-map="" ng-model="map.search" class="form-control"
+                               placeholder="Search">
+                    </div>
+                </form>
+                <ul class="nav navbar-nav navbar-right navbar-title"
+                    ng-show="$state.current.data.pageTitle == 'Dashboard'">
+                    <li><a href="">Uganda
+                        {[{ params.location.district | capitalize | prependSlash }]}
+                        {[{ params.location.subcounty | capitalize | prependSlash }]}</a></li>
+                </ul>
+            </div>
         </div>
     </div>
+
+    <div ui-view></div>
+
 </div>
-
-<div ui-view></div>
-
-{% endblock %}
-
-{% block scripts %}
-<!-- Libs -->
-<script src="{{ STATIC_URL }}bower_components/jquery/dist/jquery.min.js"></script>
-<script src="{{ STATIC_URL }}bower_components/angular/angular.min.js"></script>
-<script src="{{ STATIC_URL }}bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-<script src="{{ STATIC_URL }}bower_components/si-table/dist/si-table.js"></script>
-<script src="{{ STATIC_URL }}bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="{{ STATIC_URL }}bower_components/sifter/sifter.min.js"></script>
-<script src="{{ STATIC_URL }}bower_components/microplugin/src/microplugin.js"></script>
-<script src="{{ STATIC_URL }}bower_components/selectize/dist/js/selectize.min.js"></script>
-<script src="{{ STATIC_URL }}bower_components/angular-growl-v2/build/angular-growl.min.js"></script>
-<script src="{{ STATIC_URL }}bower_components/datetimepicker/jquery.datetimepicker.js"></script>
-<script src="{{ STATIC_URL }}bower_components/moment/min/moment.min.js"></script>
-<script src="{{ STATIC_URL }}bower_components/checklist-model/checklist-model.js"></script>
-<script src="{{ STATIC_URL }}bower_components/leaflet/dist/leaflet.js"></script>
-<!-- Custom files -->
-<script src="{{ STATIC_URL }}js/modules/index.js"></script>
-<script src="{{ STATIC_URL }}js/modules/config.js"></script>
-<script src="{{ STATIC_URL }}js/modules/message.js"></script>
-<script src="{{ STATIC_URL }}js/modules/location.js"></script>
-<script src="{{ STATIC_URL }}js/modules/mobile-user.js"></script>
-<script src="{{ STATIC_URL }}js/modules/utils.js"></script>
-<script src="{{ STATIC_URL }}js/modules/disaster.js"></script>
-<script src="{{ STATIC_URL }}js/modules/disaster-type.js"></script>
-<script src="{{ STATIC_URL }}js/modules/admin-panel.js"></script>
-<script src="{{ STATIC_URL }}js/modules/map.js"></script>
-<script src="{{ STATIC_URL }}js/modules/layer.js"></script>
-<script src="{{ STATIC_URL }}js/modules/geojson.js"></script>
-<script src="{{ STATIC_URL }}js/modules/stats.js"></script>
-<script src="{{ STATIC_URL }}js/modules/filters.js"></script>
-<script src="{{ STATIC_URL }}js/modules/polls.js"></script>
-<script src="{{ STATIC_URL }}js/modules/poll-responses.js"></script>
-<script src="{{ STATIC_URL }}js/modules/dashboard.js"></script>
 {% endblock %}

@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block page_title %} NECOC DMS {% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}bower_components/selectize/dist/css/selectize.bootstrap3.css"/>
+<link rel="stylesheet" href="{{ STATIC_URL }}bower_components/angular-growl-v2/build/angular-growl.min.css"/>
+<link rel="stylesheet" href="{{ STATIC_URL }}bower_components/datetimepicker/jquery.datetimepicker.css"/>
+<link rel="stylesheet" href="{{ STATIC_URL }}bower_components/leaflet/dist/leaflet.css"/>
+{% endblock %}
+
 {% block body %}
 <div>
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -42,4 +49,36 @@
     <div ui-view></div>
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ STATIC_URL }}bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/si-table/dist/si-table.js"></script>
+<script src="{{ STATIC_URL }}bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/sifter/sifter.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/microplugin/src/microplugin.js"></script>
+<script src="{{ STATIC_URL }}bower_components/selectize/dist/js/selectize.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/angular-growl-v2/build/angular-growl.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/datetimepicker/jquery.datetimepicker.js"></script>
+<script src="{{ STATIC_URL }}bower_components/moment/min/moment.min.js"></script>
+<script src="{{ STATIC_URL }}bower_components/checklist-model/checklist-model.js"></script>
+<script src="{{ STATIC_URL }}bower_components/leaflet/dist/leaflet.js"></script>
+<!-- Custom files -->
+<script src="{{ STATIC_URL }}js/modules/index.js"></script>
+<script src="{{ STATIC_URL }}js/modules/config.js"></script>
+<script src="{{ STATIC_URL }}js/modules/message.js"></script>
+<script src="{{ STATIC_URL }}js/modules/location.js"></script>
+<script src="{{ STATIC_URL }}js/modules/mobile-user.js"></script>
+<script src="{{ STATIC_URL }}js/modules/utils.js"></script>
+<script src="{{ STATIC_URL }}js/modules/disaster.js"></script>
+<script src="{{ STATIC_URL }}js/modules/disaster-type.js"></script>
+<script src="{{ STATIC_URL }}js/modules/admin-panel.js"></script>
+<script src="{{ STATIC_URL }}js/modules/map.js"></script>
+<script src="{{ STATIC_URL }}js/modules/layer.js"></script>
+<script src="{{ STATIC_URL }}js/modules/geojson.js"></script>
+<script src="{{ STATIC_URL }}js/modules/stats.js"></script>
+<script src="{{ STATIC_URL }}js/modules/filters.js"></script>
+<script src="{{ STATIC_URL }}js/modules/polls.js"></script>
+<script src="{{ STATIC_URL }}js/modules/poll-responses.js"></script>
+<script src="{{ STATIC_URL }}js/modules/dashboard.js"></script>
 {% endblock %}

@@ -581,6 +581,18 @@ div[class*="-aggregate-marker-icon"] div {
 #login-form-container {
     margin: 15% auto 0;
     width: 337px;
-    padding: 10px 30px;
+    padding: 1px 30px 10px;
+}
+
+#login-welcome h3 {
+    color: #46A5C2;
+    font-weight: 300;
+}
+
+.shadows {
+    box-shadow: 0 0 6px #D0D0D0;
+    -webkit-box-shadow: 0 0 6px #D0D0D0;
+    -moz-box-shadow: 0 0 6px #D0D0D0;
+    -o-box-shadow: 0 0 6px #D0D0D0;
 }
 

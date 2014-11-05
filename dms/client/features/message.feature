@@ -79,3 +79,14 @@ Feature: Messages
     When I search disaster by location
     Then the error message disappear
 
+  Scenario: Show uncategorized message count on admin panel
+    Given I am logged in as a NECOC admin
+    When I POST a message to the NECOC DMS
+    And I have a "Fire" disaster in "Mukono" district, "goma" subcounty already registered
+    And I visit the messages listing page
+    Then I should see 1 uncategorized message on the admin panel
+    When I check the message
+    And I click on associate to disaster button
+    And I search disaster by location
+    And I click the add button
+    Then I should see 0 uncategorized message on the admin panel

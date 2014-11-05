@@ -55,12 +55,12 @@ describe('dms.message', function () {
         expect($scope.polled).toBeTruthy();
     });
 
-    it('should retrieve filtered uncategorized messages', function () {
+    it('should retrieve filtered uncategorized message count', function () {
         initController();
 
         httpMock.expectGET(apiUrl + 'rapid-pro/?disaster=');
         httpMock.flush();
-        expect($scope.uncategorizedMessages).toEqual(messagesStub);
+        expect($scope.uncategorizedMessagesCount).toEqual(1);
     });
 
     it('should filter message by location given location id', function () {

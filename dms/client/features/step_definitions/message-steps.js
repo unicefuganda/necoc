@@ -237,6 +237,12 @@ module.exports = function () {
         homePage.messagesTab.click().then(next);
     });
 
+    this.Then(/I should see (.*) uncategorized message on the admin panel/, function (count, next) {
+        browser.driver.navigate().refresh();
+        this.expect(messagesPage.getTextByCss('.nav-sidebar .badge')).to
+            .eventually.be.equal(count.toString()).and.notify(next);
+    });
+
     this.Then(/^I should see the total number of messages displayed$/, function (next) {
         browser.driver.navigate().refresh();
         this.expect(messagesPage.getTextByCss('.section .sub-section-header .badge')).to

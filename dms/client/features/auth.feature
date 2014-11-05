@@ -6,3 +6,11 @@ Feature: Authenticationa and Authorization
     Then I should be redirected to login page
     When I navigate to "/admin/dashboard"
     Then I should be redirected to login page
+
+  Scenario: Login validation
+    Given I am logged out
+    When I try to login in with username "" and password ""
+    Then I should see "username" error message "* This field is required."
+    And I should see "password" error message "* This field is required."
+    When I try to login in with username "test_user" and password "wrong_password"
+    Then I should see "* Username or Password is invalid"

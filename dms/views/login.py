@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from dms.forms.login_form import LoginForm
@@ -22,3 +22,7 @@ class Login(View):
         return render(request, 'login.html', {'form': form})
 
 
+class Logout(View):
+    def get(self, request):
+        logout(request)
+        return redirect('/login/')

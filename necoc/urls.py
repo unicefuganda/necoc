@@ -16,7 +16,7 @@ from dms.api.mobile_user_endpoint import MobileUserListCreateView
 from dms.views.api_token import ObtainAPIToken
 from dms.views.export_poll_responses import ExportPollResponsesView
 from dms.views.homepage import HomeView
-from dms.views.login import Login
+from dms.views.login import Login, Logout
 
 
 urlpatterns = patterns('',
@@ -26,7 +26,8 @@ urlpatterns = patterns('',
 
     url(r'^api-token-auth/', ObtainAPIToken.as_view()),
     url(r'^api/v1/rapid-pro/$', RapidProListCreateView.as_view()),
-    url(r'^login/$', Login.as_view()),
+    url(r'^login/$', Login.as_view(), name='login_page'),
+    url(r'^logout/$', Logout.as_view(), name='login_page'),
     url(r'^api/v1/poll-responses/$', PollResponseListCreateView.as_view()),
     url(r'^api/v1/rapid-pro/(?P<id>[0-9a-z]+)/$', RapidProRetrieveUpdateView.as_view()),
     url(r'^api/v1/locations/$', LocationListCreateView.as_view()),

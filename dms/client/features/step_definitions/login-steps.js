@@ -27,4 +27,18 @@ module.exports = function () {
             }
         });
     });
+
+    this.When(/^I logout$/, function (next) {
+        homePage.loggedInUser.click().then(function () {
+            homePage.logoutLink.click().then(next);
+        })
+    });
+
+    this.Then(/^I should be redirected to login page$/, function (next) {
+        var self = this;
+        browser.getCurrentUrl().then(function (url) {
+            self.expect(url).to.match(/login/);
+            next();
+        });
+    });
 };

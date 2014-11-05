@@ -1,9 +1,9 @@
-from django.conf.urls import patterns, url
-
+from django.conf.urls import patterns, url, include
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
+from django.contrib.auth.decorators import login_required
 from dms.api.bulk_sms_endpoint import SentMessageListCreateView
 from dms.api.disaster_endpoint import DisasterListCreateView
 from dms.api.disaster_type_endpoint import DisasterTypeListCreateView
@@ -13,6 +13,7 @@ from dms.api.poll_response_endpoint import PollResponseListCreateView
 from dms.api.rapid_pro_endpoint import RapidProListCreateView, RapidProRetrieveUpdateView
 from dms.api.location_endpoint import LocationListCreateView
 from dms.api.mobile_user_endpoint import MobileUserListCreateView
+from dms.views.api_token import ObtainAPIToken
 from dms.views.export_poll_responses import ExportPollResponsesView
 from dms.views.homepage import HomeView
 from dms.views.login import Login
@@ -20,10 +21,10 @@ from dms.views.login import Login
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', HomeView.as_view()),
+    url(r'^$', login_required(HomeView.as_view(), login_url='login/')),
     # url(r'^necoc/', include('necoc.foo.urls')),
 
-    # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api-token-auth/', ObtainAPIToken.as_view()),
     url(r'^api/v1/rapid-pro/$', RapidProListCreateView.as_view()),
     url(r'^login/$', Login.as_view()),
     url(r'^api/v1/poll-responses/$', PollResponseListCreateView.as_view()),
@@ -36,7 +37,8 @@ urlpatterns = patterns('',
     url(r'^api/v1/disasters/$', DisasterListCreateView.as_view()),
     url(r'^api/v1/location-stats/$', LocationStatsListView.as_view()),
     url(r'^api/v1/location-stats/(?P<district>[0-9a-z]+)/$', DistrictStatsListView.as_view()),
-    url(r'^export/poll-responses/(?P<poll_id>[0-9a-z]+)/$', ExportPollResponsesView.as_view()),
+    url(r'^export/poll-responses/(?P<poll_id>[0-9a-z]+)/$',
+        login_required(ExportPollResponsesView.as_view(), login_url='login/')),
 
 
     # Uncomment the admin/doc line below to enable admin documentation:

@@ -173,6 +173,17 @@ LOCAL_APPS = (
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
+REST_FRAMEWORK = {
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+       'rest_framework.authentication.SessionAuthentication',
+       'dms.services.token_authentication.TokenAuth',
+   ),
+
+   'DEFAULT_PERMISSION_CLASSES': (
+       'rest_framework.permissions.IsAuthenticated',
+   )
+}
+
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # TEST_RUNNER = 'dms.tests.runner.NoSQLTestRunner'
 

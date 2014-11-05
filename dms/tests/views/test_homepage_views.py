@@ -9,6 +9,7 @@ class TestHome(MongoTestCase):
         self.client = Client()
 
     def test_should_get_homepage(self):
+        self.login_user()
         response = self.client.get(self.homepage_url)
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'index.html')

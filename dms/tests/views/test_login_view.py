@@ -24,8 +24,7 @@ class TestLogin(MongoTestCase):
             'password': 'password'
         }
         response = self.client.post(self.login_url, data)
-        self.assertEqual(200, response.status_code)
-        self.assertTemplateUsed(response, 'index.html')
+        self.assertRedirects(response, '/')
 
     def test_post_should_return_form_if_missing_data(self):
         data = {

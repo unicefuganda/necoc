@@ -1,6 +1,7 @@
 import datetime
 
 from django.test import Client
+from mongoengine.django.auth import User
 
 from dms.models import Location, MobileUser, Poll, PollResponse
 from dms.tests.base import MongoTestWithCSV
@@ -33,6 +34,7 @@ class ExportPollResponseViewTest(MongoTestWithCSV):
         poll_response_attr2['text'] = "NECOCPoll %s whatever2"%self.poll['keyword']
         poll_response2 = PollResponse(**poll_response_attr2).save()
 
+        self.login_user()
         response = self.client.get('/export/poll-responses/%s/'%str(self.poll.id))
 
         self.assertEquals(200, response.status_code)

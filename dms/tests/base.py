@@ -1,4 +1,5 @@
 import csv
+from mongoengine.django.auth import User
 from rest_framework.test import APITestCase
 from django.test import TestCase
 from dms import models as ALL_MODELS
@@ -8,6 +9,12 @@ from django.utils.deprecation import RemovedInDjango18Warning
 
 class MongoTestCase(TestCase):
     all_models = ALL_MODELS.__all__
+
+    def login_user(self):
+        user = User.objects.create(username='test_user', email='test@email.email')
+        user.set_password('password')
+        user.save()
+        self.client.login(username='test_user', password='password')
 
     def _fixture_setup(self):
         warnings.filterwarnings("ignore", category=RemovedInDjango18Warning)

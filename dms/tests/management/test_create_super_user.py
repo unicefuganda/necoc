@@ -1,5 +1,6 @@
 from mongoengine.django.auth import check_password, User
 from dms.management.commands.create_super_user import Command
+from dms.models import UserProfile, Location
 from dms.tests.base import MongoTestCase
 
 
@@ -15,20 +16,36 @@ class FakeCommand(Command):
 
 
 class CreateSuperuserTest(MongoTestCase):
+    def setUp(self):
+        self.kampala = Location(name='Kampala', type='district').save()
+
     def test_should_create_default_superuser(self):
         FakeCommand().handle()
         self.assertEqual(1, User.objects().count())
         user = User.objects().first()
+        user_profile = UserProfile.objects().first()
         self.assertEqual('admin', user.username)
         self.assertTrue(check_password('password', user.password))
         self.assertNotEqual('password', user.password)
-        self.assertEqual('admin@admin.admin', user.email)
+        self.assertEqual('admin@admin.admin', user_profile.email)
+        self.assertEqual(self.kampala, user_profile.location)
+        self.assertEqual('N/A', user_profile.phone)
+        self.assertEqual('Admin', user_profile.name)
 
     def test_should_create_super_user_from_args(self):
-        FakeCommand().handle('not_admin', 'not_password', 'not_admin@admin.admin')
+        FakeCommand().handle('new_admin',
+                             'new_password',
+                             'new_admin@admin.admin',
+                             'NewAdmin',
+                             'Kampala',
+                             '1234567890')
         self.assertEqual(1, User.objects().count())
         user = User.objects().first()
-        self.assertEqual('not_admin', user.username)
-        self.assertTrue(check_password('not_password', user.password))
-        self.assertNotEqual('not_password', user.password)
-        self.assertEqual('not_admin@admin.admin', user.email)
+        user_profile = UserProfile.objects().first()
+        self.assertEqual('new_admin', user.username)
+        self.assertTrue(check_password('new_password', user.password))
+        self.assertNotEqual('new_password', user.password)
+        self.assertEqual('new_admin@admin.admin', user_profile.email)
+        self.assertEqual(self.kampala, user_profile.location)
+        self.assertEqual('1234567890', user_profile.phone)
+        self.assertEqual('NewAdmin', user_profile.name)

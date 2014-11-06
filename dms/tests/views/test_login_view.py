@@ -10,7 +10,6 @@ class TestLogin(MongoTestCase):
 
         user = User.objects.create(username='admin', email='admin@admin.admin')
         user.set_password('password')
-        user.save()
 
     def test_should_get_login(self):
         response = self.client.get(self.login_url)
@@ -56,7 +55,6 @@ class TestLogout(MongoTestCase):
 
         user = User.objects.create(username='admin', email='admin@admin.admin')
         user.set_password('password')
-        user.save()
 
     def test_logging_user_out(self):
         self.client.login(username='admin', password='password')

@@ -13,7 +13,6 @@ class MongoTestCase(TestCase):
     def login_user(self):
         user = User.objects.create(username='test_user', email='test@email.email')
         user.set_password('password')
-        user.save()
         self.client.login(username='test_user', password='password')
 
     def _fixture_setup(self):

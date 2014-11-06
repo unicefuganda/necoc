@@ -9,3 +9,4 @@ class UserProfile(BaseModel):
     phone = StringField(required=True, unique=True)
     location = ReferenceField(Location, required=True)
     email = StringField()
+    user = ReferenceField(User)

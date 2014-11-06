@@ -1,4 +1,5 @@
 from mongoengine import ValidationError, NotUniqueError
+from mongoengine.django.auth import User
 from dms.models.location import Location
 from dms.models.user_profile import UserProfile
 from dms.tests.base import MongoTestCase
@@ -29,3 +30,11 @@ class TestUserProfileModel(MongoTestCase):
 
         UserProfile(**mobile_user_one).save()
         self.assertRaises(NotUniqueError, UserProfile(**mobile_user_two).save)
+
+    def test_saving_a_system_user(self):
+        user = User(username='haha', password='hehe').save()
+        user_profile_attr = dict(name='timothy', phone='+256775019449', location=self.district, email=None, user=user)
+
+        UserProfile(**user_profile_attr).save()
+
+        self.assertEqual(user, UserProfile.objects.get(**user_profile_attr).user)

@@ -4,6 +4,7 @@ module.exports = function () {
     var persistentCollections = [
         'system.indexes',
         'user',
+        'userprofile',
         'django_session',
         'token'
     ];

@@ -38,3 +38,16 @@ class TestUserProfileModel(MongoTestCase):
         UserProfile(**user_profile_attr).save()
 
         self.assertEqual(user, UserProfile.objects.get(**user_profile_attr).user)
+
+    def test_get_username(self):
+        user = User(username='haha', password='hehe').save()
+        user_profile_attr = dict(name='timothy', phone='+256775019449', location=self.district, email=None, user=user)
+        profile = UserProfile(**user_profile_attr).save()
+
+        self.assertEqual('haha', profile.username())
+
+    def test_get_username_from_regular_user(self):
+        user_profile_attr = dict(name='timothy', phone='+256775019449', location=self.district, email=None)
+        profile = UserProfile(**user_profile_attr).save()
+
+        self.assertEqual('', profile.username())

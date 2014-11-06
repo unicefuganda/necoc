@@ -10,3 +10,6 @@ class UserProfile(BaseModel):
     location = ReferenceField(Location, required=True)
     email = StringField()
     user = ReferenceField(User)
+
+    def username(self):
+        return self.user.username if self.user else ''

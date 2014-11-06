@@ -14,10 +14,16 @@ module.exports = function () {
     this.Then(/^I should see my profile$/, function (next) {
         var self = this;
 
-        self.expect(UserProfilePage.element_by_ng_binding('user.username')).to.eventually.equal('test_user').then(
-            function () {
-                self.expect(UserProfilePage.element_by_ng_binding('user.email')).to.eventually.equal('test_user@nothing.com').and.notify(next);
-            }
-        );
+        self.expect(UserProfilePage.element_by_ng_binding('user.username')).to.eventually.equal('test_user')
+            .then(function () {
+                self.expect(UserProfilePage.element_by_ng_binding('user.email')).to.eventually.equal('test_user@nothing.com');
+            })
+            .then(function () {
+                self.expect(UserProfilePage.element_by_ng_binding('user.location.name')).to.eventually.equal('Kampala');
+            })
+            .then(function () {
+                self.expect(UserProfilePage.element_by_ng_binding('user.phone')).to.eventually.equal('1234567890');
+            })
+            .then(next);
     });
 };

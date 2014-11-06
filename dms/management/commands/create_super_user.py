@@ -16,7 +16,7 @@ class Command(BaseCommand):
         else:
             user = User(username=args[0]).save()
             user.set_password(args[1])
-            location = Location.objects(name=args[4]).first()
+            location = Location.objects(name=args[4]).first() or Location(name=args[4], type='district').save()
             UserProfile(phone=args[5], name=args[3], location=location, user=user, email=args[2]).save()
 
         self.stdout.write('Successfully created superuser')

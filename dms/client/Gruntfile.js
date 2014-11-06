@@ -37,7 +37,10 @@ module.exports = function (grunt) {
                     'create_super_user',
                     'test_user',
                     'password',
-                    'test_user@nothing.com'
+                    'test_user@nothing.com',
+                    'Test User',
+                    'Kampala',
+                    '1234567890'
                 ],
                 options: {
                     wait: false,

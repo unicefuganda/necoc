@@ -12,7 +12,7 @@ from dms.api.poll_endpoint import PollListCreateView
 from dms.api.poll_response_endpoint import PollResponseListCreateView
 from dms.api.rapid_pro_endpoint import RapidProListCreateView, RapidProRetrieveUpdateView
 from dms.api.location_endpoint import LocationListCreateView
-from dms.api.user_profile_endpoint import UserProfileListCreateView
+from dms.api.user_profile_endpoint import UserProfileListCreateView, UserProfileView
 from dms.views.api_token import ObtainAPIToken
 from dms.views.export_poll_responses import ExportPollResponsesView
 from dms.views.homepage import HomeView
@@ -33,6 +33,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/locations/$', LocationListCreateView.as_view()),
     url(r'^api/v1/polls/$', PollListCreateView.as_view()),
     url(r'^api/v1/mobile-users/$', UserProfileListCreateView.as_view()),
+    url(r'^api/v1/mobile-users/(?P<id>[0-9a-z]+)/$', UserProfileView.as_view()),
     url(r'^api/v1/sent-messages/$', SentMessageListCreateView.as_view()),
     url(r'^api/v1/disaster-types/$', DisasterTypeListCreateView.as_view()),
     url(r'^api/v1/disasters/$', DisasterListCreateView.as_view()),

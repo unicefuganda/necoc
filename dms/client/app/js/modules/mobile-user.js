@@ -11,12 +11,16 @@
         };
     });
 
-    module.controller('MobileUserController', function ($scope, MobileUserService) {
+    module.controller('MobileUserController', function ($scope, $state, MobileUserService) {
         $scope.users = [];
 
         MobileUserService.all().then(function (response) {
             $scope.users = response.data;
         });
+
+        $scope.showUserProfile = function(user) {
+            $state.go('admin.user', {'user': user.id});
+        }
     });
 
     module.controller('MobileUserModalController', function ($scope, MobileUserService, helpers) {

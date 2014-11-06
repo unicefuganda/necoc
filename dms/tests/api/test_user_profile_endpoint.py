@@ -1,3 +1,4 @@
+from mongoengine.django.auth import User
 from dms.models.location import Location
 from dms.models.user_profile import UserProfile
 from dms.tests.base import MongoAPITestCase
@@ -34,3 +35,16 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.assertEqual(self.mobile_user_to_post['email'], response.data[0]['email'])
         self.assertEqual(self.district.name, response.data[0]['location']['name'])
 
+    def test_should_get_a_single_user(self):
+        attr = self.mobile_user.copy()
+        attr['user'] = User(username='cage', password='haha').save()
+        profile = UserProfile(**attr).save()
+
+        response = self.client.get(self.API_ENDPOINT + str(profile.id) + '/')
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(self.mobile_user_to_post['name'], response.data['name'])
+        self.assertEqual(self.mobile_user_to_post['phone'], response.data['phone'])
+        self.assertEqual(self.mobile_user_to_post['email'], response.data['email'])
+        self.assertEqual(self.district.name, response.data['location']['name'])
+        self.assertEqual('cage', response.data['username'])

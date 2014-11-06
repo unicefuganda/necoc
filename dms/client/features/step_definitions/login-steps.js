@@ -1,4 +1,4 @@
-module.exports = function () {
+    module.exports = function () {
     var loginPage = require("../pages/login-page"),
         homePage = require("../pages/home-page");
 

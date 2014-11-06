@@ -1,4 +1,5 @@
 from mongoengine import ValidationError
+from mongoengine.django.auth import User
 from dms.api.user_profile_endpoint import UserProfileSerializer
 from dms.models.location import Location
 from dms.models.user_profile import UserProfile
@@ -16,10 +17,6 @@ class UserProfileSerializerTest(MongoTestCase):
                                 email="timothyakampa@gmail.com")
         self.serialized_mobile_user = dict(name='timothy', phone='+256775019449', location=self.serialized_location,
                                            email="timothyakampa@gmail.com")
-
-    def tearDown(self):
-        UserProfile.drop_collection()
-        Location.drop_collection()
 
     def test_should_serialize_mobile_user_object(self):
         mobile_user = UserProfile(**self.mobile_user).save()
@@ -64,3 +61,13 @@ class UserProfileSerializerTest(MongoTestCase):
         del self.serialized_mobile_user['email']
         serializer = UserProfileSerializer(data=self.serialized_mobile_user)
         self.assertTrue(serializer.is_valid())
+
+    def test_only_username_is_serialized_if_user_profile_has_a_user(self):
+        mobile_user_attr = self.mobile_user.copy()
+        mobile_user_attr['user'] = User(username='cage', password='haha').save()
+        mobile_user = UserProfile(**mobile_user_attr).save()
+
+        serialized_object = UserProfileSerializer(mobile_user)
+        self.assertDictContainsSubset(self.serialized_mobile_user, serialized_object.data)
+        self.assertEqual('cage', serialized_object.data['username'])
+        self.assertFalse('user' in serialized_object.data.keys())

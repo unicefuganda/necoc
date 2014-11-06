@@ -1,7 +1,8 @@
 describe('dms.mobile-user', function () {
     var httpMock,
         scope,
-        apiUrl;
+        apiUrl,
+        stateMock;
 
     var responseStub = {
         "id": "54257147d6f45f6fc1eac346",
@@ -30,7 +31,8 @@ describe('dms.mobile-user', function () {
         beforeEach(function () {
             inject(function ($controller) {
                 httpMock.when('GET', apiUrl + 'mobile-users/').respond([responseStub]);
-                $controller('MobileUserController', {$scope: scope});
+                stateMock = jasmine.createSpyObj('stateMock', ['go']);
+                $controller('MobileUserController', {$scope: scope, $state: stateMock});
             })
         });
 
@@ -41,6 +43,10 @@ describe('dms.mobile-user', function () {
             expect(scope.users).toEqual([responseStub]);
         });
 
+        it('should add a function to navigate to the use profile', function () {
+            scope.showUserProfile(responseStub);
+            expect(stateMock.go).toHaveBeenCalledWith('admin.user', {'user': '54257147d6f45f6fc1eac346'});
+        });
     });
 
 

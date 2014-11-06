@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <table si-table="" class="table table-hover table-striped style-header">
+        <table si-table="" class="table table-hover table-striped style-header table-clickable">
             <thead>
             <tr>
                 <th>Name</th>
@@ -26,7 +26,7 @@
             </thead>
 
             <tbody>
-            <tr ng-repeat="user in users">
+            <tr ng-repeat="user in users" ng-click="showUserProfile(user)">
                 <td>{[{ user.name }]}</td>
                 <td>{[{ user.phone }]}</td>
                 <td>{[{ user.email }]}</td>

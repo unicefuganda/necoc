@@ -7,6 +7,7 @@ var HomePage = function () {
     this.title =  element(by.css('.sidebar .navbar-brand .title'));
     this.loggedInUser =  element(by.id('logged-in-user'));
     this.logoutLink = element(by.css('a[href="/logout"]'));
+    this.userProfileLink = element(by.id('user_profile_link'));
 };
 
 module.exports = new HomePage();

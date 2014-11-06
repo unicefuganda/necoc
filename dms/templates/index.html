@@ -23,7 +23,7 @@
                                 class="glyphicon glyphicon-user"></span>&nbsp;{{ request.user.username }}<span
                                 class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">Account</a></li>
+                            <li><a id="user_profile_link" href="#/admin/users/{{request.user.id}}">Account</a></li>
                             <li class="divider"></li>
                             <li><a href="/logout">Logout</a></li>
                         </ul>
@@ -81,4 +81,5 @@
 <script src="{{ STATIC_URL }}js/modules/polls.js"></script>
 <script src="{{ STATIC_URL }}js/modules/poll-responses.js"></script>
 <script src="{{ STATIC_URL }}js/modules/dashboard.js"></script>
+<script src="{{ STATIC_URL }}js/modules/user-profile.js"></script>
 {% endblock %}

@@ -9,11 +9,13 @@ class UserSerializer(serializers.MongoEngineModelSerializer):
     
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password', 'phone_no', 'location')
+        fields = ('username', 'first_name', 'last_name', 'email', 'phone_no', 'location')
 
 
 class UserListView(ListAPIView):
+
     def list(self, request, *args, **kwargs):
-        user = User.objects(id=kwargs.get('user_id', None)).first()
+        user_id = kwargs.get('user_id', '')
+        user = User.objects(id=user_id).first()
         serializer = UserSerializer(user)
         return Response(serializer.data)

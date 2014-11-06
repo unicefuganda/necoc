@@ -69,6 +69,13 @@
                 templateUrl: '/static/templates/partials/admin/messages.html',
                 controller: 'MessageController'
             })
+
+            .state('admin.user', {
+                url: '/users/:user',
+                data: { pageTitle: 'Profile'},
+                templateUrl: '/static/templates/partials/admin/users/profile.html',
+                controller: 'UserProfileController'
+            })
     });
 
     module.run(function ($rootScope, $state, $stateParams) {
@@ -77,4 +84,5 @@
     });
 
 })(angular.module('dms', ['ui.router', 'siTable', 'checklist-model', 'dms.message', 'dms.admin-panel', 'dms.location', 'dms.mobile-user',
-    'dms.utils', 'dms.disaster', 'dms.disaster-type', 'dms.map', 'dms.polls', 'dms.poll-responses', 'dms.filters', 'dms.dashboard']));
+    'dms.utils', 'dms.disaster', 'dms.disaster-type', 'dms.map', 'dms.polls', 'dms.poll-responses', 'dms.filters', 'dms.dashboard',
+    'dms.user-profile']));

@@ -1,5 +1,5 @@
 from django.core.management import BaseCommand
-from mongoengine.django.auth import User
+from dms.models.user import User
 
 
 class Command(BaseCommand):
@@ -8,11 +8,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if not len(args):
-            user = User.objects().create(username='admin', email='admin@admin.admin')
+            user = User(username='admin', email='admin@admin.admin').save()
             user.set_password('password')
-            user.save()
         else:
-            user = User.objects().create(username=args[0], email=args[2])
+            user = User(username=args[0], email=args[2]).save()
             user.set_password(args[1])
-            user.save()
         self.stdout.write('Successfully created superuser')

@@ -5,19 +5,17 @@ from dms.forms.login_form import LoginForm
 
 
 class Login(View):
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
         if form.is_valid():
             user = authenticate(username=(form.cleaned_data['username']), password=(form.cleaned_data['password']))
             if user:
                 login(request, user)
                 return redirect('/')
-            else:
-                form.add_error(None, 'Username or Password is invalid')
-                return render(request, 'login.html', {'form': form})
+            form.add_error(None, 'Username or Password is invalid')
         return render(request, 'login.html', {'form': form})
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         form = LoginForm()
         return render(request, 'login.html', {'form': form})
 

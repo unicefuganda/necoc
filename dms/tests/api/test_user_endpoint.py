@@ -7,10 +7,10 @@ class TestUserEndpoint(MongoAPITestCase):
     USER_ENDPOINT = '/api/v1/users/'
 
     def setUp(self):
-        kampala = Location(name='Kampala', type='district').save()
+        self.kampala = Location(name='Kampala', type='district').save()
         self.user_data = {
             'username': 'cage', 'first_name': 'nicolas', 'last_name': 'cage', 'email': 'nic@ol.as', 'password': 'haha',
-            'phone_no': '235669502', 'location': str(kampala.id)
+            'phone_no': '235669502', 'location': str(self.kampala.id)
         }
 
     def test_should_get_current_user(self):
@@ -23,3 +23,5 @@ class TestUserEndpoint(MongoAPITestCase):
         del expected_data['location']
 
         self.assertDictContainsSubset(expected_data, response.data)
+        self.assertEqual(str(self.kampala.id), response.data['location']['id'])
+        self.assertFalse('password' in response.data.keys())

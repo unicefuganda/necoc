@@ -1,4 +1,4 @@
-from mongoengine.django.auth import User
+from dms.models.user import User
 from dms.models.mobile_user import MobileUser
 from dms.models.bulk_sms_message import SentMessage
 from dms.models.disaster import Disaster

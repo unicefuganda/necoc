@@ -1,5 +1,7 @@
-from mongoengine.django.auth import User, check_password
+from mongoengine.django.auth import check_password
+
 from dms.management.commands.create_super_user import Command
+from dms.models import User
 from dms.tests.base import MongoTestCase
 
 

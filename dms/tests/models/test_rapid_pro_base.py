@@ -60,7 +60,6 @@ class TestRapidProMessageBase(MongoTestCase):
         message_attr = self.message.copy()
         message_attr['location'] = district
         message = RapidProMessageBase(**message_attr).save()
-
         message1 = RapidProMessageBase(**self.message).save()
 
         location_messages = RapidProMessageBase.from_(district)
@@ -68,6 +67,44 @@ class TestRapidProMessageBase(MongoTestCase):
         self.assertEqual(1, location_messages.count())
         self.assertIn(message, location_messages)
         self.assertNotIn(message1, location_messages)
+
+    def test_get_messages_given_from_date_and_to_date(self):
+        location_name = 'Abim'
+        district = Location(**dict(name=location_name, parent=None, type='district')).save()
+        message_attr = self.message.copy()
+        message_attr['location'] = district
+        message_attr['received_at'] = datetime.datetime(2014, 12, 17, 16, 0, 49, 807000)
+        message = RapidProMessageBase(**message_attr).save()
+
+        self.message['location'] = district
+        message1 = RapidProMessageBase(**self.message).save()
+
+        location_messages = RapidProMessageBase.from_(district, **dict(from_date='2014-09-17', to_date='2014-10-17'))
+
+        self.assertEqual(1, location_messages.count())
+        self.assertIn(message1, location_messages)
+        self.assertNotIn(message, location_messages)
+
+        location_messages = RapidProMessageBase.from_(district, **dict(from_date=None, to_date=None))
+        self.assertEqual(2, location_messages.count())
+
+    def test_get_message_count_given_from_and_to_date(self):
+        message_attr = self.message.copy()
+        message_attr['received_at'] = datetime.datetime(2014, 11, 17, 16, 0, 49, 807000)
+        RapidProMessageBase(**message_attr).save()
+        RapidProMessageBase(**self.message).save()
+
+        location_messages_count = RapidProMessageBase.count_(**dict(from_date='2014-09-17', to_date='2014-10-17'))
+        self.assertEqual(1, location_messages_count)
+
+        location_messages_count = RapidProMessageBase.count_(**dict(from_date='2014-08-17', to_date='2014-12-17'))
+        self.assertEqual(2, location_messages_count)
+
+        location_messages_count = RapidProMessageBase.count_(**dict(from_date='2014-08-17'))
+        self.assertEqual(2, location_messages_count)
+
+        location_messages_count = RapidProMessageBase.count_(**dict(from_date=None, to_date=None))
+        self.assertEqual(2, location_messages_count)
 
     def test_get_messages_from_children_are_also_added(self):
         location_name = 'Abim'

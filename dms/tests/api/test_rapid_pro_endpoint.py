@@ -14,8 +14,8 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.mobile_user = UserProfile(**dict(name='timothy', phone="+256775019449",
                                              location=self.village, email=None)).save()
 
-        disaster_type = DisasterType(**dict(name="Fire", description="Fire")).save()
-        disaster_attributes = dict(name=disaster_type, locations=[self.district],
+        self.fire_type = DisasterType(**dict(name="Fire", description="Fire")).save()
+        disaster_attributes = dict(name=self.fire_type, locations=[self.district],
                                    description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
         self.disaster = Disaster(**disaster_attributes).save()
 
@@ -158,16 +158,16 @@ class RapidProEndPointTest(MongoAPITestCase):
         message_attr = self.message.copy()
         message_attr['disaster'] = self.disaster
         fire_message = RapidProMessage(**message_attr).save()
-        DisasterType(**dict(name="Flood", description="Flood")).save()
+        flood_type = DisasterType(**dict(name="Flood", description="Flood")).save()
 
-        response = self.client.get(self.API_ENDPOINT, {"disaster_type": "fire", "format": "json"})
+        response = self.client.get(self.API_ENDPOINT, {"disaster_type": str(self.fire_type.id), "format": "json"})
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, len(response.data))
         self.assertEqual(str(fire_message.id), response.data[0]['id'])
         self.assertDictContainsSubset(self.expected_message, response.data[0])
 
-        response = self.client.get(self.API_ENDPOINT, {"disaster_type": "flood", "format": "json"})
+        response = self.client.get(self.API_ENDPOINT, {"disaster_type": str(flood_type.id), "format": "json"})
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(0, len(response.data))

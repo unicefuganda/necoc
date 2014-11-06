@@ -5,7 +5,6 @@ from dms.tests.base import MongoTestCase
 
 
 class LocationMessageStatsTest(MongoTestCase):
-
     def setUp(self):
         self.location_name = 'Kampala'
         text = "NECOC %s fire baba fire" % self.location_name
@@ -52,7 +51,6 @@ class LocationMessageStatsTest(MongoTestCase):
 
 
 class LocationDisasterStatsTest(MongoTestCase):
-
     def setUp(self):
         self.disaster_type = DisasterType(**dict(name='Flood', description="Some flood"))
         self.disaster_type.save()
@@ -60,8 +58,8 @@ class LocationDisasterStatsTest(MongoTestCase):
         self.district = Location(**dict(name='Kampala', type='district', parent=None))
         self.district.save()
 
-        self.disaster_attr = dict(name=self.disaster_type, locations=[self.district], description="Big Flood", date="2014-12-01",
-                          status="Assessment")
+        self.disaster_attr = dict(name=self.disaster_type, locations=[self.district], description="Big Flood",
+                                  date="2014-12-01", status="Assessment")
 
     def test_should_retrieve_message_count_in_a_location(self):
         Disaster(**self.disaster_attr).save()
@@ -82,7 +80,6 @@ class LocationDisasterStatsTest(MongoTestCase):
         attr2["locations"] = [Location(**dict(name='Location that is not Kampala', type='district')).save()]
         Disaster(**attr2).save()
 
-
         location_stats_service = LocationStatsService(self.district)
         stats = location_stats_service.aggregate_stats()
         disasters_stats = stats.disasters
@@ -91,7 +88,6 @@ class LocationDisasterStatsTest(MongoTestCase):
         self.assertEqual(50, disasters_stats.percentage)
 
     def test_should_return_0_if_no_disaster_everywhere(self):
-
         location_stats_service = LocationStatsService(self.district)
         stats = location_stats_service.aggregate_stats()
         disasters_stats = stats.disasters
@@ -101,7 +97,6 @@ class LocationDisasterStatsTest(MongoTestCase):
 
 
 class MultiLocationStatsTest(MongoTestCase):
-
     def setUp(self):
         self.location_name = 'Kampala'
         text = "NECOC %s fire baba fire" % self.location_name
@@ -112,13 +107,15 @@ class MultiLocationStatsTest(MongoTestCase):
         self.bukoto_name = 'Bukoto'
         self.bukoto = Location(**dict(name=self.bukoto_name, parent=None, type='district')).save()
         text = "NECOC %s flood" % self.bukoto_name
-        self.message_bukoto = dict(phone_no=phone_number, text=text, received_at=self.date_time, relayer_id=234, run_id=23243)
+        self.message_bukoto = dict(phone_no=phone_number, text=text, received_at=self.date_time, relayer_id=234,
+                                   run_id=23243)
 
         self.disaster_type = DisasterType(**dict(name='Flood', description="Some flood"))
         self.disaster_type.save()
 
-        self.disaster_attr = dict(name=self.disaster_type, locations=[self.kampala], description="Big Flood", date="2014-12-01",
-                          status="Assessment")
+        self.disaster_attr = dict(name=self.disaster_type, locations=[self.kampala], description="Big Flood",
+                                  date="2014-12-01",
+                                  status="Assessment")
 
         self.disaster_attr_bukoto = self.disaster_attr.copy()
         self.disaster_attr_bukoto["locations"] = [self.bukoto]
@@ -147,7 +144,7 @@ class MultiLocationStatsTest(MongoTestCase):
         RapidProMessage(**self.message).save()
 
         bugolobi_name = 'Bugolobi'
-        bugolobi = Location(**dict(name=  bugolobi_name, parent=self.kampala, type='subcounty')).save()
+        bugolobi = Location(**dict(name=bugolobi_name, parent=self.kampala, type='subcounty')).save()
         text = "NECOC %s flood" % bugolobi_name
         message_bugolobi = dict(phone_no='123444', text=text, received_at=self.date_time, relayer_id=234, run_id=23243)
         RapidProMessage(**message_bugolobi).save()

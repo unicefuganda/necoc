@@ -9,6 +9,8 @@ class Disaster(BaseModel):
                        ('Response Team Deployed', 'Response Team Deployed'),
                        ('Closed', 'Closed'))
 
+    MAPPING = dict(from_date='created_at__gte', to_date='created_at__lte')
+
     name = ReferenceField(DisasterType, required=True)
     locations = ListField(ReferenceField(Location))
     description = StringField()
@@ -16,6 +18,14 @@ class Disaster(BaseModel):
     date = DateTimeField(required=True)
 
     @classmethod
-    def from_(cls, location):
+    def from_(cls, location, **kwargs):
         locations = location.children(include_self=True)
-        return cls.objects.filter(locations__in=locations)
+        mapping = {cls.MAPPING[key]: value for key, value in kwargs.items() if value}
+        mapping['locations__in'] = locations
+        return cls.objects.filter(**mapping)
+
+    @classmethod
+    def count_(cls, **kwargs):
+        mapping = {cls.MAPPING[key]: value for key, value in kwargs.items() if value}
+        return cls.objects.filter(**mapping).count()
+

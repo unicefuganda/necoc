@@ -48,3 +48,16 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.assertEqual(self.mobile_user_to_post['email'], response.data['email'])
         self.assertEqual(self.district.name, response.data['location']['name'])
         self.assertEqual('cage', response.data['username'])
+
+    def test_post_with_non_empty_username_creates_system_user(self):
+        attr = self.mobile_user_to_post.copy()
+        attr['username'] = 'akampa'
+        response = self.client.post(self.API_ENDPOINT, data=attr)
+        self.assertEqual(201, response.status_code)
+
+        retrieved_user_profile = UserProfile.objects(name='timothy')
+        self.assertEqual(1, retrieved_user_profile.count())
+
+        retrieved_user = User.objects(username='akampa')
+        self.assertEqual(1, retrieved_user.count())
+        self.assertEqual(retrieved_user.first(), retrieved_user_profile.first().user)

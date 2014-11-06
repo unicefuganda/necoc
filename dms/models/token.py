@@ -1,7 +1,7 @@
 import binascii
 import os
 from mongoengine import StringField, ReferenceField
-from dms.models import User
+from mongoengine.django.auth import User
 from dms.models.base import BaseModel
 
 

@@ -1,5 +1,5 @@
+from mongoengine.django.auth import User
 from dms.models import Location
-from dms.models.user import User
 from dms.tests.base import MongoTestCase
 
 

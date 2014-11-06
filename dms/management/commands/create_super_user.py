@@ -1,5 +1,5 @@
 from django.core.management import BaseCommand
-from dms.models.user import User
+from mongoengine.django.auth import User
 
 
 class Command(BaseCommand):

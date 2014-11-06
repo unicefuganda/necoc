@@ -1,4 +1,3 @@
-from dms.models.user import User
 from dms.models.mobile_user import MobileUser
 from dms.models.bulk_sms_message import SentMessage
 from dms.models.disaster import Disaster
@@ -16,6 +15,5 @@ __all__=[
     'SentMessage',
     'Disaster',
     'Poll',
-    'PollResponse',
-    'User'
+    'PollResponse'
 ]

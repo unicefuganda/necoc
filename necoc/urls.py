@@ -13,7 +13,6 @@ from dms.api.poll_response_endpoint import PollResponseListCreateView
 from dms.api.rapid_pro_endpoint import RapidProListCreateView, RapidProRetrieveUpdateView
 from dms.api.location_endpoint import LocationListCreateView
 from dms.api.mobile_user_endpoint import MobileUserListCreateView
-from dms.api.user_endpoint import UserListView
 from dms.views.api_token import ObtainAPIToken
 from dms.views.export_poll_responses import ExportPollResponsesView
 from dms.views.homepage import HomeView
@@ -41,8 +40,6 @@ urlpatterns = patterns('',
     url(r'^api/v1/location-stats/(?P<district>[0-9a-z]+)/$', DistrictStatsListView.as_view()),
     url(r'^export/poll-responses/(?P<poll_id>[0-9a-z]+)/$',
         login_required(ExportPollResponsesView.as_view(), login_url='login/')),
-    url(r'^api/v1/users/(?P<user_id>[0-9a-z]+)/$', UserListView.as_view()),
-
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

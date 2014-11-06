@@ -7,7 +7,7 @@
                 $scope.messages = response.data;
             });
 
-        MessageService.filter('disaster', '')
+        MessageService.filter()
             .then(function (response) {
                 $scope.uncategorizedMessagesCount = response.data.length;
             });

@@ -1,17 +1,36 @@
 (function (module) {
 
-    module.controller('DashboardMessagesController', function ($scope, MessageService) {
+    module.controller('DashboardController', function ($rootScope, $moment) {
+        $rootScope.filter = { from: yesterday() };
+
+        function yesterday() {
+            return $moment().subtract(1, 'days').format('YYYY-MM-DD')
+        }
+    });
+
+    module.controller('DashboardMessagesController', function ($rootScope, $scope, MessageService, $moment) {
 
         $scope.$watch('params.location', function (location) {
             $scope.district = (location && location.district) ? location.district : '';
             $scope.subcounty = (location && location.subcounty) ? location.subcounty : '';
         }, true);
 
-        MessageService.all().then(function (response) {
-            $scope.messages = response.data;
-        });
+        $rootScope.$watch('filter', function (filter) {
+            if(!filter) return;
+
+            var newFilter = angular.copy(filter);
+            newFilter.to ? newFilter.to = addDay(newFilter.to): null;
+
+            MessageService.filter(newFilter).then(function (response) {
+                $scope.messages = response.data;
+            });
+        }, true);
 
         $scope.showMessageCheckboxes = false;
+
+        function addDay(date) {
+            return $moment(date, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD');
+        }
     });
 
     module.directive('slidingPanel', function () {
@@ -39,4 +58,4 @@
         }
     })
 
-})(angular.module('dms.dashboard', ['dms.message']));
+})(angular.module('dms.dashboard', ['dms.message', 'dms.utils']));

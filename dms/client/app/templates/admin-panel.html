@@ -41,22 +41,24 @@
                     <form role="form" class="time-filter">
                         <h3 class="bar-content">Map Options</h3>
 
-                        <label>Filter by</label>
-                        <div class="form-group">
-                            <select class="form-control"></select>
-                        </div>
-                        <div class="form-group">
-                            <select class="form-control"></select>
+                        <!--<label>Filter by</label>-->
+                        <!--<div class="form-group">-->
+                            <!--<input type="text" ng-model="disasterType" disaster-types="disaster" name="type"-->
+                                   <!--class="form-control"-->
+                                   <!--placeholder="select disaster type" required="">-->
+                        <!--</div>-->
+                        <!--<div class="form-group">-->
+                            <!--<select class="form-control"></select>-->
+                        <!--</div>-->
+
+                        <div>
+                            <label for="from-date">Show data from</label>
+                            <input id="from-date" class="form-control" ng-model="filter.from" data-datepicker="" data-timepicker="false"  placeholder="select from date"/>
                         </div>
 
                         <div>
-                            <label>Show data from</label>
-                            <input class="form-control" datepicker/>
-                        </div>
-
-                        <div>
-                            <label>To</label>
-                            <input class="form-control" datepicker/></select>
+                            <label for="to-date">To</label>
+                            <input id="to-date" class="form-control" ng-model="filter.to" data-datepicker="" data-timepicker="false" placeholder="select from date"/></select>
                         </div>
                     </form>
                 </li>

@@ -23,7 +23,14 @@
     module.directive('datepicker', function () {
         return {
             link: function (scope, element, attrs) {
-                element.datetimepicker();
+                var options = {};
+
+                if (attrs.timepicker !== 'true') {
+                    options.timepicker = false;
+                    options.format = 'Y-m-d'
+                }
+
+                element.datetimepicker(options);
             }
         }
     });

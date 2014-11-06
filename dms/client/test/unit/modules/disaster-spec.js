@@ -90,7 +90,9 @@ describe('dms.disaster', function () {
     describe('DisastersController', function () {
         var initController;
         var scope;
+        var mockMessageService;
         beforeEach(function () {
+            mockMessageService = createPromiseSpy('mockMessageService', ['filter', 'all']);
 
             inject(function ($controller, $rootScope) {
                 scope = $rootScope.$new();
@@ -98,7 +100,7 @@ describe('dms.disaster', function () {
                 httpMock.when('GET', apiUrl + 'disasters/').respond(disastersStub);
                 initController = function () {
                     scope.associatedMessages = [];
-                    $controller('DisastersController', { $scope: scope });
+                    $controller('DisastersController', { $scope: scope, MessageService: mockMessageService });
                 };
             });
         });
@@ -114,15 +116,16 @@ describe('dms.disaster', function () {
         describe('showAssociatedMessages()', function () {
             it('should add messages associated to a disaster to the scope', function () {
                 initController();
+                var disasterStub = {id: "disaster_id"};
                 var mockAssociatedMessages = [
-                        {name: "mockMessages"}
-                    ],
-                    disasterStub = {id: "disaster_id"};
+                    { name: "mockMessages" }
+                ];
 
+                mockMessageService.when('filter').returnPromiseOf({ data: mockAssociatedMessages });
                 scope.showAssociatedMessages(disasterStub);
-                httpMock.expectGET(apiUrl + 'rapid-pro/?disaster=disaster_id').respond(mockAssociatedMessages);
 
-                httpMock.flush();
+                scope.$apply();
+                expect(mockMessageService.filter).toHaveBeenCalledWith('disaster', 'disaster_id');
                 expect(scope.associatedMessages).toEqual(mockAssociatedMessages);
                 expect(scope.showMessageList).toBeTruthy();
             });

@@ -4,7 +4,8 @@ describe('dms.admin-panel', function () {
         messagesStub,
         apiUrl,
         initController,
-        uncategorizedMessagesStub;
+        uncategorizedMessagesStub,
+        mockMessageService;
 
     beforeEach(function () {
         module('dms.admin-panel');
@@ -40,12 +41,13 @@ describe('dms.admin-panel', function () {
         inject(function ($controller, $rootScope, $httpBackend, Config) {
             httpMock = $httpBackend;
             apiUrl = Config.apiUrl;
-            httpMock.when('GET', apiUrl + 'rapid-pro/').respond(messagesStub);
-            httpMock.when('GET', apiUrl + 'rapid-pro/?disaster=').respond(uncategorizedMessagesStub);
+            mockMessageService = createPromiseSpy('mockMessageService', ['filter', 'all']);
+            mockMessageService.when('filter').returnPromiseOf({ data:uncategorizedMessagesStub });
+            mockMessageService.when('all').returnPromiseOf({ data:messagesStub });
 
             initController = function () {
                 $scope = $rootScope.$new();
-                $controller('AdminPanelController', {$scope: $scope});
+                $controller('AdminPanelController', {$scope: $scope, MessageService: mockMessageService });
             }
         });
 
@@ -54,18 +56,17 @@ describe('dms.admin-panel', function () {
     it('should retrieve messages from the \'/api/v1/rapid-pro/\' endpoint and add them to the scope.', function () {
         initController();
 
-        httpMock.expectGET(apiUrl + 'rapid-pro/');
-        httpMock.flush();
+        $scope.$apply();
+        expect(mockMessageService.all).toHaveBeenCalled();
         expect($scope.messages).toEqual(messagesStub);
     });
 
     it('should retrieve uncategorized messages and add them to the scope.', function () {
         initController();
 
-        httpMock.expectGET(apiUrl + 'rapid-pro/?disaster=');
-        httpMock.flush();
+        $scope.$apply();
+        expect(mockMessageService.filter).toHaveBeenCalled();
         expect($scope.uncategorizedMessagesCount).toEqual(1);
     });
-
 
 });

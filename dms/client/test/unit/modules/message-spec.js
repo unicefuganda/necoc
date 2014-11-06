@@ -5,6 +5,7 @@ describe('dms.message', function () {
     var apiUrl;
     var initController;
     var interval;
+    var yesterday = '2014-11-03';
 
     beforeEach(function () {
         module('dms.message');
@@ -24,94 +25,176 @@ describe('dms.message', function () {
             }
         ];
 
-        inject(function ($controller, $rootScope, $httpBackend, $interval, Config) {
-            httpMock = $httpBackend;
-            interval = $interval;
-            apiUrl = Config.apiUrl;
-            httpMock.when('GET', apiUrl + 'rapid-pro/').respond(messagesStub);
-            httpMock.when('GET', apiUrl + 'rapid-pro/?disaster=').respond(messagesStub);
-            $scope = $rootScope.$new();
-
-            initController = function () {
-                $controller('MessageController', {$scope: $scope });
+        var mockMoment = function () {
+            return {
+                format: function () {
+                    return yesterday;
+                },
+                subtract: function () {
+                    return this;
+                }
             };
+        };
+
+        module(function ($provide) {
+            $provide.value('$moment', mockMoment)
         });
 
     });
 
-    it('should retrieve messages from the \'/api/v1/rapid-pro/\' endpoint and add them to the scope.', function () {
-        initController();
+    describe('MessageController', function () {
+        var mockMessageService;
+        beforeEach(function () {
+            mockMessageService = createPromiseSpy('mockMessageService', ['filter', 'all']);
+            mockMessageService.when('all').returnPromiseOf({ data: messagesStub });
+            mockMessageService.when('filter').returnPromiseOf({ data: messagesStub });
 
-        httpMock.expectGET(apiUrl + 'rapid-pro/');
-        httpMock.flush();
-        expect($scope.messages).toEqual(messagesStub);
+            inject(function ($controller, $rootScope, $httpBackend, $interval, Config) {
+                httpMock = $httpBackend;
+                interval = $interval;
+                $scope = $rootScope.$new();
+                initController = function () {
+                    $controller('MessageController', {$scope: $scope, MessageService: mockMessageService });
+                };
+            });
+        });
+
+        it('should retrieve messages from the \'/api/v1/rapid-pro/\' endpoint and add them to the scope.', function () {
+            initController();
+            expect(mockMessageService.all).toHaveBeenCalled();
+            $scope.$apply();
+            expect($scope.messages).toEqual(messagesStub);
+        });
+
+        it('should poll messages from the \'/api/v1/rapid-pro/\' endpoint at an interval of 15 seconds', function () {
+            initController();
+
+            interval.flush(15000);
+            $scope.$apply();
+            expect($scope.polled).toBeTruthy();
+        });
+
+        it('should retrieve filtered uncategorized message count', function () {
+            initController();
+            $scope.$apply();
+            expect($scope.uncategorizedMessagesCount).toEqual(1);
+        });
+
+        it('should filter message by location given location id', function () {
+            initController();
+            $scope.location = "location-id";
+            var messageStub = { text: "Some text", phone: "45678909876543"};
+            mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
+
+            $scope.$apply();
+            expect(mockMessageService.filter.mostRecentCall.args).toEqual(['location', 'location-id']);
+            expect($scope.messages).toEqual(messageStub);
+        });
+
+        it('should retrieve all messages when location not supplied', function () {
+            initController();
+            $scope.location = "location-id";
+
+            var messageStub = [
+                { text: "Some text", phone: "45678909876543"}
+            ];
+
+            mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
+
+            $scope.$apply();
+            expect(mockMessageService.filter.mostRecentCall.args).toEqual(['location', 'location-id']);
+            expect($scope.messages).toEqual(messageStub);
+
+            $scope.location = "";
+            messageStub = [
+                { text: "Some text", phone: "45678909876543"},
+                { text: "Other text", phone: "45678909876543"}
+            ];
+            mockMessageService.when('all').returnPromiseOf({ data: messageStub });
+
+            $scope.$apply();
+            expect(mockMessageService.all).toHaveBeenCalled();
+            expect($scope.messages).toEqual(messageStub);
+        });
+
+        it('should tell the scope to show messages', function () {
+            initController();
+            expect($scope.showMessageCheckboxes).toBeTruthy();
+        });
     });
 
-    it('should poll messages from the \'/api/v1/rapid-pro/\' endpoint at an interval of 15 seconds', function () {
-        initController();
+    describe('MessageService', function () {
+        var httpMock,
+            apiUrl,
+            $scope,
+            messageService;
 
-        interval.flush(15000);
-        httpMock.flush();
-        expect($scope.polled).toBeTruthy();
-    });
+        beforeEach(function () {
 
-    it('should retrieve filtered uncategorized message count', function () {
-        initController();
+            inject(function ($rootScope, $httpBackend, Config, MessageService) {
+                httpMock = $httpBackend;
+                apiUrl = Config.apiUrl;
+                $scope = $rootScope.$new();
+                messageService = MessageService;
+            });
+        });
 
-        httpMock.expectGET(apiUrl + 'rapid-pro/?disaster=');
-        httpMock.flush();
-        expect($scope.uncategorizedMessagesCount).toEqual(1);
-    });
+        describe('METHOD: filter', function () {
+            it('should get filter messages filtered by date given the date filter is passed', function () {
+                var filter = {disaster: 'disaster-id', from: '2011-02-02'};
+                messageService.filter(filter);
+                httpMock.expectGET(apiUrl + 'rapid-pro/?disaster=disaster-id&from=2011-02-02').respond(messagesStub);
+                httpMock.flush()
+            });
+        });
 
-    it('should filter message by location given location id', function () {
-        initController();
-        $scope.location = "location-id";
-        var messageStub = { text: "Some text", phone: "45678909876543"};
-        httpMock.expectGET(apiUrl + 'rapid-pro/?location=' + $scope.location).respond(messageStub);
-        httpMock.flush();
-        expect($scope.messages).toEqual(messageStub);
-    });
+        describe('METHOD: all', function () {
+            it('should retrieve all messages from api', function () {
+                messageService.all();
+                httpMock.expectGET(apiUrl + 'rapid-pro/').respond(messagesStub);
+                httpMock.flush();
+            });
+        });
 
-    it('should retrieve all messages when location not supplied', function () {
-        initController();
-        $scope.location = "location-id";
+        describe('METHOD: sendBulkSms', function () {
+            it('should post the sms to the api endpoint', function () {
+                var sms = { phone_numbers: ["232", "4334"], text: "message" };
+                messageService.sendBulkSms(sms);
+                httpMock.expectPOST(apiUrl + 'sent-messages/', {"phone_numbers": ["232", "4334"], "text": "message"}).respond({});
+                httpMock.flush();
+            });
+        });
 
-        var messageStub = [
-            { text: "Some text", phone: "45678909876543"}
-        ];
-        httpMock.expectGET(apiUrl + 'rapid-pro/?location=' + $scope.location).respond(messageStub);
-        httpMock.flush();
-        expect($scope.messages).toEqual(messageStub);
+        describe('METHOD: mapToDisaster', function () {
+            it('should put a disaster to messages api given form is valid', function () {
+                var selected = {messages: ['message-id-1', 'message-id-2']};
+                var disaster = 'disaster-id';
+                messageService.mapToDisaster(disaster, selected.messages);
 
-        $scope.location = "";
-        messageStub = [
-            { text: "Some text", phone: "45678909876543"},
-            { text: "Other text", phone: "45678909876543"}
-        ];
-        httpMock.expectGET(apiUrl + 'rapid-pro/').respond(messageStub);
-        httpMock.flush();
-        expect($scope.messages).toEqual(messageStub);
-    });
+                httpMock.expectPOST(apiUrl + 'rapid-pro/message-id-1/', { disaster: 'disaster-id'}).respond({});
+                httpMock.expectPOST(apiUrl + 'rapid-pro/message-id-2/', { disaster: 'disaster-id'}).respond({});
+                httpMock.flush();
+            });
+        });
 
-    it('should tell the scope to show messages', function () {
-        initController();
-        expect($scope.showMessageCheckboxes).toBeTruthy();
     });
 
     describe('SmsModalController', function () {
         var initController;
         var scope;
         var mockGrowl;
+        var mockMessageService;
 
         beforeEach(function () {
-
+            mockMessageService = createPromiseSpy('mockMessageService', ['sendBulkSms', 'all']);
+            mockMessageService.when('sendBulkSms').returnPromiseOf({ data: {} });
             mockGrowl = jasmine.createSpyObj('growl', ['success']);
 
             inject(function ($controller, $rootScope) {
                 initController = function (isFormValid) {
                     scope = $rootScope.$new();
                     scope.send_sms_form = { $valid: isFormValid};
-                    $controller('SmsModalController', {$scope: scope, growl: mockGrowl});
+                    $controller('SmsModalController', {$scope: scope, growl: mockGrowl, MessageService: mockMessageService });
                 }
             });
         });
@@ -121,11 +204,11 @@ describe('dms.message', function () {
             scope.sms = { phone_numbers: "232,4334", text: "message" };
             scope.sendBulkSms();
 
-            httpMock.expectPOST(apiUrl + 'sent-messages/', {"phone_numbers": ["232", "4334"], "text": "message"}).respond({});
             expect(scope.saveStatus).toBeTruthy();
             expect(scope.successful).toBeFalsy();
+            expect(mockMessageService.sendBulkSms).toHaveBeenCalledWith({ phone_numbers : [ '232', '4334' ], text : 'message' });
 
-            httpMock.flush();
+            scope.$apply();
             expect(scope.hasErrors).toBeFalsy();
             expect(scope.saveStatus).toBeFalsy();
             expect(scope.successful).toBeTruthy();
@@ -137,14 +220,20 @@ describe('dms.message', function () {
     describe('AddToDisasterController', function () {
         var initController;
         var scope;
+        var $scope;
+        var mockMessageService;
 
         beforeEach(function () {
+            mockMessageService = createPromiseSpy('mockMessageService', ['mapToDisaster', 'all']);
+            mockMessageService.when('mapToDisaster').returnPromiseOf({ data: {} });
+            mockMessageService.when('all').returnPromiseOf({ data: messagesStub });
 
             inject(function ($controller, $rootScope) {
+                $scope = $rootScope.$new();
                 initController = function (isFormValid) {
                     scope = jasmine.createSpyObj('scope', ['setMessages']);
                     scope.add_to_disaster_form = { $valid: isFormValid};
-                    $controller('AddToDisasterController', {$scope: scope});
+                    $controller('AddToDisasterController', {$scope: scope, MessageService: mockMessageService });
                 }
             });
         });
@@ -152,17 +241,15 @@ describe('dms.message', function () {
         describe('scope.addToDisaster', function () {
             it('should put a disaster to messages api given form is valid', function () {
                 initController(true);
-                scope.selected = {messages: ['message-id-1', 'message-id-2']};
+                scope.selected = { messages: ['message-id-1', 'message-id-2'] };
                 scope.disaster = 'disaster-id';
                 scope.addToDisaster();
 
-                httpMock.expectPOST(apiUrl + 'rapid-pro/message-id-1/', { disaster: 'disaster-id'}).respond({});
-                httpMock.expectPOST(apiUrl + 'rapid-pro/message-id-2/', { disaster: 'disaster-id'}).respond({});
-                httpMock.expectGET(apiUrl + 'rapid-pro/').respond(messagesStub);
                 expect(scope.saveStatus).toBeTruthy();
                 expect(scope.successful).toBeFalsy();
+                expect(mockMessageService.mapToDisaster).toHaveBeenCalledWith('disaster-id', [ 'message-id-1', 'message-id-2' ]);
 
-                httpMock.flush();
+                $scope.$apply();
                 expect(scope.saveStatus).toBeFalsy();
                 expect(scope.hasErrors).toBeFalsy();
                 expect(scope.successful).toBeTruthy();

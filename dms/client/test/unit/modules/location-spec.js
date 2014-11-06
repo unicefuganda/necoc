@@ -2,9 +2,7 @@ describe('dms.location', function () {
     var httpMock,
         locationService,
         districtsStub,
-        countiesStub,
         subCountiesStub,
-        parishStub,
         apiUrl,
         scope;
 

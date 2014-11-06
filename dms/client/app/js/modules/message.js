@@ -4,13 +4,18 @@
         growlProvider.globalTimeToLive(3000);
     }]);
 
-    module.factory('MessageService', function ($http, $q, Config) {
+    module.factory('MessageService', function ($http, $q, Config, $moment) {
         return {
             all: function () {
                 return $http.get(Config.apiUrl + 'rapid-pro/');
             },
-            filter: function (filter, filter_id) {
-                return $http.get(Config.apiUrl + 'rapid-pro/?' + filter + '=' + filter_id);
+            filter: function (options) {
+                var queryString = '?';
+                angular.forEach (options, function (value, key) {
+                    queryString += key + '=' + value + '&';
+                });
+                queryString = queryString.slice(0, -1);
+                return $http.get(Config.apiUrl + 'rapid-pro/' + queryString);
             },
             sendBulkSms: function (sms) {
                 return $http.post(Config.apiUrl + 'sent-messages/', sms);
@@ -40,7 +45,7 @@
             }
         });
 
-        MessageService.filter('disaster', '').then(function (response) {
+        MessageService.filter().then(function (response) {
             $scope.uncategorizedMessagesCount = response.data.length;
         });
 

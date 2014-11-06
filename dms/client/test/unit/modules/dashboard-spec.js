@@ -1,5 +1,9 @@
 describe('dms.dashboard', function () {
 
+    beforeEach(function () {
+        module('dms.dashboard');
+    });
+
     describe('DashboardMessagesController', function () {
         var scope,
             apiUrl,
@@ -62,13 +66,15 @@ describe('dms.dashboard', function () {
                 scope = $rootScope.$new();
 
                 httpMock.when('GET', apiUrl + 'rapid-pro/').respond(messagesStub);
-                $controller('DashboardMessagesController', { $scope: scope});
+                $controller('DashboardMessagesController', { $rootScope: scope, $scope: scope});
             });
         });
 
         it('should add a list of messages to the scope', function () {
-            httpMock.expectGET(apiUrl + 'rapid-pro/');
+            httpMock.expectGET(apiUrl + 'rapid-pro/?from=2014-11-06&to=2014-11-08').respond(messagesStub);
+            scope.filter = {from: '2014-11-06', to: '2014-11-07'};
             httpMock.flush();
+
             expect(scope.messages).toEqual(messagesStub);
         });
 
@@ -142,6 +148,34 @@ describe('dms.dashboard', function () {
             spyOn($.fn, 'animate').andCallThrough();
             element.find('.back-arrow').trigger('click');
             expect($.fn.animate).toHaveBeenCalledWith({left: '97%'});
+        });
+    });
+
+
+    describe('DashboardController', function () {
+        var scope;
+        var yesterday = "2014-11-03";
+
+        var mockMoment = function () {
+            return {
+                format: function () {
+                    return yesterday;
+                },
+                subtract: function () {
+                    return this;
+                }
+            };
+        };
+
+        beforeEach(function () {
+            inject(function ($rootScope, $controller) {
+                scope = $rootScope.$new();
+                $controller('DashboardController', {$rootScope: scope, $moment: mockMoment });
+            });
+        });
+
+        it('should have a time filter on the scope with from date as yesterday', function () {
+            expect(scope.filter).toEqual({from: yesterday })
         });
     });
 });

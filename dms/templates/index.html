@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block body %}
+{% load generic_tags %}
 <div>
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container-fluid">
@@ -23,7 +24,7 @@
                                 class="glyphicon glyphicon-user"></span>&nbsp;{{ request.user.username }}<span
                                 class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a id="user_profile_link" href="#/admin/users/{{request.user.id}}">Account</a></li>
+                            <li><a id="user_profile_link" href="#/admin/users/{{ request.user | get_profile_id }}">Account</a></li>
                             <li class="divider"></li>
                             <li><a href="/logout">Logout</a></li>
                         </ul>

@@ -3,7 +3,7 @@
     module.factory('UserProfileService', function ($http, Config) {
         return {
             profile: function (user_id) {
-                return $http.get(Config.apiUrl + 'users/'+ user_id + '/');
+                return $http.get(Config.apiUrl + 'mobile-users/'+ user_id + '/');
             }
         };
     });

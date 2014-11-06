@@ -30,7 +30,7 @@ describe('dms.user-profile', function () {
     it('should retrieve user profile from api endpoint and add them to the scope.', function () {
         var userId = 'user_id';
         initController(userId);
-        httpMock.expectGET(apiUrl + 'users/' + userId + '/').respond(userStub);
+        httpMock.expectGET(apiUrl + 'mobile-users/' + userId + '/').respond(userStub);
         httpMock.flush();
         expect($scope.user).toEqual(userStub);
     });

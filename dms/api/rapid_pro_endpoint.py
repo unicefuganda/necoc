@@ -30,7 +30,7 @@ class RapidProListCreateView(ListCreateAPIView):
 
         if location_queried:
             location = Location.objects(id=location_queried).first()
-            queryset = RapidProMessage.from_(location, queryset)
+            queryset = RapidProMessage.from_(location, _queryset=queryset)
 
         disaster_type = self.request.GET.get('disaster_type', None)
         if disaster_type:
@@ -51,7 +51,7 @@ class RapidProListCreateView(ListCreateAPIView):
         return RapidProMessage.objects(**query_params)
 
     def query_by_disaster_type(self, disaster_type, queryset=None):
-        disaster_type = DisasterType.objects(name__iexact=disaster_type).first()
+        disaster_type = DisasterType.objects(id=disaster_type).first()
         disasters = Disaster.objects(name=disaster_type)
         return queryset.filter(disaster__in=disasters)
 
@@ -62,5 +62,3 @@ class RapidProRetrieveUpdateView(MongoRetrieveUpdateView):
 
     def post(self, request, *args, **kwargs):
         return self.patch(request, *args, **kwargs)
-
-

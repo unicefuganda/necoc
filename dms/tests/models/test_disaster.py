@@ -36,11 +36,11 @@ class TestDisasterModel(MongoTestCase):
     def test_get_disasters_given_from_date_and_to_date(self):
         date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
         attributes = dict(name=self.disaster_type, locations=[self.district], description="Big Flood",
-                          date="2014-12-01", status="Assessment", created_at=date_time)
+                          date=date_time, status="Assessment")
         disaster1 = Disaster(**attributes).save()
 
         attr2 = attributes.copy()
-        attr2["created_at"] = datetime.datetime(2014, 8, 17, 16, 0, 49, 807000)
+        attr2["date"] = datetime.datetime(2014, 8, 17, 16, 0, 49, 807000)
         disaster2 = Disaster(**attr2).save()
 
         location_disasters = Disaster.from_(self.district, **dict(from_date='2014-08-17', to_date='2014-09-17'))
@@ -54,7 +54,7 @@ class TestDisasterModel(MongoTestCase):
     def test_get_disaster_count_given_from_date_and_to_date(self):
         date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
         attributes = dict(name=self.disaster_type, locations=[self.district], description="Big Flood",
-                          date="2014-12-01", status="Assessment", created_at=date_time)
+                          date=date_time, status="Assessment" )
         Disaster(**attributes).save()
 
         location_disasters = Disaster.count_(**dict(from_date='2014-08-17', to_date='2014-10-17'))

@@ -9,7 +9,7 @@ class Disaster(BaseModel):
                        ('Response Team Deployed', 'Response Team Deployed'),
                        ('Closed', 'Closed'))
 
-    MAPPING = dict(from_date='created_at__gte', to_date='created_at__lte')
+    MAPPING = dict(from_date='date__gte', to_date='date__lte')
 
     name = ReferenceField(DisasterType, required=True)
     locations = ListField(ReferenceField(Location))

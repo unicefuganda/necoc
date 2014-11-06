@@ -1,9 +1,9 @@
 from dms.models.location import Location
-from dms.models.mobile_user import MobileUser
+from dms.models.user_profile import UserProfile
 from dms.tests.base import MongoAPITestCase
 
 
-class TestMobileUserEndpoint(MongoAPITestCase):
+class TestUserProfileEndpoint(MongoAPITestCase):
 
     API_ENDPOINT = '/api/v1/mobile-users/'
 
@@ -14,17 +14,17 @@ class TestMobileUserEndpoint(MongoAPITestCase):
         self.mobile_user = dict(name='timothy', phone='+256775019449', location=self.district, email=None)
 
     def tearDown(self):
-        MobileUser.drop_collection()
+        UserProfile.drop_collection()
 
     def test_should_post_a_mobile_user(self):
         response = self.client.post(self.API_ENDPOINT, data=self.mobile_user_to_post)
         self.assertEqual(201, response.status_code)
 
-        retrieved_user = MobileUser.objects(name='timothy')
+        retrieved_user = UserProfile.objects(name='timothy')
         self.assertEqual(1, retrieved_user.count())
 
     def test_should_get_a_list_of_users(self):
-        MobileUser(**self.mobile_user).save()
+        UserProfile(**self.mobile_user).save()
         response = self.client.get(self.API_ENDPOINT, format='json')
 
         self.assertEqual(200, response.status_code)

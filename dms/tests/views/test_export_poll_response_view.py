@@ -3,7 +3,7 @@ import datetime
 from django.test import Client
 from mongoengine.django.auth import User
 
-from dms.models import Location, MobileUser, Poll, PollResponse
+from dms.models import Location, UserProfile, Poll, PollResponse
 from dms.tests.base import MongoTestWithCSV
 
 
@@ -15,8 +15,8 @@ class ExportPollResponseViewTest(MongoTestWithCSV):
 
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
-        self.mobile_user = MobileUser(**dict(name='timothy', phone=phone_number, location=self.village, email=None)).save()
-        self.mobile_user2 = MobileUser(**dict(name='timothy2', phone='12344', location=self.village, email=None)).save()
+        self.mobile_user = UserProfile(**dict(name='timothy', phone=phone_number, location=self.village, email=None)).save()
+        self.mobile_user2 = UserProfile(**dict(name='timothy2', phone='12344', location=self.village, email=None)).save()
 
         poll_attr = dict(name="disaster space", question="How many disasters are in your area?", keyword="some_word",
                          target_locations=[str(self.village.id)])

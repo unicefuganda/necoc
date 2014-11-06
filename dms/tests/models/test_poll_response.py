@@ -3,7 +3,7 @@ from django.test import override_settings
 from dms.models import Poll
 
 from dms.models.location import Location
-from dms.models.mobile_user import MobileUser
+from dms.models.user_profile import UserProfile
 from dms.models.poll_response import PollResponse
 from dms.tests.base import MongoTestCase
 
@@ -16,7 +16,7 @@ class PollResponseTest(MongoTestCase):
 
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
-        self.mobile_user = MobileUser(**dict(name='timothy', phone=phone_number, location=self.village, email=None)).save()
+        self.mobile_user = UserProfile(**dict(name='timothy', phone=phone_number, location=self.village, email=None)).save()
 
         self.poll_response = dict(phone_no=phone_number, text="NECOC There is a fire", received_at=date_time, relayer_id=234,
                         run_id=23243)

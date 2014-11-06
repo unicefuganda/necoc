@@ -2,7 +2,7 @@ from dms.api.poll_endpoint import PollSerializer
 from dms.api.poll_response_endpoint import PollResponseSerializer
 from dms.models import Poll
 from dms.models.location import Location
-from dms.models.mobile_user import MobileUser
+from dms.models.user_profile import UserProfile
 from dms.models.poll_response import PollResponse
 from dms.tests.base import MongoTestCase
 import datetime
@@ -14,7 +14,7 @@ class PollResponseSerializerTest(MongoTestCase):
         phone_number = "+256775019449"
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
-        self.mobile_user = MobileUser(
+        self.mobile_user = UserProfile(
             **dict(name='timothy', phone=phone_number, location=self.village, email=None)).save()
 
 

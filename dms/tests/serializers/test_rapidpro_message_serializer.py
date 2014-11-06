@@ -1,7 +1,7 @@
 from dms.api.rapid_pro_endpoint import RapidProMessageSerializer
 from dms.models import DisasterType, Disaster
 from dms.models.location import Location
-from dms.models.mobile_user import MobileUser
+from dms.models.user_profile import UserProfile
 from dms.models.rapid_pro_message import RapidProMessage
 from dms.tests.base import MongoTestCase
 import datetime
@@ -13,7 +13,7 @@ class RapidProMessageSerializerTest(MongoTestCase):
         phone_number = "+256775019449"
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
-        self.mobile_user = MobileUser(
+        self.mobile_user = UserProfile(
             **dict(name='timothy', phone=phone_number, location=self.village, email=None)).save()
         text = "NECOC %s There is a fire" % self.village.name
         self.message = dict(phone_no=phone_number, text=text, received_at=date_time, relayer_id=234,

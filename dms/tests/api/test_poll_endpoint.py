@@ -1,6 +1,6 @@
 import json
 from mock import patch, MagicMock, ANY
-from dms.models import Poll, Location, MobileUser, PollResponse
+from dms.models import Poll, Location, UserProfile, PollResponse
 from dms.tests.base import MongoAPITestCase
 from necoc.settings import API_URL, API_TOKEN
 
@@ -12,14 +12,14 @@ class TestPollEndpoint(MongoAPITestCase):
         self.kampala = Location(name='Kampala', parent=None, type='district').save()
         gulu = Location(**(dict(name='Gulu', parent=None, type='district'))).save()
         user_attr = dict(name='timothy', phone='+256775019449', location=gulu, email=None)
-        MobileUser(**(user_attr)).save()
+        UserProfile(**(user_attr)).save()
 
         self.bukoto = Location(name='Bukoto', parent=self.kampala, type='subcounty').save()
         bukoto_user_attr = dict(name='timothy', phone='+250775019449', location=self.bukoto, email=None)
-        MobileUser(**bukoto_user_attr).save()
+        UserProfile(**bukoto_user_attr).save()
         bukoto_user_attr2 = bukoto_user_attr.copy()
         bukoto_user_attr2['phone'] = '+4343245552'
-        MobileUser(**bukoto_user_attr2).save()
+        UserProfile(**bukoto_user_attr2).save()
 
         self.target_locations = [str(self.kampala.id), str(gulu.id)]
         self.poll_to_post = dict(name="Disaster", question="How many disasters are in your area?", keyword="some_word",

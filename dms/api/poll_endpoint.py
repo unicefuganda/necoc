@@ -3,7 +3,7 @@ from rest_framework import fields
 from rest_framework import serializers as serialiserzz
 from rest_framework_mongoengine.generics import ListCreateAPIView
 from rest_framework import serializers as rest_serializers
-from dms.models import Poll, Location, MobileUser
+from dms.models import Poll, Location, UserProfile
 from dms.tasks import send_bulk_sms
 from dms.utils.general_helpers import flatten
 
@@ -29,7 +29,7 @@ class PollListCreateView(ListCreateAPIView):
 
     def post_save(self, obj, created=True):
         locations = self.get_location(obj)
-        phone_numbers = list(MobileUser.objects(location__in=locations).values_list('phone'))
+        phone_numbers = list(UserProfile.objects(location__in=locations).values_list('phone'))
         text = '%s Reply With: %s' % (obj.question, obj.keyword)
         send_bulk_sms.delay(obj, phone_numbers, text)
 

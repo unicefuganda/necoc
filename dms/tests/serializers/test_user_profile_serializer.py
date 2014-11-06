@@ -1,11 +1,11 @@
 from mongoengine import ValidationError
-from dms.api.mobile_user_endpoint import MobileUserSerializer
+from dms.api.user_profile_endpoint import UserProfileSerializer
 from dms.models.location import Location
-from dms.models.mobile_user import MobileUser
+from dms.models.user_profile import UserProfile
 from dms.tests.base import MongoTestCase
 
 
-class MobileUserSerializerTest(MongoTestCase):
+class UserProfileSerializerTest(MongoTestCase):
     def setUp(self):
         self.district = Location(**dict(name='Kampala', type='district', parent=None))
         self.district.save()
@@ -18,49 +18,49 @@ class MobileUserSerializerTest(MongoTestCase):
                                            email="timothyakampa@gmail.com")
 
     def tearDown(self):
-        MobileUser.drop_collection()
+        UserProfile.drop_collection()
         Location.drop_collection()
 
     def test_should_serialize_mobile_user_object(self):
-        mobile_user = MobileUser(**self.mobile_user).save()
-        serialized_object = MobileUserSerializer(mobile_user)
+        mobile_user = UserProfile(**self.mobile_user).save()
+        serialized_object = UserProfileSerializer(mobile_user)
         self.assertDictContainsSubset(self.serialized_mobile_user, serialized_object.data)
         self.assertIsNotNone(serialized_object.data['id'])
 
     def test_should_deserialize_mobile_user_object(self):
         self.serialized_mobile_user['location'] = self.district.id
-        serializer = MobileUserSerializer(data=self.serialized_mobile_user)
+        serializer = UserProfileSerializer(data=self.serialized_mobile_user)
 
         self.assertTrue(serializer.is_valid())
         saved_mobile_user = serializer.save()
 
-        self.assertTrue(isinstance(saved_mobile_user, MobileUser))
+        self.assertTrue(isinstance(saved_mobile_user, UserProfile))
         for attribute, value in self.mobile_user.items():
             self.assertEqual(value, getattr(saved_mobile_user, attribute))
 
     def test_serializer_should_be_invalid_if_phone_number_is_not_unique(self):
         self.serialized_mobile_user['location'] = self.district.id
-        serializer = MobileUserSerializer(data=self.serialized_mobile_user)
+        serializer = UserProfileSerializer(data=self.serialized_mobile_user)
 
         self.assertTrue(serializer.is_valid())
         serializer.save()
 
-        serializer = MobileUserSerializer(data=self.serialized_mobile_user)
+        serializer = UserProfileSerializer(data=self.serialized_mobile_user)
         self.assertFalse(serializer.is_valid())
 
     def test_serializer_should_be_invalid_if_email_is_not_unique(self):
         self.serialized_mobile_user['location'] = self.district.id
-        serializer = MobileUserSerializer(data=self.serialized_mobile_user)
+        serializer = UserProfileSerializer(data=self.serialized_mobile_user)
 
         self.assertTrue(serializer.is_valid())
         serializer.save()
 
         self.serialized_mobile_user['phone'] = '+25632323424'
-        serializer = MobileUserSerializer(data=self.serialized_mobile_user)
+        serializer = UserProfileSerializer(data=self.serialized_mobile_user)
         self.assertFalse(serializer.is_valid())
 
     def test_serializer_should_be_valid_if_no_email_is_passed(self):
         self.serialized_mobile_user['location'] = self.district.id
         del self.serialized_mobile_user['email']
-        serializer = MobileUserSerializer(data=self.serialized_mobile_user)
+        serializer = UserProfileSerializer(data=self.serialized_mobile_user)
         self.assertTrue(serializer.is_valid())

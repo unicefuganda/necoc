@@ -4,7 +4,7 @@ from dms.models.base import BaseModel
 from dms.models.location import Location
 
 
-class MobileUser(BaseModel):
+class UserProfile(BaseModel):
     name = StringField(required=True)
     phone = StringField(required=True, unique=True)
     location = ReferenceField(Location, required=True)

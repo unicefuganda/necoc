@@ -1,5 +1,5 @@
 import datetime
-from dms.models import Location, MobileUser, Poll
+from dms.models import Location, UserProfile, Poll
 from dms.models.poll_response import PollResponse
 from dms.tests.base import MongoAPITestCase
 
@@ -11,7 +11,7 @@ class PollResponseEndPointTest(MongoAPITestCase):
         self.date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
-        self.mobile_user = MobileUser(**dict(name='timothy', phone="+256775019449",
+        self.mobile_user = UserProfile(**dict(name='timothy', phone="+256775019449",
                                              location=self.village, email=None)).save()
 
         self.poll_attr = dict(name="Disaster", question="How many disasters are in your area?", keyword="some_word",

@@ -1,6 +1,6 @@
 import datetime
 from mongoengine import *
-from dms.models import MobileUser
+from dms.models import UserProfile
 
 
 class Message(Document):
@@ -35,7 +35,7 @@ class RapidProMessageBase (ReceivedMessage):
         return self.SENDER
 
     def mobile_user(self):
-        return MobileUser.objects(phone=self.phone_no).first()
+        return UserProfile.objects(phone=self.phone_no).first()
 
     def _assign_location(self):
         pass

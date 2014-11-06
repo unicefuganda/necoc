@@ -1,5 +1,5 @@
 import datetime
-from dms.models import Location, MobileUser, Disaster, DisasterType
+from dms.models import Location, UserProfile, Disaster, DisasterType
 from dms.models.rapid_pro_message import RapidProMessage
 from dms.tests.base import MongoAPITestCase
 
@@ -11,7 +11,7 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
-        self.mobile_user = MobileUser(**dict(name='timothy', phone="+256775019449",
+        self.mobile_user = UserProfile(**dict(name='timothy', phone="+256775019449",
                                              location=self.village, email=None)).save()
 
         disaster_type = DisasterType(**dict(name="Fire", description="Fire")).save()
@@ -78,7 +78,7 @@ class RapidProEndPointTest(MongoAPITestCase):
         other_phone_number = '1234'
         other_message_options = dict(phone_no=other_phone_number, text=self.text_format % wakiso.name, received_at=self.date_time,
                                      relayer_id=234, run_id=23243)
-        MobileUser(**dict(name='timothy', phone=other_phone_number, location=wakiso)).save()
+        UserProfile(**dict(name='timothy', phone=other_phone_number, location=wakiso)).save()
         wakiso_message = RapidProMessage(**other_message_options).save()
 
         response = self.client.get(self.API_ENDPOINT, {"location": self.district.id, "format": "json"})

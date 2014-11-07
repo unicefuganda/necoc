@@ -188,6 +188,17 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'mongo_auth.MongoUser'
 MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'necocdev@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_PASSWORD']
+DEFAULT_FROM_EMAIL = 'necocdev@gmail.com'
+SERVER_EMAIL = 'necocdev@gmail.com'
+DEFAULT_TO_EMAIL = 'necocdev@gmail.com'
+
+HOSTNAME = 'http://necoc.org.ug'
+
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # TEST_RUNNER = 'dms.tests.runner.NoSQLTestRunner'
 

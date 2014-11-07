@@ -1,10 +1,10 @@
-from mongoengine.django.auth import User
 from rest_framework_mongoengine.generics import ListCreateAPIView, ListAPIView
 from rest_framework_mongoengine import serializers
 from rest_framework import serializers as rest_serializers
 from dms.models.user_profile import UserProfile
 from rest_framework import fields
 from rest_framework.response import Response
+from dms.services.user_profile_service import UserProfileService
 
 
 class UserProfileSerializer(serializers.MongoEngineModelSerializer):
@@ -31,19 +31,11 @@ class UserProfileListCreateView(ListCreateAPIView):
     queryset = UserProfile.objects()
     model = UserProfile
 
-    def __init__(self, *args, **kwargs):
-        self.user = None
-        return super(UserProfileListCreateView, self).__init___(*args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        username = request.POST.get('username', None)
-        if username:
-            self.user = User(username=username).save()
-        return super(UserProfileListCreateView, self).post(request, *args, **kwargs)
-
     def pre_save(self, obj):
-        obj.user = self.user
-        return super(UserProfileListCreateView, self).pre_save(obj)
+        username = self.request.DATA.get('username', None)
+        if username:
+            user = UserProfileService.setup_new_user(username, obj.name, obj.email)
+            obj.user = user
 
 
 class UserProfileView(ListAPIView):

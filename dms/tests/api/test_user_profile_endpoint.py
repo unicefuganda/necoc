@@ -1,4 +1,6 @@
+from django.core import mail
 from mongoengine.django.auth import User
+
 from dms.models.location import Location
 from dms.models.user_profile import UserProfile
 from dms.tests.base import MongoAPITestCase
@@ -61,3 +63,14 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         retrieved_user = User.objects(username='akampa')
         self.assertEqual(1, retrieved_user.count())
         self.assertEqual(retrieved_user.first(), retrieved_user_profile.first().user)
+
+    def test_posting_new_system_user_sends_email(self):
+        attr = self.mobile_user_to_post.copy()
+        attr['username'] = 'akampa'
+        attr['email'] = 'email@email.email'
+        response = self.client.post(self.API_ENDPOINT, data=attr)
+        self.assertEqual(201, response.status_code)
+
+        email = mail.outbox[0]
+        self.assertEqual('necocdev@gmail.com', email.from_email)
+        self.assertEqual('email@email.email', email.to[0])

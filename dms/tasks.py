@@ -18,7 +18,6 @@ def send_bulk_sms(obj, phone_numbers=[], text=""):
 
     obj.save()
 
-
 def _send(phone_numbers, text):
     data = dict(phone=phone_numbers, text=text)
     headers = {'Authorization': 'Token ' + API_TOKEN,

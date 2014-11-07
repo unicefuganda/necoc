@@ -18,7 +18,7 @@
             $scope.users = response.data;
         });
 
-        $scope.showUserProfile = function (user) {
+        $scope.showUserProfile = function(user) {
             $state.go('admin.user', {'user': user.id});
         }
     });
@@ -94,25 +94,5 @@
         }
     });
 
-    module.directive('buttonSwitch', function () {
-        return {
-            link: function (scope, element, attrs) {
-                var onText = attrs.on,
-                    offText = attrs.off,
-                    sectionIdToToggle = attrs.toggleSection;
-
-                element.html('<a class="btn btn-xs btn-default">' + onText + '</a>' +
-                    '<a class="btn btn-xs btn-primary active">' + offText + '</a>');
-
-                element.find('.btn').click(function () {
-                    element.find('.btn').toggleClass('active');
-                    element.find('.btn').toggleClass('btn-primary');
-                    element.find('.btn').toggleClass('btn-default');
-                    console.log($('#' + sectionIdToToggle));
-                    $('#' + sectionIdToToggle).toggleClass('hide');
-                });
-            }
-        }
-    });
 
 })(angular.module('dms.mobile-user', ['dms.config', 'dms.utils']));

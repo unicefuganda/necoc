@@ -106,12 +106,12 @@
             }
         }
 
-        function addAggregateLayer(map, parentLayerName) {
+        function addAggregateLayer(map, filter) {
             var layerGroup = L.layerGroup();
 
-            return StatsService.getAggregates(parentLayerName).then(function (response) {
+            return StatsService.getAggregates(filter).then(function (response) {
                 var aggregateStats = response.data,
-                    layer = LayerMap.getLayer(parentLayerName);
+                    layer = LayerMap.getLayer(filter.district);
 
                 angular.forEach(aggregateStats, function (aggregateValue, aggregateName) {
                     var childLayer = layer.getChildLayer(aggregateName);
@@ -164,12 +164,14 @@
         }
 
         function addHeatMapLayer(filter) {
-            return StatsService.getAggregates(filter).then(function (response) {
+            var filterCopy = angular.copy(filter);
+            delete filterCopy.district;
+
+            return StatsService.getAggregates(filterCopy).then(function (response) {
                 var aggregateStats = response.data;
 
                 angular.forEach(LayerMap.getLayers(), function (layer, layerName) {
                     if (aggregateStats[layerName]) {
-
                         layer.setStyle(MapConfig.heatMapStyle.messages(aggregateStats[layerName].messages.percentage));
                     } else {
                         layer.setStyle(MapConfig.heatMapStyle.messages(0));
@@ -219,7 +221,7 @@
                 return addDistrictsLayer(map).then(function () {
                     var options = {animate: false};
                     if (district) {
-                        this.selectDistrict(district, options).then(function () {
+                        this.selectDistrict(district, filter, options).then(function () {
                             this.selectSubcounty(district, subcounty);
                         }.bind(this));
                     }
@@ -250,16 +252,16 @@
             getHighlightedLayer: function () {
                 return LayerMap.getSelectedLayer();
             },
-            selectDistrict: function (layerName, options) {
-                if (layerName) {
-                    layerName = layerName.toLowerCase();
-                    LayerMap.zoomIn(layerName, options);
-                    this.highlightLayer(layerName);
+            selectDistrict: function (district, filter, options) {
+                if (district) {
+                    district = district.toLowerCase();
+                    LayerMap.zoomIn(district, options);
+                    this.highlightLayer(district);
                 }
 
-                return this.addSubCountyLayer(layerName).then(function () {
-                    addAggregateLayer(map, layerName.toLowerCase());
-                });
+                return this.addSubCountyLayer(district).then(function () {
+                    this.loadClusterLayer(filter, district);
+                }.bind(this));
             },
             selectSubcounty: function (district, subcounty) {
                 if (subcounty) {
@@ -275,6 +277,13 @@
             },
             onClickSubcounty: function (handler) {
                 self.subCountyLayerOptions.onClickHandler = handler;
+            },
+            loadClusterLayer: function (filter, district) {
+                filter ? filter.district = district.toLowerCase() :
+                    filter = { district: district.toLowerCase() };
+                addAggregateLayer(map, filter).then(function () {
+                    addLayerGroupOnZoom('aggregate_stats', TOGGLE_ZOOM_LEVEL);
+                });
             },
             numberOfLayersIn: function (layerGroupName) {
                 return LayerMap.getLayerGroup(layerGroupName).getLayers().length;
@@ -299,7 +308,7 @@
 
                     map.onClickDistrict(function (district) {
                         $state.go('admin.dashboard.district', {district: district}, {reload: false}).then(function () {
-                            MapService.selectDistrict(district);
+                            MapService.selectDistrict(district, scope.filter);
                         });
                     });
 
@@ -317,6 +326,7 @@
                     scope.$watch('filter', function (filter) {
                         if (filter) {
                             map.refreshHeatMap(filter);
+                            $stateParams.district && map.loadClusterLayer(filter, $stateParams.district);
                         }
                     }, true);
                 });
@@ -336,7 +346,7 @@
                         MapService.hasLayer(district.toLowerCase()) &&
                         $state.go('admin.dashboard.district', {district: district.toLowerCase()}, {reload: true})
                             .then(function () {
-                                MapService.selectDistrict(district);
+                                MapService.selectDistrict(district, scope.filter);
                             });
 
                     } else {

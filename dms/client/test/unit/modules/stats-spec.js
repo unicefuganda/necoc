@@ -46,7 +46,7 @@ describe('dms.stats', function () {
             });
 
             it('should filter aggregate stats of a particular location', function () {
-                var obtainedStats = statsService.getAggregates({location: 'gulu'});
+                var obtainedStats = statsService.getAggregates({district: 'gulu'});
                 httpMock.expectGET(apiUrl + 'location-stats/gulu/').respond({});
                 httpMock.flush();
                 expect(obtainedStats).toBeDefined();

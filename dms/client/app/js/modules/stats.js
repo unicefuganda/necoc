@@ -5,12 +5,12 @@
 
         return {
             getAggregates: function (statOptions) {
-                var options = statOptions || {};
-                var location = options.location;
-                delete options.location;
+                var options = angular.copy(statOptions || {});
+                var district = options.district;
+                delete options.district;
                 var queryString = helpers.buildQueryString(options);
-                if (location) {
-                    return $http.get(Config.apiUrl + 'location-stats/' + location + '/' + queryString);
+                if (district) {
+                    return $http.get(Config.apiUrl + 'location-stats/' + district + '/' + queryString);
                 }
                 return $http.get(Config.apiUrl + 'location-stats/' + queryString);
             }

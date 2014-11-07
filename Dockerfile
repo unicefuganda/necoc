@@ -5,6 +5,7 @@ MAINTAINER Timothy Akampa timothyakampa@gmail.com
 ENV NGINX_SERVER_NAME 127.0.0.1
 ENV API_TOKEN 123232
 ENV LOAD_DATA False
+ENV EMAIL_PASSWORD XXXX
 
 RUN apt-get -qq update
 RUN apt-get -qqy install wget build-essential

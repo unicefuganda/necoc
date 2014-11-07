@@ -120,7 +120,8 @@
                 var savedGroup = LayerMap.getLayerGroup('aggregate_stats');
                 try {
                     map.hasLayer(savedGroup) && map.removeLayer(savedGroup);
-                } catch(err) {}
+                } catch (err) {
+                }
                 LayerMap.addLayerGroup('aggregate_stats', layerGroup);
                 map.addLayer(layerGroup);
             });
@@ -157,8 +158,8 @@
             map.addLayer(layerGroup);
         }
 
-        function addHeatMapLayer() {
-            return StatsService.getAggregates().then(function (response) {
+        function addHeatMapLayer(filter) {
+            return StatsService.getAggregates(filter).then(function (response) {
                 var aggregateStats = response.data;
 
                 angular.forEach(LayerMap.getLayers(), function (layer, layerName) {
@@ -207,7 +208,7 @@
         }
 
         return {
-            render: function (elementId, district, subcounty) {
+            render: function (elementId, district, subcounty, filter) {
                 map = initMap(elementId);
 
                 return addDistrictsLayer(map).then(function () {
@@ -218,7 +219,7 @@
                         }.bind(this));
                     }
                 }.bind(this)).then(function () {
-                    addHeatMapLayer().then(addDisasterBubbles.bind({}, map));
+                    addHeatMapLayer(filter).then(addDisasterBubbles.bind({}, map));
                     addHeatMapLegend(map);
                 }).then(function () {
                     return this;
@@ -254,7 +255,7 @@
                 });
             },
             selectSubcounty: function (district, subcounty) {
-                if(subcounty) {
+                if (subcounty) {
                     var subCountyLayer = LayerMap.getLayer(district.toLowerCase()).getChildLayer(subcounty.toLowerCase());
                     subCountyLayer && subCountyLayer.zoomIn();
                 }
@@ -271,8 +272,8 @@
             numberOfLayersIn: function (layerGroupName) {
                 return LayerMap.getLayerGroup(layerGroupName).getLayers().length;
             },
-            refreshHeatMap: function () {
-                addHeatMapLayer();
+            refreshHeatMap: function (filter) {
+                addHeatMapLayer(filter);
             },
             clickSubCounty: function (district, subcounty) {
                 return LayerMap.getLayer(district.toLowerCase()).getChildLayer(subcounty.toLowerCase()).click();
@@ -284,7 +285,7 @@
         return {
             scope: false,
             link: function (scope, element, attrs) {
-                MapService.render(attrs.id, $stateParams.district, $stateParams.subcounty).then(function (map) {
+                MapService.render(attrs.id, $stateParams.district, $stateParams.subcounty, scope.filter).then(function (map) {
                     $window.map = map;
 
                     map.onClickDistrict(function (district) {
@@ -301,8 +302,14 @@
                     });
 
                     $interval(function () {
-                        map.refreshHeatMap();
+                        map.refreshHeatMap(scope.filter);
                     }, 15000);
+
+                    scope.$watch('filter', function (filter) {
+                        if (filter) {
+                            map.refreshHeatMap(filter);
+                        }
+                    }, true);
                 });
             }
         }

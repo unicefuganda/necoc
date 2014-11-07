@@ -29,7 +29,7 @@ describe('dms.stats', function () {
             });
         });
 
-        describe('.getAggregates()', function () {
+        describe('METHOD: getAggregates', function () {
             it('should fetch aggregate stats', function () {
                 var obtainedStats = statsService.getAggregates();
                 httpMock.expectGET(apiUrl + 'location-stats/');
@@ -37,8 +37,16 @@ describe('dms.stats', function () {
                 expect(obtainedStats).toBeDefined();
             });
 
-            it('should felt aggregate stats of a particular location', function () {
-                var obtainedStats = statsService.getAggregates('gulu');
+            it('should filter aggregate stats by date', function () {
+                var options = {from: '2014-12-23', to: '2014-12-30'};
+                var obtainedStats = statsService.getAggregates(options);
+                httpMock.expectGET(apiUrl + 'location-stats/?from=2014-12-23&to=2014-12-30').respond({});
+                httpMock.flush();
+                expect(obtainedStats).toBeDefined();
+            });
+
+            it('should filter aggregate stats of a particular location', function () {
+                var obtainedStats = statsService.getAggregates({location: 'gulu'});
                 httpMock.expectGET(apiUrl + 'location-stats/gulu/').respond({});
                 httpMock.flush();
                 expect(obtainedStats).toBeDefined();

@@ -53,6 +53,13 @@
                 Object.keys(errors).forEach(function (key) {
                     form[key].$invalid = true;
                 });
+            },
+            buildQueryString: function (options) {
+                var queryString = '?';
+                angular.forEach(options, function (value, key) {
+                    queryString += key + '=' + value + '&';
+                });
+                return queryString.slice(0, -1);
             }
         }
     });

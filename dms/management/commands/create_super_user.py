@@ -8,20 +8,15 @@ class Command(BaseCommand):
     help = 'Creates a super user with credentials that you pass in'
 
     def handle(self, *args, **options):
-        UserProfile.objects()
         if not len(args):
-            user = User.objects(username='admin').first() or User(username='admin').save()
+            user = User(username='admin').save()
             user.set_password('password')
             location = Location.objects(type='district').first() or Location(name='Kampala', type='district').save()
-            profile = UserProfile.objects(phone='N/A').first() or UserProfile(phone='N/A', name='Admin', location=location, email='admin@admin.admin').save()
-            profile.user = user
-            profile.save()
+            UserProfile(phone='N/A', name='Admin', location=location, user=user, email='admin@admin.admin').save()
         else:
-            user = User.objects(username=args[0]).first() or User(username=args[0]).save()
+            user = User(username=args[0]).save()
             user.set_password(args[1])
             location = Location.objects(name=args[4]).first() or Location(name=args[4], type='district').save()
-            profile = UserProfile.objects(phone=args[5]).first() or UserProfile(phone=args[5], name=args[3], location=location, email=args[2]).save().save()
-            profile.user = user
-            profile.save()
+            UserProfile(phone=args[5], name=args[3], location=location, user=user, email=args[2]).save()
 
         self.stdout.write('Successfully created superuser')

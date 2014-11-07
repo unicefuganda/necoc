@@ -40,14 +40,16 @@ module.exports = function () {
         pollsPage.newPollModal.sendPollsButton.click().then(next);
     });
 
-    this.Then(/^I should see poll successfully sent$/, function (next) {
+    this.Then(/^I can submit and see the poll successfully sent$/, function (next) {
         var self = this;
         self.ignoreSync(true);
-
-        browser.wait(pollsPage.notification.getText).then(function (text) {
-            self.expect(text).to.equal('Poll successfully sent');
-            next();
-        });
+        pollsPage.newPollModal.sendPollsButton.click().then(function () {
+            browser.wait(pollsPage.notification.getText).then(function (text) {
+                self.expect(text).to.equal('Poll successfully sent');
+                self.ignoreSync(false);
+                next();
+            });
+        })
     });
 
     this.Then(/^I should see the polls fields required error messages$/, function (next) {

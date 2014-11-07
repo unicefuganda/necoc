@@ -11,8 +11,7 @@ Feature: Poll
     And I enter a poll keyword as "polls"
     And I select poll districts as "Lira" and "Gulu"
     And I select poll subcounties as "Ogur" and "Awach"
-    And I click the send poll button
-    Then I should see poll successfully sent
+    Then I can submit and see the poll successfully sent
     And I should see the poll in the poll-list
     When I click new poll button
     And I enter a poll name as "NECOC POLL"

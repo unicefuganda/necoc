@@ -48,7 +48,7 @@ module.exports = function () {
                 self.expect(messagesPage.getMessageData('text', 0)).to.eventually.equal(message.text);
             })
             .then(function () {
-                self.expect(messagesPage.getMessageData('time | date:"MMM dd, yyyy - h:mma"', 0)).to.eventually.equal(messagesPage.formattedTime);
+                self.expect(messagesPage.getMessageData('time | date:"MMM dd, yyyy - h:mma"', 0)).to.eventually.equal(message.formattedTime);
             })
             .then(function () {
                 self.expect(messagesPage.getMessageData('location', 0)).to.eventually.equal(location || messagesPage.senderLocation.name);

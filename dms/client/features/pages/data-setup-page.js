@@ -137,9 +137,12 @@ var DataSetupPage = function () {
     };
 
     this.postMessage = function (message, callback) {
+        var now = moment().format('YYYY-MM-DDTHH:mm');
+        var formatedTime = moment().format('MMM DD, YYYY - h:mmA');
+
         var sms = {
             phone: message.phone || '+25484384389434',
-            time: message.time || moment().format('YYYY-MM-DDTHH:mm'),
+            time: message.time || now,
             relayer: 2,
             run: 1,
             text: message.text,
@@ -148,7 +151,10 @@ var DataSetupPage = function () {
 
         return baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {
             form: sms
-        }, callback.bind({}, sms));
+        }, function () {
+            sms.formattedTime = formatedTime;
+            callback(sms);
+        });
     };
 
 };

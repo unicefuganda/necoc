@@ -1,5 +1,6 @@
 import json
 from celery.task import task
+from django.core.mail import send_mail
 import requests
 from requests.exceptions import RequestException
 from necoc.settings import API_URL, API_TOKEN
@@ -32,3 +33,7 @@ def _log(response, obj):
         obj.log = "%d: %s = %s" % (status_code, 'rapid_pro_id', response_data['sms'][0])
     else:
         obj.log = "%d: %s" % (status_code, str(response_data))
+
+@task
+def send_new_user_email(self, *args, **kwargs):
+    send_mail(*args, **kwargs)

@@ -18,4 +18,3 @@ class NoSQLTestRunner(DiscoverRunner):
         connection.drop_database(self.MONGODB_NAME)
         disconnect()
         return super(NoSQLTestRunner, self).teardown_databases(old_config, **kwargs)
-

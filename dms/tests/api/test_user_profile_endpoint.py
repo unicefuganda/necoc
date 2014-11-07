@@ -1,4 +1,8 @@
+from django.conf import settings
+
 from django.core import mail
+from django.test import override_settings
+import mock
 from mongoengine.django.auth import User
 
 from dms.models.location import Location
@@ -7,7 +11,6 @@ from dms.tests.base import MongoAPITestCase
 
 
 class TestUserProfileEndpoint(MongoAPITestCase):
-
     API_ENDPOINT = '/api/v1/mobile-users/'
 
     def setUp(self):
@@ -64,13 +67,15 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.assertEqual(1, retrieved_user.count())
         self.assertEqual(retrieved_user.first(), retrieved_user_profile.first().user)
 
-    def test_posting_new_system_user_sends_email(self):
+    @mock.patch('dms.tasks.send_new_user_email.delay')
+    def test_posting_new_system_user_sends_email(self, mock_send_new_user_email):
         attr = self.mobile_user_to_post.copy()
         attr['username'] = 'akampa'
         attr['email'] = 'email@email.email'
         response = self.client.post(self.API_ENDPOINT, data=attr)
         self.assertEqual(201, response.status_code)
-
-        email = mail.outbox[0]
-        self.assertEqual('necocdev@gmail.com', email.from_email)
-        self.assertEqual('email@email.email', email.to[0])
+        mock_send_new_user_email.assert_called_with('Your NECOC Account',
+                                                    mock.ANY,
+                                                    settings.DEFAULT_FROM_EMAIL,
+                                                    ['email@email.email'],
+                                                    fail_silently=False)

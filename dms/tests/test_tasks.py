@@ -97,3 +97,14 @@ class CeleryTasksTest(MongoAPITestCase):
         retrieved_sms = SentMessage.objects(**self.bulk_sms_to_post)
         self.assertEqual(1, retrieved_sms.count())
         self.assertEqual("ConnectionError: %s" % connection_error, retrieved_sms[0].log)
+
+    @patch('django.core.mail.send_mail')
+    def test_send_new_user_email_sends_email(self, mock_send_mail):
+        subject = 'subject'
+        message = 'message'
+        from_email = 'from_email'
+        recipient_list = ['recipient_list']
+
+        send_bulk_sms.delay(subject, message, from_email, recipient_list, fail_silently=False)
+
+        self.assertTrue(mock_send_mail.called_once_with(subject, message, from_email, recipient_list, fail_silently=False))

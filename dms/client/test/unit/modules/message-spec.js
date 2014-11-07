@@ -2,7 +2,6 @@ describe('dms.message', function () {
     var $scope;
     var httpMock;
     var messagesStub;
-    var apiUrl;
     var initController;
     var interval;
     var yesterday = '2014-11-03';
@@ -87,7 +86,7 @@ describe('dms.message', function () {
             mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
 
             $scope.$apply();
-            expect(mockMessageService.filter.mostRecentCall.args).toEqual(['location', 'location-id']);
+            expect(mockMessageService.filter.mostRecentCall.args).toEqual([{ location : 'location-id' }]);
             expect($scope.messages).toEqual(messageStub);
         });
 
@@ -102,7 +101,7 @@ describe('dms.message', function () {
             mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
 
             $scope.$apply();
-            expect(mockMessageService.filter.mostRecentCall.args).toEqual(['location', 'location-id']);
+            expect(mockMessageService.filter.mostRecentCall.args).toEqual([{ location : 'location-id' }]);
             expect($scope.messages).toEqual(messageStub);
 
             $scope.location = "";

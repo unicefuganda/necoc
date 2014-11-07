@@ -32,13 +32,13 @@ Feature: Map
     Then I should see the map title as "Uganda / Gulu / Awach"
     And the map zooms into "Awach"
 
-  Scenario: View Messages and Disasters bubble on each Subcounty
+  Scenario: View Messages and Disasters cluster markers on each Subcounty
     Given I am logged in as a NECOC admin
     And I have "Gulu" district and "Awach" subcounty already registered
     And I POST "NECOC Awach Flood" to the NECOC DMS
     When I navigate to map location "/admin/dashboard/gulu"
-    Then I should see a messages bubble with 1 incoming messages
-    Then I should not see a disasters bubble
+    Then I should see a message cluster marker with 1 incoming messages
+    Then I should not see a disaster cluster marker
 
   Scenario: View Messages HeatMap
     Given I am logged in as a NECOC admin
@@ -65,4 +65,26 @@ Feature: Map
     When I navigate to map location "/admin/dashboard"
     Then I see should see 1 disasters bubble on the map
     When I click "Gulu" district
-    Then I should see a disasters bubble with 1 disasters
+    Then I should see a disaster cluster marker with 1 disasters
+
+  Scenario: Apply time filters to the map.
+    Given I am logged in as a NECOC admin
+    And I have a "Flood" disaster in "Gulu" district, "Awach" subcounty already registered
+    And I POST "NECOC Awach Flood here" to the NECOC DMS
+    And I navigate to map location "/admin/dashboard"
+    Then I see should see 1 disasters bubble on the map
+    When I navigate to map location "/admin/dashboard/gulu"
+    Then I should see a message cluster marker with 1 incoming messages
+    Then I should see a disaster cluster marker with 1 disasters
+    Then I should see "gulu" district with layer color "#E31A1C"
+    When I enter a from date filter as "2014-01-06"
+    And I enter a to date filter as "2014-02-06"
+    Then I should not see a message cluster marker
+    Then I should not see a disaster cluster marker
+    Then I should see "gulu" district with layer color "#FFEDA0"
+
+  Scenario: Show map options on dashboard and Hide on other tabs.
+    Given I am logged in as a NECOC admin
+    Then I should see map options panel on dashboard
+    When I navigate to "/admin/disasters"
+    Then I should not see map options panel

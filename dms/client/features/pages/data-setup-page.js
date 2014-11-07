@@ -1,5 +1,6 @@
 var DataSetupPage = function () {
     var request = require('request'),
+        moment = require('moment'),
         baseRequest,
         self = this;
 
@@ -14,7 +15,7 @@ var DataSetupPage = function () {
             }
         }, function (error, response, body) {
             baseRequest = request.defaults({
-                headers: {'Authorization': 'Token '+ body.token}
+                headers: {'Authorization': 'Token ' + body.token}
             });
         });
     })();
@@ -71,7 +72,7 @@ var DataSetupPage = function () {
                     body: {
                         name: JSON.parse(disasterTypeBody).id,
                         status: "Assessment",
-                        date: "2014-10-24T17:00:00",
+                        date: moment().format('YYYY-MM-DDTHH:mm'),
                         description: "big disaster",
                         type: "subcounty",
                         locations: [JSON.parse(locationBody).id]
@@ -124,7 +125,7 @@ var DataSetupPage = function () {
                     run: "23243",
                     poll: poll.id
                 }
-            }, function (err, httpResponse, pollResponse) {
+            }, function () {
                 callback(poll);
             });
         });
@@ -133,6 +134,21 @@ var DataSetupPage = function () {
     this.createPollAndResponseFrom = function (pollResponseAttr, callback) {
         return self.createPollAndResponse(pollResponseAttr.phone, pollResponseAttr.keyword,
             pollResponseAttr.location, pollResponseAttr.text, callback);
+    };
+
+    this.postMessage = function (message, callback) {
+        var sms = {
+            phone: message.phone || '+25484384389434',
+            time: message.time || moment().format('YYYY-MM-DDTHH:mm'),
+            relayer: 2,
+            run: 1,
+            text: message.text,
+            source: 'NECOC Volunteer'
+        };
+
+        return baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {
+            form: sms
+        }, callback.bind({}, sms));
     };
 
 };

@@ -33,8 +33,3 @@ class TestDisasterEndpoint(MongoAPITestCase):
         self.assertEqual(self.disaster_to_post['status'], response.data[0]['status'])
         self.assertEqual(self.disaster_to_post['date'], str(response.data[0]['date']))
         self.assertEqual(self.disaster_to_post['description'], response.data[0]['description'])
-        # print response.data
-
-        #
-        # self.assertEqual(self.district.name, response.data[0]['location']['name'])
-        # self.assertEqual(self.disaster_type.name, response.data[0]['name']['name'])

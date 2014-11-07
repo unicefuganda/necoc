@@ -579,13 +579,30 @@ div[class*="-aggregate-marker-icon"] div {
 }
 
 .time-filter {
-    background-color: #f1f1f1;
-    padding: 35px 24px 0px 24px;
+    padding: 0 10px;
     min-height: 600px;
 }
 
 .time-filter .form-group {
     margin-bottom: 10px;
+}
+
+.filter {
+    background-color: #f1f1f1;
+    border-left: 4px solid #3E9CB8;
+}
+
+.filter h4 {
+    width: 100%;
+    font-size: 16px;
+    font-weight: 300;
+    color: #3E9CB8;
+    margin-bottom: 15px;
+}
+
+.filter form label {
+    color: #3E9CB8;
+    font-weight: 300;
 }
 
 #login-form-container {

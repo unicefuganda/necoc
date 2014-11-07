@@ -65,7 +65,7 @@ describe('dms.admin-panel', function () {
         initController();
 
         $scope.$apply();
-        expect(mockMessageService.filter).toHaveBeenCalled();
+        expect(mockMessageService.filter).toHaveBeenCalledWith({disaster: ''});
         expect($scope.uncategorizedMessagesCount).toEqual(1);
     });
 

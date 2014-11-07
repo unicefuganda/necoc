@@ -21,7 +21,9 @@ module.exports = function () {
     });
 
     this.When(/^I POST "([^"]*)" to the NECOC DMS$/, function (text, next) {
-        messagesPage.postMessageWithText(text, function(message) {
+        dataSetupPage.postMessage({
+            text: text
+        }, function(message) {
             messages.push(message);
             next();
         });

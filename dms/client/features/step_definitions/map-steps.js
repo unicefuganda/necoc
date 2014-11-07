@@ -98,7 +98,7 @@ module.exports = function () {
         }, district).then(next);
     });
 
-    this.Then(/^I should see a messages bubble with (\d+) incoming messages$/, function (numberOfMessages, next) {
+    this.Then(/^I should see a message cluster marker with (\d+) incoming messages$/, function (numberOfMessages, next) {
         this.expect(mapPage.messagesBubble.getText()).to.eventually.equal(numberOfMessages)
             .and.notify(next);
     });
@@ -147,14 +147,25 @@ module.exports = function () {
         });
     });
 
-    this.Then(/^I should see a disasters bubble with (\d+) disasters$/, function (numberOfDisasters, next) {
-        this.expect(mapPage.disastersBubble.getText()).to.eventually.equal(numberOfDisasters)
-            .and.notify(next);
+    this.Then(/^I should see a disaster cluster marker with (\d+) disasters$/, function (numberOfDisasters, next) {
+        var self = this;
+        this.waitForElement(by.css(".disasters-aggregate-marker-icon div"), function () {
+            self.expect(mapPage.disastersBubble.getText()).to.eventually.equal(numberOfDisasters)
+                .and.notify(next);
+        });
     });
 
-    this.Then(/^I should not see a disasters bubble$/, function (next) {
+    this.Then(/^I should not see a disaster cluster marker$/, function (next) {
         var self = this;
         browser.isElementPresent(by.css('.disasters-aggregate-marker-icon div')).then(function (elementPresent) {
+            self.expect(elementPresent).to.be.false;
+            next();
+        })
+    });
+
+    this.Then(/^I should not see a message cluster marker$/, function (next) {
+        var self = this;
+        browser.isElementPresent(by.css('.messages-aggregate-marker-icon div')).then(function (elementPresent) {
             self.expect(elementPresent).to.be.false;
             next();
         })
@@ -169,6 +180,26 @@ module.exports = function () {
             self.expect(number).to.equal(parseInt(disasters));
             next();
         });
+    });
+
+    this.When(/^I enter a from date filter as "([^"]*)"$/, function (fromDate, next) {
+        mapPage.fromDateField.clear().then(function () {
+            mapPage.fromDateField.sendKeys(fromDate);
+        }).then(next);
+    });
+
+    this.When(/^I enter a to date filter as "([^"]*)"$/, function (toDate, next) {
+        mapPage.toDateField.sendKeys(toDate).then(next);
+    });
+
+    this.Then(/^I should see map options panel on dashboard$/, function (next) {
+        this.expect(mapPage.mapOptions.getText()).to.eventually.equal('Map Options')
+            .and.notify(next);
+    });
+
+    this.Then(/^I should not see map options panel$/, function (next) {
+        this.expect(mapPage.mapOptions.isDisplayed()).to.eventually.equal(false)
+            .and.notify(next);
     });
 
 };

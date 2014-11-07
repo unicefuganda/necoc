@@ -35,13 +35,14 @@
             if (!newLocation) {
                 getAllMessages();
             } else {
-                MessageService.filter('location', newLocation).then(function (response) {
+                MessageService.filter({location: newLocation}).then(function (response) {
                     $scope.messages = response.data;
                 });
             }
+
         });
 
-        MessageService.filter().then(function (response) {
+        MessageService.filter({disaster: ''}).then(function (response) {
             $scope.uncategorizedMessagesCount = response.data.length;
         });
 

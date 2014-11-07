@@ -37,10 +37,9 @@
                         <span class="bar-content">Users</span>
                     </a>
                 </li>
-                <li  class="">
+                <li  class="filter" ng-show="$state.current.data.pageTitle == 'Dashboard'">
+                    <h4 class="bar-content text-center">Map Options</h4>
                     <form role="form" class="time-filter">
-                        <h3 class="bar-content">Map Options</h3>
-
                         <!--<label>Filter by</label>-->
                         <!--<div class="form-group">-->
                             <!--<input type="text" ng-model="disasterType" disaster-types="disaster" name="type"-->
@@ -50,7 +49,6 @@
                         <!--<div class="form-group">-->
                             <!--<select class="form-control"></select>-->
                         <!--</div>-->
-
                         <div>
                             <label for="from-date">Show data from</label>
                             <input id="from-date" class="form-control" ng-model="filter.from" data-datepicker="" data-timepicker="false"  placeholder="select from date"/>

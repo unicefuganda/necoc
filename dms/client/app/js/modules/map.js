@@ -4,6 +4,8 @@
         var map,
             self = this;
 
+        var TOGGLE_ZOOM_LEVEL = 9;
+
         self.subCountyLayerOptions = { style: MapConfig };
         self.districtlayerOptions = { style: MapConfig };
 
@@ -23,9 +25,9 @@
 
         function initMapEvents(map) {
             map.on('zoomend', function () {
-                addLayerGroupOnZoom('aggregate_stats', 9);
-                addLayerGroupOnZoom('sub_counties', 9);
-                removeLayerGroupOnZoom('disaster_bubbles', 9);
+                addLayerGroupOnZoom('aggregate_stats', TOGGLE_ZOOM_LEVEL);
+                addLayerGroupOnZoom('sub_counties', TOGGLE_ZOOM_LEVEL);
+                removeLayerGroupOnZoom('disaster_bubbles', TOGGLE_ZOOM_LEVEL);
             });
         }
 
@@ -44,9 +46,11 @@
 
             if (map.getZoom() < zoomLevel && !map.hasLayer(layerGroup)) {
                 layerGroup && map.addLayer(layerGroup);
+
             } else if (map.getZoom() >= zoomLevel && map.hasLayer(layerGroup)) {
                 layerGroup && map.removeLayer(layerGroup);
             }
+
         }
 
         function addHeatMapLegend(map) {
@@ -153,7 +157,8 @@
                     layerGroup.addLayer(bubble);
                 }
             });
-
+            var savedGroup = LayerMap.getLayerGroup('disaster_bubbles');
+            map.hasLayer(savedGroup) && map.removeLayer(savedGroup);
             LayerMap.addLayerGroup('disaster_bubbles', layerGroup);
             map.addLayer(layerGroup);
         }
@@ -219,7 +224,9 @@
                         }.bind(this));
                     }
                 }.bind(this)).then(function () {
-                    addHeatMapLayer(filter).then(addDisasterBubbles.bind({}, map));
+                    addHeatMapLayer(filter).then(addDisasterBubbles.bind({}, map)).then(function () {
+                        removeLayerGroupOnZoom('disaster_bubbles', TOGGLE_ZOOM_LEVEL);
+                    });
                     addHeatMapLegend(map);
                 }).then(function () {
                     return this;
@@ -273,7 +280,9 @@
                 return LayerMap.getLayerGroup(layerGroupName).getLayers().length;
             },
             refreshHeatMap: function (filter) {
-                addHeatMapLayer(filter);
+                addHeatMapLayer(filter).then(addDisasterBubbles.bind({}, map)).then(function () {
+                    removeLayerGroupOnZoom('disaster_bubbles', TOGGLE_ZOOM_LEVEL);
+                });
             },
             clickSubCounty: function (district, subcounty) {
                 return LayerMap.getLayer(district.toLowerCase()).getChildLayer(subcounty.toLowerCase()).click();

@@ -41,13 +41,8 @@ module.exports = function () {
     });
 
     this.Then(/^I should see poll successfully sent$/, function (next) {
-        var self = this;
-        self.ignoreSync(true);
-
-        browser.wait(pollsPage.notification.getText).then(function (text) {
-            self.expect(text).to.equal('Poll successfully sent');
-            next();
-        });
+        this.expect(pollsPage.newPollModal.title.isDisplayed()).to.eventually.be.false
+            .and.notify(next)
     });
 
     this.Then(/^I should see the polls fields required error messages$/, function (next) {

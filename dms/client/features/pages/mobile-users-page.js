@@ -3,7 +3,9 @@ var MobileUsersModal = function () {
     this.name = element(by.model('user.name'));
     this.phone = element(by.model('user.phone'));
     this.email = element(by.model('user.email'));
+    this.username = element(by.model('user.username'));
     this.saveButton = element(by.id('save-mobile-user-modal'));
+    this.closeButton = element(by.id('close-mobile-user-modal'));
     this.closeButton = element(by.id('close-mobile-user-modal'));
 
     this.clickCloseButton = function () {
@@ -47,14 +49,19 @@ var MobileUsersModal = function () {
 var MobileUsersPage = function () {
     var request = require('request');
     this.createUserButton = element(by.id('create-user'));
+    this.grantWebAccessToggle = element(by.id('grant-web-access-button'));
     this.createUserModal = new MobileUsersModal();
+
+    this.clickUserRowByName = function (name, next) {
+        element(by.cssContainingText('tr.ng-scope', name)).click().then(next);
+    }
 
     this.clickCreateUserButton = function () {
         return this.createUserButton.click()
     };
 
-    this.getMobileUsersData = function (row, key) {
-        return element(by.repeater('user in users').row(row).column('{[{ ' + key + ' }]}')).getText();
+    this.getMobileUsersData = function (index, key) {
+        return element(by.repeater('user in users').row(index).column('{[{ ' + key + ' }]}')).getText();
     };
 };
 

@@ -4,7 +4,7 @@ module.exports = function () {
     var persistentCollections = [
         'system.indexes',
         'user',
-        'userprofile',
+        'user_profile',
         'django_session',
         'token'
     ];
@@ -65,4 +65,4 @@ module.exports = function () {
             });
         }
     }
-}
+};

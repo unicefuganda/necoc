@@ -1,6 +1,8 @@
 module.exports = function () {
-    var homePage = require("../pages/home-page");
-    var mobileUsersPage = require("../pages/mobile-users-page"),
+    var homePage = require("../pages/home-page"),
+        dbUtils = require("../feature_utils/db-helpers.js")(),
+        mobileUsersPage = require("../pages/mobile-users-page"),
+        userProfilePage = require("../pages/user-profile-page"),
         dataSetUpPage = require("../pages/data-setup-page"),
         user = { location: {}};
 
@@ -36,21 +38,21 @@ module.exports = function () {
             });
     });
 
-    this.Then(/^I should see my details in mobile users table$/, function (next) {
+    this.Then(/^I should see my details in mobile users table in row ([0-9]+)$/, function (index, next) {
         var self = this;
 
-        mobileUsersPage.getMobileUsersData(0, 'user.name')
+        mobileUsersPage.getMobileUsersData(index, 'user.name')
             .then(function (name) {
                 self.expect(name).to.equal(user.name);
             })
             .then(function () {
-                self.expect(mobileUsersPage.getMobileUsersData(0, 'user.phone')).to.eventually.equal(user.phone);
+                self.expect(mobileUsersPage.getMobileUsersData(index, 'user.phone')).to.eventually.equal(user.phone);
             })
             .then(function () {
-                self.expect(mobileUsersPage.getMobileUsersData(0, 'user.email')).to.eventually.equal(user.email);
+                self.expect(mobileUsersPage.getMobileUsersData(index, 'user.email')).to.eventually.equal(user.email);
             })
             .then(function () {
-                self.expect(mobileUsersPage.getMobileUsersData(0, '[user.location.parent, user.location] | joinNames'))
+                self.expect(mobileUsersPage.getMobileUsersData(index, '[user.location.parent, user.location] | joinNames'))
                     .to.eventually.equal(user.location.district + ', ' + user.location.subcounty).and.notify(next);
             });
 
@@ -61,6 +63,10 @@ module.exports = function () {
             browser.sleep(200);
             next();
         });
+    });
+
+    this.When(/^I choose to grant web access$/, function (next) {
+        mobileUsersPage.grantWebAccessToggle.click().then(next);
     });
 
     this.Then(/^I should see fields required error messages$/, function (next) {
@@ -83,7 +89,7 @@ module.exports = function () {
     });
 
     this.When(/^I have a Mobile User with email "([^"]*)" and phone "([^"]*)"$/, function (email, phone, next) {
-        dataSetUpPage.registerMobileUser(phone, 'Mukono', email,  next);
+        dataSetUpPage.registerMobileUser(phone, 'Mukono', email, next);
     });
 
     this.Then(/^I should not see the field required error messages$/, function (next) {
@@ -123,5 +129,31 @@ module.exports = function () {
                 self.expect(mobileUsersPage.createUserModal.getDistrictFieldErrors()).to.eventually.be.empty
                     .and.notify(next);
             });
+    });
+
+    this.When(/^I click "([^"]*)" in the mobile users table$/, function (name, next) {
+        mobileUsersPage.clickUserRowByName(name, next);
+    });
+
+    this.Then(/^I should see my details in the profile page$/, function (next) {
+        var self = this;
+        browser.driver.navigate().refresh();
+        userProfilePage.element_by_ng_binding('user.name')
+            .then(function (username) {
+                self.expect(username).to.equal(user.name);
+            })
+            .then(function () {
+                self.expect(userProfilePage.element_by_ng_binding('user.phone')).to.eventually.equal(user.phone);
+            })
+            .then(function () {
+                self.expect(userProfilePage.element_by_ng_binding('user.email')).to.eventually.equal(user.email)
+                    .and.notify(next);
+            })
+    });
+
+    this.Given(/^I have no users$/, function (next) {
+        dbUtils.dropDB(function () {
+            dataSetUpPage.createUser(next);
+        });
     });
 };

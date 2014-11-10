@@ -1,10 +1,11 @@
 var DataSetupPage = function () {
     var request = require('request'),
         moment = require('moment'),
+        exec = require('child_process').exec,
         baseRequest,
         self = this;
 
-    (function () {
+    function init (callback) {
         request({
             url: 'http://localhost:7999/api-token-auth/',
             method: 'post',
@@ -17,8 +18,22 @@ var DataSetupPage = function () {
             baseRequest = request.defaults({
                 headers: {'Authorization': 'Token ' + body.token}
             });
+            callback && callback();
         });
-    })();
+    };
+
+    init();
+
+    this.createUser = function (callback) {
+        exec('./../../manage.py create_super_user test_user password ' +
+            'test_user@nothing.com "Test User" Kampala 1234567890', function (error, stdout, stderr) {
+            if(error) {
+                console.log(error, stdout, stderr);
+                return;
+            }
+            init(callback);
+        });
+    };
 
     this.registerDisasterType = function (disasterType, next) {
         baseRequest.post('http://localhost:7999/api/v1/disaster-types/', {

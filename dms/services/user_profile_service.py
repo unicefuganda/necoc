@@ -13,7 +13,7 @@ class UserProfileService(object):
         user = User(username=username).save()
         password = cls.set_new_password(user)
         message = cls.build_email_message(name, username, password)
-        send_new_user_email.delay('Your NECOC Account', message, settings.DEFAULT_FROM_EMAIL, [email], fail_silently=False)
+        send_new_user_email.delay('Your NECOC Account', message, settings.DEFAULT_FROM_EMAIL, [email])
         return user
 
     @classmethod

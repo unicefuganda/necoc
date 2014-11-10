@@ -462,7 +462,11 @@ label {
 }
 
 .disasters-aggregate-marker-icon {
-    left: 42px;
+    left: 21px !important;
+}
+
+.messages-aggregate-marker-icon {
+    left: -21px !important;
 }
 
 .messages-aggregate-marker-icon div {

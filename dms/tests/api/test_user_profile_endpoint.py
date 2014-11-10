@@ -77,5 +77,4 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         mock_send_new_user_email.assert_called_with('Your NECOC Account',
                                                     mock.ANY,
                                                     settings.DEFAULT_FROM_EMAIL,
-                                                    ['email@email.email'],
-                                                    fail_silently=False)
+                                                    ['email@email.email'])

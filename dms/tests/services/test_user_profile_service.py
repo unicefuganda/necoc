@@ -28,8 +28,7 @@ class UserProfileServiceTest(MongoTestCase):
         mock_send_mail.assert_called_with('Your NECOC Account',
                                           message,
                                           settings.DEFAULT_FROM_EMAIL,
-                                          ['andrew@some.where'],
-                                          fail_silently=False)
+                                          ['andrew@some.where'])
 
     @patch('dms.tasks.send_new_user_email.delay')
     def test_saves_new_password(self, mock_send_mail):

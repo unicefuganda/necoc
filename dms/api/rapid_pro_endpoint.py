@@ -1,3 +1,4 @@
+from rest_framework.permissions import AllowAny
 from rest_framework_mongoengine.generics import ListCreateAPIView
 from rest_framework_mongoengine import serializers
 from rest_framework import fields
@@ -22,6 +23,7 @@ class RapidProMessageSerializer(serializers.MongoEngineModelSerializer):
 
 class RapidProListCreateView(ListCreateAPIView):
     serializer_class = RapidProMessageSerializer
+    permission_classes = (AllowAny,)
     model = RapidProMessage
 
     def get_queryset(self):

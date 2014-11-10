@@ -72,7 +72,7 @@ var MessagesPage = function () {
     this.postMessageWithText = function (text, callback) {
         var clonedMessage = JSON.parse( JSON.stringify( this.messages[0] ) );
         clonedMessage.text = text;
-        baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {form: clonedMessage}, callback.bind({}, clonedMessage));
+        request.post('http://localhost:7999/api/v1/rapid-pro/', {form: clonedMessage}, callback.bind({}, clonedMessage));
     };
 
     this.postMessages = function (number, callback) {
@@ -80,7 +80,7 @@ var MessagesPage = function () {
         for (var index = 0; index < number; index++) {
             var message = { phone: "023020302" + index, time: "2014-02-13T02:00:00", relayer: 2, run: String(index),
                 text: "I am message" + index, source: "NECOC Volunteer" };
-            baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
+            request.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
             messages.push(message);
         }
         browser.sleep(800).then(callback.bind({},messages))

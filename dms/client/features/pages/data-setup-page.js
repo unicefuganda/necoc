@@ -164,7 +164,7 @@ var DataSetupPage = function () {
             source: 'NECOC Volunteer'
         };
 
-        return baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {
+        return request.post('http://localhost:7999/api/v1/rapid-pro/', {
             form: sms
         }, function () {
             sms.formattedTime = formatedTime;

@@ -16,7 +16,7 @@ module.exports = function () {
 
         userProfilePage.userName.getText()
             .then(function (userName) {
-                self.expect(userName).to.equal(user.name);
+                self.expect(userName).to.equal(user.name.toUpperCase());
             })
             .then(function () {
                 self.expect(userProfilePage.userPhone.getText()).to.eventually.equal(user.phone);

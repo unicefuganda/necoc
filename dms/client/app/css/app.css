@@ -67,7 +67,7 @@ body > .ng-scope, .main > .ng-scope {
     font-weight: 200;
     vertical-align: top;
     display: inline-block;
-    margin: 5px 10px;
+    margin: 5px 15%;
 }
 
 .sub-section-header .icon {
@@ -625,4 +625,55 @@ div[class*="-aggregate-marker-icon"] div {
     -webkit-box-shadow: 0 0 6px #D0D0D0;
     -moz-box-shadow: 0 0 6px #D0D0D0;
     -o-box-shadow: 0 0 6px #D0D0D0;
+}
+
+.profile-pic {
+    border-radius: 50%;
+    width: 150px;
+    opacity: 0.7;
+    margin: 5% 20%;
+}
+
+.profile-container {
+    margin-top: 30px;
+}
+
+.profile-container > div {
+    padding: 10px 0;
+}
+
+.profile-container > div > span {
+    margin-left: 5px;
+    font-weight: 300;
+    font-size: 15px;
+    width: 15%;
+    display: inline-block;
+}
+
+.profile-container > div > i {
+    color: rgba(122, 122, 122, 0.74);
+    text-shadow: 1px 1px 2px #fff;
+}
+
+.profile-container > div > strong {
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.profile-title {
+    width: 100%;
+    margin: 0 !important;
+}
+
+.edit-btn {
+    font-size: 17px;
+    background-color: #E5E5E5;
+    border-radius: 0px;
+    margin-left: 2px;
+    border: none;
+    outline: none;
+    position: absolute;
+    right: -9px;
+    top: 0px;
+    border-right: 4px solid #3E9CB8;
 }

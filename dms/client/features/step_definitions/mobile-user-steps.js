@@ -140,7 +140,7 @@ module.exports = function () {
         browser.driver.navigate().refresh();
         userProfilePage.element_by_ng_binding('profile.name')
             .then(function (username) {
-                self.expect(username).to.equal(user.name);
+                self.expect(username).to.equal(user.name.toUpperCase());
             })
             .then(function () {
                 self.expect(userProfilePage.element_by_ng_binding('profile.phone')).to.eventually.equal(user.phone);

@@ -3,32 +3,30 @@
     <div class="c-well">
         <div class="row with-btm-margin">
             <div class="col-md-3 sub-section-header">
-                <span class="icon icon-contact-add"></span><span class="title">{[{profile.name}]}</span>
+                <div class="title text-center profile-title">{[{profile.name | uppercase }]}</div>
+                <div>
+                    <img class="profile-pic" src="/static/img/default_profile.jpg" alt=""/>
+                </div>
             </div>
-            <div class="col-lg-5">
-                <table class="table">
-                    <tbody>
-                    <tr>
-                        <th>Username</th>
-                        <td>{[{ profile.username }]}</td>
-                    </tr>
-                    <tr>
-                        <th>Email</th>
-                        <td>{[{ profile.email }]}</td>
-                    </tr>
-                    <tr>
-                        <th>Phone Number</th>
-                        <td>{[{ profile.phone }]}</td>
-                    </tr>
-                    <tr>
-                        <th>Location</th>
-                        <td>{[{ [profile.location.parent, profile.location] | joinNames }]}</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <button type="button" id="edit-user" class="btn btn-default btn-icon pull-right" data-toggle="modal"
+            <div class="col-lg-9">
+                <div class="profile-container">
+                    <div ng-show="profile.username">
+                        <i class="icon icon-torso"></i>
+                        <span>Username:</span><strong>{[{ profile.username }]}</strong>
+                    </div>
+                    <div>
+                        <i class="icon icon-mail"></i><span>Email:</span><strong>{[{ profile.email }]}</strong>
+                    </div>
+                    <div>
+                        <i class="icon icon-phone-on"></i><span>Phone Number:</span><strong>{[{ profile.phone }]}</strong>
+                    </div>
+                    <div>
+                        <i class="icon icon-location"></i><span>Location:</span><strong>{[{ [profile.location.parent, profile.location] | joinNames }]}</strong>
+                    </div>
+                </div>
+                <button type="button" id="edit-user" class="btn btn-default edit-btn btn-icon pull-right" data-toggle="modal"
                         data-target="#mobile-user-modal" ng-click="editProfile()">
-                    <span class="icon icon-plus-circle"></span>
+                    <span class="icon icon-edit"></span>
                     <span class="value">Edit</span>
                 </button>
             </div>

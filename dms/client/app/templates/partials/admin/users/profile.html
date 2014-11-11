@@ -3,30 +3,31 @@
     <div class="c-well">
         <div class="row with-btm-margin">
             <div class="col-md-3 sub-section-header">
-                <span class="icon icon-contact-add"></span><span class="title">{[{user.name}]}</span>
+                <span class="icon icon-contact-add"></span><span class="title">{[{profile.name}]}</span>
             </div>
             <div class="col-lg-5">
                 <table class="table">
                     <tbody>
                     <tr>
                         <th>Username</th>
-                        <td>{[{ user.username }]}</td>
+                        <td>{[{ profile.username }]}</td>
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td>{[{ user.email }]}</td>
+                        <td>{[{ profile.email }]}</td>
                     </tr>
                     <tr>
                         <th>Phone Number</th>
-                        <td>{[{ user.phone }]}</td>
+                        <td>{[{ profile.phone }]}</td>
                     </tr>
                     <tr>
                         <th>Location</th>
-                        <td>{[{ user.location.name }]}</td>
+                        <td>{[{ [profile.location.parent, profile.location] | joinNames }]}</td>
                     </tr>
                     </tbody>
                 </table>
-                <button type="button" id="edit-user" class="btn btn-default btn-icon pull-right">
+                <button type="button" id="edit-user" class="btn btn-default btn-icon pull-right" data-toggle="modal"
+                        data-target="#mobile-user-modal" ng-click="editProfile()">
                     <span class="icon icon-plus-circle"></span>
                     <span class="value">Edit</span>
                 </button>
@@ -34,4 +35,5 @@
 
         </div>
     </div>
+    <ng-include src="'/static/templates/partials/admin/users/edit-profile-modal.html'"></ng-include>
 </div>

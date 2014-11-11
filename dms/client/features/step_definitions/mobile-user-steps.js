@@ -138,15 +138,15 @@ module.exports = function () {
     this.Then(/^I should see my details in the profile page$/, function (next) {
         var self = this;
         browser.driver.navigate().refresh();
-        userProfilePage.element_by_ng_binding('user.name')
+        userProfilePage.element_by_ng_binding('profile.name')
             .then(function (username) {
                 self.expect(username).to.equal(user.name);
             })
             .then(function () {
-                self.expect(userProfilePage.element_by_ng_binding('user.phone')).to.eventually.equal(user.phone);
+                self.expect(userProfilePage.element_by_ng_binding('profile.phone')).to.eventually.equal(user.phone);
             })
             .then(function () {
-                self.expect(userProfilePage.element_by_ng_binding('user.email')).to.eventually.equal(user.email)
+                self.expect(userProfilePage.element_by_ng_binding('profile.email')).to.eventually.equal(user.email)
                     .and.notify(next);
             })
     });

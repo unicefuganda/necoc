@@ -7,6 +7,9 @@
             },
             all: function () {
                 return $http.get(Config.apiUrl + 'mobile-users/');
+            },
+            update:function (user) {
+                return $http.post(Config.apiUrl + 'mobile-users/' + user.id + '/', user);
             }
         };
     });
@@ -23,11 +26,11 @@
         }
     });
 
-    module.controller('MobileUserModalController', function ($scope, MobileUserService, helpers) {
+    module.controller('AddUserController', function ($scope, MobileUserService, helpers) {
+        $scope.user = {}
         $scope.saveUser = function (user) {
-            if ($scope.mobile_user_form.$valid) {
+            if ($scope.user_form.$valid) {
                 $scope.saveStatus = true;
-
                 MobileUserService.create(user)
                     .then(function (response) {
                         $scope.saveStatus = false;
@@ -36,7 +39,7 @@
                         $scope.users.push(response.data);
                     }, function (error) {
                         $scope.errors = error.data;
-                        helpers.invalidate($scope.mobile_user_form, $scope.errors);
+                        helpers.invalidate($scope.user_form, $scope.errors);
                         $scope.saveStatus = false;
                         $scope.hasErrors = true;
                     });
@@ -45,6 +48,29 @@
                 $scope.hasErrors = true;
             }
         };
+    });
+
+    module.controller('EditUserController', function ($scope, MobileUserService, helpers) {
+        $scope.editUser = function (user) {
+            if ($scope.user_form.$valid) {
+                $scope.saveStatus = true;
+                delete user.username;
+                MobileUserService.update(user)
+                    .then(function (response) {
+                        $scope.saveStatus = false;
+                        $scope.profile = response.data;
+                        $scope.hasErrors = false;
+                    }, function (error) {
+                        $scope.errors = error.data;
+                        $scope.saveStatus = false;
+                        helpers.invalidate($scope.user_form, $scope.errors);
+                        $scope.hasErrors = true;
+                    });
+
+            } else {
+                $scope.hasErrors = true;
+            }
+        }
     });
 
     module.directive('recipients', function (MobileUserService) {

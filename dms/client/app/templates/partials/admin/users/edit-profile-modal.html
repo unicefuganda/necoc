@@ -5,10 +5,10 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 id="mu-modal-title" class="modal-title">Add Mobile User</h4>
+                <h4 id="mu-modal-title" class="modal-title">Edit User Profile</h4>
             </div>
-            <div ng-controller="AddUserController">
-                <form role="form" novalidate="" name="user_form" ng-submit="saveUser(user)">
+            <div ng-controller="EditUserController">
+                <form role="form" novalidate="" name="user_form" ng-submit="editUser(user)">
                     <ng-include src="'/static/templates/partials/admin/user-modal-fields.html'"></ng-include>
                 </form>
             </div>

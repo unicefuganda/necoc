@@ -45,6 +45,17 @@ class UserProfileSerializerTest(MongoTestCase):
         serializer = UserProfileSerializer(data=self.serialized_mobile_user)
         self.assertFalse(serializer.is_valid())
 
+    def test_serializer_should_be_valid_if_model_is_being_updated(self):
+        self.serialized_mobile_user['location'] = self.district.id
+        serializer = UserProfileSerializer(data=self.serialized_mobile_user)
+
+        self.assertTrue(serializer.is_valid())
+        saved_profile = serializer.save()
+        self.serialized_mobile_user['id'] = saved_profile.id
+
+        serializer = UserProfileSerializer(data=self.serialized_mobile_user)
+        self.assertTrue(serializer.is_valid())
+
     def test_serializer_should_be_invalid_if_email_is_not_unique(self):
         self.serialized_mobile_user['location'] = self.district.id
         serializer = UserProfileSerializer(data=self.serialized_mobile_user)

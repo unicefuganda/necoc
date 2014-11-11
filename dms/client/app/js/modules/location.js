@@ -79,12 +79,19 @@
                         }, []);
                         scope.select[type].clearOptions();
                         callback(options);
+
+                        if (attrs.defaultChildValue) {
+                            scope.select[type].setValue(attrs.defaultChildValue);
+                        }
                     });
                 }
 
                 function loadParentOptions (type, input, callback) {
                     LocationService[type](input).then(function (response) {
                         callback(response.data);
+                        if (attrs.defaultParentValue) {
+                            $select[0].selectize.setValue(attrs.defaultParentValue);
+                        }
                     });
                 }
 

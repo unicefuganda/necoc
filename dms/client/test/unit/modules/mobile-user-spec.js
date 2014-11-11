@@ -50,7 +50,7 @@ describe('dms.mobile-user', function () {
     });
 
 
-    describe('MobileUserModalController', function () {
+    describe('AddUserController', function () {
         var initController;
 
         var errorMessage = {
@@ -64,10 +64,10 @@ describe('dms.mobile-user', function () {
                 httpMock.when('POST', apiUrl + 'mobile-users/').respond(responseStub);
 
                 initController = function (isFormValid) {
-                    scope.mobile_user_form = { $valid: isFormValid, phone: { $invalid: false } };
+                    scope.user_form = { $valid: isFormValid, phone: { $invalid: false } };
                     scope.user = { name: "Timothy" };
                     scope.users = [];
-                    $controller('MobileUserModalController', { $scope: scope });
+                    $controller('AddUserController', { $scope: scope });
                 };
             })
         });
@@ -90,7 +90,6 @@ describe('dms.mobile-user', function () {
             initController(false);
             scope.saveUser();
             expect(scope.hasErrors).toBeTruthy();
-            expect(scope.user).toEqual({ name: 'Timothy'});
         });
 
         it('should add error to the scope given the post returns an error code', function () {
@@ -99,10 +98,87 @@ describe('dms.mobile-user', function () {
             scope.saveUser();
             httpMock.flush();
 
-            expect(scope.mobile_user_form.phone.$invalid).toBeTruthy();
+            expect(scope.user_form.phone.$invalid).toBeTruthy();
             expect(scope.hasErrors).toBeTruthy();
             expect(scope.saveStatus).toBeFalsy();
             expect(scope.errors).toEqual(errorMessage);
         });
+
+
     });
+
+    describe('EditUserController', function () {
+
+        var initController;
+
+        var errorMessage = {
+            phone: [
+                "Phone number must be unique"
+            ]
+        };
+
+        beforeEach(function () {
+            inject(function ($controller) {
+                httpMock.when('POST', apiUrl + 'mobile-users/').respond(responseStub);
+
+                initController = function (isFormValid) {
+                    scope.user_form = { $valid: isFormValid, phone: { $invalid: false } };
+                    scope.user = { name: "Timothy" };
+                    scope.users = [];
+                    $controller('EditUserController', { $scope: scope });
+                };
+            })
+        });
+
+        it('should update profile with edited information given form is valid', function () {
+            initController(true);
+            responseStub.phone_no = '2560760540321';
+            responseStub.id = '1';
+            httpMock.expectPOST(apiUrl + 'mobile-users/1/', responseStub).respond(responseStub);
+
+            scope.editUser(responseStub);
+            expect(scope.saveStatus).toBeTruthy();
+            httpMock.flush();
+            expect(scope.profile).toEqual(responseStub);
+            expect(scope.saveStatus).toBeFalsy();
+            expect(scope.hasErrors).toBeFalsy();
+        });
+
+        it('should not send username to server', function () {
+            initController(true);
+            responseStub.phone_no = '2560760540321';
+            responseStub.id = '1';
+            var formData = angular.copy(responseStub);
+            formData.username = 'username';
+            httpMock.expectPOST(apiUrl + 'mobile-users/1/', responseStub).respond(formData);
+
+            scope.editUser(formData);
+            expect(scope.saveStatus).toBeTruthy();
+            httpMock.flush();
+            expect(scope.profile).toEqual(responseStub);
+            expect(scope.saveStatus).toBeFalsy();
+            expect(scope.hasErrors).toBeFalsy();
+        });
+
+        it('should not try to update if the form is invalid', function () {
+            initController(false);
+            scope.editUser(responseStub);
+            expect(scope.hasErrors).toBeTruthy();
+        });
+
+        it('should not update profile with edited information given form is invalid', function () {
+            initController(true);
+            responseStub.phone_no = '2560760540321';
+            responseStub.id = '1';
+            httpMock.expectPOST(apiUrl + 'mobile-users/1/', responseStub).respond(409, errorMessage);
+
+            scope.editUser(responseStub);
+            expect(scope.saveStatus).toBeTruthy();
+            httpMock.flush();
+            expect(scope.user_form.isValid).toBeFalsy();
+            expect(scope.errors).toEqual(errorMessage);
+            expect(scope.saveStatus).toBeFalsy();
+            expect(scope.hasErrors).toBeTruthy();
+        });
+    })
 });

@@ -10,17 +10,29 @@ describe('dms.user-profile', function () {
         module('dms.config');
 
         userStub = {
-            username: 'cage', first_name: 'nicolas',
-            last_name: 'cage', email: 'nic@ol.as',
-            phone_no: '235669502'};
+            username: 'cage',
+            first_name: 'nicolas',
+            last_name: 'cage',
+            email: 'nic@ol.as',
+            phone_no: '235669502',
+            "location": {
+                "name": "LWAMATA",
+                "parent": {
+                    "name": "KIBOGA",
+                    "id": "54590707d6f45f80b7eb6c53"
+                },
+                "id": "54590707d6f45f80b7eb6c56"
+            }
+        };
 
 
         inject(function ($controller, $rootScope, $httpBackend, Config) {
             httpMock = $httpBackend;
             apiUrl = Config.apiUrl;
             $scope = $rootScope.$new();
-            initController = function (userId) {
+            initController = function (userId, valid) {
                 var mockStateParams = {user: userId};
+                $scope.user_form = {$valid: valid || false, phone: { $invalid: false } };
                 $controller('UserProfileController', {$scope: $scope, $stateParams: mockStateParams});
             };
         });
@@ -33,5 +45,14 @@ describe('dms.user-profile', function () {
         httpMock.expectGET(apiUrl + 'mobile-users/' + userId + '/').respond(userStub);
         httpMock.flush();
         expect($scope.user).toEqual(userStub);
+        expect($scope.profile).toEqual(userStub);
+    });
+
+    it('should set onEdit to true', function () {
+        var userId = 'user_id';
+        initController(userId);
+        httpMock.expectGET(apiUrl + 'mobile-users/' + userId + '/').respond(userStub);
+        httpMock.flush();
+        expect($scope.onEdit).toBeTruthy();
     });
 });

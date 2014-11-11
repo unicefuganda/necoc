@@ -79,13 +79,13 @@ class TestRapidProMessageBase(MongoTestCase):
         self.message['location'] = district
         message1 = RapidProMessageBase(**self.message).save()
 
-        location_messages = RapidProMessageBase.from_(district, **dict(from_date='2014-09-17', to_date='2014-10-17'))
+        location_messages = RapidProMessageBase.from_(district, **{'from': '2014-09-17', 'to': '2014-10-17'})
 
         self.assertEqual(1, location_messages.count())
         self.assertIn(message1, location_messages)
         self.assertNotIn(message, location_messages)
 
-        location_messages = RapidProMessageBase.from_(district, **dict(from_date=None, to_date=None))
+        location_messages = RapidProMessageBase.from_(district, **{'from': None, 'to': None})
         self.assertEqual(2, location_messages.count())
 
     def test_get_message_count_given_from_and_to_date(self):
@@ -94,16 +94,16 @@ class TestRapidProMessageBase(MongoTestCase):
         RapidProMessageBase(**message_attr).save()
         RapidProMessageBase(**self.message).save()
 
-        location_messages_count = RapidProMessageBase.count_(**dict(from_date='2014-09-17', to_date='2014-10-17'))
+        location_messages_count = RapidProMessageBase.count_(**{'from': '2014-09-17', 'to': '2014-10-17'})
         self.assertEqual(1, location_messages_count)
 
-        location_messages_count = RapidProMessageBase.count_(**dict(from_date='2014-08-17', to_date='2014-12-17'))
+        location_messages_count = RapidProMessageBase.count_(**{'from': '2014-08-17', 'to': '2014-12-17'})
         self.assertEqual(2, location_messages_count)
 
-        location_messages_count = RapidProMessageBase.count_(**dict(from_date='2014-08-17'))
+        location_messages_count = RapidProMessageBase.count_(**{'from': '2014-08-17'})
         self.assertEqual(2, location_messages_count)
 
-        location_messages_count = RapidProMessageBase.count_(**dict(from_date=None, to_date=None))
+        location_messages_count = RapidProMessageBase.count_(**{'from': None, 'to': None})
         self.assertEqual(2, location_messages_count)
 
     def test_get_messages_from_children_are_also_added(self):

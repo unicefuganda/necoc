@@ -43,12 +43,12 @@ class TestDisasterModel(MongoTestCase):
         attr2["date"] = datetime.datetime(2014, 8, 17, 16, 0, 49, 807000)
         disaster2 = Disaster(**attr2).save()
 
-        location_disasters = Disaster.from_(self.district, **dict(from_date='2014-08-17', to_date='2014-09-17'))
+        location_disasters = Disaster.from_(self.district, **{'from': '2014-08-17', 'to': '2014-09-17'})
         self.assertEqual(1, location_disasters.count())
         self.assertIn(disaster2, location_disasters)
         self.assertNotIn(disaster1, location_disasters)
 
-        location_disasters = Disaster.from_(self.district, **dict(from_date=None, to_date=None))
+        location_disasters = Disaster.from_(self.district, **{'from': None, 'to': None})
         self.assertEqual(2, location_disasters.count())
 
     def test_get_disaster_count_given_from_date_and_to_date(self):
@@ -57,13 +57,13 @@ class TestDisasterModel(MongoTestCase):
                           date=date_time, status="Assessment" )
         Disaster(**attributes).save()
 
-        location_disasters = Disaster.count_(**dict(from_date='2014-08-17', to_date='2014-10-17'))
+        location_disasters = Disaster.count_(**{'from': '2014-08-17', 'to': '2014-10-17'})
         self.assertEqual(1, location_disasters)
 
-        location_disasters = Disaster.count_(**dict(from_date='2014-11-17', to_date='2014-12-17'))
+        location_disasters = Disaster.count_(**{'from': '2014-11-17', 'to': '2014-12-17'})
         self.assertEqual(0, location_disasters)
 
-        location_disasters = Disaster.count_(**dict(from_date=None, to_date=None))
+        location_disasters = Disaster.count_(**{'from': None, 'to': None})
         self.assertEqual(1, location_disasters)
 
     def test_get_messages_from_children_are_also_added(self):

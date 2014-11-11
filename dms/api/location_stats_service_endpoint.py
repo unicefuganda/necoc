@@ -19,8 +19,8 @@ class LocationStatsSerializer(serializers.Serializer):
 
 class MultiLocationStatsSerializer(object):
 
-    def __init__(self, district_name=None, from_date=None, to_date=None):
-        self.stats = MultiLocationStatsService(district_name, from_date, to_date).stats()
+    def __init__(self, location, **kwargs):
+        self.stats = MultiLocationStatsService(location, **kwargs).stats()
         self.data = self._serialized_data()
 
     def _serialized_data(self):
@@ -30,17 +30,13 @@ class MultiLocationStatsSerializer(object):
 class LocationStatsListView(ListAPIView):
 
     def list(self, request, *args, **kwargs):
-        from_date = request.GET.get('from', None)
-        to_date = request.GET.get('to', None)
-        serializer = MultiLocationStatsSerializer(from_date=from_date, to_date=to_date)
+        serializer = MultiLocationStatsSerializer(None, **request.GET.dict())
         return Response(serializer.data)
 
 
 class DistrictStatsListView(ListAPIView):
 
     def list(self, request, *args, **kwargs):
-        from_date = request.GET.get('from', None)
-        to_date = request.GET.get('to', None)
-        district = kwargs.get('district', None)
-        serializer = MultiLocationStatsSerializer(district, from_date, to_date)
+        location = kwargs.get('district', None)
+        serializer = MultiLocationStatsSerializer(location, **request.GET.dict())
         return Response(serializer.data)

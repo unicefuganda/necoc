@@ -26,7 +26,7 @@ class RapidProMessageBase (ReceivedMessage):
     SENDER = 'NECOC Volunteer'
     relayer_id = IntField()
     run_id = IntField()
-    MAPPING = dict(from_date='received_at__gte', to_date='received_at__lte')
+    MAPPING = {'from': 'received_at__gte', 'to': 'received_at__lte'}
 
     def save(self, *args, **kwargs):
         self.location = self.location or self._assign_location()
@@ -50,13 +50,13 @@ class RapidProMessageBase (ReceivedMessage):
     def from_(cls, location, _queryset=None, **kwargs):
         if not _queryset:
             _queryset = cls.objects()
-        mapping = {cls.MAPPING[key]: value for key, value in kwargs.items() if value}
+        mapping = {value: kwargs.get(key) for key, value in cls.MAPPING.items() if kwargs.get(key, None)}
         mapping['location__in'] = location.children(include_self=True)
         return _queryset.filter(**mapping)
 
     @classmethod
     def count_(cls, **kwargs):
-        mapping = {cls.MAPPING[key]: value for key, value in kwargs.items() if value}
+        mapping = {value: kwargs.get(key) for key, value in cls.MAPPING.items() if kwargs.get(key, None)}
         return cls.objects.filter(**mapping).count()
 
     class Meta:

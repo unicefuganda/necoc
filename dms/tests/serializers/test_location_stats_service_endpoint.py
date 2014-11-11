@@ -49,7 +49,7 @@ class LocationStatsServiceSerializersTest(MongoTestCase):
 
         Disaster(**disaster_attr).save()
 
-        location_stats_service = LocationStatsService(self.district)
+        location_stats_service = LocationStatsService(location=self.district)
         queryset = location_stats_service.aggregate_stats()
         serialized_object = LocationStatsSerializer(queryset)
         serialized_data = {'messages': {'count': 1, 'percentage': 50},
@@ -84,7 +84,7 @@ class MultiLocationStatsServiceSerializersTest(MongoTestCase):
         RapidProMessage(**self.message_bukoto).save()
         Disaster(**self.disaster_attr).save()
 
-        multi_location_serializer = MultiLocationStatsSerializer()
+        multi_location_serializer = MultiLocationStatsSerializer(location=None)
         serialized_object = multi_location_serializer
 
         expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50},

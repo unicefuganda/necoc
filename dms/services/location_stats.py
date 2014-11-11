@@ -3,33 +3,31 @@ from dms.utils.general_helpers import percentize
 
 
 class LocationStatsAttribute(object):
-    def __init__(self, location, from_date, to_date, object_class):
+
+    def __init__(self, object_class, location, **kwargs):
         self.location = location
-        self.from_date = from_date
-        self.to_date = to_date
         self.attribute_class = object_class
+        self.kwargs = kwargs
 
     def stats(self):
         attribute_count = self.attribute_count()
-        total_attribute_count = self.attribute_class.count_(**dict(from_date=self.from_date, to_date=self.to_date))
+        total_attribute_count = self.attribute_class.count_(**self.kwargs)
         percentage = percentize(attribute_count, total_attribute_count)
         return StatsDetails(attribute_count, percentage)
 
     def attribute_count(self):
         if self.location:
-            return self.attribute_class.from_(self.location, from_date=self.from_date, to_date=self.to_date).count()
+            return self.attribute_class.from_(location=self.location, **self.kwargs).count()
         return 0
 
 
 class LocationStatsService(object):
-    def __init__(self, location, from_date=None, to_date=None):
-        self.location = location
-        self.from_date = from_date
-        self.to_date = to_date
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
 
     def aggregate_stats(self):
-        message_stats = LocationStatsAttribute(self.location, self.from_date, self.to_date, RapidProMessage).stats()
-        disaster_stats = LocationStatsAttribute(self.location, self.from_date, self.to_date, Disaster).stats()
+        message_stats = LocationStatsAttribute(RapidProMessage, **self.kwargs).stats()
+        disaster_stats = LocationStatsAttribute(Disaster, **self.kwargs).stats()
         return LocationStats(message_stats, disaster_stats)
 
 
@@ -46,14 +44,13 @@ class StatsDetails(object):
 
 
 class MultiLocationStatsService(object):
-    def __init__(self, location=None, from_date=None, to_date=None):
+    def __init__(self, location, **kwargs):
         self.location_name = location
         self.locations = self.set_locations()
-        self.from_date = from_date
-        self.to_date = to_date
+        self.kwargs = kwargs
 
     def stats(self):
-        return {location.name: LocationStatsService(location, self.from_date, self.to_date).aggregate_stats() for
+        return {location.name: LocationStatsService(location=location, **self.kwargs).aggregate_stats() for
                 location in self.locations}
 
     def set_locations(self):

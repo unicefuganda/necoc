@@ -19,7 +19,7 @@ class LocationMessageStatsTest(MongoTestCase):
         message1["phone_number"] = "12345"
         RapidProMessage(**message1).save()
 
-        location_stats_service = LocationStatsService(self.district)
+        location_stats_service = LocationStatsService(location=self.district)
         stats = location_stats_service.aggregate_stats()
         message_stats = stats.messages
 
@@ -32,7 +32,7 @@ class LocationMessageStatsTest(MongoTestCase):
         message1["text"] = "some message that is not coming from Kampala"
         RapidProMessage(**message1).save()
 
-        location_stats_service = LocationStatsService(self.district)
+        location_stats_service = LocationStatsService(location=self.district)
         stats = location_stats_service.aggregate_stats()
         message_stats = stats.messages
 
@@ -42,7 +42,7 @@ class LocationMessageStatsTest(MongoTestCase):
     def test_should_return_0_if_location_not_existing(self):
         inexistant_location = None
 
-        location_stats_service = LocationStatsService(inexistant_location)
+        location_stats_service = LocationStatsService(location=inexistant_location)
         stats = location_stats_service.aggregate_stats()
         message_stats = stats.messages
 
@@ -67,7 +67,7 @@ class LocationDisasterStatsTest(MongoTestCase):
         attr2["status"] = "Closed"
         Disaster(**attr2).save()
 
-        location_stats_service = LocationStatsService(self.district)
+        location_stats_service = LocationStatsService(location=self.district)
         stats = location_stats_service.aggregate_stats()
         disasters_stats = stats.disasters
 
@@ -80,7 +80,7 @@ class LocationDisasterStatsTest(MongoTestCase):
         attr2["locations"] = [Location(**dict(name='Location that is not Kampala', type='district')).save()]
         Disaster(**attr2).save()
 
-        location_stats_service = LocationStatsService(self.district)
+        location_stats_service = LocationStatsService(location=self.district)
         stats = location_stats_service.aggregate_stats()
         disasters_stats = stats.disasters
 
@@ -88,7 +88,7 @@ class LocationDisasterStatsTest(MongoTestCase):
         self.assertEqual(50, disasters_stats.percentage)
 
     def test_should_return_0_if_no_disaster_everywhere(self):
-        location_stats_service = LocationStatsService(self.district)
+        location_stats_service = LocationStatsService(location=self.district)
         stats = location_stats_service.aggregate_stats()
         disasters_stats = stats.disasters
 
@@ -126,7 +126,7 @@ class MultiLocationStatsTest(MongoTestCase):
         Disaster(**self.disaster_attr).save()
         Disaster(**self.disaster_attr_bukoto).save()
 
-        multi_location_stats_service = MultiLocationStatsService()
+        multi_location_stats_service = MultiLocationStatsService(location=None)
         stats = multi_location_stats_service.stats()
         self.assertEqual(2, len(stats))
 

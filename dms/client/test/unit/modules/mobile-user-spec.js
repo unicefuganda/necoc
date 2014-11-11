@@ -109,13 +109,12 @@ describe('dms.mobile-user', function () {
 
     describe('EditUserController', function () {
 
-        var initController;
-
-        var errorMessage = {
-            phone: [
-                "Phone number must be unique"
-            ]
-        };
+        var initController,
+            errorMessage = {
+                phone: [
+                    "Phone number must be unique"
+                ]
+            };
 
         beforeEach(function () {
             inject(function ($controller) {
@@ -125,6 +124,7 @@ describe('dms.mobile-user', function () {
                     scope.user_form = { $valid: isFormValid, phone: { $invalid: false } };
                     scope.user = { name: "Timothy" };
                     scope.users = [];
+                    scope.setProfile = jasmine.createSpy();
                     $controller('EditUserController', { $scope: scope });
                 };
             })
@@ -138,9 +138,11 @@ describe('dms.mobile-user', function () {
 
             scope.editUser(responseStub);
             expect(scope.saveStatus).toBeTruthy();
+            expect(scope.successful).toBeFalsy();
             httpMock.flush();
-            expect(scope.profile).toEqual(responseStub);
+            expect(scope.setProfile).toHaveBeenCalledWith(responseStub);
             expect(scope.saveStatus).toBeFalsy();
+            expect(scope.successful).toBeTruthy();
             expect(scope.hasErrors).toBeFalsy();
         });
 
@@ -155,15 +157,17 @@ describe('dms.mobile-user', function () {
             scope.editUser(formData);
             expect(scope.saveStatus).toBeTruthy();
             httpMock.flush();
-            expect(scope.profile).toEqual(responseStub);
             expect(scope.saveStatus).toBeFalsy();
             expect(scope.hasErrors).toBeFalsy();
+            expect(scope.successful).toBeTruthy();
         });
 
         it('should not try to update if the form is invalid', function () {
             initController(false);
             scope.editUser(responseStub);
             expect(scope.hasErrors).toBeTruthy();
+            expect(scope.setProfile).not.toHaveBeenCalled();
+            expect(scope.successful).toBeFalsy();
         });
 
         it('should not update profile with edited information given form is invalid', function () {
@@ -176,8 +180,10 @@ describe('dms.mobile-user', function () {
             expect(scope.saveStatus).toBeTruthy();
             httpMock.flush();
             expect(scope.user_form.isValid).toBeFalsy();
+            expect(scope.setProfile).not.toHaveBeenCalled();
             expect(scope.errors).toEqual(errorMessage);
             expect(scope.saveStatus).toBeFalsy();
+            expect(scope.successful).toBeFalsy();
             expect(scope.hasErrors).toBeTruthy();
         });
     })

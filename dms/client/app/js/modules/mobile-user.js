@@ -53,16 +53,19 @@
     module.controller('EditUserController', function ($scope, MobileUserService, helpers) {
         $scope.editUser = function (user) {
             if ($scope.user_form.$valid) {
+                $scope.successful = false;
                 $scope.saveStatus = true;
                 delete user.username;
                 MobileUserService.update(user)
                     .then(function (response) {
                         $scope.saveStatus = false;
-                        $scope.profile = response.data;
+                        $scope.setProfile(response.data);
+                        $scope.successful = true;
                         $scope.hasErrors = false;
                     }, function (error) {
                         $scope.errors = error.data;
                         $scope.saveStatus = false;
+                        $scope.successful = false;
                         helpers.invalidate($scope.user_form, $scope.errors);
                         $scope.hasErrors = true;
                     });

@@ -15,6 +15,10 @@
             $scope.user = angular.copy($scope.profile);
         });
         $scope.onEdit = true;
+
+        $scope.setProfile = function (profile) {
+            $scope.profile  = profile
+        }
     });
 
 })(angular.module('dms.user-profile', ['dms.config']));

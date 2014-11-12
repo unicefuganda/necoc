@@ -64,10 +64,10 @@ describe('dms.mobile-user', function () {
                 httpMock.when('POST', apiUrl + 'mobile-users/').respond(responseStub);
 
                 initController = function (isFormValid) {
-                    scope.user_form = { $valid: isFormValid, phone: { $invalid: false } };
                     scope.user = { name: "Timothy" };
                     scope.users = [];
                     $controller('AddUserController', { $scope: scope });
+                    scope.form.user_form = { $valid: isFormValid, phone: { $invalid: false } };
                 };
             })
         });
@@ -98,13 +98,16 @@ describe('dms.mobile-user', function () {
             scope.saveUser();
             httpMock.flush();
 
-            expect(scope.user_form.phone.$invalid).toBeTruthy();
+            expect(scope.form.user_form.phone.$invalid).toBeTruthy();
             expect(scope.hasErrors).toBeTruthy();
             expect(scope.saveStatus).toBeFalsy();
             expect(scope.errors).toEqual(errorMessage);
         });
 
-
+        it('should set modalTitle', function () {
+            initController(false);
+            expect(scope.modalTitle).toEqual('Add User');
+        });
     });
 
     describe('EditUserController', function () {
@@ -121,11 +124,11 @@ describe('dms.mobile-user', function () {
                 httpMock.when('POST', apiUrl + 'mobile-users/').respond(responseStub);
 
                 initController = function (isFormValid) {
-                    scope.user_form = { $valid: isFormValid, phone: { $invalid: false } };
                     scope.user = { name: "Timothy" };
                     scope.users = [];
                     scope.setProfile = jasmine.createSpy();
                     $controller('EditUserController', { $scope: scope });
+                    scope.form.user_form = { $valid: isFormValid, phone: { $invalid: false } };
                 };
             })
         });
@@ -136,7 +139,7 @@ describe('dms.mobile-user', function () {
             responseStub.id = '1';
             httpMock.expectPOST(apiUrl + 'mobile-users/1/', responseStub).respond(responseStub);
 
-            scope.editUser(responseStub);
+            scope.saveUser(responseStub);
             expect(scope.saveStatus).toBeTruthy();
             expect(scope.successful).toBeFalsy();
             httpMock.flush();
@@ -154,7 +157,7 @@ describe('dms.mobile-user', function () {
             formData.username = 'username';
             httpMock.expectPOST(apiUrl + 'mobile-users/1/', responseStub).respond(formData);
 
-            scope.editUser(formData);
+            scope.saveUser(formData);
             expect(scope.saveStatus).toBeTruthy();
             httpMock.flush();
             expect(scope.saveStatus).toBeFalsy();
@@ -164,10 +167,15 @@ describe('dms.mobile-user', function () {
 
         it('should not try to update if the form is invalid', function () {
             initController(false);
-            scope.editUser(responseStub);
+            scope.saveUser(responseStub);
             expect(scope.hasErrors).toBeTruthy();
             expect(scope.setProfile).not.toHaveBeenCalled();
             expect(scope.successful).toBeFalsy();
+        });
+
+        it('should set modalTitle', function () {
+            initController(false);
+            expect(scope.modalTitle).toEqual('Edit User Profile');
         });
 
         it('should not update profile with edited information given form is invalid', function () {
@@ -176,10 +184,10 @@ describe('dms.mobile-user', function () {
             responseStub.id = '1';
             httpMock.expectPOST(apiUrl + 'mobile-users/1/', responseStub).respond(409, errorMessage);
 
-            scope.editUser(responseStub);
+            scope.saveUser(responseStub);
             expect(scope.saveStatus).toBeTruthy();
             httpMock.flush();
-            expect(scope.user_form.isValid).toBeFalsy();
+            expect(scope.form.user_form.isValid).toBeFalsy();
             expect(scope.setProfile).not.toHaveBeenCalled();
             expect(scope.errors).toEqual(errorMessage);
             expect(scope.saveStatus).toBeFalsy();

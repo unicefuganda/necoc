@@ -11,7 +11,7 @@ module.exports = function () {
     this.When(/^I click the create new user button$/, function (next) {
         mobileUsersPage.clickCreateUserButton().then(function () {
             browser.sleep(500);
-            this.expect(mobileUsersPage.createUserModal.title.getText()).to.eventually.equal('Add Mobile User')
+            this.expect(mobileUsersPage.createUserModal.title.getText()).to.eventually.equal('Add User')
                 .and.notify(next);
         }.bind(this));
     });

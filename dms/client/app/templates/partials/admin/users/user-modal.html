@@ -1,0 +1,116 @@
+<div class="modal fade" id="mobile-user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog sm-2">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 id="mu-modal-title" class="modal-title">{[{ modalTitle }]}</h4>
+            </div>
+            <div>
+                <form role="form" novalidate="" name="form.user_form" ng-submit="saveUser(user)">
+                    <div class="modal-body">
+                        <div class="form-group" ng-class="{'has-error': form.user_form.name.$invalid && hasErrors }">
+                            <label class="control-label" for="name">Name</label>
+                            <input type="text" id="name" ng-model="user.name" name="name" class="form-control"
+                                   placeholder="enter name" required="">
+
+                            <div id="name-errors" class="error-text"
+                                 ng-show="form.user_form.name.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="form.user_form.name.$error.required">
+                                    This field is required
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': form.user_form.phone.$invalid && hasErrors }">
+                            <label class="control-label" for="phone-number">Phone Number</label>
+                            <input type="text" id="phone-number" ng-model="user.phone" name="phone" class="form-control"
+                                   placeholder="enter phone number" required="">
+
+                            <div id="phone-errors" class="error-text"
+                                 ng-show="form.user_form.phone.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="form.user_form.phone.$error.required">
+                                    This field is required
+                                </p>
+
+                                <p class="text-danger" ng-repeat="error in errors.phone">
+                                    {[{ error }]}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': form.user_form.email.$invalid && hasErrors }">
+                            <label class="control-label" for="email">Email</label>
+                            <input type="email" id="email" ng-model="user.email" name="email" class="form-control"
+                                   placeholder="enter email">
+
+                            <div id="email-errors" class="error-text"
+                                 ng-show="form.user_form.email.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="form.user_form.email.$error.email">
+                                    Please enter a valid email address
+                                </p>
+
+                                <p class="text-danger" ng-repeat="error in errors.email">
+                                    {[{ error }]}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group district"
+                             ng-class="{'has-error': form.user_form.district.$invalid && hasErrors}">
+                            <label class="control-label" for="district">District</label>
+                            <input type="text" id="district" name="district" class="form-control" data-parent="true"
+                                   location-cascade="districts" ng-model="user.district" data-max-locations="1"
+                                   placeholder="select district" data-child="subcounties" data-dataset="user"
+                                   required="" data-default-parent-value="{[{ user.location.parent.id }]}"
+                                   data-default-child-value="{[{ user.location.id }]}">
+
+                            <div id="district-errors" class="error-text"
+                                 ng-show="form.user_form.district.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="form.user_form.district.$error.required">
+                                    This field is required
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group subcounty"
+                             ng-class="{'has-error': form.user_form.location.$invalid && hasErrors}">
+                            <label class="control-label" for="subcounty">Sub-County</label>
+                            <input type="text" id="subcounty" ng-model="user.location" name="subcounty"
+                                   location-cascade="subcounties" class="form-control" data-max-locations="1"
+                                   placeholder="select sub-county" data-dataset="user" required="">
+
+                            <div id="subcounty-errors" class="error-text"
+                                 ng-show="form.user_form.location.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="form.user_form.location.$error.required">
+                                    This field is required
+                                </p>
+                            </div>
+                        </div>
+                        <div class="from-group" ng-hide="onEdit">
+                            <label class="control-label">Grant Web Access: </label>
+
+                            <div class="btn-group btn-toggle" id="grant-web-access-button" button-switch=""
+                                 data-on="Yes"
+                                 data-off="No" data-toggle-section="username_section"></div>
+                        </div>
+                        <div id="username_section" class="form-group hide"
+                             ng-class="{'has-error': form.user_form.username.$invalid && hasErrors }">
+                            <label class="control-label" for="username">Username</label>
+                            <input type="text" id="username" ng-model="user.username" name="username"
+                                   class="form-control"
+                                   placeholder="enter username">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" id="close-mobile-user-modal" class="btn btn-default" data-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="submit" id="save-mobile-user-modal" close-modal="mobile-user-modal"
+                                class="btn btn-info" save-state=""
+                                data-loading-text="Saving...">Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

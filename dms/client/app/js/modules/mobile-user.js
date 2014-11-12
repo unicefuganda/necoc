@@ -27,9 +27,11 @@
     });
 
     module.controller('AddUserController', function ($scope, MobileUserService, helpers) {
-        $scope.user = {}
+        $scope.modalTitle = 'Add User';
+        $scope.user = {};
+        $scope.form = {};
         $scope.saveUser = function (user) {
-            if ($scope.user_form.$valid) {
+            if ($scope.form.user_form.$valid) {
                 $scope.saveStatus = true;
                 MobileUserService.create(user)
                     .then(function (response) {
@@ -39,7 +41,7 @@
                         $scope.users.push(response.data);
                     }, function (error) {
                         $scope.errors = error.data;
-                        helpers.invalidate($scope.user_form, $scope.errors);
+                        helpers.invalidate($scope.form.user_form, $scope.errors);
                         $scope.saveStatus = false;
                         $scope.hasErrors = true;
                     });
@@ -51,8 +53,10 @@
     });
 
     module.controller('EditUserController', function ($scope, MobileUserService, helpers) {
-        $scope.editUser = function (user) {
-            if ($scope.user_form.$valid) {
+        $scope.modalTitle = 'Edit User Profile';
+        $scope.form = {};
+        $scope.saveUser = function (user) {
+            if ($scope.form.user_form.$valid) {
                 $scope.successful = false;
                 $scope.saveStatus = true;
                 delete user.username;
@@ -66,10 +70,9 @@
                         $scope.errors = error.data;
                         $scope.saveStatus = false;
                         $scope.successful = false;
-                        helpers.invalidate($scope.user_form, $scope.errors);
+                        helpers.invalidate($scope.form.user_form, $scope.errors);
                         $scope.hasErrors = true;
                     });
-
             } else {
                 $scope.hasErrors = true;
             }

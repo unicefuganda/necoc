@@ -60,7 +60,7 @@ Feature: Dashboard
     And I POST "NECOC Awach Flood here" to the NECOC DMS
     And I navigate to map location "/admin/dashboard"
     Then I see should see 1 disasters bubble on the map
-    When I enter the disaster type as "Fire"
+    When I add the disaster type as "Fire"
     Then I see should see 0 disasters bubble on the map
     When I navigate to map location "/admin/dashboard/gulu"
     Then I should see a message cluster marker with 1 incoming messages
@@ -68,7 +68,7 @@ Feature: Dashboard
     Then I should see "gulu" district with layer color "#E31A1C"
     And I click the messages panel chevron
     Then I should see my message with location "Gulu >> Awach"
-    When I select the disaster type as "Fire"
+    When I select in the dashboard the disaster type as "Fire"
     Then I should not see a message cluster marker
     Then I should not see a disaster cluster marker
     Then I should see "gulu" district with layer color "#FFEDA0"

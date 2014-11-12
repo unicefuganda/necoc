@@ -6,7 +6,7 @@ module.exports = function () {
         numberOfMassMessages = 15,
         messages = [];
 
-    this.Before(function(next) {
+    this.Before(function (next) {
         messages = [];
         next();
     });
@@ -23,7 +23,7 @@ module.exports = function () {
     this.When(/^I POST "([^"]*)" to the NECOC DMS$/, function (text, next) {
         dataSetupPage.postMessage({
             text: text
-        }, function(message) {
+        }, function (message) {
             messages.push(message);
             next();
         });
@@ -60,7 +60,7 @@ module.exports = function () {
     };
 
     this.When(/^I POST a list of messages to NECOC DMS$/, function (next) {
-        messagesPage.postMessages(numberOfMassMessages, function(postMessages) {
+        messagesPage.postMessages(numberOfMassMessages, function (postMessages) {
             messages.concat(postMessages);
             next();
         });
@@ -254,4 +254,11 @@ module.exports = function () {
             .eventually.be.equal('0').and.notify(next);
     });
 
+    this.Then(/^I should see (\d+) message$/, function (number, next) {
+        var self = this;
+        messagesPage.numberOfMessages()
+            .then(function (noOfMessages) {
+                self.expect(noOfMessages).to.equal(parseInt(number)); })
+            .then(next);
+    });
 };

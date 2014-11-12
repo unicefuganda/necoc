@@ -117,13 +117,16 @@ module.exports = function () {
         var self = this;
         mobileUsersPage.createUserModal.getPhoneFieldErrors(1)
             .then(function (error) {
-                self.expect(error).to.be.equal('Phone number must be unique');
+                self.expect(error).to.be.equal('Phone must be unique');
             })
             .then(function () {
                 self.expect(mobileUsersPage.createUserModal.getEmailFieldErrors(1)).to.eventually.equal('Email must be unique');
             })
             .then(function () {
                 self.expect(mobileUsersPage.createUserModal.getNameFieldErrors()).to.eventually.be.empty;
+            })
+            .then(function () {
+                self.expect(mobileUsersPage.createUserModal.getUsernameFieldErrors(0)).to.eventually.equal('Username must be unique');
             })
             .then(function () {
                 self.expect(mobileUsersPage.createUserModal.getDistrictFieldErrors()).to.eventually.be.empty

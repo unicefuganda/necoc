@@ -27,6 +27,8 @@ Feature: Mobile User
     And I enter my "phone" as "0775019449"
     And I select my "district" as "Mukono"
     And I select my "subcounty" as "Nabbaale"
+    And I choose to grant web access
+    And I enter my "username" as "test_user"
     Then I should not see the field required error messages
     When I click the save button
     Then I should see other server-side validation errors

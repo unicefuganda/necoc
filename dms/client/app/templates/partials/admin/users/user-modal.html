@@ -97,6 +97,13 @@
                             <input type="text" id="username" ng-model="user.username" name="username"
                                    class="form-control"
                                    placeholder="enter username">
+
+                            <div id="username-errors" class="error-text"
+                                 ng-show="form.user_form.username.$invalid && hasErrors">
+                                <p class="text-danger" ng-repeat="error in errors.username">
+                                    {[{ error }]}
+                                </p>
+                            </div>
                         </div>
                     </div>
 

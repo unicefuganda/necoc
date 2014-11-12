@@ -1,12 +1,6 @@
 from django.conf import settings
-
-from django.core import mail
-from django.test import override_settings
 import mock
-from mongoengine.django.auth import User
-
-from dms.models.location import Location
-from dms.models.user_profile import UserProfile
+from dms.models import User, Location, UserProfile
 from dms.tests.base import MongoAPITestCase
 
 

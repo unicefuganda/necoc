@@ -1,4 +1,4 @@
-from mongoengine.django.auth import User
+from dms.models import User
 from mongoengine.django.auth import UserManager
 from django.conf import settings
 from django.core.mail import send_mail

@@ -1,5 +1,4 @@
-from mongoengine.django.auth import User
-from dms.models import Location, UserProfile
+from dms.models import Location, UserProfile, User
 from dms.templatetags.generic_tags import get_profile_id
 from dms.tests.base import MongoTestCase
 

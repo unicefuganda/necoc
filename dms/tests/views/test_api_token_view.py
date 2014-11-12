@@ -1,6 +1,6 @@
 import ast
 from django.test import Client
-from mongoengine.django.auth import User
+from dms.models import User
 from dms.tests.base import MongoAPITestCase
 
 

@@ -1,5 +1,6 @@
 import csv
-from mongoengine.django.auth import User
+from django.core import management
+from dms.models import User
 from rest_framework.test import APITestCase
 from django.test import TestCase
 from dms import models as ALL_MODELS
@@ -16,6 +17,7 @@ class MongoTestCase(TestCase):
         self.client.login(username='test_user', password='password')
 
     def _fixture_setup(self):
+        management.call_command('create_user_groups')
         warnings.filterwarnings("ignore", category=RemovedInDjango18Warning)
         pass
 

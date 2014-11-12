@@ -7,14 +7,14 @@ class TestUserModel(MongoTestCase):
 
 
     def test_has_group_permissions(self):
-        ct = ContentType(app_label='dms', model='', name='').save()
+        ct = ContentType(app_label='dms', model='test', name='test').save()
         permission = Permission(name='can test things', codename='can_test_things', content_type=ct.id).save()
         group = Group(name='Test Group', permissions=[permission]).save()
         user = User(username='tim', password='password', group=group)
         self.assertTrue(user.has_perm('dms.can_test_things'))
 
     def test_does_not_have_group_permissions(self):
-        ct = ContentType(app_label='dms', model='', name='').save()
+        ct = ContentType(app_label='dms', model='test', name='test').save()
         permission = Permission(name='can test things', codename='can_test_things', content_type=ct.id).save()
         group = Group(name='Test Group', permissions=[permission]).save()
         user = User(username='tim', password='password', group=group)

@@ -1,4 +1,4 @@
-from mongoengine.django.auth import User
+from dms.models import User
 from dms.models.token import Token
 from dms.tests.base import MongoTestCase
 

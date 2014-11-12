@@ -1,4 +1,4 @@
-from mongoengine.django.auth import User
+from dms.models import User
 from rest_framework_mongoengine.generics import ListCreateAPIView, ListAPIView
 from rest_framework_mongoengine import serializers
 from rest_framework import serializers as rest_serializers

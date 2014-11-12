@@ -1,8 +1,6 @@
 import datetime
 
 from django.test import Client
-from mongoengine.django.auth import User
-
 from dms.models import Location, UserProfile, Poll, PollResponse
 from dms.tests.base import MongoTestWithCSV
 

@@ -1,8 +1,5 @@
-from mongoengine import ValidationError
-from mongoengine.django.auth import User
+from dms.models import User, Location, UserProfile
 from dms.api.user_profile_endpoint import UserProfileSerializer
-from dms.models.location import Location
-from dms.models.user_profile import UserProfile
 from dms.tests.base import MongoTestCase
 
 

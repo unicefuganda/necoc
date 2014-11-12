@@ -31,6 +31,7 @@ class CreateSuperuserTest(MongoTestCase):
         self.assertEqual(self.kampala, user_profile.location)
         self.assertEqual('N/A', user_profile.phone)
         self.assertEqual('Admin', user_profile.name)
+        self.assertEqual('Administrator', user_profile.user.group.name)
 
     def test_should_handle_existing_profile(self):
         UserProfile(phone='N/A', name='Admin', location=self.kampala, email='admin@admin.admin').save()
@@ -45,6 +46,7 @@ class CreateSuperuserTest(MongoTestCase):
         self.assertEqual(self.kampala, user_profile.location)
         self.assertEqual('N/A', user_profile.phone)
         self.assertEqual('Admin', user_profile.name)
+        self.assertEqual('Administrator', user_profile.user.group.name)
 
     def test_should_create_super_user_from_args(self):
         FakeCommand().handle('new_admin',
@@ -63,6 +65,7 @@ class CreateSuperuserTest(MongoTestCase):
         self.assertEqual(self.kampala, user_profile.location)
         self.assertEqual('1234567890', user_profile.phone)
         self.assertEqual('NewAdmin', user_profile.name)
+        self.assertEqual('Administrator', user_profile.user.group.name)
 
     def test_should_handle_existing_profile_from_args(self):
         UserProfile(phone='1234567890', name='NewAdmin', location=self.kampala, email='new_admin@admin.admin').save()
@@ -82,3 +85,4 @@ class CreateSuperuserTest(MongoTestCase):
         self.assertEqual(self.kampala, user_profile.location)
         self.assertEqual('1234567890', user_profile.phone)
         self.assertEqual('NewAdmin', user_profile.name)
+        self.assertEqual('Administrator', user_profile.user.group.name)

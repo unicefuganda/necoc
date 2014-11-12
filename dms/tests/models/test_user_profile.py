@@ -1,7 +1,5 @@
 from mongoengine import ValidationError, NotUniqueError
-from mongoengine.django.auth import User
-from dms.models.location import Location
-from dms.models.user_profile import UserProfile
+from dms.models import User, Location, UserProfile
 from dms.tests.base import MongoTestCase
 
 

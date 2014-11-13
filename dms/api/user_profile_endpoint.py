@@ -59,7 +59,7 @@ class UserProfileListCreateView(ListCreateAPIView):
     def pre_save(self, obj):
         username = self.request.DATA.get('username', None)
         if username:
-            user = UserProfileService.setup_new_user(username, obj.name, obj.email)
+            user = UserProfileService(obj).setup_new_user(username)
             obj.user = user
 
 

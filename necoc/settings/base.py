@@ -197,6 +197,33 @@ DEFAULT_TO_EMAIL = 'necocdev@gmail.com'
 
 HOSTNAME = 'http://necoc.org.ug'
 
+NEW_USER_MESSAGE = """
+                Dear %(name)s,
+
+                Your email was recently registered for NECOC DMS.
+                Please use the following credentials to login to %(hostname)s
+
+                username: %(username)s
+                password: %(password)s
+
+                Thank you,
+                NECOC DMS team
+                """
+
+CHANGE_PASSWD_MESSAGE = """
+                Dear %(name)s,
+
+                This is to notify you that you have recently changed your password for NECOC DMS.
+                You will need to use the new password to login to %(hostname)s.
+
+                If you think this is a mistake, please contact immediately the NECOC DMS
+                administrator in %(admin_email)s.
+
+                Thank you,
+                NECOC DMS team
+                """
+
+
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # TEST_RUNNER = 'dms.tests.runner.NoSQLTestRunner'
 

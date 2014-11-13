@@ -10,6 +10,10 @@ class PasswordChangeSerializerTest(MongoTestCase):
         self.user.set_password('hehe')
         self.password_data = dict(old_password='hehe', new_password='hoho', confirm_password='hoho')
 
+    def test_serialize_should_show_nothing(self):
+        serializer = UserPasswordChangeSerializer(self.user, data=self.password_data)
+        self.assertEqual({}, serializer.data)
+
     def test_should_deserialize_user_object(self):
         serializer = UserPasswordChangeSerializer(self.user, data=self.password_data)
 

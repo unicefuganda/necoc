@@ -1,12 +1,15 @@
 from mongoengine.django.auth import User
+from rest_framework_mongoengine.generics import UpdateAPIView
 from rest_framework_mongoengine import serializers
 from rest_framework import serializers as rest_serializers
 
+from dms.models.user_profile import UserProfile
+
 
 class UserPasswordChangeSerializer(serializers.MongoEngineModelSerializer):
-    old_password = rest_serializers.CharField()
-    new_password = rest_serializers.CharField()
-    confirm_password = rest_serializers.CharField()
+    old_password = rest_serializers.CharField(write_only=True)
+    new_password = rest_serializers.CharField(write_only=True)
+    confirm_password = rest_serializers.CharField(write_only=True)
 
     def validate_old_password(self, attrs, source):
         old_password = attrs.get(source)
@@ -30,3 +33,17 @@ class UserPasswordChangeSerializer(serializers.MongoEngineModelSerializer):
         fields = ('old_password', 'new_password', 'confirm_password', )
 
 
+class PasswordChangeView(UpdateAPIView):
+    serializer_class = UserPasswordChangeSerializer
+    queryset = UserProfile.objects()
+    model = UserProfile
+
+    def get_object(self, queryset=None):
+        profile = super(PasswordChangeView, self).get_object()
+        if not profile.user:
+            from django.http import Http404
+            raise Http404('%s is not a web user.' % profile.name)
+        return profile.user
+
+    def post(self, request, *args, **kwargs):
+        return self.patch(request, *args, **kwargs)

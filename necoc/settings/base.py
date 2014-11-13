@@ -194,6 +194,7 @@ EMAIL_HOST_PASSWORD = os.environ['EMAIL_PASSWORD']
 DEFAULT_FROM_EMAIL = 'necocdev@gmail.com'
 SERVER_EMAIL = 'necocdev@gmail.com'
 DEFAULT_TO_EMAIL = 'necocdev@gmail.com'
+ADMIN_EMAIL = ''
 
 HOSTNAME = 'http://necoc.org.ug'
 

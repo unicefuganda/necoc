@@ -2,6 +2,7 @@ import sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+ADMIN_EMAIL = 'ayo@yo.yo'
 
 MONGODB_USER = ''
 MONGODB_PASSWORD = ''

@@ -4,6 +4,7 @@ from rest_framework_mongoengine import serializers
 from rest_framework import serializers as rest_serializers
 
 from dms.models.user_profile import UserProfile
+from dms.services.user_profile_service import UserProfileService
 
 
 class UserPasswordChangeSerializer(serializers.MongoEngineModelSerializer):
@@ -44,6 +45,11 @@ class PasswordChangeView(UpdateAPIView):
             from django.http import Http404
             raise Http404('%s is not a web user.' % profile.name)
         return profile.user
+
+    def pre_save(self, obj):
+        profile = super(PasswordChangeView, self).get_object()
+        UserProfileService(profile).notify_password_change()
+        super(PasswordChangeView, self).pre_save(obj)
 
     def post(self, request, *args, **kwargs):
         return self.patch(request, *args, **kwargs)

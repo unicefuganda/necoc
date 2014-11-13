@@ -1,14 +1,19 @@
+from django.contrib.auth.models import AnonymousUser
+import re
+from rest_condition import Or
+from rest_framework.request import Request
 from rest_framework_mongoengine.generics import ListCreateAPIView
+
 from rest_framework_mongoengine import serializers
 from rest_framework import serializers as rest_serializers
 from rest_framework import fields
 from rest_framework.response import Response
-from rest_framework import permissions
-
 from dms.models import User
+
 from dms.api.retrieve_update_wrapper import MongoRetrieveUpdateView
 from dms.models.user_profile import UserProfile
 from dms.services.user_profile_service import UserProfileService
+from dms.utils.permission_class_factory import build_permission_class
 
 
 class UserProfileSerializer(serializers.MongoEngineModelSerializer):
@@ -44,17 +49,11 @@ class UserProfileSerializer(serializers.MongoEngineModelSerializer):
         exclude = ('created_at', 'user')
 
 
-class CanManageUsersPermission(permissions.BasePermission):
-
-    def has_permission(self, request, view):
-        return request.user.has_perm('dms.can_manage_users')
-
-
 class UserProfileListCreateView(ListCreateAPIView):
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects()
     model = UserProfile
-    permission_classes = (CanManageUsersPermission,)
+    permission_classes = (build_permission_class('dms.can_manage_users'),)
 
     def pre_save(self, obj):
         username = self.request.DATA.get('username', None)
@@ -63,9 +62,18 @@ class UserProfileListCreateView(ListCreateAPIView):
             obj.user = user
 
 
+class IsCurrentUsersProfile(object):
+    def has_permission(self, request, view):
+        if request.user.is_anonymous():
+            return False
+        user_id = str(UserProfile.objects.get(user=request.user).id)
+        return user_id in request.path
+
+
 class UserProfileView(MongoRetrieveUpdateView):
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all()
+    permission_classes = [Or(build_permission_class('dms.can_manage_users'), IsCurrentUsersProfile), ]
 
     def list(self, request, *args, **kwargs):
         user_profile = UserProfile.objects(id=kwargs['id']).first()

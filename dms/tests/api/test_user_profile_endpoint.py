@@ -12,7 +12,8 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.login_user()
         self.district = Location(**dict(name='Kampala', type='district', parent=None))
         self.district.save()
-        self.mobile_user_to_post = dict(name='tim', phone='+256775019500', location=self.district.id, email='tim@akampa.com')
+        self.mobile_user_to_post = dict(name='tim', phone='+256775019500', location=self.district.id,
+                                        email='tim@akampa.com')
         self.mobile_user = dict(name='timothy', phone='+256775019449', location=self.district, email=None)
 
     def tearDown(self):
@@ -54,6 +55,7 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.assertEqual(self.district.name, response.data['location']['name'])
         self.assertEqual('cage', response.data['username'])
 
+
     def test_should_update_a_single_user(self):
         attr = self.mobile_user.copy()
         attr['email'] = 'tim@akampa.com'
@@ -70,6 +72,32 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.assertEqual(self.mobile_user_to_post['name'], profile.name)
         self.assertEqual(self.mobile_user_to_post['phone'], profile.phone)
         self.assertEqual(self.mobile_user_to_post['email'], profile.email)
+
+    def test_raise_403_given_user_is_trying_to_access_some_other_users_profile(self):
+        attr = self.mobile_user.copy()
+        attr['email'] = 'someother@email.com'
+        attr['phone'] = '+256775029500'
+        attr['user'] = User(username='someother', password='hahahah').save()
+        profile = UserProfile(**attr).save()
+        self.assert_permission_required_for_get(self.API_ENDPOINT + str(profile.id) + '/')
+        self.assert_permission_required_for_post(self.API_ENDPOINT + str(profile.id) + '/')
+
+    def test_not_raising_403_if_user_only_wants_access_to_their_profile(self):
+        self.client.logout()
+        attr = self.mobile_user.copy()
+        attr['email'] = 'someother@email.com'
+        attr['phone'] = '+256775029500'
+        user = User(username='someother11', email='hahahaha@hahahahaha.ha')
+        user.group = None
+        user.set_password('hahahah')
+        attr['user'] = user
+        profile = UserProfile(**attr).save()
+        self.client.login(username='someother11', password='hahahah')
+
+        response = self.client.get(self.API_ENDPOINT + str(profile.id) + '/')
+        self.assertEquals(response.status_code, 200)
+        response = self.client.post(self.API_ENDPOINT + str(profile.id) + '/')
+        self.assertEquals(response.status_code, 200)
 
     def test_post_with_non_empty_username_creates_system_user(self):
         attr = self.mobile_user_to_post.copy()

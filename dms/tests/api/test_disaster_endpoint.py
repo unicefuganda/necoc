@@ -36,6 +36,7 @@ class TestDisasterEndpoint(MongoAPITestCase):
         self.assertEqual(self.disaster_to_post['description'], response.data[0]['description'])
 
     def test_can_get_a_list_of_disasters_with_no_permissions(self):
+        self.login_without_permissions()
         response = self.client.get(self.API_ENDPOINT)
         self.assertEquals(response.status_code, 200)
 

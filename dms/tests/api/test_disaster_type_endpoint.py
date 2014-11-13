@@ -25,6 +25,7 @@ class TestDisasterTypeEndpoint(MongoAPITestCase):
         self.assertDictContainsSubset(self.details, response.data[0])
 
     def test_can_get_a_list_of_disaster_types_with_no_permissions(self):
+        self.login_without_permissions()
         response = self.client.get(self.DISASTER_TYPE_ENDPOINT)
         self.assertEquals(response.status_code, 200)
 

@@ -13,6 +13,7 @@ class TestLocationEndpoint(MongoAPITestCase):
     BULK_SMS_ENDPOINT = '/api/v1/sent-messages/'
 
     def setUp(self):
+        self.login_user()
         phone_numbers = ['256775019449', '2345']
         self.bulk_sms_to_post = dict(text="There is a fire", phone_numbers=phone_numbers)
         self.headers = {'Authorization': 'Token ' + API_TOKEN,
@@ -61,3 +62,21 @@ class TestLocationEndpoint(MongoAPITestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, len(response.data))
         self.assertDictContainsSubset(self.bulk_sms_to_post, response.data[0])
+
+    def test_can_get_a_list_of_disaster_types_with_no_permissions(self):
+        self.login_without_permissions()
+        response = self.client.get(self.BULK_SMS_ENDPOINT)
+        self.assertEquals(response.status_code, 200)
+
+    def test_cant_post_to_disaster_types_without_permission(self):
+        self.assert_permission_required_for_post(self.BULK_SMS_ENDPOINT)
+
+    def test_can_post_to_disaster_types_with_permission(self):
+        self.login_with_permission('can_manage_messages')
+        response = self.client.get(self.BULK_SMS_ENDPOINT)
+        self.assertEquals(response.status_code, 200)
+        response = self.client.post(self.BULK_SMS_ENDPOINT,
+                                    data=json.dumps(self.bulk_sms_to_post),
+                                    content_type="application/json")
+        self.assertEqual(201, response.status_code)
+

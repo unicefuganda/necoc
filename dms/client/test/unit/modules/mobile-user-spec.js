@@ -194,5 +194,69 @@ describe('dms.mobile-user', function () {
             expect(scope.successful).toBeFalsy();
             expect(scope.hasErrors).toBeTruthy();
         });
-    })
+    });
+
+    describe('ChangePasswordController', function () {
+        var initController, mockGrowl,
+            newUser = {
+            "id": "54257147d6f45f6fc1eac346",
+            "old_password": "haha",
+            "new_password": "hehe",
+            "confirm_password": "hoho"
+            },
+            errorMessage = {
+                old_password: [
+                    "Current password incorrect."
+                ]
+            };
+
+        beforeEach(function () {
+            inject(function ($controller) {
+                mockGrowl = jasmine.createSpyObj('growl', ['success']);
+
+                initController = function (isFormValid) {
+                    scope.user = { name: "Timothy" };
+                    scope.users = [];
+                    $controller('ChangePasswordController', { $scope: scope, growl: mockGrowl });
+                    scope.form.user_form = { $valid: isFormValid,  old_password: { $invalid: false }};
+                };
+            })
+        });
+
+        it('should update password given form is valid', function () {
+            initController(true);
+            httpMock.expectPOST(apiUrl + 'mobile-users/'+ newUser.id + '/password/', newUser).respond({});
+
+            scope.changePassword(newUser);
+
+            expect(scope.saveStatus).toBeTruthy();
+            expect(scope.successful).toBeFalsy();
+            httpMock.flush();
+            expect(scope.saveStatus).toBeFalsy();
+            expect(scope.successful).toBeTruthy();
+            expect(scope.hasErrors).toBeFalsy();
+            expect(mockGrowl.success).toHaveBeenCalledWith('Password successfully changed', { ttl: 3000 });
+        });
+
+        it('should not try to update if the form is invalid', function () {
+            initController(false);
+            scope.changePassword(newUser);
+            expect(scope.hasErrors).toBeTruthy();
+            expect(scope.successful).toBeFalsy();
+        });
+
+        it('should not update password given form is invalid server-side', function () {
+            initController(true);
+            httpMock.expectPOST(apiUrl + 'mobile-users/'+ newUser.id + '/password/', newUser).respond(400, errorMessage);
+
+            scope.changePassword(newUser);
+            expect(scope.saveStatus).toBeTruthy();
+            httpMock.flush();
+            expect(scope.form.user_form.isValid).toBeFalsy();
+            expect(scope.errors).toEqual(errorMessage);
+            expect(scope.saveStatus).toBeFalsy();
+            expect(scope.successful).toBeFalsy();
+            expect(scope.hasErrors).toBeTruthy();
+        });
+    });
 });

@@ -8,8 +8,11 @@
             all: function () {
                 return $http.get(Config.apiUrl + 'mobile-users/');
             },
-            update:function (user) {
+            update: function (user) {
                 return $http.post(Config.apiUrl + 'mobile-users/' + user.id + '/', user);
+            },
+            changePassword: function (user) {
+                return $http.post(Config.apiUrl + 'mobile-users/' + user.id + '/password/', user);
             }
         };
     });
@@ -66,6 +69,31 @@
                         $scope.setProfile(response.data);
                         $scope.successful = true;
                         $scope.hasErrors = false;
+                    }, function (error) {
+                        $scope.errors = error.data;
+                        $scope.saveStatus = false;
+                        $scope.successful = false;
+                        helpers.invalidate($scope.form.user_form, $scope.errors);
+                        $scope.hasErrors = true;
+                    });
+            } else {
+                $scope.hasErrors = true;
+            }
+        }
+    });
+
+    module.controller('ChangePasswordController', function ($scope, MobileUserService, growl, helpers) {
+        $scope.form = {};
+        $scope.changePassword = function (user) {
+            if ($scope.form.user_form.$valid) {
+                $scope.successful = false;
+                $scope.saveStatus = true;
+                MobileUserService.changePassword(user)
+                    .then(function (response) {
+                        $scope.saveStatus = false;
+                        $scope.successful = true;
+                        $scope.hasErrors = false;
+                        growl.success('Password successfully changed', {ttl: 3000});
                     }, function (error) {
                         $scope.errors = error.data;
                         $scope.saveStatus = false;
@@ -147,4 +175,4 @@
         }
     });
 
-})(angular.module('dms.mobile-user', ['dms.config', 'dms.utils']));
+})(angular.module('dms.mobile-user', ['dms.config', 'angular-growl', 'dms.utils']));

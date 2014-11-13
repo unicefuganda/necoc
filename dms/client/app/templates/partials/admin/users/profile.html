@@ -8,6 +8,7 @@
                     <img class="profile-pic" src="/static/img/default_profile.jpg" alt=""/>
                 </div>
             </div>
+            <div class="profile-toast" growl></div>
             <div class="col-lg-9">
                 <div class="profile-container">
                     <div ng-show="profile.username">
@@ -24,14 +25,32 @@
                         <i class="icon icon-location"></i><span>Location:</span><strong>{[{ [profile.location.parent, profile.location] | joinNames }]}</strong>
                     </div>
                 </div>
-                <button type="button" id="edit-user" class="btn btn-default edit-btn btn-icon pull-right" data-toggle="modal"
-                        data-target="#mobile-user-modal" ng-click="editProfile()">
-                    <span class="icon icon-edit"></span>
-                    <span class="value">Edit</span>
-                </button>
+                <div class="user-actions pull-right">
+                    <ul>
+                        <li>
+                            <button type="button" id="change-password" class="btn btn-default user-btn btn-icon"
+                                    data-toggle="modal"
+                                    data-target="#change-password-modal" ng-click="changePassword()">
+                                <span class="icon icon-lock"></span>
+                                <span class="value">Change Password</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" id="edit-user" class="btn btn-default user-btn btn-icon"
+                                    data-toggle="modal"
+                                    data-target="#mobile-user-modal" ng-click="editProfile()">
+                                <span class="icon icon-edit"></span>
+                                <span class="value">Edit</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
         </div>
     </div>
-    <ng-include ng-controller="EditUserController" src="'/static/templates/partials/admin/users/user-modal.html'"></ng-include>
+    <ng-include ng-controller="EditUserController"
+                src="'/static/templates/partials/admin/users/user-modal.html'"></ng-include>
+    <ng-include ng-controller="ChangePasswordController"
+                src="'/static/templates/partials/admin/users/change-password-modal.html'"></ng-include>
 </div>

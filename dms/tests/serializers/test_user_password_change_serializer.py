@@ -1,4 +1,4 @@
-from mongoengine.django.auth import User
+from dms.models import User
 
 from dms.api.password_change_endpoint import UserPasswordChangeSerializer
 from dms.tests.base import MongoTestCase

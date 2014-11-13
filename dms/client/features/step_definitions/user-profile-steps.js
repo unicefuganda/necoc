@@ -55,5 +55,42 @@ module.exports = function () {
         user.location[className] = location;
         userProfilePage.updateUserModal.selectLocation(className, location).then(next);
     });
-}
-;
+
+    this.When(/^I change my password$/, function (next) {
+        var self = this;
+        userProfilePage.changePasswordButton.click().then(function () {
+            self.expect(browser.wait(userProfilePage.changePasswordModal.saveButton.isDisplayed)).to.eventually.be.true
+                .and.notify(next);
+        });
+    });
+
+    this.When(/^I input my "([^"]*)" as "([^"]*)"$/, function (field, value, next) {
+        userProfilePage.changePasswordModal[field].clear().then(function () {
+            userProfilePage.changePasswordModal[field].sendKeys(value).then(next);
+        });
+    });
+
+    this.When(/^I proceed to click the save button$/, function (next) {
+        userProfilePage.changePasswordModal.clickSaveButton().then(next);
+    });
+
+    this.Then(/^I should see password successfully updated message$/, function (next) {
+        var self = this;
+        self.ignoreSync(true);
+
+        browser.wait(userProfilePage.notification.getText).then(function (text) {
+            self.expect(text).to.equal('Password successfully changed');
+            next();
+        });
+    });
+
+    this.Then(/^I should be logged In$/, function (next) {
+        this.expect(homePage.loggedInUser.isDisplayed()).to.eventually.be.true
+            .and.notify(next);
+    });
+
+    this.Then(/^I see "([^"]*)" number (\d+) error message "([^"]*)"$/, function (fieldId, number, error, next) {
+        this.expect(userProfilePage.getFieldErrors(fieldId + '-errors', number)).to
+            .eventually.be.equal(error).and.notify(next);
+    });
+};

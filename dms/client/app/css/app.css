@@ -665,15 +665,21 @@ div[class*="-aggregate-marker-icon"] div {
     margin: 0 !important;
 }
 
-.edit-btn {
+.user-btn{
+    margin-bottom: 10px;
+    float: right;
     font-size: 17px;
     background-color: #E5E5E5;
     border-radius: 0px;
     margin-left: 2px;
     border: none;
     outline: none;
-    position: absolute;
+    position: relative;
     right: -9px;
     top: 0px;
     border-right: 4px solid #3E9CB8;
+}
+
+.user-actions ul li{
+    list-style-type: none;
 }

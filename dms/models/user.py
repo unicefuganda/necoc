@@ -1,8 +1,8 @@
 from mongoengine import ReferenceField
-from mongoengine.django.auth import User, Group
+from mongoengine.django.auth import Group, User as MongoUser
 
 
-class User(User):
+class User(MongoUser):
     group = ReferenceField(Group)
 
     def has_perm(self, perm, obj=None):

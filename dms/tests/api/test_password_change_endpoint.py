@@ -1,9 +1,6 @@
 from django.conf import settings
-
-from django.core import mail
-from django.test import override_settings
 import mock
-from mongoengine.django.auth import User
+from dms.models import User
 
 from dms.models.location import Location
 from dms.models.user_profile import UserProfile
@@ -53,11 +50,11 @@ class TestPasswordChangeEndpoint(MongoAPITestCase):
         self.assertTrue(users.first().check_password(self.password_data['old_password']))
 
     @mock.patch('dms.tasks.send_new_user_email.delay')
-    def test_posting_new_password_sends_email(self, mock_send_new_user_email):
+    def test_posting_new_password_sends_email(self, mock_send_email):
         profile = UserProfile(**self.mobile_user_attr).save()
         response = self.client.post(self.API_ENDPOINT + str(profile.id) + '/password/', self.password_data)
         self.assertEqual(200, response.status_code)
-        mock_send_new_user_email.assert_called_with('Your NECOC Account',
+        mock_send_email.assert_called_with('Your NECOC Account',
                                                     mock.ANY,
                                                     settings.DEFAULT_FROM_EMAIL,
                                                     [profile.email])

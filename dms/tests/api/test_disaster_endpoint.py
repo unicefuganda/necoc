@@ -8,6 +8,7 @@ class TestDisasterEndpoint(MongoAPITestCase):
     API_ENDPOINT = '/api/v1/disasters/'
 
     def setUp(self):
+        self.login_user()
         self.district = Location(**dict(name='Kampala', type='district', parent=None))
         self.district.save()
         self.disaster_type = DisasterType(**dict(name="Fire", description="Fire"))
@@ -33,3 +34,17 @@ class TestDisasterEndpoint(MongoAPITestCase):
         self.assertEqual(self.disaster_to_post['status'], response.data[0]['status'])
         self.assertEqual(self.disaster_to_post['date'], str(response.data[0]['date']))
         self.assertEqual(self.disaster_to_post['description'], response.data[0]['description'])
+
+    def test_can_get_a_list_of_disasters_with_no_permissions(self):
+        response = self.client.get(self.API_ENDPOINT)
+        self.assertEquals(response.status_code, 200)
+
+    def test_cant_post_to_disasters_without_permission(self):
+        self.assert_permission_required_for_post(self.API_ENDPOINT)
+
+    def test_can_post_to_disasters_with_permission(self):
+        self.login_with_permission('can_manage_disasters')
+        response = self.client.get(self.API_ENDPOINT)
+        self.assertEquals(response.status_code, 200)
+        response = self.client.post(self.API_ENDPOINT, data=json.dumps(self.disaster_to_post), content_type="application/json")
+        self.assertEqual(201, response.status_code)

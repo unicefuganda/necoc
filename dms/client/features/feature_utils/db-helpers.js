@@ -6,7 +6,10 @@ module.exports = function () {
         'user',
         'user_profile',
         'django_session',
-        'token'
+        'token',
+        'group',
+        'permission',
+        'content_type'
     ];
 
     function connectToMongo(callback) {

@@ -31,6 +31,15 @@ module.exports = function (grunt) {
                     quite: true
                 }
             },
+            createUserGroups: {
+                cmd: '../../manage.py',
+                args: ['create_user_groups',
+                       'test_user'],
+                options: {
+                    wait: false,
+                    quite: true
+                }
+            },
             createUser: {
                 cmd: '../../manage.py',
                 args: [
@@ -56,7 +65,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('ft', function () {
         grunt.task.run('run:runserver');
-        grunt.task.run('run:createUser');
         grunt.task.run('protractor');
     });
 

@@ -1,8 +1,14 @@
-import os
 import sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+MONGODB_USER = ''
+MONGODB_PASSWORD = ''
+MONGODB_HOST = 'localhost'
+MONGODB_NAME = 'dms'
+MONGODB_DATABASE_HOST = 'mongodb://%s/%s' % (MONGODB_HOST, MONGODB_NAME)
+
 
 if 'test' in sys.argv:
     REST_FRAMEWORK = {}
@@ -17,15 +23,9 @@ if ('test' in sys.argv) or ('0.0.0.0:7999' in sys.argv) or ('test_user' in sys.a
     MONGODB_NAME = 'dms_test'
     MONGODB_DATABASE_HOST = 'mongodb://%s/%s' % (MONGODB_HOST, MONGODB_NAME)
 
-    from mongoengine.connection import connect, disconnect, get_connection
-
-    disconnect()
-    connect(MONGODB_NAME, host=MONGODB_DATABASE_HOST)
-    connection = get_connection()
-    connection.drop_database(MONGODB_NAME)
-
     API_TOKEN = 'ayoyoyoooooooo'
-    # API_URL = 'http://domaindoesnotexist.commmm'
     API_URL = 'http://localhost:7999/api/v1/mobile-users'
     EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
+from mongoengine.connection import connect
+connect(MONGODB_NAME, host=MONGODB_DATABASE_HOST)

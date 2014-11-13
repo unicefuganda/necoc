@@ -1,11 +1,13 @@
-from dms.models import User
-from rest_framework_mongoengine.generics import ListCreateAPIView, ListAPIView
+from rest_framework_mongoengine.generics import ListCreateAPIView
 from rest_framework_mongoengine import serializers
 from rest_framework import serializers as rest_serializers
-from dms.api.retrieve_update_wrapper import MongoRetrieveUpdateView
-from dms.models.user_profile import UserProfile
 from rest_framework import fields
 from rest_framework.response import Response
+from rest_framework import permissions
+
+from dms.models import User
+from dms.api.retrieve_update_wrapper import MongoRetrieveUpdateView
+from dms.models.user_profile import UserProfile
 from dms.services.user_profile_service import UserProfileService
 
 
@@ -42,10 +44,17 @@ class UserProfileSerializer(serializers.MongoEngineModelSerializer):
         exclude = ('created_at', 'user')
 
 
+class CanManageUsersPermission(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        return request.user.has_perm('dms.can_manage_users')
+
+
 class UserProfileListCreateView(ListCreateAPIView):
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects()
     model = UserProfile
+    permission_classes = (CanManageUsersPermission,)
 
     def pre_save(self, obj):
         username = self.request.DATA.get('username', None)

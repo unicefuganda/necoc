@@ -1,11 +1,16 @@
 module.exports = function () {
-    var dbUtils = require("../feature_utils/db-helpers.js")();
+    var dbUtils = require("../feature_utils/db-helpers.js")(),
+        dataSetUpPage = require("../pages/data-setup-page");
 
     this.World = require("../support/world").World;
 
     this.registerHandler('BeforeFeatures', function (event, next) {
         browser.driver.manage().window().setSize(1280, 1024);
-        next();
+        dbUtils.dropDB(function () {
+            dataSetUpPage.createUserGroup(function () {
+                dataSetUpPage.createUser(next);
+            });
+        });
     });
 
     this.After(function (callback) {
@@ -20,4 +25,5 @@ module.exports = function () {
     this.registerHandler('AfterFeatures', function (event, callback) {
         dbUtils.dropDB(callback);
     });
+
 };

@@ -8,7 +8,6 @@ class Command(BaseCommand):
     help = 'Creates a super user with credentials that you pass in'
 
     def handle(self, *args, **options):
-        UserProfile.objects()
         if not len(args):
             user = User.objects(username='admin').first() or User(username='admin').save()
             user.group = Group.objects(name='Administrator').first()

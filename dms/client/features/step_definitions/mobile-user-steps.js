@@ -156,7 +156,9 @@ module.exports = function () {
 
     this.Given(/^I have no users$/, function (next) {
         dbUtils.dropDB(function () {
-            dataSetUpPage.createUser(next);
+            dataSetUpPage.createUserGroup(function () {
+                dataSetUpPage.createUser(next);
+            });
         });
     });
 };

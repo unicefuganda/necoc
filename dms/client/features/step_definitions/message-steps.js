@@ -14,7 +14,7 @@ module.exports = function () {
     this.World = require("../support/world").World;
 
     this.When(/^I POST a message to the NECOC DMS$/, function (next) {
-        messagesPage.postMessage(function (message) {
+        dataSetupPage.postFullMessage(messagesPage.messages[0], function (message) {
             messages.push(message);
             next();
         });
@@ -60,7 +60,7 @@ module.exports = function () {
     };
 
     this.When(/^I POST a list of messages to NECOC DMS$/, function (next) {
-        messagesPage.postMessages(numberOfMassMessages, function (postMessages) {
+        dataSetupPage.postMessages(numberOfMassMessages, function (postMessages) {
             messages.concat(postMessages);
             next();
         });
@@ -82,7 +82,7 @@ module.exports = function () {
     });
 
     this.Given(/^I have one Necoc Volunteer registered$/, function (next) {
-        messagesPage.postMobileUser(next);
+        dataSetupPage.postMobileUser(next);
     });
 
     this.When(/^I select my location as "([^"]*)"$/, function (district, next) {
@@ -258,7 +258,8 @@ module.exports = function () {
         var self = this;
         messagesPage.numberOfMessages()
             .then(function (noOfMessages) {
-                self.expect(noOfMessages).to.equal(parseInt(number)); })
+                self.expect(noOfMessages).to.equal(parseInt(number));
+            })
             .then(next);
     });
 };

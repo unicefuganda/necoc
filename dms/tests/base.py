@@ -1,5 +1,6 @@
 import csv
 from django.core import management
+from mongoengine.django.auth import Group
 from dms.models import User
 from rest_framework.test import APITestCase
 from django.test import TestCase
@@ -13,8 +14,25 @@ class MongoTestCase(TestCase):
 
     def login_user(self):
         user = User.objects.create(username='test_user', email='test@email.email')
+        user.group = Group.objects(name='Administrator').first()
         user.set_password('password')
         self.client.login(username='test_user', password='password')
+
+    def login_without_permissions(self):
+        self.client.logout()
+        empty_group = Group(name='Empty', permissions=[])
+        User(username='useless', password='pw', group=empty_group)
+        self.client.login(username='useless', password='pw')
+
+    def assert_permission_required_for_get(self, url):
+        self.login_without_permissions()
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 403)
+
+    def assert_permission_required_for_post(self, url):
+        self.login_without_permissions()
+        response = self.client.post(url)
+        self.assertEquals(response.status_code, 403)
 
     def _fixture_setup(self):
         management.call_command('create_user_groups')

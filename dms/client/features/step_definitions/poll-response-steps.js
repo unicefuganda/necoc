@@ -15,7 +15,7 @@ module.exports = function () {
         pollResponseAttr.keyword = keyword;
         pollResponseAttr.phone = '+234567';
 
-        dataSetupPage.createPollAndResponseFrom(pollResponseAttr, function(poll){
+        dataSetupPage.createPollAndResponseFrom(pollResponseAttr, function (poll) {
             pollId = poll.id;
             pollName = poll.name;
             next();
@@ -72,5 +72,4 @@ module.exports = function () {
     this.Then(/^I should see the export poll button$/, function (next) {
         this.expect(pollResponsesPage.exportPollResponseButton(pollId).isDisplayed()).to.eventually.be.true.and.notify(next);
     });
-
 };

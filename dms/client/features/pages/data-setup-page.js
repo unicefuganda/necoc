@@ -5,7 +5,7 @@ var DataSetupPage = function () {
         baseRequest,
         self = this;
 
-    function init (callback) {
+    function init(callback) {
         request({
             url: 'http://localhost:7999/api-token-auth/',
             method: 'post',
@@ -27,11 +27,21 @@ var DataSetupPage = function () {
     this.createUser = function (callback) {
         exec('./../../manage.py create_super_user test_user password ' +
             'test_user@nothing.com "Test User" Kampala 1234567890', function (error, stdout, stderr) {
-            if(error) {
+            if (error) {
                 console.log(error, stdout, stderr);
                 return;
             }
             init(callback);
+        });
+    };
+
+    this.createUserGroup = function (callback) {
+        exec('./../../manage.py create_user_groups test_user', function (error, stdout, stderr) {
+            if (error) {
+                console.log(error, stdout, stderr);
+                return;
+            }
+            callback();
         });
     };
 
@@ -106,7 +116,7 @@ var DataSetupPage = function () {
                     email: email,
                     location: JSON.parse(location).id
                 }
-            }, function (err, httpResponse, mobileUser) {
+            }, function (err, httpResponse) {
                 callback(err, httpResponse, location);
             });
         });
@@ -164,11 +174,36 @@ var DataSetupPage = function () {
             source: 'NECOC Volunteer'
         };
 
-        return request.post('http://localhost:7999/api/v1/rapid-pro/', {
+        return baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {
             form: sms
         }, function () {
             sms.formattedTime = formatedTime;
             callback(sms);
+        });
+    };
+
+    this.postFullMessage = function (content, callback) {
+        baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {form: content}, callback.bind({}, content));
+    };
+
+    this.postMessages = function (number, callback) {
+        var messages = [];
+        for (var index = 0; index < number; index++) {
+            var message = { phone: "023020302" + index, time: "2014-02-13T02:00:00", relayer: 2, run: String(index),
+                text: "I am message" + index, source: "NECOC Volunteer" };
+            baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
+            messages.push(message);
+        }
+        browser.sleep(800).then(callback.bind({}, messages))
+    };
+
+    this.postMobileUser = function (callback) {
+        var necocVolunteer = { "name": "ayoyo", "phone": "023020302", "email": "haha@ha.ha"};
+        baseRequest.get('http://localhost:7999/api/v1/locations/?format=json', function (error, response, location) {
+            necocVolunteer["location"] = JSON.parse(location)[0].id;
+            baseRequest.post('http://localhost:7999/api/v1/mobile-users/', {form: necocVolunteer}, function () {
+                callback();
+            });
         });
     };
 

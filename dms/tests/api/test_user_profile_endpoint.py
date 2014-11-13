@@ -1,5 +1,6 @@
 from django.conf import settings
 import mock
+from mongoengine.django.auth import Group
 from dms.models import User, Location, UserProfile
 from dms.tests.base import MongoAPITestCase
 
@@ -8,6 +9,7 @@ class TestUserProfileEndpoint(MongoAPITestCase):
     API_ENDPOINT = '/api/v1/mobile-users/'
 
     def setUp(self):
+        self.login_user()
         self.district = Location(**dict(name='Kampala', type='district', parent=None))
         self.district.save()
         self.mobile_user_to_post = dict(name='tim', phone='+256775019500', location=self.district.id, email='tim@akampa.com')
@@ -33,6 +35,10 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.assertEqual(self.mobile_user['phone'], response.data[0]['phone'])
         self.assertEqual(self.mobile_user['email'], response.data[0]['email'])
         self.assertEqual(self.district.name, response.data[0]['location']['name'])
+
+    def test_raise_403_if_user_doesnt_have_manage_permission(self):
+        self.assert_permission_required_for_get(self.API_ENDPOINT)
+        self.assert_permission_required_for_post(self.API_ENDPOINT)
 
     def test_should_get_a_single_user(self):
         attr = self.mobile_user.copy()

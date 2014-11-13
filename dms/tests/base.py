@@ -1,6 +1,7 @@
 import csv
+import uuid
 from django.core import management
-from mongoengine.django.auth import Group
+from mongoengine.django.auth import Group, ContentType, Permission
 from dms.models import User
 from rest_framework.test import APITestCase
 from django.test import TestCase
@@ -17,6 +18,15 @@ class MongoTestCase(TestCase):
         user.group = Group.objects(name='Administrator').first()
         user.set_password('password')
         self.client.login(username='test_user', password='password')
+
+    def login_with_permission(self, permission_codename):
+        self.client.logout()
+        ct = ContentType(app_label='dms', model=str(uuid.uuid4()), name=str(uuid.uuid4())).save()
+        permission = Permission(name='can view polls ', codename=permission_codename, content_type=ct.id).save()
+        group = Group(name=str(uuid.uuid4()), permissions=[permission]).save()
+        user = User(username='permitted', group=group)
+        user.set_password('pw')
+        self.client.login(username='permitted', password='pw')
 
     def login_without_permissions(self):
         self.client.logout()

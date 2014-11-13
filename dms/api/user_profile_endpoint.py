@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AnonymousUser
 import re
 from rest_condition import Or
+from rest_framework.permissions import BasePermission
 from rest_framework.request import Request
 from rest_framework_mongoengine.generics import ListCreateAPIView
 
@@ -62,7 +63,7 @@ class UserProfileListCreateView(ListCreateAPIView):
             obj.user = user
 
 
-class IsCurrentUsersProfile(object):
+class IsCurrentUsersProfile(BasePermission):
     def has_permission(self, request, view):
         if request.user.is_anonymous():
             return False

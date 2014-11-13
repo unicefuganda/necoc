@@ -1,3 +1,5 @@
+from rest_condition import And, Or
+from rest_framework.permissions import BasePermission
 from rest_framework_mongoengine import serializers
 from rest_framework import fields
 from rest_framework import serializers as serialiserzz
@@ -6,6 +8,7 @@ from rest_framework import serializers as rest_serializers
 from dms.models import Poll, Location, UserProfile
 from dms.tasks import send_bulk_sms
 from dms.utils.general_helpers import flatten
+from dms.utils.permission_class_factory import build_permission_class
 
 
 class PollSerializer(serializers.MongoEngineModelSerializer):
@@ -22,10 +25,17 @@ class PollSerializer(serializers.MongoEngineModelSerializer):
         exclude = ('log',)
 
 
+class CurrentlyViewingPolls(BasePermission):
+    def has_permission(self, request, view):
+        return request.method == 'GET'
+
+
 class PollListCreateView(ListCreateAPIView):
     model = Poll
     serializer_class = PollSerializer
     queryset = Poll.objects()
+    permission_classes = [Or(build_permission_class('dms.can_manage_polls'),
+                             And(build_permission_class('dms.can_view_polls'), CurrentlyViewingPolls))]
 
     def post_save(self, obj, created=True):
         locations = self.get_location(obj)

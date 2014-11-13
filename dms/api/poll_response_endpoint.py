@@ -1,3 +1,4 @@
+from rest_framework.permissions import AllowAny
 from rest_framework_mongoengine import serializers
 from rest_framework import fields
 from rest_framework import serializers as serialiserzz
@@ -21,6 +22,7 @@ class PollResponseSerializer(serializers.MongoEngineModelSerializer):
 
 class PollResponseListCreateView(ListCreateAPIView):
     serializer_class = PollResponseSerializer
+    permission_classes = (AllowAny,)
     model = PollResponse
 
     def get_queryset(self):

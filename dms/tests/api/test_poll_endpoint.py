@@ -1,6 +1,8 @@
 import json
+import uuid
 from mock import patch, MagicMock, ANY
-from dms.models import Poll, Location, UserProfile, PollResponse
+from mongoengine.django.auth import Group, Permission, ContentType
+from dms.models import Poll, Location, UserProfile, PollResponse, User
 from dms.tests.base import MongoAPITestCase
 from necoc.settings import API_URL, API_TOKEN
 
@@ -9,6 +11,7 @@ class TestPollEndpoint(MongoAPITestCase):
     POLL_ENDPOINT = '/api/v1/polls/'
 
     def setUp(self):
+        self.login_user()
         self.kampala = Location(name='Kampala', parent=None, type='district').save()
         gulu = Location(**(dict(name='Gulu', parent=None, type='district'))).save()
         user_attr = dict(name='timothy', phone='+256775019449', location=gulu, email=None)
@@ -74,3 +77,19 @@ class TestPollEndpoint(MongoAPITestCase):
         expected_poll = self.poll_to_post.copy()
         expected_poll['number_of_responses'] = 1
         self.assertDictContainsSubset(expected_poll, response.data[0])
+
+    def test_should_not_get_a_list_of_polls_if_unauthorized(self):
+        self.client.logout()
+        self.assert_permission_required_for_get(self.POLL_ENDPOINT)
+        self.assert_permission_required_for_post(self.POLL_ENDPOINT)
+
+    def test_should_get_a_list_of_polls_with_only_view_permissions(self):
+        endpoint = self.POLL_ENDPOINT
+        self.login_with_permission('can_view_polls')
+        response = self.client.get(endpoint)
+        self.assertEquals(response.status_code, 200)
+        response = self.client.post(endpoint)
+        self.assertEquals(response.status_code, 403)
+
+
+

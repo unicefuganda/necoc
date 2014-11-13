@@ -25,6 +25,7 @@ class PollResponseEndPointTest(MongoAPITestCase):
                                      run=23243)
         self.poll_response = dict(phone_no="+256775019449", text=text, received_at=self.date_time,
                             relayer_id=234, run_id=23243)
+        self.client.logout()
 
     def _api_url(self, id):
         return "%s%s/" % (self.API_ENDPOINT, str(id))

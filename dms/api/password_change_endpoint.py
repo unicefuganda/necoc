@@ -49,7 +49,6 @@ class PasswordChangeView(UpdateAPIView):
     def pre_save(self, obj):
         profile = super(PasswordChangeView, self).get_object()
         UserProfileService(profile).notify_password_change()
-        super(PasswordChangeView, self).pre_save(obj)
 
     def post(self, request, *args, **kwargs):
         return self.patch(request, *args, **kwargs)

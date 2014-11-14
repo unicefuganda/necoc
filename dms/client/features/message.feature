@@ -59,6 +59,7 @@ Feature: Messages
     And I click the add button
     Then I should see the message associated with the disaster
     And I should see zero message uncategorized
+    And I POST "NECOC GULU Fire" to the NECOC DMS
     When I navigate to "/admin/disasters"
     And I click the disaster in "Mukono"
     Then I should see the associated message

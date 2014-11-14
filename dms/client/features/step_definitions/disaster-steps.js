@@ -134,9 +134,13 @@ module.exports = function () {
     this.Then(/^I should see the associated message$/, function (next) {
         var self = this;
 
-        disasterPage.associatedMessages(0, 'source')
-            .then(function (source) {
-                self.expect(source).to.equal(associatedMessage.source + " (" + associatedMessage.phone + ")");
+        disasterPage.numberOfAssociatedMessages()
+            .then(function (noOfMessages) {
+                self.expect(noOfMessages).to.equal(1);
+            })
+            .then(function () {
+                self.expect(disasterPage.associatedMessages(0, 'source')).to
+                    .eventually.equal(associatedMessage.source + " (" + associatedMessage.phone + ")");
             })
             .then(function () {
                 self.expect(disasterPage.associatedMessages(0, 'text')).to.eventually.equal(associatedMessage.text);

@@ -18,7 +18,7 @@
         });
 
         $scope.showAssociatedMessages = function (disaster) {
-            MessageService.filter('disaster', disaster.id)
+            MessageService.filter({disaster: disaster.id})
                 .then(function (response) {
                     $scope.associatedMessages = response.data;
                     $scope.showMessageList = true;

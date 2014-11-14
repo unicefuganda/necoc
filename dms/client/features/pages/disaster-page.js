@@ -51,6 +51,11 @@ var DisasterPage = function () {
     this.associatedMessages = function (row, key) {
         return element(by.repeater('message in associatedMessages').row(row).column('{[{ message.' + key + ' }]}')).getText();
     };
+
+    this.numberOfAssociatedMessages = function () {
+        return element.all(by.repeater("message in associatedMessages")).count();
+    };
+
 };
 
 module.exports = new DisasterPage();

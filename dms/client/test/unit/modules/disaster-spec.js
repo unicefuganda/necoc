@@ -123,9 +123,8 @@ describe('dms.disaster', function () {
 
                 mockMessageService.when('filter').returnPromiseOf({ data: mockAssociatedMessages });
                 scope.showAssociatedMessages(disasterStub);
-
                 scope.$apply();
-                expect(mockMessageService.filter).toHaveBeenCalledWith('disaster', 'disaster_id');
+                expect(mockMessageService.filter).toHaveBeenCalledWith({disaster: 'disaster_id'});
                 expect(scope.associatedMessages).toEqual(mockAssociatedMessages);
                 expect(scope.showMessageList).toBeTruthy();
             });

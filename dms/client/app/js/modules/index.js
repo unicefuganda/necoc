@@ -79,12 +79,19 @@
             })
     });
 
-    module.run(function ($rootScope, $state, $stateParams) {
+
+    module.run(function ($rootScope, $state, $stateParams, Permission, User, Permissions) {
         $rootScope.$state = $state;
         $rootScope.params = {location : $stateParams};
+
+        Permissions.LIST.forEach(function (permission) {
+            Permission.defineRole(permission, function () {
+                return User.hasPermission(permission);
+            });
+        });
     });
 
-})(angular.module('dms', ['ui.router', 'siTable', 'checklist-model', 'dms.message', 'dms.admin-panel', 'dms.location', 'dms.mobile-user',
+})(angular.module('dms', ['ui.router', 'permission', 'siTable', 'checklist-model', 'dms.message', 'dms.admin-panel', 'dms.location', 'dms.mobile-user',
     'dms.utils', 'dms.disaster', 'dms.disaster-type', 'dms.map', 'dms.polls', 'dms.poll-responses', 'dms.filters', 'dms.dashboard',
-    'dms.user-profile']));
+    'dms.user-profile', 'dms.user']));
 

@@ -26,7 +26,7 @@
             color: '#FC4F55',
             fillOpacity: 0.4,
             weight: 1,
-            clickable : false
+            clickable: false
         },
         legendPosition: 'bottomleft',
         districtLayerStyle: {
@@ -49,6 +49,16 @@
                 }
             }
         }
+    });
+
+    module.constant('Permissions', {
+        LIST: [
+            'can_manage_users',
+            'can_manage_polls',
+            'can_view_polls',
+            'can_manage_disasters',
+            'can_manage_messages'
+        ]
     });
 
 })(angular.module('dms.config', []));

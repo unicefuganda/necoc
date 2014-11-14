@@ -65,7 +65,12 @@
 
             .state('admin.disasters', {
                 url: '/disasters',
-                data: { pageTitle: 'Disasters'},
+                data: {
+                    pageTitle: 'Disasters',
+                    permissions: {
+                        only: ['can_manage_disasters']
+                    }
+                },
                 templateUrl: '/static/templates/partials/admin/disasters/disasters.html',
                 controller: 'DisastersController'
             })
@@ -88,7 +93,7 @@
 
     module.run(function ($rootScope, $state, $stateParams, Permission, User, Permissions) {
         $rootScope.$state = $state;
-        $rootScope.params = {location : $stateParams};
+        $rootScope.params = {location: $stateParams};
 
         Permissions.LIST.forEach(function (permission) {
             Permission.defineRole(permission, function () {

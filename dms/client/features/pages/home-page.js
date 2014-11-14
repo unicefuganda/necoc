@@ -3,6 +3,7 @@ var HomePage = function () {
 
     this.messagesTab = element(by.id('messages-tab'));
     this.usersTab = element(by.id('users-tab'));
+    this.disastersTab = element(by.id('disasters-tab'));
     this.pollsTab = element(by.id('polls-tab'));
     this.title =  element(by.css('.sidebar .navbar-brand .title'));
     this.loggedInUser =  element(by.id('logged-in-user'));

@@ -19,8 +19,8 @@
                         <span class="badge">{[{uncategorizedMessagesCount}]}</span>
                     </a>
                 </li>
-                <li ui-sref-active="active">
-                    <a ui-sref="admin.disasters">
+                <li ui-sref-active="active" ng-if-permissions="can_manage_disasters">
+                    <a ui-sref="admin.disasters" id="disasters-tab">
                         <span class="icon icon-flash-electric"></span>
                         <span class="bar-content">Disasters</span>
                     </a>

@@ -20,3 +20,15 @@ Feature: Authentication and Authorization
     And I log in with "" permission
     Then I should not see the users tab
     And I should not route to "/admin/mobile-users"
+    Given I log in with "can_manage_users" permission
+    Then I should see the users tab
+    And I can route to "/admin/mobile-users"
+
+  Scenario: Manage Disasters Authorization
+    Given I am logged out
+    And I log in with "" permission
+    Then I should not see the disasters tab
+    And I should not route to "/admin/disasters"
+    Given I log in with "can_manage_disasters" permission
+    Then I should see the disasters tab
+    And I can route to "/admin/disasters"

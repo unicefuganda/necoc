@@ -45,6 +45,17 @@ var DataSetupPage = function () {
         });
     };
 
+    this.createUserWithPermission = function (options, callback) {
+        var params = options.username + ' ' + options.password + ' ' + options.email + ' ' + options.permission;
+        exec('./../../manage.py create_user_with_permission ' + params, function (error, stdout, stderr) {
+            if (error) {
+                console.log(error, stdout, stderr);
+                return;
+            }
+            callback();
+        });
+    };
+
     this.registerDisasterType = function (disasterType, next) {
         baseRequest.post('http://localhost:7999/api/v1/disaster-types/', {
             form: {

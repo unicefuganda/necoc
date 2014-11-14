@@ -31,7 +31,7 @@
                         <span class="bar-content">Polls</span>
                     </a>
                 </li>
-                <li ui-sref-active="active">
+                <li ui-sref-active="active" ng-if-permissions="can_manage_users">
                     <a ui-sref="admin.mobile-users" id="users-tab">
                         <span class="icon icon-contacts-social"></span>
                         <span class="bar-content">Users</span>

@@ -23,6 +23,7 @@
                 url: '/:district',
                 data: { pageTitle: 'Dashboard'},
                 templateUrl: '/static/templates/partials/admin/dashboard.html'
+
             })
 
             .state('admin.dashboard.district.subcounty', {
@@ -38,7 +39,12 @@
 
             .state('admin.mobile-users', {
                 url: '/mobile-users',
-                data: { pageTitle: 'Users'},
+                data: {
+                    pageTitle: 'Users',
+                    permissions: {
+                        only: ['can_manage_users']
+                    }
+                },
                 templateUrl: '/static/templates/partials/admin/mobile-users.html',
                 controller: 'MobileUserController'
             })

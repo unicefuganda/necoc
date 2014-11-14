@@ -1,30 +1,54 @@
-    module.exports = function () {
+module.exports = function () {
     var loginPage = require("../pages/login-page"),
-        homePage = require("../pages/home-page");
+        homePage = require("../pages/home-page"),
+        dataSetUpPage = require("../pages/data-setup-page");
 
     this.World = require("../support/world").World;
 
-    this.Given(/^I am logged in as a NECOC admin$/, function (next) {
-        var self = this;
+    var login = function (self, username, password, next) {
         browser.get('/');
         browser.getCurrentUrl().then(function (url) {
             if (url.match(/login/)) {
-                loginPage.username.sendKeys('test_user').then(function () {
-                    loginPage.password.sendKeys('password')
+                loginPage.username.sendKeys(username).then(function () {
+                    loginPage.password.sendKeys(password)
                 }).then(function () {
                     loginPage.signInButton.click()
                 }).then(function () {
                     self.expect(browser.wait(homePage.title.getText)).to.eventually.equal('NECOC DMS')
                 }).then(function () {
-                    self.expect(browser.wait(homePage.loggedInUser.getText)).to.eventually.match(/test_user/)
+                    self.expect(browser.wait(homePage.loggedInUser.getText)).to.eventually.match(new RegExp(username))
                 }).then(next)
             } else {
                 self.expect(browser.wait(homePage.title.getText)).to.eventually.equal('NECOC DMS')
                     .and.notify(function () {
-                        self.expect(browser.wait(homePage.loggedInUser.getText)).to.eventually.match(/test_user/)
-                            .and.notify(next)
+                        browser.wait(homePage.loggedInUser.getText).then(function (currentUsername) {
+                            if(currentUsername != username) {
+                                browser.get('/logout').then(function () {
+                                    login(self, username, password, next)
+                                });
+                            }
+                        })
                     });
             }
+        });
+    }
+
+    this.Given(/^I am logged in as a NECOC admin$/, function (next) {
+        var self = this;
+        login(self, 'test_user', 'password', next);
+    });
+
+    this.Given(/^I log in with "([^"]*)" permission$/, function (permission, next) {
+        var self = this,
+            params = {
+                username: "some_user",
+                password: "test_user",
+                email: "user@email.com",
+                permission: permission
+            };
+
+        dataSetUpPage.createUserWithPermission(params, function () {
+            login(self, params.username, params.password, next);
         });
     });
 

@@ -27,6 +27,7 @@ describe('dms.user', function () {
             });
         });
 
+
         describe('METHOD: getPermissions', function () {
             it('should retrieve current users permissions', function () {
                 var obtainedPermissions = user.getPermissions();
@@ -110,4 +111,49 @@ describe('dms.user', function () {
             });
         });
     });
+
+    describe('ngIfPermissions', function () {
+        var scope,
+            compile,
+            element,
+            ngElement,
+            httpMock,
+            apiUrl,
+            html = "<div id='test'>" +
+                "<div ng-if-permissions='can_view_tests' id='test_view'>Test Tab</div>" +
+                "</div>";
+
+        beforeEach(inject(function ($compile, $rootScope, $httpBackend, Config) {
+            compile = $compile;
+            httpMock = $httpBackend;
+            scope = $rootScope;
+            apiUrl = Config.apiUrl;
+        }));
+
+        function compileDirective() {
+            ngElement = angular.element(html);
+            element = compile(ngElement)(scope);
+            scope.$digest();
+            httpMock.flush();
+        }
+
+        it('should show element if user has permission', function () {
+            httpMock.when('GET', apiUrl + 'current-permissions/').respond({
+                permissions: ['can_view_tests']
+            });
+            ngElement = angular.element(html);
+            element = compile(ngElement)(scope);
+            scope.$digest();
+            httpMock.flush();
+            expect(element.find('#test_view').css('display') == 'none').toBeFalsy();
+        });
+
+        it('should not show element if user has no permission', function () {
+            httpMock.when('GET', apiUrl + 'current-permissions/').respond({
+                permissions: ['cannot_view_tests']
+            });
+            compileDirective();
+            expect(element.find('#test_view').css('display') == 'none').toBeTruthy();
+        });
+    })
 });

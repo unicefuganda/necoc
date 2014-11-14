@@ -18,11 +18,31 @@
                     }).length
                 }).then(function (exists) {
                     var deferred = $q.defer();
-                    exists ? deferred.resolve(2) : deferred.reject();
+                    exists ? deferred.resolve(true) : deferred.reject();
                     return deferred.promise;
                 });
             }
         };
     });
 
-})(angular.module('dms.user', ['dms.config']));
+    module.directive('ngIfPermissions', function (User, helpers, $q) {
+        return {
+            link: function (scope, element, attrs) {
+                var permissionsList = helpers.stringToArray(attrs.ngIfPermissions, ',');
+
+                var permissionPromises = permissionsList.map(function (permission) {
+                    return User.hasPermission(permission)
+                });
+
+                $q.all(permissionPromises).then(
+                    function () {
+                        element.show();
+                    },
+                    function () {
+                        element.hide();
+                    });
+            }
+        }
+    })
+
+})(angular.module('dms.user', ['dms.config', 'dms.utils']));

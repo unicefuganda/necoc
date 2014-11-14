@@ -22,7 +22,7 @@ class MongoTestCase(TestCase):
     def login_with_permission(self, permission_codename):
         self.client.logout()
         ct = ContentType(app_label='dms', model=str(uuid.uuid4()), name=str(uuid.uuid4())).save()
-        permission = Permission(name='can view polls ', codename=permission_codename, content_type=ct.id).save()
+        permission = Permission(name=permission_codename, codename=permission_codename, content_type=ct.id).save()
         group = Group(name=str(uuid.uuid4()), permissions=[permission]).save()
         user = User(username='permitted', group=group)
         user.set_password('pw')

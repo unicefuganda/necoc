@@ -20,6 +20,7 @@
 
             var newFilter = angular.copy(filter);
             newFilter.to ? newFilter.to = addDay(newFilter.to): null;
+            if (!newFilter.disaster_type) delete newFilter.disaster_type;
 
             MessageService.filter(newFilter).then(function (response) {
                 $scope.messages = response.data;

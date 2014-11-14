@@ -78,6 +78,14 @@ describe('dms.dashboard', function () {
             expect(scope.messages).toEqual(messagesStub);
         });
 
+        it('should remove disaster_type from filter when cleared', function () {
+            httpMock.expectGET(apiUrl + 'rapid-pro/?from=2014-11-06').respond(messagesStub);
+            scope.filter = {from: '2014-11-06', disaster_type: undefined};
+            httpMock.flush();
+
+            expect(scope.messages).toEqual(messagesStub);
+        });
+
         it('should tell the scope not to show checkboxes', function () {
             expect(scope.showMessageCheckboxes).toBeFalsy();
         });

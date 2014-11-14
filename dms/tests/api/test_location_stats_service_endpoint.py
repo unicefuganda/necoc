@@ -314,3 +314,84 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(200, response.status_code)
         self.assertEqual(expected_serialized_data, response.data)
+
+    def test_all_locations_empty_GET_parameter_query(self):
+        RapidProMessage(**self.message).save()
+        RapidProMessage(**self.message_bukoto).save()
+        Disaster(**self.disaster_attr).save()
+        Disaster(**self.disaster_attr_bukoto).save()
+
+        expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50},
+                                                'disasters': {'count': 1, 'percentage': 50}},
+                                    'bukoto': {'messages': {'count': 1, 'percentage': 50},
+                                               'disasters': {'count': 1, 'percentage': 50}}
+        }
+
+        from_ = self.date_time - datetime.timedelta(days=1)
+        from_ = str(from_.date())
+        to_ = self.date_time + datetime.timedelta(days=1)
+        to_ = str(to_.date())
+
+        response = self.client.get(self.API_ENDPOINT + '?format=json&from=%s&to=%s&disaster_type=' % (from_, to_))
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(expected_serialized_data, response.data)
+
+        expected_serialized_data = {'kampala': {'messages': {'count': 0, 'percentage': 0},
+                                                'disasters': {'count': 0, 'percentage': 0}},
+                                    'bukoto': {'messages': {'count': 0, 'percentage': 0},
+                                               'disasters': {'count': 0, 'percentage': 0}}
+                                    }
+
+
+        response = self.client.get(self.API_ENDPOINT + '?format=json&from=%s&disaster_type=&to=' % to_)
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(expected_serialized_data, response.data)
+
+        response = self.client.get(self.API_ENDPOINT + '?format=json&to=%s&disaster_type=&from=' % from_)
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(expected_serialized_data, response.data)
+
+    def test_subcounties_empty_GET_parameter_query(self):
+        RapidProMessage(**self.message).save()
+
+        bugolobi_name = 'Bugolobi'
+        bugolobi = Location(**dict(name=bugolobi_name, parent=self.kampala, type='subcounty')).save()
+        text = "NECOC %s flood" % bugolobi_name
+        message_bugolobi = dict(phone_no='123444', text=text, received_at=self.date_time, relayer_id=234, run_id=23243)
+
+        RapidProMessage(**message_bugolobi).save()
+
+        Disaster(**self.disaster_attr).save()
+        disaster_attr_bugolobi = self.disaster_attr.copy()
+        disaster_attr_bugolobi["locations"] = [bugolobi]
+        Disaster(**disaster_attr_bugolobi).save()
+
+        expected_serialized_data = {'bugolobi': {'messages': {'count': 1, 'percentage': 50},
+                                                 'disasters': {'count': 1, 'percentage': 50}}}
+
+        from_ = self.date_time - datetime.timedelta(days=1)
+        from_ = str(from_.date())
+        to_ = self.date_time + datetime.timedelta(days=1)
+        to_ = str(to_.date())
+
+        url = self.API_ENDPOINT + '%s/?format=json&from=%s&to=%s&disaster_type=' % (str(self.kampala.name.lower()), from_, to_)
+        response = self.client.get(url, format='json')
+        self.assertEqual(200, response.status_code)
+
+
+        self.assertEqual(expected_serialized_data, response.data)
+
+        expected_serialized_data = {'bugolobi': {'messages': {'count': 0, 'percentage': 0},
+                                                'disasters': {'count': 0, 'percentage': 0}}}
+
+        url = self.API_ENDPOINT + '%s/?format=json&from=%s&disaster_type=&to=' % (str(self.kampala.name.lower()), to_)
+        response = self.client.get(url, format='json')
+        self.assertEqual(200, response.status_code)
+
+        self.assertEqual(expected_serialized_data, response.data)
+
+        url = self.API_ENDPOINT + '%s/?format=json&to=%s&disaster_type=&from=' % (str(self.kampala.name.lower()), from_)
+        response = self.client.get(url, format='json')
+        self.assertEqual(200, response.status_code)
+
+        self.assertEqual(expected_serialized_data, response.data)

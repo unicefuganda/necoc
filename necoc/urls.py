@@ -8,6 +8,7 @@ from dms.api.bulk_sms_endpoint import SentMessageListCreateView
 from dms.api.current_permissions_endpoint import CurrentPermissionsView
 from dms.api.disaster_endpoint import DisasterListCreateView
 from dms.api.disaster_type_endpoint import DisasterTypeListCreateView
+from dms.api.groups_endpoint import GroupsEndpointListView
 from dms.api.location_stats_service_endpoint import LocationStatsListView, DistrictStatsListView
 from dms.api.password_change_endpoint import PasswordChangeView
 from dms.api.poll_endpoint import PollListCreateView
@@ -34,6 +35,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/rapid-pro/(?P<id>[0-9a-z]+)/$', RapidProRetrieveUpdateView.as_view()),
     url(r'^api/v1/locations/$', LocationListCreateView.as_view()),
     url(r'^api/v1/polls/$', PollListCreateView.as_view()),
+    url(r'^api/v1/groups/$', GroupsEndpointListView.as_view()),
     url(r'^api/v1/mobile-users/$', UserProfileListCreateView.as_view()),
     url(r'^api/v1/mobile-users/(?P<id>[0-9a-z]+)/$', UserProfileView.as_view()),
     url(r'^api/v1/mobile-users/(?P<id>[0-9a-z]+)/password/$', PasswordChangeView.as_view()),

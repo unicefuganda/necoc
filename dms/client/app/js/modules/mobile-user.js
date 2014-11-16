@@ -175,4 +175,31 @@
         }
     });
 
+
+    module.directive('userRole', function (User) {
+        return {
+            link: function (scope, element, attrs) {
+                var $select = element.selectize({
+                    valueField: 'id',
+                    labelField: 'name',
+                    searchField: 'name',
+                    maxItems: 1,
+                    create: false,
+                    preload: true,
+                    load: function (query, callback) {
+                        User.getAllGroups().then(function (response) {
+                            callback(response.data)
+                        });
+                    }
+                });
+
+                scope.$watch(attrs.userRole, function (disaster) {
+                    if (!disaster) {
+                        $select[0].selectize.clear();
+                    }
+                });
+            }
+        }
+    });
+
 })(angular.module('dms.mobile-user', ['dms.config', 'angular-growl', 'dms.utils']));

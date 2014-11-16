@@ -15,7 +15,17 @@ describe('dms.user', function () {
                     'can_view_profile',
                     'can_edit_others'
                 ]
-            };
+            },
+            userGroupsStub = [
+                {
+                    id: "5465cbacd6f45f73d87007d9",
+                    name: "IT Assistant"
+                },
+                {
+                    id: "5465cbacd6f45f73d87007da",
+                    name: "Disaster Preparedness"
+                }
+            ];
 
         beforeEach(function () {
             inject(function (User, Config, $rootScope, $httpBackend) {
@@ -24,6 +34,7 @@ describe('dms.user', function () {
                 scope = $rootScope.$new();
                 apiUrl = Config.apiUrl;
                 httpMock.when('GET', apiUrl + 'current-permissions/').respond(userPermissionsStub);
+                httpMock.when('GET', apiUrl + 'groups/').respond(userGroupsStub);
             });
         });
 
@@ -51,6 +62,33 @@ describe('dms.user', function () {
 
                 runs(function () {
                     expect(permissions).toEqual(userPermissionsStub)
+                });
+            });
+        });
+
+        describe('METHOD: getAllGroups', function () {
+            it('should retrieve all user groups', function () {
+                var groupsPromise = user.getAllGroups();
+                httpMock.expectGET(apiUrl + 'groups/');
+                httpMock.flush();
+
+                var done = false,
+                    groups;
+
+                runs(function () {
+                    groupsPromise.then(function (response) {
+                        done = true;
+                        groups = response.data
+                    });
+                    scope.$apply();
+                });
+
+                waitsFor(function () {
+                    return done;
+                });
+
+                runs(function () {
+                    expect(groups).toEqual(userGroupsStub)
                 });
             });
         });

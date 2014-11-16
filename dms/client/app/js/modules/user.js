@@ -21,6 +21,9 @@
                     exists ? deferred.resolve(true) : deferred.reject();
                     return deferred.promise;
                 });
+            },
+            getAllGroups: function () {
+                return $http.get(Config.apiUrl + 'groups/');
             }
         };
     });

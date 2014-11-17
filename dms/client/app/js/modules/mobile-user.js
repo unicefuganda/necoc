@@ -1,9 +1,13 @@
 (function (module) {
 
-    module.factory('MobileUserService', function ($http, Config) {
+    module.factory('MobileUserService', function ($http, Config, $upload) {
         return {
-            create: function (user) {
-                return $http.post(Config.apiUrl + 'mobile-users/', user);
+            create: function (user, file) {
+                return $upload.upload({
+                    url: Config.apiUrl + 'mobile-users/',
+                    file: file,
+                    data: user
+                });
             },
             all: function () {
                 return $http.get(Config.apiUrl + 'mobile-users/');
@@ -33,10 +37,18 @@
         $scope.modalTitle = 'Add User';
         $scope.user = {};
         $scope.form = {};
+
+        var selectedFile;
+
+        $scope.onFileSelect = function ($files) {
+            selectedFile = $files[0];
+        };
+
         $scope.saveUser = function (user) {
+
             if ($scope.form.user_form.$valid) {
                 $scope.saveStatus = true;
-                MobileUserService.create(user)
+                MobileUserService.create(user, selectedFile)
                     .then(function (response) {
                         $scope.saveStatus = false;
                         $scope.user = {};
@@ -202,4 +214,4 @@
         }
     });
 
-})(angular.module('dms.mobile-user', ['dms.config', 'angular-growl', 'dms.utils', 'dms.user']));
+})(angular.module('dms.mobile-user', ['angularFileUpload', 'dms.config', 'angular-growl', 'dms.utils', 'dms.user']));

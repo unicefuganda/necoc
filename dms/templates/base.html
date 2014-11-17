@@ -20,6 +20,7 @@
 <body>
 {% block body %}{% endblock %}
 <!-- Libs -->
+{% block before_scripts %}{% endblock %}
 <script src="{{ STATIC_URL }}bower_components/jquery/dist/jquery.min.js"></script>
 <script src="{{ STATIC_URL }}bower_components/angular/angular.min.js"></script>
 {% block scripts %}{% endblock %}

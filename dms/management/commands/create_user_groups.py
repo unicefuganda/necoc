@@ -27,15 +27,15 @@ class Command(BaseCommand):
                                                     manage_disasters,
                                                     manage_messages]).save()
 
-            Group(name='Disaster Preparedness', permissions=[manage_polls,
-                                                             view_polls,
-                                                             manage_disasters,
-                                                             manage_messages]).save()
+            Group(name='Disaster Preparedness Officer', permissions=[manage_polls,
+                                                                     view_polls,
+                                                                     manage_disasters,
+                                                                     manage_messages]).save()
 
-            Group(name='Disaster Management', permissions=[manage_polls,
-                                                           view_polls,
-                                                           manage_disasters,
-                                                           manage_messages]).save()
+            Group(name='Disaster Management Officer', permissions=[manage_polls,
+                                                                   view_polls,
+                                                                   manage_disasters,
+                                                                   manage_messages]).save()
 
             Group(name='Management Team', permissions=[manage_users,
                                                        manage_polls,

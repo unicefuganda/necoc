@@ -123,3 +123,14 @@ class TestUserProfileEndpoint(MongoAPITestCase):
                                                     mock.ANY,
                                                     settings.DEFAULT_FROM_EMAIL,
                                                     ['email@email.email'])
+
+    def test_post_with_group_associates_user_to_group(self):
+        attr = self.mobile_user_to_post.copy()
+        attr['username'] = 'akampa'
+        group = Group.objects().first()
+        attr['group'] = str(group.id)
+        response = self.client.post(self.API_ENDPOINT, data=attr)
+        self.assertEqual(201, response.status_code)
+
+        retrieved_user = User.objects(username='akampa').first()
+        self.assertEqual(group, retrieved_user.group)

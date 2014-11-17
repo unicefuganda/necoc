@@ -39,7 +39,7 @@
                 MobileUserService.create(user)
                     .then(function (response) {
                         $scope.saveStatus = false;
-                        $scope.user = null;
+                        $scope.user = {};
                         $scope.hasErrors = false;
                         $scope.users.push(response.data);
                     }, function (error) {
@@ -193,8 +193,8 @@
                     }
                 });
 
-                scope.$watch(attrs.userRole, function (disaster) {
-                    if (!disaster) {
+                scope.$watch(attrs.userRole, function (role) {
+                    if (!role || Object.keys(role).length == 0) {
                         $select[0].selectize.clear();
                     }
                 });
@@ -202,4 +202,4 @@
         }
     });
 
-})(angular.module('dms.mobile-user', ['dms.config', 'angular-growl', 'dms.utils']));
+})(angular.module('dms.mobile-user', ['dms.config', 'angular-growl', 'dms.utils', 'dms.user']));

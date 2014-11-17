@@ -58,8 +58,9 @@ class UserProfileListCreateView(ListCreateAPIView):
 
     def pre_save(self, obj):
         username = self.request.DATA.get('username', None)
+        group_id = self.request.DATA.get('group', None)
         if username:
-            user = UserProfileService(obj).setup_new_user(username)
+            user = UserProfileService(obj).setup_new_user(username, group_id)
             obj.user = user
 
 

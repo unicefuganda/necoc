@@ -89,20 +89,35 @@
 
                             <div class="btn-group btn-toggle" id="grant-web-access-button" button-switch=""
                                  data-on="Yes"
-                                 data-off="No" data-toggle-section="username_section"></div>
+                                 data-off="No" data-toggle-section="online-user-info"></div>
                         </div>
-                        <div id="username_section" class="form-group hide"
-                             ng-class="{'has-error': form.user_form.username.$invalid && hasErrors }">
-                            <label class="control-label" for="username">Username</label>
-                            <input type="text" id="username" ng-model="user.username" name="username"
-                                   class="form-control"
-                                   placeholder="enter username">
+                        <div id="online-user-info" class="hide">
+                            <div id="username-section" class="form-group"
+                                 ng-class="{'has-error': form.user_form.username.$invalid && hasErrors }">
+                                <label class="control-label" for="username">Username</label>
+                                <input type="text" id="username" ng-model="user.username" name="username"
+                                       class="form-control"
+                                       placeholder="enter username">
 
-                            <div id="username-errors" class="error-text"
-                                 ng-show="form.user_form.username.$invalid && hasErrors">
-                                <p class="text-danger" ng-repeat="error in errors.username">
-                                    {[{ error }]}
-                                </p>
+                                <div id="username-errors" class="error-text"
+                                     ng-show="form.user_form.username.$invalid && hasErrors">
+                                    <p class="text-danger" ng-repeat="error in errors.username">
+                                        {[{ error }]}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group role"
+                                 ng-class="{'has-error':  form.user_form.role.$invalid && hasErrors }">
+                                <label class="control-label">Role</label>
+                                <input type="text" ng-model="user.group" name="role" class="form-control"
+                                       placeholder="select role" user-role="user">
+
+                                <div id="role-errors" class="error-text"
+                                     ng-show="form.user_form.role.$invalid && hasErrors">
+                                    <p class="text-danger" ng-show="form.user_form.role.$error.required">
+                                        This field is required
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>

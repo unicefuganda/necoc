@@ -10,8 +10,8 @@ class UserProfileService(object):
     def __init__(self, profile):
         self.profile = profile
 
-    def setup_new_user(self, username):
-        user = User(username=username).save()
+    def setup_new_user(self, username, group_id):
+        user = User(username=username, group=group_id).save()
         password = self.set_new_password(user)
         message = self._build_new_user_email_message(username, password)
         send_new_user_email.delay('Your NECOC Account', message, settings.DEFAULT_FROM_EMAIL, [self.profile.email])

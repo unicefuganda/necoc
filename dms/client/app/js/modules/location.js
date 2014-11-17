@@ -33,7 +33,7 @@
                         var selectize = $select[0].selectize;
                         selectize.clear();
                     }
-                });
+                }, true);
             }
         }
     });
@@ -98,10 +98,10 @@
                 scope.select[attrs.locationCascade] = $select[0].selectize;
 
                 scope.$watch(attrs.dataset, function (dataSet) {
-                    if (!dataSet) {
+                    if (!dataSet  || Object.keys(dataSet).length == 0) {
                         scope.select[attrs.locationCascade].clear();
                     }
-                });
+                }, true);
             }
         }
     });

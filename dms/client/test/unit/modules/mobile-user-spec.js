@@ -82,7 +82,7 @@ describe('dms.mobile-user', function () {
             httpMock.flush();
             expect(scope.hasErrors).toBeFalsy();
             expect(scope.saveStatus).toBeFalsy();
-            expect(scope.user).toBeNull();
+            expect(scope.user).toEqual({});
             expect(scope.users).toEqual([responseStub]);
         });
 

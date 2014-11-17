@@ -46,6 +46,7 @@ Feature: Mobile User
     And I select my "subcounty" as "Nabbaale"
     And I choose to grant web access
     And I enter my "username" as "solomon1990"
+    And I select my role as "IT Assistant"
     And I click  save and close
     Then I should see my details in mobile users table in row 1
     When I click "Solomon" in the mobile users table

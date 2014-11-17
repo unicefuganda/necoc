@@ -23,7 +23,7 @@ module.exports = function () {
 
     this.When(/^I select my "([^"]*)" as "([^"]*)"$/, function (className, location, next) {
         user.location[className] = location;
-        mobileUsersPage.createUserModal.selectLocation(className, location).then(next);
+        mobileUsersPage.createUserModal.selectInput(className, location).then(next);
     });
 
     this.When(/^I navigate to the users page$/, function (next) {
@@ -149,6 +149,9 @@ module.exports = function () {
                 self.expect(userProfilePage.element_by_ng_binding('profile.phone')).to.eventually.equal(user.phone);
             })
             .then(function () {
+                self.expect(userProfilePage.element_by_ng_binding('profile.group')).to.eventually.equal(user.group);
+            })
+            .then(function () {
                 self.expect(userProfilePage.element_by_ng_binding('profile.email')).to.eventually.equal(user.email)
                     .and.notify(next);
             })
@@ -160,5 +163,10 @@ module.exports = function () {
                 dataSetUpPage.createUser(next);
             });
         });
+    });
+
+    this.When(/^I select my role as "([^"]*)"$/, function (role, next) {
+        user.group = role;
+        mobileUsersPage.createUserModal.selectInput('user-role', role).then(next);
     });
 };

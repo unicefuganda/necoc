@@ -16,7 +16,7 @@ var MobileUsersModal = function () {
         return this.saveButton.click();
     };
 
-    this.selectLocation = function (className, location) {
+    this.selectInput = function (className, location) {
         return element(by.css('.' + className + ' .selectize-input')).click().then(function () {
             browser.sleep(200);
             return element(by.cssContainingText('.' + className + ' .selectize-dropdown-content .option', location)).click()

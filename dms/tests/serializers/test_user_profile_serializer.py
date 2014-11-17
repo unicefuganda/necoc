@@ -1,3 +1,4 @@
+from mongoengine.django.auth import Group
 from dms.models import User, Location, UserProfile
 from dms.api.user_profile_endpoint import UserProfileSerializer
 from dms.tests.base import MongoTestCase
@@ -86,3 +87,19 @@ class UserProfileSerializerTest(MongoTestCase):
         self.assertDictContainsSubset(self.serialized_mobile_user, serialized_object.data)
         self.assertEqual('cage', serialized_object.data['username'])
         self.assertFalse('user' in serialized_object.data.keys())
+
+    def test_serializing_group_name(self):
+        mobile_user_attr = self.mobile_user.copy()
+        group = Group.objects().first()
+        mobile_user_attr['user'] = User(username='cage', password='haha', group=group).save()
+        mobile_user = UserProfile(**mobile_user_attr).save()
+
+        serialized_object = UserProfileSerializer(mobile_user)
+        self.assertEqual(group.name, serialized_object.data['group'])
+
+    def test_serializing_group_name_when_absent(self):
+        mobile_user_attr = self.mobile_user.copy()
+        mobile_user = UserProfile(**mobile_user_attr).save()
+
+        serialized_object = UserProfileSerializer(mobile_user)
+        self.assertEqual('', serialized_object.data['group'])

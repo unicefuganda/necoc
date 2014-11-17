@@ -19,6 +19,7 @@ from dms.utils.permission_class_factory import build_permission_class
 
 class UserProfileSerializer(serializers.MongoEngineModelSerializer):
     username = fields.CharField(source='username', required=False)
+    group = fields.CharField(source='group', required=False)
 
     def validate_phone(self, attrs, source):
         phone = attrs.get(source)

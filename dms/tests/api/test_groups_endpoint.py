@@ -7,15 +7,21 @@ class GroupsEndpointTest(MongoAPITestCase):
     GROUPS_ENDPOINT = '/api/v1/groups/'
 
     def setUp(self):
+        self.login_user()
         ct = ContentType(app_label='dms', model='test_ct', name='test_ct').save()
         self.permission = Permission(name='can manage something', codename='can_manage_something',
                                      content_type=ct.id).save()
 
     def test_should_get_groups_from_end_point(self):
-        Group.drop_collection()
-        group = Group(name='Test Group', permissions=[self.permission]).save()
+        groups = Group.objects.all()
         response = self.client.get(self.GROUPS_ENDPOINT, format='json')
 
         self.assertEqual(200, response.status_code)
-        self.assertEqual(1, len(response.data))
-        self.assertDictContainsSubset(dict(id=str(group.id), name='Test Group'), response.data[0])
+        self.assertEqual(groups.count(), len(response.data))
+
+        for group in groups:
+            self.assertIn(dict(id=str(group.id), name=group.name), response.data)
+
+    def test_raise_403_if_user_doesnt_have_manage_user_permissions(self):
+        self.assert_permission_required_for_get(self.GROUPS_ENDPOINT)
+        self.assert_permission_required_for_post(self.GROUPS_ENDPOINT)

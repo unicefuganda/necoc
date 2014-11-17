@@ -149,7 +149,11 @@ module.exports = function () {
                 self.expect(userProfilePage.element_by_ng_binding('profile.phone')).to.eventually.equal(user.phone);
             })
             .then(function () {
-                self.expect(userProfilePage.element_by_ng_binding('profile.group')).to.eventually.equal(user.group);
+                if(user.group) {
+                    self.expect(userProfilePage.element_by_ng_binding('profile.group')).to.eventually.equal(user.group);
+                } else {
+                    self.expect(element(by.binding('profile.group')).isDisplayed()).to.eventually.be.false;
+                }
             })
             .then(function () {
                 self.expect(userProfilePage.element_by_ng_binding('profile.email')).to.eventually.equal(user.email)

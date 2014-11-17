@@ -13,6 +13,8 @@ Feature: Mobile User
     And I select my "subcounty" as "Nabbaale"
     And I click  save and close
     Then I should see my details in mobile users table in row 1
+    When I click "Solomon" in the mobile users table
+    Then I should see my details in the profile page
 
   Scenario: Create Mobile User -- Validation
     Given I am logged in as a NECOC admin

@@ -665,7 +665,7 @@ div[class*="-aggregate-marker-icon"] div {
     margin: 0 !important;
 }
 
-.user-btn{
+.user-btn {
     margin-bottom: 10px;
     float: right;
     font-size: 17px;
@@ -680,6 +680,12 @@ div[class*="-aggregate-marker-icon"] div {
     border-right: 4px solid #3E9CB8;
 }
 
-.user-actions ul li{
+.user-actions ul li {
     list-style-type: none;
+}
+
+.user-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
 }

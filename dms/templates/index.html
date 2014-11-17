@@ -14,7 +14,7 @@
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" ng-bind="$state.current.data.pageTitle">a</a>
+                <a class="navbar-brand" ng-bind="$state.current.data.pageTitle"></a>
             </div>
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -39,7 +39,7 @@
                 </form>
                 <ul class="nav navbar-nav navbar-right navbar-title"
                     ng-show="$state.current.data.pageTitle == 'Dashboard'">
-                    <li><a href="">Uganda
+                    <li><a href="" ng-cloak>Uganda
                         {[{ params.location.district | capitalize | prependSlash }]}
                         {[{ params.location.subcounty | capitalize | prependSlash }]}</a></li>
                 </ul>

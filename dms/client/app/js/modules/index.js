@@ -77,7 +77,12 @@
 
             .state('admin.messages', {
                 url: '/messages',
-                data: { pageTitle: 'Messages'},
+                data: {
+                    pageTitle: 'Messages',
+                    permissions: {
+                        only: ['can_manage_messages']
+                    }
+                },
                 templateUrl: '/static/templates/partials/admin/messages.html',
                 controller: 'MessageController'
             })

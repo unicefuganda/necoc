@@ -21,6 +21,14 @@ module.exports = function () {
         this.expect(homePage.disastersTab.isDisplayed()).to.eventually.be.true.and.notify(next);
     });
 
+    this.Then(/^I should not see the messages tab$/, function (next) {
+        this.expect(homePage.messagesTab.isDisplayed()).to.eventually.be.false.and.notify(next);
+    });
+
+    this.Then(/^I should see the messages tab$/, function (next) {
+        this.expect(homePage.messagesTab.isDisplayed()).to.eventually.be.true.and.notify(next);
+    });
+
     this.Then(/^I should not route to "([^"]*)"$/, function (location, next) {
         var self = this;
         browser.setLocation(location).then(function () {

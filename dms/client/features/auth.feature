@@ -32,3 +32,12 @@ Feature: Authentication and Authorization
     Given I log in with "can_manage_disasters" permission
     Then I should see the disasters tab
     And I can route to "/admin/disasters"
+
+  Scenario: Manage Messages Authorization
+    Given I am logged out
+    And I log in with "" permission
+    Then I should not see the messages tab
+    And I should not route to "/admin/messages"
+    Given I log in with "can_manage_messages" permission
+    Then I should see the messages tab
+    And I can route to "/admin/messages"

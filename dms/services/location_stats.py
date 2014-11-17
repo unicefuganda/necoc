@@ -70,8 +70,8 @@ class DisasterStatsDetails(StatsDetails):
 
     def __init__(self, count, percentage, affected_areas, type_distribution):
         super(DisasterStatsDetails, self).__init__(count, percentage)
-        self.affected_areas = affected_areas
-        self.type_distribution = type_distribution
+        self.affected = affected_areas
+        self.types = type_distribution
 
 
 class MultiLocationStatsService(object):

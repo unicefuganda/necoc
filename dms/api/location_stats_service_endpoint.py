@@ -11,10 +11,16 @@ class StatsDetailsSerializer(serializers.Serializer):
     percentage = serializers.Field()
 
 
+class DisasterStatsDetailsSerializer(StatsDetailsSerializer):
+
+    affected = serializers.Field()
+    types = serializers.Field()
+
+
 class LocationStatsSerializer(serializers.Serializer):
 
     messages = StatsDetailsSerializer(many=False)
-    disasters = StatsDetailsSerializer(many=False)
+    disasters = DisasterStatsDetailsSerializer(many=False)
 
 
 class MultiLocationStatsSerializer(object):

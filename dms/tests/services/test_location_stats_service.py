@@ -60,7 +60,7 @@ class LocationDisasterStatsTest(MongoTestCase):
         self.disaster_attr = dict(name=self.disaster_type, locations=[self.bukoto], description="Big Flood",
                                   date="2014-12-01", status="Assessment")
 
-    def test_should_retrieve_message_count_percentage_affected_areas_type_distribution_of_a_district(self):
+    def test_should_retrieve_message_count_percentage_affected_types_of_a_district(self):
         Disaster(**self.disaster_attr).save()
         attr2 = self.disaster_attr.copy()
         attr2["status"] = "Closed"
@@ -72,10 +72,10 @@ class LocationDisasterStatsTest(MongoTestCase):
 
         self.assertEqual(2, disasters_stats.count)
         self.assertEqual(100, disasters_stats.percentage)
-        self.assertEqual(1, disasters_stats.affected_areas)
-        self.assertEqual({'Flood': 2}, disasters_stats.type_distribution)
+        self.assertEqual(1, disasters_stats.affected)
+        self.assertEqual({'Flood': 2}, disasters_stats.types)
 
-    def test_should_retrieve_message_count_percentage_affected_areas_type_distribution_of_a_subcounty(self):
+    def test_should_retrieve_message_count_percentage_affected_types_of_a_subcounty(self):
         Disaster(**self.disaster_attr).save()
         fire_type = DisasterType(**dict(name='Fire', description="whatever")).save()
         attr2 = self.disaster_attr.copy()
@@ -90,10 +90,10 @@ class LocationDisasterStatsTest(MongoTestCase):
         self.assertEqual(1, disasters_stats.count)
         self.assertEqual(50, disasters_stats.percentage)
 
-        self.assertEqual(1, disasters_stats.affected_areas)
-        self.assertEqual({'Flood': 1}, disasters_stats.type_distribution)
+        self.assertEqual(1, disasters_stats.affected)
+        self.assertEqual({'Flood': 1}, disasters_stats.types)
 
-    def test_type_distribution_of_a_subcounty(self):
+    def test_types_of_a_subcounty(self):
         Disaster(**self.disaster_attr).save()
         fire_type = DisasterType(**dict(name='Fire', description="whatever")).save()
         attr2 = self.disaster_attr.copy()
@@ -107,8 +107,8 @@ class LocationDisasterStatsTest(MongoTestCase):
         self.assertEqual(2, disasters_stats.count)
         self.assertEqual(100, disasters_stats.percentage)
 
-        self.assertEqual(1, disasters_stats.affected_areas)
-        self.assertEqual({'Flood': 1, 'Fire': 1}, disasters_stats.type_distribution)
+        self.assertEqual(1, disasters_stats.affected)
+        self.assertEqual({'Flood': 1, 'Fire': 1}, disasters_stats.types)
 
     def test_should_return_0_if_no_disaster_everywhere(self):
         location_stats_service = LocationStatsService(location=self.bukoto)
@@ -118,8 +118,8 @@ class LocationDisasterStatsTest(MongoTestCase):
         self.assertEqual(0, disasters_stats.count)
         self.assertEqual(0, disasters_stats.percentage)
 
-        self.assertEqual(0, disasters_stats.affected_areas)
-        self.assertEqual({}, disasters_stats.type_distribution)
+        self.assertEqual(0, disasters_stats.affected)
+        self.assertEqual({}, disasters_stats.types)
 
 
 class MultiLocationStatsTest(MongoTestCase):
@@ -160,16 +160,16 @@ class MultiLocationStatsTest(MongoTestCase):
         self.assertEqual(50, stats['Kampala'].messages.percentage)
         self.assertEqual(1, stats['Kampala'].disasters.count)
         self.assertEqual(50, stats['Kampala'].disasters.percentage)
-        self.assertEqual(1, stats['Kampala'].disasters.affected_areas)
-        self.assertEqual({'Flood': 1}, stats['Kampala'].disasters.type_distribution)
+        self.assertEqual(1, stats['Kampala'].disasters.affected)
+        self.assertEqual({'Flood': 1}, stats['Kampala'].disasters.types)
 
 
         self.assertEqual(1, stats['Bukoto'].messages.count)
         self.assertEqual(50, stats['Bukoto'].messages.percentage)
         self.assertEqual(1, stats['Bukoto'].disasters.count)
         self.assertEqual(50, stats['Bukoto'].disasters.percentage)
-        self.assertEqual(1, stats['Bukoto'].disasters.affected_areas)
-        self.assertEqual({'Flood': 1}, stats['Bukoto'].disasters.type_distribution)
+        self.assertEqual(1, stats['Bukoto'].disasters.affected)
+        self.assertEqual({'Flood': 1}, stats['Bukoto'].disasters.types)
 
     def test_should_retrieve_message_stats_in_subcounties_when_district_name_supplied(self):
         RapidProMessage(**self.message).save()
@@ -193,5 +193,5 @@ class MultiLocationStatsTest(MongoTestCase):
         self.assertEqual(50, stats['Bugolobi'].messages.percentage)
         self.assertEqual(1, stats['Bugolobi'].disasters.count)
         self.assertEqual(50, stats['Bugolobi'].disasters.percentage)
-        self.assertEqual(1, stats['Bugolobi'].disasters.affected_areas)
-        self.assertEqual({'Flood': 1}, stats['Bugolobi'].disasters.type_distribution)
+        self.assertEqual(1, stats['Bugolobi'].disasters.affected)
+        self.assertEqual({'Flood': 1}, stats['Bugolobi'].disasters.types)

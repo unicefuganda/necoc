@@ -41,3 +41,12 @@ Feature: Authentication and Authorization
     Given I log in with "can_manage_messages" permission
     Then I should see the messages tab
     And I can route to "/admin/messages"
+
+  Scenario: Manage Polls Authorization
+    Given I am logged out
+    And I log in with "" permission
+    And I navigate to polls page
+    Then I should not see the new poll button
+    Given I log in with "can_manage_polls" permission
+    And I navigate to polls page
+    Then I should see the new poll button

@@ -120,7 +120,7 @@ describe('dms.user', function () {
             httpMock,
             apiUrl,
             html = "<div id='test'>" +
-                "<div ng-if-permissions='can_view_tests' id='test_view'>Test Tab</div>" +
+                "<div ng-if-permissions='can_view_tests' id='test_view' class='hide'>Test Tab</div>" +
                 "</div>";
 
         beforeEach(inject(function ($compile, $rootScope, $httpBackend, Config) {
@@ -145,7 +145,7 @@ describe('dms.user', function () {
             element = compile(ngElement)(scope);
             scope.$digest();
             httpMock.flush();
-            expect(element.find('#test_view').css('display') == 'none').toBeFalsy();
+            expect(element.find('#test_view').hasClass('hide')).toBeFalsy();
         });
 
         it('should not show element if user has no permission', function () {
@@ -153,7 +153,7 @@ describe('dms.user', function () {
                 permissions: ['cannot_view_tests']
             });
             compileDirective();
-            expect(element.find('#test_view').css('display') == 'none').toBeTruthy();
+            expect(element.find('#test_view').hasClass('hide')).toBeTruthy();
         });
     })
 });

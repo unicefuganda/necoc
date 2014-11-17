@@ -12,14 +12,14 @@
                         <span class="bar-content">Dashboard</span>
                     </a>
                 </li>
-                <li ui-sref-active="active" ng-if-permissions="can_manage_messages">
+                <li ui-sref-active="active" ng-if-permissions="can_manage_messages" class="hide">
                     <a ui-sref="admin.messages" id="messages-tab">
                         <span class="icon icon-bubble-3"></span>
                         <span class="bar-content">Messages</span>
                         <span class="badge">{[{uncategorizedMessagesCount}]}</span>
                     </a>
                 </li>
-                <li ui-sref-active="active" ng-if-permissions="can_manage_disasters">
+                <li ui-sref-active="active" ng-if-permissions="can_manage_disasters" class="hide">
                     <a ui-sref="admin.disasters" id="disasters-tab">
                         <span class="icon icon-flash-electric"></span>
                         <span class="bar-content">Disasters</span>
@@ -31,7 +31,7 @@
                         <span class="bar-content">Polls</span>
                     </a>
                 </li>
-                <li ui-sref-active="active" ng-if-permissions="can_manage_users">
+                <li ui-sref-active="active" ng-if-permissions="can_manage_users" class="hide">
                     <a ui-sref="admin.mobile-users" id="users-tab">
                         <span class="icon icon-contacts-social"></span>
                         <span class="bar-content">Users</span>

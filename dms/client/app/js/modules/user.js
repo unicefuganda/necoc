@@ -36,10 +36,10 @@
 
                 $q.all(permissionPromises).then(
                     function () {
-                        element.show();
+                        element.removeClass('hide');
                     },
                     function () {
-                        element.hide();
+                        element.addClass('hide');
                     });
             }
         }

@@ -4,11 +4,16 @@ from dms.models.base import BaseModel
 from dms.models.location import Location
 
 
+class MongoFileField(FileField):
+    max_length = None
+
+
 class UserProfile(BaseModel):
     name = StringField(required=True)
     phone = StringField(required=True, unique=True)
     location = ReferenceField(Location, required=True)
     email = StringField()
+    photo = MongoFileField()
     user = ReferenceField(User)
 
     def username(self):
@@ -17,3 +22,8 @@ class UserProfile(BaseModel):
     def group(self):
         has_group = self.user and self.user.group
         return self.user.group.name if has_group else ''
+
+    def photo_uri(self):
+        if self.photo and self.id:
+            return '/api/v1/photo/%s' % self.id
+        return None

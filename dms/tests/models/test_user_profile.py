@@ -1,10 +1,10 @@
 from mongoengine import ValidationError, NotUniqueError
 from dms.models import User, Location, UserProfile
 from dms.tests.base import MongoTestCase
+from necoc import settings
 
 
 class TestUserProfileModel(MongoTestCase):
-
     def setUp(self):
         self.district = Location(**dict(name='Kampala', type='district', parent=None))
         self.district.save()
@@ -49,3 +49,15 @@ class TestUserProfileModel(MongoTestCase):
         profile = UserProfile(**user_profile_attr).save()
 
         self.assertEqual('', profile.username())
+
+    def test_should_save_photo_of_user(self):
+        user_profile_attr = dict(name='timothy', phone='+256775019449', location=self.district, email=None)
+        profile = UserProfile(**user_profile_attr)
+        user_photo = open(settings.PROJECT_ROOT + '/../dms/tests/test.jpg', 'rb')
+        profile.photo.put(user_photo, content_type='image/content_type')
+        profile.save()
+        reloaded_profile = UserProfile.objects(id=profile.id).first()
+        self.assertEqual(reloaded_profile.photo.read(),
+                         open(settings.PROJECT_ROOT + '/../dms/tests/test.jpg', 'rb').read())
+        self.assertEqual(reloaded_profile.photo.content_type, 'image/content_type')
+        self.assertEqual(reloaded_profile.photo_uri(), '/api/v1/photo/' + str(reloaded_profile.id))

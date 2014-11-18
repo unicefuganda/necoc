@@ -1,17 +1,16 @@
-from django.contrib.auth.models import AnonymousUser
-import re
 from rest_condition import Or
 from rest_framework.permissions import BasePermission
-from rest_framework.request import Request
-from rest_framework_mongoengine.generics import ListCreateAPIView
 
+from rest_framework_mongoengine.generics import ListCreateAPIView
 from rest_framework_mongoengine import serializers
 from rest_framework import serializers as rest_serializers
 from rest_framework import fields
 from rest_framework.response import Response
+
 from dms.models import User
 
 from dms.api.retrieve_update_wrapper import MongoRetrieveUpdateView
+
 from dms.models.user_profile import UserProfile
 from dms.services.user_profile_service import UserProfileService
 from dms.utils.permission_class_factory import build_permission_class
@@ -20,6 +19,7 @@ from dms.utils.permission_class_factory import build_permission_class
 class UserProfileSerializer(serializers.MongoEngineModelSerializer):
     username = fields.CharField(source='username', required=False)
     group = fields.CharField(source='group', required=False)
+    photo_uri = fields.CharField(source='photo_uri', required=False)
 
     def validate_phone(self, attrs, source):
         phone = attrs.get(source)
@@ -48,7 +48,7 @@ class UserProfileSerializer(serializers.MongoEngineModelSerializer):
 
     class Meta:
         model = UserProfile
-        exclude = ('created_at', 'user')
+        exclude = ('created_at', 'user', 'photo')
 
 
 class UserProfileListCreateView(ListCreateAPIView):
@@ -63,6 +63,13 @@ class UserProfileListCreateView(ListCreateAPIView):
         if username:
             user = UserProfileService(obj).setup_new_user(username, group_id)
             obj.user = user
+
+    def post_save(self, obj, created=False):
+        if self.request.FILES.get('file'):
+            image = self.request.FILES.get('file').read()
+            content_type = self.request.FILES.get('file').content_type
+            obj.photo.put(image, content_type=content_type)
+            obj.save()
 
 
 class IsCurrentUsersProfile(BasePermission):

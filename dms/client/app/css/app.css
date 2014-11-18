@@ -628,9 +628,7 @@ div[class*="-aggregate-marker-icon"] div {
 }
 
 .profile-pic {
-    border-radius: 50%;
     width: 150px;
-    opacity: 0.7;
     margin: 5% 20%;
 }
 

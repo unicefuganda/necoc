@@ -8,6 +8,8 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "ng-file-upload" : "1.6.12",
+    "ng-file-upload-shim" : "1.6.12",
     "bootstrap": "~3.2.0",
     "angular": "~1.2.25",
     "si-table": "~0.0.1-beta.6",

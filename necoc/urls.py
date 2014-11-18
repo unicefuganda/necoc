@@ -20,6 +20,7 @@ from dms.views.api_token import ObtainAPIToken
 from dms.views.export_poll_responses import ExportPollResponsesView
 from dms.views.homepage import HomeView
 from dms.views.login import Login, Logout
+from dms.views.profile_image import ProfileImageView
 
 
 urlpatterns = patterns('',
@@ -33,6 +34,7 @@ urlpatterns = patterns('',
     url(r'^logout/$', Logout.as_view(), name='login_page'),
     url(r'^api/v1/poll-responses/$', PollResponseListCreateView.as_view()),
     url(r'^api/v1/rapid-pro/(?P<id>[0-9a-z]+)/$', RapidProRetrieveUpdateView.as_view()),
+    url(r'^api/v1/photo/(?P<id>[0-9a-z]+)/$', ProfileImageView.as_view()),
     url(r'^api/v1/locations/$', LocationListCreateView.as_view()),
     url(r'^api/v1/polls/$', PollListCreateView.as_view()),
     url(r'^api/v1/groups/$', GroupsEndpointListView.as_view()),

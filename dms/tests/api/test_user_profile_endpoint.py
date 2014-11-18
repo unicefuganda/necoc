@@ -5,6 +5,14 @@ from dms.models import User, Location, UserProfile
 from dms.tests.base import MongoAPITestCase
 
 
+class FakeImageResizer:
+    def __init__(self, image):
+        self.image = image
+
+    def generate(self):
+        return self.image
+
+
 class TestUserProfileEndpoint(MongoAPITestCase):
     API_ENDPOINT = '/api/v1/mobile-users/'
 
@@ -135,6 +143,9 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         retrieved_user = User.objects(username='akampa').first()
         self.assertEqual(group, retrieved_user.group)
 
+
+
+    @mock.patch('dms.utils.image_resizer.ImageResizer', FakeImageResizer)
     def test_post_with_photo_file(self):
         attr = self.mobile_user_to_post.copy()
         attr['username'] = 'akampa'

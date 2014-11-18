@@ -163,6 +163,7 @@ THIRD_PARTY_APPS = (
     'rest_framework',
     'djcelery',
     'mongoengine.django.mongo_auth',
+    'imagekit',
 )
 
 LOCAL_APPS = (

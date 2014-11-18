@@ -1,18 +1,15 @@
 from rest_condition import Or
 from rest_framework.permissions import BasePermission
-
 from rest_framework_mongoengine.generics import ListCreateAPIView
 from rest_framework_mongoengine import serializers
 from rest_framework import serializers as rest_serializers
 from rest_framework import fields
 from rest_framework.response import Response
-
 from dms.models import User
-
 from dms.api.retrieve_update_wrapper import MongoRetrieveUpdateView
-
 from dms.models.user_profile import UserProfile
 from dms.services.user_profile_service import UserProfileService
+from dms.utils import image_resizer
 from dms.utils.permission_class_factory import build_permission_class
 
 
@@ -66,7 +63,7 @@ class UserProfileListCreateView(ListCreateAPIView):
 
     def post_save(self, obj, created=False):
         if self.request.FILES.get('file'):
-            image = self.request.FILES.get('file').read()
+            image = image_resizer.ImageResizer(self.request.FILES.get('file')).generate().read()
             content_type = self.request.FILES.get('file').content_type
             obj.photo.put(image, content_type=content_type)
             obj.save()

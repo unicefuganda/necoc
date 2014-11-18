@@ -5,7 +5,7 @@
             <div class="col-md-3 sub-section-header">
                 <div class="title text-center profile-title">{[{profile.name | uppercase }]}</div>
                 <div>
-                    <img class="profile-pic" src="/static/img/default_profile.jpg" alt=""/>
+                    <img class="profile-pic" src="/api/v1/photo/{[{ profile.id }]}" alt=""/>
                 </div>
             </div>
             <div class="profile-toast" growl></div>

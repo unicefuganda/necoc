@@ -156,6 +156,12 @@ module.exports = function () {
                 }
             })
             .then(function () {
+                browser.getCurrentUrl().then(function (url) {
+                    id = RegExp("[^\/]*$").exec(url)[0];
+                    self.expect(element(by.css('img.profile-pic')).getAttribute('src')).to.eventually.equal('http://localhost:7999/api/v1/photo/' + id);
+                });
+            })
+            .then(function () {
                 self.expect(userProfilePage.element_by_ng_binding('profile.email')).to.eventually.equal(user.email)
                     .and.notify(next);
             })

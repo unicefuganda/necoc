@@ -140,7 +140,7 @@ describe('dms.mobile-user', function () {
                 initController(true);
                 responseStub.phone_no = '2560760540321';
                 responseStub.id = '1';
-                httpMock.expectPOST(apiUrl + 'mobile-users/1/', responseStub).respond(responseStub);
+                httpMock.expectPOST(apiUrl + 'mobile-users/1/').respond(responseStub);
 
                 scope.saveUser(responseStub);
                 expect(scope.saveStatus).toBeTruthy();
@@ -158,7 +158,7 @@ describe('dms.mobile-user', function () {
                 responseStub.id = '1';
                 var formData = angular.copy(responseStub);
                 formData.username = 'username';
-                httpMock.expectPOST(apiUrl + 'mobile-users/1/', responseStub).respond(formData);
+                httpMock.expectPOST(apiUrl + 'mobile-users/1/').respond(formData);
 
                 scope.saveUser(formData);
                 expect(scope.saveStatus).toBeTruthy();
@@ -185,7 +185,7 @@ describe('dms.mobile-user', function () {
                 initController(true);
                 responseStub.phone_no = '2560760540321';
                 responseStub.id = '1';
-                httpMock.expectPOST(apiUrl + 'mobile-users/1/', responseStub).respond(409, errorMessage);
+                httpMock.expectPOST(apiUrl + 'mobile-users/1/').respond(409, errorMessage);
 
                 scope.saveUser(responseStub);
                 expect(scope.saveStatus).toBeTruthy();
@@ -266,7 +266,8 @@ describe('dms.mobile-user', function () {
     });
 
     describe('Stubbed uploading', function () {
-        var uploadService;
+        var uploadService,
+            initController;
 
         beforeEach(function () {
 
@@ -277,15 +278,18 @@ describe('dms.mobile-user', function () {
 
             uploadService.when('upload').returnPromiseOf({});
 
-            inject(function ($controller, Config, $rootScope) {
-                apiUrl = Config.apiUrl;
-                scope = $rootScope.$new();
-                $controller('AddUserController', { $scope: scope });
-                scope.form.user_form = { $valid: true, phone: { $invalid: false } };
-            });
+            initController = function (controllerName) {
+                inject(function ($controller, Config, $rootScope) {
+                    apiUrl = Config.apiUrl;
+                    scope = $rootScope.$new();
+                    $controller(controllerName, { $scope: scope });
+                    scope.form.user_form = { $valid: true, phone: { $invalid: false } };
+                });
+            }
         });
 
-        it('should post the image to the server', function () {
+        it('should post the image to the server during Add', function () {
+            initController('AddUserController')
             var imageFile = {data: 'some-image-binary'};
             var user = { name: 'Username', phone: 'PhoneNumber' };
 
@@ -293,6 +297,20 @@ describe('dms.mobile-user', function () {
             scope.saveUser(user);
             expect(uploadService.upload).toHaveBeenCalledWith({
                 url: apiUrl + 'mobile-users/',
+                file: imageFile,
+                data: user
+            })
+        });
+
+        it('should post the image to the server during Edit', function () {
+            initController('EditUserController')
+            var imageFile = {data: 'some-image-binary'};
+            var user = { name: 'Username', phone: 'PhoneNumber', id: 'id' };
+
+            scope.onFileSelect([imageFile]);
+            scope.saveUser(user);
+            expect(uploadService.upload).toHaveBeenCalledWith({
+                url: apiUrl + 'mobile-users/id/',
                 file: imageFile,
                 data: user
             })

@@ -12,8 +12,12 @@
             all: function () {
                 return $http.get(Config.apiUrl + 'mobile-users/');
             },
-            update: function (user) {
-                return $http.post(Config.apiUrl + 'mobile-users/' + user.id + '/', user);
+            update: function (user, file) {
+                return $upload.upload({
+                    url: Config.apiUrl + 'mobile-users/' + user.id + '/',
+                    file: file,
+                    data: user
+                });
             },
             changePassword: function (user) {
                 return $http.post(Config.apiUrl + 'mobile-users/' + user.id + '/password/', user);
@@ -70,12 +74,19 @@
     module.controller('EditUserController', function ($scope, MobileUserService, helpers) {
         $scope.modalTitle = 'Edit User Profile';
         $scope.form = {};
+
+        var selectedFile;
+
+        $scope.onFileSelect = function ($files) {
+            selectedFile = $files[0];
+        };
+
         $scope.saveUser = function (user) {
             if ($scope.form.user_form.$valid) {
                 $scope.successful = false;
                 $scope.saveStatus = true;
                 delete user.username;
-                MobileUserService.update(user)
+                MobileUserService.update(user, selectedFile)
                     .then(function (response) {
                         $scope.saveStatus = false;
                         $scope.setProfile(response.data);

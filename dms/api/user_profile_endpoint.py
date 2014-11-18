@@ -61,12 +61,15 @@ class UserProfileListCreateView(ListCreateAPIView):
             user = UserProfileService(obj).setup_new_user(username, group_id)
             obj.user = user
 
-    def post_save(self, obj, created=False):
+    def save_new_image(self, obj):
         if self.request.FILES.get('file'):
             image = image_resizer.ImageResizer(self.request.FILES.get('file')).generate().read()
             content_type = self.request.FILES.get('file').content_type
             obj.photo.put(image, content_type=content_type)
             obj.save()
+
+    def post_save(self, obj, created=False):
+        self.save_new_image(obj)
 
 
 class IsCurrentUsersProfile(BasePermission):
@@ -89,3 +92,13 @@ class UserProfileView(MongoRetrieveUpdateView):
 
     def post(self, request, *args, **kwargs):
         return self.patch(request, *args, **kwargs)
+
+    def replace_image(self, obj):
+        if self.request.FILES.get('file'):
+            image = image_resizer.ImageResizer(self.request.FILES.get('file')).generate().read()
+            content_type = self.request.FILES.get('file').content_type
+            obj.photo.replace(image, content_type=content_type)
+            obj.save()
+
+    def post_save(self, obj, created=False):
+        self.replace_image(obj)

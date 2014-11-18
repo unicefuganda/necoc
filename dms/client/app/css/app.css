@@ -630,6 +630,7 @@ div[class*="-aggregate-marker-icon"] div {
 .profile-pic {
     width: 150px;
     margin: 5% 20%;
+    border-radius: 3px;
 }
 
 .profile-container {

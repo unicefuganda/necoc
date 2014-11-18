@@ -55,4 +55,13 @@ describe('dms.user-profile', function () {
         httpMock.flush();
         expect($scope.onEdit).toBeTruthy();
     });
+
+    it('should set profileImageSrc', function () {
+        var userId = 'user_id';
+        initController(userId);
+        userStub.id = '12345678'
+        httpMock.expectGET(apiUrl + 'mobile-users/' + userId + '/').respond(userStub);
+        httpMock.flush();
+        expect($scope.profileImageSrc).toMatch(/\/api\/v1\/photo\/12345678\?decache=/);
+    });
 });

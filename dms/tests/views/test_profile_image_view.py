@@ -28,8 +28,9 @@ class ProfileImageViewTest(MongoAPITestCase):
         self.assert_permission_required_for_get(self.PROFILE_IMAGE_ENDPOINT + str(self.profile.id) + '/')
 
     def test_no_image_found(self):
-        response = self.client.get(self.PROFILE_IMAGE_ENDPOINT + 'fake_id/')
-        self.assertEqual(404, response.status_code)
+        response = self.client.get(self.PROFILE_IMAGE_ENDPOINT + 'j34ks34344df234/')
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(open(settings.PROJECT_ROOT + '/../dms/client/app/img/default_profile.jpg', 'rb').read(), response.content)
 
     def test_allow_user_to_see_their_own(self):
         self.client.logout()

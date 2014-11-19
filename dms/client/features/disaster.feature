@@ -14,6 +14,8 @@ Feature: Disasters
     And I enter disaster date as "2014/10/08 00:03"
     And I click save and close
     Then I should see the disaster in the disasters table
+    When I click the disaster in "Mukono"
+    Then I should see my disaster information
 
   Scenario: Add Disaster with un registered Disaster Type
     Given I am logged in as a NECOC admin

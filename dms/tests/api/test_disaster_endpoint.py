@@ -18,14 +18,14 @@ class TestDisasterEndpoint(MongoAPITestCase):
         self.disaster = dict(name=self.disaster_type, locations=[self.district],
                              description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
 
-    def test_should_post_a_mobile_user(self):
+    def test_should_post_a_disaster(self):
         response = self.client.post(self.API_ENDPOINT, data=json.dumps(self.disaster_to_post), content_type="application/json")
         self.assertEqual(201, response.status_code)
 
         retrieved_disaster = Disaster.objects(description="Big Flood")
         self.assertEqual(1, retrieved_disaster.count())
 
-    def test_should_get_a_list_of_users(self):
+    def test_should_get_a_list_of_disasters(self):
         Disaster(**self.disaster).save()
         response = self.client.get(self.API_ENDPOINT, format='json')
 
@@ -49,3 +49,16 @@ class TestDisasterEndpoint(MongoAPITestCase):
         self.assertEquals(response.status_code, 200)
         response = self.client.post(self.API_ENDPOINT, data=json.dumps(self.disaster_to_post), content_type="application/json")
         self.assertEqual(201, response.status_code)
+
+    def test_should_get_a_single_disaster(self):
+        disaster = Disaster(**self.disaster).save()
+        response = self.client.get(self.API_ENDPOINT + str(disaster.id) + '/', format='json')
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(self.disaster_to_post['status'], response.data['status'])
+        self.assertEqual(self.disaster_to_post['date'], str(response.data['date']))
+        self.assertEqual(self.disaster_to_post['description'], response.data['description'])
+
+    def test_cant_get_single_disaster_without_permission(self):
+        disaster = Disaster(**self.disaster).save()
+        self.assert_permission_required_for_post(self.API_ENDPOINT + str(disaster.id) + '/')

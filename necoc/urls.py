@@ -6,7 +6,7 @@ from django.conf.urls import patterns, url, include
 from django.contrib.auth.decorators import login_required
 from dms.api.bulk_sms_endpoint import SentMessageListCreateView
 from dms.api.current_permissions_endpoint import CurrentPermissionsView
-from dms.api.disaster_endpoint import DisasterListCreateView
+from dms.api.disaster_endpoint import DisasterListCreateView, DisasterView
 from dms.api.disaster_type_endpoint import DisasterTypeListCreateView
 from dms.api.groups_endpoint import GroupsEndpointListView
 from dms.api.location_stats_service_endpoint import LocationStatsListView, DistrictStatsListView
@@ -44,6 +44,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/sent-messages/$', SentMessageListCreateView.as_view()),
     url(r'^api/v1/disaster-types/$', DisasterTypeListCreateView.as_view()),
     url(r'^api/v1/disasters/$', DisasterListCreateView.as_view()),
+    url(r'^api/v1/disasters/(?P<id>[0-9a-z]+)/$', DisasterView.as_view()),
     url(r'^api/v1/current-permissions/$', CurrentPermissionsView.as_view()),
     url(r'^api/v1/location-stats/$', LocationStatsListView.as_view()),
     url(r'^api/v1/location-stats/(?P<district>[0-9a-z]+)/$', DistrictStatsListView.as_view()),

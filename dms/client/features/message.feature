@@ -63,8 +63,6 @@ Feature: Messages
     When I navigate to "/admin/disasters"
     And I click the disaster in "Mukono"
     Then I should see the associated message
-    When I click the back button
-    Then I should see the disasters listing page
 
   Scenario: Associate Messages to disaster -- Validations
     Given I am logged in as a NECOC admin

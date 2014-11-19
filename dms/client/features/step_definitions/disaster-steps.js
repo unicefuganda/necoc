@@ -1,5 +1,6 @@
 module.exports = function () {
     var disasterPage = require("../pages/disaster-page"),
+        disasterInfoPage = require("../pages/disaster-info-page"),
         dataSetUpPage = require("../pages/data-setup-page"),
         messagesPage = require("../pages/messages-page"),
         associatedMessage = messagesPage.messages[0],
@@ -78,14 +79,14 @@ module.exports = function () {
                 self.expect(name).to.equal(disaster.type);
             })
             .then(function () {
-                if(disaster.subcounties) {
+                if (disaster.subcounties) {
                     self.expect(disasterPage.getDisasterData(0, 'locations[0].parent.name')).to.eventually.equal(disaster.district);
                 } else {
                     self.expect(disasterPage.getDisasterData(0, 'locations | joinNames | capitalize')).to.eventually.equal(disaster.district);
                 }
             })
             .then(function () {
-                if(disaster.subcounties) {
+                if (disaster.subcounties) {
                     self.expect(disasterPage.getDisasterData(0, 'locations | joinNames | capitalize')).to.eventually.equal(disaster.subcounties);
                 }
             })
@@ -142,6 +143,7 @@ module.exports = function () {
                 self.expect(disasterPage.associatedMessages(0, 'source')).to
                     .eventually.equal(associatedMessage.source + " (" + associatedMessage.phone + ")");
             })
+
             .then(function () {
                 self.expect(disasterPage.associatedMessages(0, 'text')).to.eventually.equal(associatedMessage.text);
             })
@@ -162,4 +164,34 @@ module.exports = function () {
         this.expect(disasterPage.sectionTitle.getText()).to.eventually.equal('Registered Disasters')
             .and.notify(next);
     });
+
+    this.Then(/^I should see my disaster information$/, function (next) {
+        var self = this;
+
+        disasterInfoPage.getDisasterData('name.name')
+            .then(function (name) {
+                self.expect(name).to.equal(disaster.type);
+            })
+            .then(function () {
+                if (disaster.subcounties) {
+                    self.expect(disasterInfoPage.getDisasterData('locations[0].parent.name')).to.eventually.equal(disaster.district);
+                } else {
+                    self.expect(disasterInfoPage.getDisasterData('locations | joinNames | capitalize')).to.eventually.equal(disaster.district);
+                }
+            })
+            .then(function () {
+                if (disaster.subcounties) {
+                    self.expect(disasterInfoPage.getDisasterData('locations | joinNames | capitalize')).to.eventually.equal(disaster.subcounties);
+                }
+            })
+            .then(function () {
+                self.expect(disasterInfoPage.getDisasterData('description')).to.eventually.equal(disaster.description);
+            })
+            .then(function () {
+                self.expect(disasterInfoPage.getDisasterData('date | duration')).to.eventually.exist;
+            })
+            .then(function () {
+                self.expect(disasterInfoPage.getDisasterData('status')).to.eventually.equal(disaster.status)
+                    .and.notify(next);
+            });    });
 };

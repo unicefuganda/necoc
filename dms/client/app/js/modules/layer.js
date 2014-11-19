@@ -77,6 +77,7 @@
     module.factory('LayerMap', function () {
         var layerList = {},
             layerGroups = {};
+            controls = {};
 
         return {
             addLayer: function (layer) {
@@ -117,6 +118,12 @@
             },
             addLayerGroup: function (type, layerGroup) {
                 layerGroups[type] = layerGroup;
+            },
+            addControl: function (type, control) {
+                layerGroups[type] = control;
+            },
+            getControl: function (type, control) {
+                return layerGroups[type];
             },
             getLayerGroup: function (type) {
                 return layerGroups[type];

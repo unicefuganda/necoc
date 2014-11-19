@@ -42,14 +42,30 @@ Feature: Map
 
   Scenario: View Messages HeatMap
     Given I am logged in as a NECOC admin
-    When I navigate to "/admin/dashboard"
+    And I have "Lira" district already registered
+    When I navigate to map location "/admin/dashboard"
     And I click "Lira" district
-    Then I should see "lira" district with layer color "#FFEDA0"
+    Then I should see "lira" district with layer color "#dfff67"
     Given I am logged in as a NECOC admin
-    When I have "Kampala" district already registered
-    When I POST a message to the NECOC DMS
-    And I click "Kampala" district
-    Then I should see "kampala" district with layer color "#FFEDA0"
+    And I have "Gulu" district and "Awach" subcounty already registered
+    And I POST "NECOC Awach Fire" to the NECOC DMS
+    When I navigate to map location "/admin/dashboard"
+    And I click "Gulu" district
+    Then I should see "gulu" district with layer color "#ef2602"
+
+  Scenario: View Legend on the Map
+    Given I am logged in as a NECOC admin
+    And I have "Gulu" district and "Awach" subcounty already registered
+    When I navigate to map location "/admin/dashboard"
+    Then I should see map legend displayed
+    Then I should see the legend title as "Messages"
+    Then I should see the legend labels as "0,,1"
+    When I POST "NECOC Awach Fire" to the NECOC DMS
+    And I POST "NECOC Awach Fire is killing us" to the NECOC DMS
+    And I POST "NECOC Awach There is a fire here" to the NECOC DMS
+    And I POST "NECOC Awach Fire please" to the NECOC DMS
+    And I navigate to map location "/admin/dashboard"
+    Then I should see the legend labels as "0,2,4"
 
   Scenario: Search location on the map
     Given I am logged in as a NECOC admin

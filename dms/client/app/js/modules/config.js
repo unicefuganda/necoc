@@ -1,15 +1,5 @@
 (function (module) {
 
-    function messagesHeatMapColor(p) {
-        return p > 100 ? '#BD0026' :
-                p > 80 ? '#E31A1C' :
-                p > 60 ? '#FC4E2A' :
-                p > 40 ? '#FD8D3C' :
-                p > 20 ? '#FEB24C' :
-                p > 0 ? '#FED976' :
-            '#FFEDA0';
-    }
-
     module.constant('Config', {
         baseUrl: window.location.origin,
         apiUrl: window.location.origin + "/api/v1/",
@@ -40,15 +30,13 @@
             weight: 4,
             fillOpacity: 0.7
         },
-        heatMapStyle: {
-            messages: function (percentage) {
-                return {
-                    fillColor: messagesHeatMapColor(percentage),
-                    fillOpacity: 0.6,
-                    weight: 2
-                }
-            }
-        }
+        heatMapColors: [
+            '#DFFF67',
+            '#FEE629',
+            '#FAAE22',
+            '#FB8E1F',
+            '#EF2602'
+        ]
     });
 
     module.constant('Permissions', {

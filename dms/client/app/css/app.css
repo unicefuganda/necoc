@@ -515,13 +515,16 @@ div[class*="-aggregate-marker-icon"] div {
     padding: 0 0;
 }
 
-.legend i {
-    width: 18px;
-    height: 18px;
-    float: left;
+.legend > div > span {
+    width: 20px;
+    height: 3px;
     margin-right: 8px;
     margin-left: 8px;
-    opacity: 0.7;
+    display: block;
+}
+
+.legend > div:last-child {
+    margin-bottom: 10px;
 }
 
 .legend-title {
@@ -530,9 +533,9 @@ div[class*="-aggregate-marker-icon"] div {
     margin-bottom: 8px;
     color: white;
     background: #3E9CB8;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 300;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif ";
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
 #message-overlay.open {
@@ -694,4 +697,21 @@ div[class*="-aggregate-marker-icon"] div {
 
 .user-actions-absolute {
     position: absolute;
+}
+
+.legend i {
+    position: absolute;
+    margin-left: 33px;
+    margin-top: -10px;
+    font-style: normal;
+}
+
+.legend i:before {
+    content: "";
+    width: 7px;
+    height: 1px;
+    background-color: #121212;
+    position: absolute;
+    top: 9px;
+    left: -12px;
 }

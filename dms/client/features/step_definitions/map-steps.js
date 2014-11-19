@@ -82,7 +82,7 @@ module.exports = function () {
         var self = this,
             NORMAL_ZOOM_LEVEL = 7;
 
-        browser.wait(mapPage.mapLegend.isDisplayed).then(function () {
+        browser.wait(mapPage.legend.title.isDisplayed).then(function () {
             browser.executeScript(function () {
                 return window.map.getZoom();
             }).then(function (zoomLevel) {
@@ -120,8 +120,20 @@ module.exports = function () {
     });
 
     this.Then(/^I should see map legend displayed$/, function (next) {
-        this.expect(mapPage.mapLegend.isDisplayed()).to.eventually.be.true
+        this.expect(mapPage.legend.title.isDisplayed()).to.eventually.be.true
             .and.notify(next);
+    });
+
+    this.Then(/^I should see the legend title as "([^"]*)"$/, function (legendTitle, next) {
+        this.expect(mapPage.legend.title.getText()).to.eventually.equal(legendTitle)
+            .and.notify(next);
+    });
+
+    this.Then(/^I should see the legend labels as "([^"]*)"$/, function (labelList, next) {
+        var labels = mapPage.legend.labels.map(function (element) {
+            return element.getText()
+        });
+        this.expect(labels).to.eventually.eql(labelList.split(',')).and.notify(next);
     });
 
     this.When(/^I search for "([^"]*)" district$/, function (district, next) {
@@ -134,7 +146,7 @@ module.exports = function () {
 
     this.When(/^I navigate to map location "([^"]*)"$/, function (url, next) {
         browser.get('#' + url);
-        this.expect(browser.wait(mapPage.mapLegend.isDisplayed)).to.eventually.equal(true)
+        this.expect(browser.wait(mapPage.legend.title.isDisplayed)).to.eventually.equal(true)
             .and.notify(next);
     });
 

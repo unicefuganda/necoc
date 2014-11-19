@@ -1,6 +1,6 @@
 (function (module) {
 
-    module.factory('MapService', function (GeoJsonService, MapConfig, LayerMap, StatsService, Layer, $interval) {
+    module.factory('MapService', function (GeoJsonService, MapConfig, LayerMap, StatsService, Layer, $interval, $chroma) {
         var map,
             self = this;
 
@@ -46,28 +46,56 @@
 
             if (map.getZoom() < zoomLevel && !map.hasLayer(layerGroup)) {
                 layerGroup && map.addLayer(layerGroup);
-
             } else if (map.getZoom() >= zoomLevel && map.hasLayer(layerGroup)) {
                 layerGroup && map.removeLayer(layerGroup);
             }
-
         }
 
-        function addHeatMapLegend(map) {
+        function addHeatMapLegend(map, stats) {
             var legend = L.control({position: MapConfig.legendPosition});
 
             legend.onAdd = function () {
                 var div = L.DomUtil.create('div', 'info legend'),
-                    scale = [0, 20, 40, 60, 80, 100];
-                div.innerHTML += '<div class="legend-title">Legend</div>';
+                    scale = legendScale(stats),
+                    intervals = 50;
 
-                for (var i = 0; i < scale.length - 1; i++) {
-                    div.innerHTML += '<i style="background:' + MapConfig.heatMapStyle.messages(scale[i] + 1).fillColor + '"></i> ' +
-                        scale[i] + (scale[i + 1] ? '&ndash;' + scale[i + 1] + ' % <br>' : '+');
+                div.innerHTML += '<div class="legend-title"> Messages </div>';
+
+                for (var i = 0; i < intervals; i++) {
+                    div.innerHTML += '<div><span style="background:' + buildColor(Math.sqrt(i / intervals)) + '"></span>' +
+                        (
+                                i == 0 ? '<i>' + scale[0] + '</i>' :
+                                i > ((intervals - 1) / 2) && i <= ((intervals) / 2) ? '<i>' + scale[1] + '</i>' :
+                                i == (intervals - 1) ? '<i>' + scale[2] + '</i>' : ''
+                            )
+                        + '<div>';
                 }
                 return div;
             };
-            legend.addTo(map);
+
+            try {
+                LayerMap.getControl('legend').removeFrom(map);
+            } catch (E) {
+            }
+
+            LayerMap.addControl('legend', legend);
+            map.addControl(legend);
+        }
+
+        function legendScale(stats) {
+            var scale = [0],
+                maxMessages = messagesPeakValue(stats),
+                median = Math.round(maxMessages / 2);
+
+            if (maxMessages > 1 && maxMessages != median && median != 0) {
+                scale.push(median);
+                scale.push(maxMessages);
+            } else {
+                scale.push('');
+                scale.push(1);
+            }
+
+            return scale;
         }
 
         function circleMarkerIcon(content, classPrefix) {
@@ -163,6 +191,43 @@
             map.addLayer(layerGroup);
         }
 
+        function messagesPeakValue(stats) {
+            if (!Object.keys(stats).length) {
+                return 0;
+            }
+
+            var district = Object.keys(stats).reduce(function (prevDistrict, nextDistrict) {
+                if (stats[prevDistrict].messages.count > stats[nextDistrict].messages.count) {
+                    return prevDistrict;
+                }
+                return nextDistrict;
+            });
+            return stats[district].messages.count
+        }
+
+        function generateHeatMapColor(stats, layerName) {
+            var maxMessages = messagesPeakValue(stats),
+                scaleValue = 0;
+
+            if (maxMessages != 0) {
+                scaleValue = Math.sqrt((stats[layerName].messages.count) / maxMessages);
+            }
+            return buildColor(scaleValue);
+        }
+
+        function buildColor(scaleValue) {
+            var scale = $chroma.scale(MapConfig.heatMapColors);
+            return scale(scaleValue).hex();
+        }
+
+        function heatMapStyle(stats, layerName) {
+            return {
+                fillColor: generateHeatMapColor(stats, layerName),
+                fillOpacity: 0.6,
+                weight: 2
+            }
+        }
+
         function addHeatMapLayer(filter) {
             var filterCopy = angular.copy(filter);
             delete filterCopy.district;
@@ -172,11 +237,12 @@
 
                 angular.forEach(LayerMap.getLayers(), function (layer, layerName) {
                     if (aggregateStats[layerName]) {
-                        layer.setStyle(MapConfig.heatMapStyle.messages(aggregateStats[layerName].messages.percentage));
+                        layer.setStyle(heatMapStyle(aggregateStats, layerName));
                     } else {
-                        layer.setStyle(MapConfig.heatMapStyle.messages(0));
+                        layer.setStyle(MapConfig.heatMapColors[0]);
                     }
                 });
+                addHeatMapLegend(map, aggregateStats);
                 return aggregateStats;
             });
         }
@@ -229,7 +295,6 @@
                     addHeatMapLayer(filter).then(addDisasterBubbles.bind({}, map)).then(function () {
                         removeLayerGroupOnZoom('disaster_bubbles', TOGGLE_ZOOM_LEVEL);
                     });
-                    addHeatMapLegend(map);
                 }).then(function () {
                     return this;
                 }.bind(this));
@@ -357,4 +422,4 @@
         }
     });
 
-})(angular.module('dms.map', ['dms.config', 'ui.router', 'dms.geojson', 'dms.stats', 'dms.layer']));
+})(angular.module('dms.map', ['dms.config', 'ui.router', 'dms.geojson', 'dms.stats', 'dms.layer', 'dms.utils']));

@@ -78,6 +78,12 @@ describe('dms.layer', function () {
             layerMap.addLayerGroup(stubLayerGroup.name, stubLayerGroup);
             expect(layerMap.getLayerGroup(stubLayerGroup.name)).toEqual(stubLayerGroup);
         });
+
+        it('should add a control to layer map', function () {
+            var controlStub = {legend: 'control-stub', name: 'name'};
+            layerMap.addControl(controlStub.name, controlStub);
+            expect(layerMap.getControl(controlStub.name)).toEqual(controlStub);
+        });
     });
 
 

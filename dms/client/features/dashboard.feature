@@ -43,14 +43,14 @@ Feature: Dashboard
     When I navigate to map location "/admin/dashboard/gulu"
     Then I should see a message cluster marker with 1 incoming messages
     Then I should see a disaster cluster marker with 1 disasters
-    Then I should see "gulu" district with layer color "#E31A1C"
+    Then I should see "gulu" district with layer color "#ef2602"
     And I click the messages panel chevron
     Then I should see my message with location "Gulu >> Awach"
     When I enter a from date filter as "2014-01-06"
     And I enter a to date filter as "2014-02-06"
     Then I should not see a message cluster marker
     Then I should not see a disaster cluster marker
-    Then I should see "gulu" district with layer color "#FFEDA0"
+    Then I should see "gulu" district with layer color "#dfff67"
     And I click the messages panel chevron
     Then I should see 0 message
 
@@ -65,13 +65,13 @@ Feature: Dashboard
     When I navigate to map location "/admin/dashboard/gulu"
     Then I should see a message cluster marker with 1 incoming messages
     Then I should see a disaster cluster marker with 1 disasters
-    Then I should see "gulu" district with layer color "#E31A1C"
+    Then I should see "gulu" district with layer color "#ef2602"
     And I click the messages panel chevron
     Then I should see my message with location "Gulu >> Awach"
     When I select in the dashboard the disaster type as "Fire"
     Then I should not see a message cluster marker
     Then I should not see a disaster cluster marker
-    Then I should see "gulu" district with layer color "#FFEDA0"
+    Then I should see "gulu" district with layer color "#dfff67"
     And I click the messages panel chevron
     Then I should see 0 message
 

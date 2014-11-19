@@ -18,14 +18,15 @@ class Disaster(BaseModel):
     date = DateTimeField(required=True)
 
     @classmethod
-    def from_(cls, location, **kwargs):
-        locations = location.children(include_self=True)
+    def from_(cls, location=None, **kwargs):
         mapping = {value: kwargs.get(key) for key, value in cls.MAPPING.items() if kwargs.get(key, None)}
-        mapping['locations__in'] = locations
+        if location:
+            locations = location.children(include_self=True)
+            mapping['locations__in'] = locations
         return cls.objects.filter(**mapping)
 
     @classmethod
     def count_(cls, **kwargs):
-        mapping = {value: kwargs.get(key) for key, value in cls.MAPPING.items() if kwargs.get(key, None)}
-        return cls.objects.filter(**mapping).count()
+        queryset = cls.from_(**kwargs)
+        return queryset.count()
 

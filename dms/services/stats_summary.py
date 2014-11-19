@@ -29,7 +29,7 @@ class SummaryStatsAttribute(object):
     def get_queryset(self, location):
         if location:
             return self.attribute_class.from_(location=location, **self.kwargs)
-        return self.attribute_class.objects(**self.kwargs)
+        return self.attribute_class.from_(**self.kwargs)
 
 
 class SummaryStats(object):

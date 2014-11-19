@@ -15,6 +15,7 @@ from dms.api.poll_endpoint import PollListCreateView
 from dms.api.poll_response_endpoint import PollResponseListCreateView
 from dms.api.rapid_pro_endpoint import RapidProListCreateView, RapidProRetrieveUpdateView
 from dms.api.location_endpoint import LocationListCreateView
+from dms.api.stats_summary_service_endpoint import SummaryStatsListView
 from dms.api.user_profile_endpoint import UserProfileListCreateView, UserProfileView
 from dms.views.api_token import ObtainAPIToken
 from dms.views.export_poll_responses import ExportPollResponsesView
@@ -46,6 +47,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/disasters/$', DisasterListCreateView.as_view()),
     url(r'^api/v1/disasters/(?P<id>[0-9a-z]+)/$', DisasterView.as_view()),
     url(r'^api/v1/current-permissions/$', CurrentPermissionsView.as_view()),
+    url(r'^api/v1/stats-summary/$', SummaryStatsListView.as_view()),
     url(r'^api/v1/location-stats/$', LocationStatsListView.as_view()),
     url(r'^api/v1/location-stats/(?P<district>[0-9a-z]+)/$', DistrictStatsListView.as_view()),
     url(r'^export/poll-responses/(?P<poll_id>[0-9a-z]+)/$',

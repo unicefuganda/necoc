@@ -85,6 +85,14 @@ module.exports = function () {
             .then(function () {
                 self.expect(mobileUsersPage.createUserModal.getDistrictFieldErrors()).to.eventually.equal('This field is required')
                     .and.notify(next);
+            })
+            .then(function () {
+                self.expect(mobileUsersPage.createUserModal.getUsernameFieldErrors()).to.eventually.equal('This field is required')
+                    .and.notify(next);
+            })
+            .then(function () {
+                self.expect(mobileUsersPage.createUserModal.getRoleFieldErrors()).to.eventually.equal('This field is required')
+                    .and.notify(next);
             });
     });
 
@@ -149,7 +157,7 @@ module.exports = function () {
                 self.expect(userProfilePage.element_by_ng_binding('profile.phone')).to.eventually.equal(user.phone);
             })
             .then(function () {
-                if(user.group) {
+                if (user.group) {
                     self.expect(userProfilePage.element_by_ng_binding('profile.group')).to.eventually.equal(user.group);
                 } else {
                     self.expect(element(by.binding('profile.group')).isDisplayed()).to.eventually.be.false;

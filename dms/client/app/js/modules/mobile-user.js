@@ -184,10 +184,12 @@
                     offText = attrs.off,
                     sectionIdToToggle = attrs.toggleSection;
 
+                scope.webAccessGranted = false;
                 element.html('<a class="btn btn-xs btn-default">' + onText + '</a>' +
                     '<a class="btn btn-xs btn-primary active">' + offText + '</a>');
 
                 element.find('.btn').click(function () {
+                    scope.webAccessGranted = !scope.webAccessGranted;
                     element.find('.btn').toggleClass('active');
                     element.find('.btn').toggleClass('btn-primary');
                     element.find('.btn').toggleClass('btn-default');

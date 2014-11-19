@@ -42,6 +42,11 @@ var MobileUsersModal = function () {
         return element.all(by.css('#username-errors .text-danger')).get(i).getText();
     };
 
+    this.getRoleFieldErrors = function (index) {
+        var i = index || 0;
+        return element.all(by.css('#role-errors .text-danger')).get(i).getText();
+    };
+
     this.getDistrictFieldErrors = function () {
         return element(by.css('#district-errors .text-danger')).getText();
     };

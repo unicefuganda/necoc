@@ -100,13 +100,16 @@
                                  ng-class="{'has-error': form.user_form.username.$invalid && hasErrors }">
                                 <label class="control-label" for="username">Username</label>
                                 <input type="text" id="username" ng-model="user.username" name="username"
-                                       class="form-control"
-                                       placeholder="enter username">
+                                       class="form-control" placeholder="enter username"
+                                       ng-required="webAccessGranted">
 
                                 <div id="username-errors" class="error-text"
                                      ng-show="form.user_form.username.$invalid && hasErrors">
                                     <p class="text-danger" ng-repeat="error in errors.username">
                                         {[{ error }]}
+                                    </p>
+                                    <p class="text-danger" ng-show="form.user_form.username.$error.required">
+                                        This field is required
                                     </p>
                                 </div>
                             </div>
@@ -114,7 +117,8 @@
                                  ng-class="{'has-error':  form.user_form.role.$invalid && hasErrors }">
                                 <label class="control-label">Role</label>
                                 <input type="text" ng-model="user.group" name="role" class="form-control"
-                                       placeholder="select role" user-role="user">
+                                       placeholder="select role" user-role="user"
+                                       ng-required="webAccessGranted">
 
                                 <div id="role-errors" class="error-text"
                                      ng-show="form.user_form.role.$invalid && hasErrors">

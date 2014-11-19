@@ -13,6 +13,11 @@ class FakeImageResizer:
         return self.image
 
 
+class BadImageResizer:
+    def __init__(self, image):
+        raise Exception('Something has gone wrong')
+
+
 class TestUserProfileEndpoint(MongoAPITestCase):
     API_ENDPOINT = '/api/v1/mobile-users/'
 
@@ -161,6 +166,21 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.assertEqual(reloaded_profile.photo.content_type, 'image/jpeg')
         self.assertEqual(reloaded_profile.photo_uri(), '/api/v1/photo/' + str(reloaded_profile.id))
 
+    @mock.patch('dms.utils.image_resizer.ImageResizer', BadImageResizer)
+    def test_post_with_photo_file(self):
+        attr = self.mobile_user_to_post.copy()
+        attr['username'] = 'akampa'
+
+        with open(settings.PROJECT_ROOT + '/../dms/tests/test.jpg', 'rb') as test_image:
+            attr['file'] = test_image
+            response = self.client.post(self.API_ENDPOINT, data=attr)
+
+        self.assertEqual(201, response.status_code)
+
+        retrieved_user = User.objects(username='akampa').first()
+        reloaded_profile = UserProfile.objects(user=retrieved_user).first()
+        self.assertEqual(reloaded_profile.photo.read(), None)
+
     @mock.patch('dms.utils.image_resizer.ImageResizer', FakeImageResizer)
     def test_updating_profile_with_photo_file(self):
         attr = self.mobile_user_to_post.copy()
@@ -183,3 +203,23 @@ class TestUserProfileEndpoint(MongoAPITestCase):
                          open(settings.PROJECT_ROOT + '/../dms/tests/test2.jpg', 'rb').read())
         self.assertEqual(reloaded_profile.photo.content_type, 'image/jpeg')
         self.assertEqual(reloaded_profile.photo_uri(), '/api/v1/photo/' + str(reloaded_profile.id))
+
+    @mock.patch('dms.utils.image_resizer.ImageResizer', BadImageResizer)
+    def test_handling_photo_update_exception(self):
+        attr = self.mobile_user_to_post.copy()
+        attr['email'] = 'tim@akampa.com'
+        attr['phone'] = '+256775019511'
+        attr['user'] = User(username='cage2', password='haha').save()
+        profile = UserProfile(**attr)
+        user_photo = open(settings.PROJECT_ROOT + '/../dms/tests/test.jpg', 'rb')
+        profile.photo.put(user_photo, content_type='image/content_type')
+        profile.save()
+
+        with open(settings.PROJECT_ROOT + '/../dms/tests/test2.jpg', 'rb') as test_image:
+            attr['file'] = test_image
+            response = self.client.post(self.API_ENDPOINT + str(profile.id) + '/', attr)
+            self.assertEqual(200, response.status_code)
+
+        retrieved_user = User.objects(username='cage2').first()
+        reloaded_profile = UserProfile.objects(user=retrieved_user).first()
+        self.assertEqual(reloaded_profile.photo.read(), None)

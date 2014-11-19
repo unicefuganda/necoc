@@ -26,6 +26,9 @@ RUN apt-get -qqy install nodejs-legacy
 RUN apt-get -qqy install npm
 RUN npm install -g bower
 
+# --- Install image processing ---
+RUN apt-get -qqy install imagemagick libjpeg8-dev libfreetype6 libfreetype6-dev zlib1g-dev libpng12-dev
+
 # --- Install python, pip and virtualenv ----
 RUN apt-get -qqy install python python-dev
 RUN wget https://bootstrap.pypa.io/get-pip.py

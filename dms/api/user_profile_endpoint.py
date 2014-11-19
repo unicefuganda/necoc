@@ -62,10 +62,14 @@ class UserProfileListCreateView(ListCreateAPIView):
             obj.user = user
 
     def save_new_image(self, obj):
-        if self.request.FILES.get('file'):
-            image = image_resizer.ImageResizer(self.request.FILES.get('file')).generate().read()
-            content_type = self.request.FILES.get('file').content_type
-            obj.photo.put(image, content_type=content_type)
+        try:
+            if self.request.FILES.get('file'):
+                image = image_resizer.ImageResizer(self.request.FILES.get('file')).generate().read()
+                content_type = self.request.FILES.get('file').content_type
+                obj.photo.put(image, content_type=content_type)
+                obj.save()
+        except:
+            obj.photo.delete()
             obj.save()
 
     def post_save(self, obj, created=False):
@@ -94,10 +98,14 @@ class UserProfileView(MongoRetrieveUpdateView):
         return self.patch(request, *args, **kwargs)
 
     def replace_image(self, obj):
-        if self.request.FILES.get('file'):
-            image = image_resizer.ImageResizer(self.request.FILES.get('file')).generate().read()
-            content_type = self.request.FILES.get('file').content_type
-            obj.photo.replace(image, content_type=content_type)
+        try:
+            if self.request.FILES.get('file'):
+                image = image_resizer.ImageResizer(self.request.FILES.get('file')).generate().read()
+                content_type = self.request.FILES.get('file').content_type
+                obj.photo.replace(image, content_type=content_type)
+                obj.save()
+        except:
+            obj.photo.delete()
             obj.save()
 
     def post_save(self, obj, created=False):

@@ -159,7 +159,7 @@ module.exports = function () {
                 browser.getCurrentUrl().then(function (url) {
                     id = RegExp("[^\/]*$").exec(url)[0];
                     self.expect(element(by.css('img.profile-pic')).getAttribute('src')).to.eventually
-                        .match(RegExp('http://localhost:7999/api/v1/photo/' + id));
+                        .match(RegExp('http://localhost:7999/api/v1/photo/' + id + '.decache='));
                 });
             })
             .then(function () {

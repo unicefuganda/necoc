@@ -1,6 +1,6 @@
 var DisasterInfoPage = function () {
     this.getDisasterData = function (key) {
-        return element(by.binding('{[{ disaster.' + key + ' }]}')).getText();
+        return element(by.binding('{[{ disasterInfo.' + key + ' }]}')).getText();
     };
 };
 

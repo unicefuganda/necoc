@@ -24,6 +24,11 @@
                     load: function (query, callback) {
                         DisasterTypeService.all().then(function (response) {
                             callback(response.data)
+                            scope.$watch(attrs.defaultValue, function (defaultValue) {
+                                if (defaultValue) {
+                                    $select[0].selectize.setValue(defaultValue);
+                                }
+                            });
                         });
                     },
                     create: function (input, callback) {

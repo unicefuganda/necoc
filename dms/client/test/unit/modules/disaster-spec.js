@@ -24,7 +24,7 @@ describe('dms.disaster', function () {
         });
     });
 
-    describe('DisastersModalController', function () {
+    describe('AddDisastersModalController', function () {
         var initController;
         var scope;
 
@@ -33,8 +33,9 @@ describe('dms.disaster', function () {
                 scope = $rootScope.$new();
                 httpMock.when('POST', apiUrl + 'disasters/').respond(disastersStub);
                 initController = function (isValid) {
-                    scope.disasters_form = { $valid: isValid};
-                    $controller('DisastersModalController', {$scope: scope});
+                    $controller('AddDisastersModalController', {$scope: scope});
+                    scope.form = {};
+                    scope.form.disasters_form = { $valid: isValid  };
                 };
             });
         });
@@ -83,6 +84,96 @@ describe('dms.disaster', function () {
             httpMock.expectPOST(apiUrl + 'disasters/', {name: "Flood", date: "2014-10-02T19:13",
                 locations: ['district-id'] });
             httpMock.flush();
+        });
+
+        it('should set modal title', function () {
+            initController(true);
+            expect(scope.modalTitle).toEqual('Add Disaster');
+        });
+    });
+
+    describe('EditDisastersModalController', function () {
+        var initController,
+            scope,
+            disasterStub = {
+                name: 'FLOOD',
+                description: 'Some description',
+                id: 'disaster_id'
+            }
+
+        beforeEach(function () {
+            inject(function ($controller, $rootScope) {
+                scope = $rootScope.$new();
+                httpMock.when('POST', apiUrl + 'disasters/' + disasterStub.id + '/').respond(disastersStub);
+                initController = function (isValid) {
+                    $controller('EditDisastersModalController', {$scope: scope});
+                    scope.form = {};
+                    scope.form.disasters_form = { $valid: isValid};
+                };
+            });
+        });
+
+        it('should post single disaster given the form is valid', function () {
+            initController(true);
+            scope.disaster = { name: "Flood", date: "2014/10/02 19:13", subcounties: 'subcounty_id', id: 'disaster_id'};
+            scope.disasters = [];
+            scope.hasErrors = true;
+
+            scope.saveDisaster();
+            httpMock.expectPOST(apiUrl + 'disasters/' + disasterStub.id + '/',
+                {name: "Flood", date: "2014-10-02T19:13", locations: ['subcounty_id'], id: 'disaster_id' });
+            expect(scope.saveStatus).toBeTruthy();
+            httpMock.flush();
+
+            expect(scope.saveStatus).toBeFalsy();
+            expect(scope.disaster).toBeNull();
+            expect(scope.hasErrors).toBeFalsy();
+            expect(scope.disasters).toEqual([disastersStub]);
+        });
+
+        it('should not post the disaster given the form has errors', function () {
+            initController(false);
+            scope.saveDisaster();
+            expect(scope.hasErrors).toBeTruthy();
+        });
+
+        it('should post the disaster with location as subcounty if it is given', function () {
+            initController(true);
+            scope.disaster = { name: "Flood",
+                date: "2014/10/02 19:13",
+                id: 'disaster_id',
+                district: {name: 'district-name'}, subcounties: 'sub-county-id1,sub-county-id2' };
+            scope.disasters = [];
+
+            scope.saveDisaster();
+            httpMock.expectPOST(apiUrl + 'disasters/' + disasterStub.id + '/',
+                { name: "Flood",
+                    id: 'disaster_id',
+                    date: "2014-10-02T19:13",
+                    locations: ['sub-county-id1', 'sub-county-id2'] });
+            httpMock.flush();
+        });
+
+        it('should post disaster with location as district if no subcounty is given', function () {
+            initController(true);
+            scope.disaster = { name: "Flood",
+                date: "2014/10/02 19:13",
+                id: 'disaster_id',
+                district: 'district-id' };
+            scope.disasters = [];
+
+            scope.saveDisaster();
+            httpMock.expectPOST(apiUrl + 'disasters/' + disasterStub.id + '/',
+                {   name: "Flood",
+                    date: "2014-10-02T19:13",
+                    id: 'disaster_id',
+                    locations: ['district-id'] });
+            httpMock.flush();
+        });
+
+        it('should set modal title', function () {
+            initController(true);
+            expect(scope.modalTitle).toEqual('Edit Disaster');
         });
     });
 

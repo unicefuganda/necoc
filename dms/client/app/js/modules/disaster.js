@@ -6,6 +6,10 @@
                 disaster.date = $moment(disaster.date, "YYYY/MM/DD hh:mm").format('YYYY-MM-DDTHH:mm');
                 return $http.post(Config.apiUrl + 'disasters/', disaster);
             },
+            update: function (disaster) {
+                disaster.date = $moment(disaster.date, "YYYY/MM/DD hh:mm").format('YYYY-MM-DDTHH:mm');
+                return $http.post(Config.apiUrl + 'disasters/' + disaster.id + '/', disaster);
+            },
             all: function () {
                 return $http.get(Config.apiUrl + 'disasters/');
             },
@@ -25,21 +29,50 @@
         };
     });
 
-    module.controller('DisasterInfoController', function($scope, MessageService, DisasterService, $stateParams) {
+    module.controller('DisasterInfoController', function ($scope, MessageService, DisasterService, $stateParams) {
         var disasterId = $stateParams.disaster;
         MessageService.filter({disaster: disasterId})
-                .then(function (response) {
-                    $scope.associatedMessages = response.data;
-                });
+            .then(function (response) {
+                $scope.associatedMessages = response.data;
+            });
         DisasterService.disaster(disasterId)
-                .then(function (response) {
-                    $scope.disaster = response.data;
-                });
+            .then(function (response) {
+                $scope.disaster = response.data;
+                $scope.disasterInfo = angular.copy($scope.disaster);
+            });
     })
 
-    module.controller('DisastersModalController', function ($scope, DisasterService, helpers) {
+    module.controller('AddDisastersModalController', function ($scope, DisasterService, helpers) {
+        $scope.modalTitle = 'Add Disaster';
+        $scope.form = {};
+        $scope.disaster = {};
         $scope.saveDisaster = function () {
-            if ($scope.disasters_form.$valid) {
+            if ($scope.form.disasters_form.$valid) {
+                $scope.saveStatus = true;
+                $scope.disaster.locations = $scope.disaster.subcounties ?
+                    helpers.stringToArray($scope.disaster.subcounties, ',') : [ $scope.disaster.district ];
+
+                delete $scope.disaster.district;
+                delete $scope.disaster.subcounties;
+                DisasterService.create($scope.disaster).then(function (response) {
+                    $scope.disaster = null;
+                    $scope.saveStatus = false;
+                    $scope.hasErrors = false;
+                    $scope.disasters.push(response.data);
+                });
+
+            } else {
+                $scope.hasErrors = true;
+            }
+        }
+    });
+
+    module.controller('EditDisastersModalController', function ($scope, DisasterService, helpers) {
+        $scope.modalTitle = 'Edit Disaster';
+        $scope.form = {};
+        $scope.disaster = {};
+        $scope.saveDisaster = function () {
+            if ($scope.form.disasters_form.$valid) {
                 $scope.saveStatus = true;
 
                 $scope.disaster.locations = $scope.disaster.subcounties ?
@@ -48,7 +81,7 @@
                 delete $scope.disaster.district;
                 delete $scope.disaster.subcounties;
 
-                DisasterService.create($scope.disaster).then(function (response) {
+                DisasterService.update($scope.disaster).then(function (response) {
                     $scope.disaster = null;
                     $scope.saveStatus = false;
                     $scope.hasErrors = false;
@@ -76,6 +109,12 @@
                         {value: 'Response Team Deployed', name: 'Response Team Deployed'},
                         {value: 'Closed', name: 'Closed'}
                     ]
+                });
+
+                scope.$watch(attrs.defaultValue, function (defaultValue) {
+                    if (defaultValue) {
+                        $select[0].selectize.setValue(defaultValue);
+                    }
                 });
 
                 scope.$watch(attrs.disasterStatus, function (disaster) {

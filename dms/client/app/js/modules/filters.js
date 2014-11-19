@@ -35,4 +35,13 @@
         }
     });
 
+    module.filter('idsAsString', function() {
+        return function (input) {
+            if (!input) return;
+            return input.map(function (el) {
+                return el.id;
+            }).join();
+        }
+    })
+
 })(angular.module('dms.filters', []));

@@ -23,7 +23,7 @@
                 <div>
                     <i class="icon icon-torso"></i>
                     <span>Type:</span>
-                    <strong>{[{ disaster.name.name }]}</strong>
+                    <strong>{[{ disasterInfo.name.name }]}</strong>
                 </div>
                 <div>
                     <i class="icon icon-location"></i>
@@ -31,25 +31,25 @@
 
                     <div class="multi-line-details">
                         <strong>
-                            <div>{[{ disaster.locations[0].parent.name }]}</div>
+                            <div>{[{ disasterInfo.locations[0].parent.name }]}</div>
                         </strong>
-                        <span>{[{ disaster.locations | joinNames | capitalize }]}</span>
+                        <span>{[{ disasterInfo.locations | joinNames | capitalize }]}</span>
                     </div>
                 </div>
                 <div>
                     <i class="icon icon-phone-on"></i>
                     <span>Description:</span>
-                    <strong>{[{ disaster.description }]}</strong>
+                    <strong>{[{ disasterInfo.description }]}</strong>
                 </div>
                 <div>
                     <i class="icon icon-location"></i>
                     <span>Status:</span>
-                    <strong>{[{ disaster.status }]}</strong>
+                    <strong>{[{ disasterInfo.status }]}</strong>
                 </div>
                 <div>
                     <i class="icon icon-contacts-social"></i>
                     <span>Duration:</span>
-                    <strong>{[{ disaster.date | duration }]}</strong>
+                    <strong>{[{ disasterInfo.date | duration }]}</strong>
                 </div>
             </div>
         </div>

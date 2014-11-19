@@ -81,7 +81,7 @@
                         callback(options);
 
                         if (attrs.defaultChildValue) {
-                            scope.select[type].setValue(attrs.defaultChildValue);
+                            scope.select[type].setValue(helpers.stringToArray(attrs.defaultChildValue, ','));
                         }
                     });
                 }

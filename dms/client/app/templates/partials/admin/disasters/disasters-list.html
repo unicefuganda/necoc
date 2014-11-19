@@ -29,7 +29,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="disaster in disasters" ng-click="showAssociatedMessages(disaster)">
+        <tr ng-repeat="disaster in disasters" ng-click="showDisasterInfo(disaster)">
             <td>{[{ disaster.name.name }]}</td>
             <td>
                 <div>{[{ disaster.locations[0].parent.name }]}</div>

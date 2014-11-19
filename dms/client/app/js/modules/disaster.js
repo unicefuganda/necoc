@@ -8,30 +8,34 @@
             },
             all: function () {
                 return $http.get(Config.apiUrl + 'disasters/');
+            },
+            disaster: function (disasterId) {
+                return $http.get(Config.apiUrl + 'disasters/' + disasterId + '/');
             }
         };
     });
 
-    module.controller('DisastersController', function ($scope, DisasterService, MessageService) {
-        $scope.disaster = {};
+    module.controller('DisastersController', function ($scope, DisasterService, $state) {
         DisasterService.all().then(function (response) {
             $scope.disasters = response.data;
         });
 
-        $scope.showAssociatedMessages = function (disaster) {
-            MessageService.filter({disaster: disaster.id})
-                .then(function (response) {
-                    $scope.disaster = disaster;
-                    $scope.associatedMessages = response.data;
-                    $scope.showMessageList = true;
-                });
-        };
-
-        $scope.backToDisasters = function () {
-            $scope.disaster = {};
-            $scope.showMessageList = false;
+        $scope.showDisasterInfo = function (disaster) {
+            $state.go('admin.disaster-info', {'disaster': disaster.id});
         };
     });
+
+    module.controller('DisasterInfoController', function($scope, MessageService, DisasterService, $stateParams) {
+        var disasterId = $stateParams.disaster;
+        MessageService.filter({disaster: disasterId})
+                .then(function (response) {
+                    $scope.associatedMessages = response.data;
+                });
+        DisasterService.disaster(disasterId)
+                .then(function (response) {
+                    $scope.disaster = response.data;
+                });
+    })
 
     module.controller('DisastersModalController', function ($scope, DisasterService, helpers) {
         $scope.saveDisaster = function () {

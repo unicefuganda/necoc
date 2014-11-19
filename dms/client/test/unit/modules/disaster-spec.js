@@ -88,9 +88,11 @@ describe('dms.disaster', function () {
 
 
     describe('DisastersController', function () {
-        var initController;
-        var scope;
-        var mockMessageService;
+        var initController,
+            scope,
+            mockMessageService,
+            stateMock;
+
         beforeEach(function () {
             mockMessageService = createPromiseSpy('mockMessageService', ['filter', 'all']);
 
@@ -98,9 +100,11 @@ describe('dms.disaster', function () {
                 scope = $rootScope.$new();
 
                 httpMock.when('GET', apiUrl + 'disasters/').respond(disastersStub);
+                stateMock = jasmine.createSpyObj('stateMock', ['go']);
+
                 initController = function () {
                     scope.associatedMessages = [];
-                    $controller('DisastersController', { $scope: scope, MessageService: mockMessageService });
+                    $controller('DisastersController', { $scope: scope, MessageService: mockMessageService, $state: stateMock });
                 };
             });
         });
@@ -113,30 +117,78 @@ describe('dms.disaster', function () {
             expect(scope.disasters).toEqual(disastersStub);
         });
 
-        describe('showAssociatedMessages()', function () {
-            it('should add messages associated to a disaster to the scope', function () {
+        describe('showDisasterInfo()', function () {
+            it('should direct user to disaster info page on click', function () {
                 initController();
-                var disasterStub = {id: "disaster_id"};
-                var mockAssociatedMessages = [
-                    { name: "mockMessages" }
-                ];
-
-                mockMessageService.when('filter').returnPromiseOf({ data: mockAssociatedMessages });
-                scope.showAssociatedMessages(disasterStub);
-                scope.$apply();
-                expect(mockMessageService.filter).toHaveBeenCalledWith({disaster: 'disaster_id'});
-                expect(scope.associatedMessages).toEqual(mockAssociatedMessages);
-                expect(scope.showMessageList).toBeTruthy();
+                scope.showDisasterInfo({id: "disaster_id"});
+                expect(stateMock.go).toHaveBeenCalledWith('admin.disaster-info', {'disaster': 'disaster_id'});
             });
         });
-
-        describe('backToDisasters()', function () {
-            it('should set scope.showMessageList to false', function () {
-                initController();
-                scope.backToDisasters();
-                expect(scope.showMessageList).toBeFalsy();
-            });
-        });
-
     });
-});
+
+    describe('DisasterInfoController', function () {
+        var initController,
+            scope,
+            mockMessageService,
+            mockStateParams,
+            mockHttp,
+            mockState,
+            disasterStub = {
+                "status": "Assessment",
+                "id": "546c5e39a4a12563242a9e91",
+                "name": { "name": "FLOOD" },
+                "locations": [
+                    {
+                        "name": "AWACH",
+                        "parent": {
+                            "name": "GULU"
+                        }
+                    }
+                ],
+                "description": "There is a Fire in Kampala",
+                "date": "2014-11-19T13:22:00"
+            };
+
+        beforeEach(function () {
+            mockMessageService = createPromiseSpy('mockMessageService', ['filter', 'all']);
+            mockState = jasmine.createSpyObj('mockState', ['go']);
+            mockStateParams = { disaster: 'disaster_id' }
+            inject(function ($controller, $rootScope, $httpBackend) {
+                initController = function () {
+                    scope = $rootScope.$new();
+                    mockHttp = $httpBackend;
+                    scope.associatedMessages = [];
+                    $controller('DisasterInfoController', {
+                        $scope: scope,
+                        MessageService: mockMessageService,
+                        $state: mockState,
+                        $stateParams: mockStateParams });
+                };
+            });
+        });
+
+        it('should add messages associated to a disaster to the scope', function () {
+            var mockAssociatedMessages = [
+                { name: "mockMessages" }
+            ];
+
+            mockMessageService.when('filter').returnPromiseOf({ data: mockAssociatedMessages });
+            initController();
+            httpMock.expectGET(apiUrl + 'disasters/disaster_id/').respond({});
+            httpMock.flush();
+            scope.$apply();
+            expect(mockMessageService.filter).toHaveBeenCalledWith({disaster: 'disaster_id'});
+            expect(scope.associatedMessages).toEqual(mockAssociatedMessages);
+        });
+
+        it('should add disaster information to the scope', function () {
+            mockMessageService.when('filter').returnPromiseOf({});
+            initController();
+            httpMock.expectGET(apiUrl + 'disasters/disaster_id/').respond(disasterStub);
+            httpMock.flush();
+            scope.$apply();
+            expect(scope.disaster).toEqual(disasterStub);
+        });
+    })
+})
+;

@@ -75,6 +75,18 @@
                 controller: 'DisastersController'
             })
 
+            .state('admin.disaster-info', {
+                url: '/disasters/:disaster',
+                data: {
+                    pageTitle: 'Disaster',
+                    permissions: {
+                        only: ['can_manage_disasters']
+                    }
+                },
+                templateUrl: '/static/templates/partials/admin/disasters/disaster-info.html',
+                controller: 'DisasterInfoController'
+            })
+
             .state('admin.messages', {
                 url: '/messages',
                 data: {

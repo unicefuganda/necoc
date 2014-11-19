@@ -38,8 +38,6 @@ var DisasterPage = function () {
 
     this.addDisasterModal = new AddDisasterModel();
 
-    this.backToDisastersButton = element(by.id('back-to-disasters-btn'));
-
     this.getDisasterData = function (row, key) {
         return element(by.repeater('disaster in disasters').row(row).column('{[{ disaster.' + key + ' }]}')).getText();
     };

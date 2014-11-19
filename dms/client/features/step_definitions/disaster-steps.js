@@ -155,7 +155,7 @@ module.exports = function () {
     });
 
     this.When(/^I click the back button$/, function (next) {
-        disasterPage.backToDisastersButton.click().then(next);
+        undefined.doSomethingToRaise();
     });
 
     this.Then(/^I should see the disasters listing page$/, function (next) {

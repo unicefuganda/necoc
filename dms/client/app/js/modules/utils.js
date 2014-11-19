@@ -39,6 +39,10 @@
         return moment;
     });
 
+    module.factory('$chroma', function () {
+        return chroma;
+    });
+
     module.factory('helpers', function () {
         return {
             stringToArray: function (string, seperator) {

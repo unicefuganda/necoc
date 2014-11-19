@@ -13,6 +13,7 @@
     });
 
     module.controller('DisastersController', function ($scope, DisasterService, MessageService) {
+        $scope.disaster = {};
         DisasterService.all().then(function (response) {
             $scope.disasters = response.data;
         });
@@ -20,12 +21,14 @@
         $scope.showAssociatedMessages = function (disaster) {
             MessageService.filter({disaster: disaster.id})
                 .then(function (response) {
+                    $scope.disaster = disaster;
                     $scope.associatedMessages = response.data;
                     $scope.showMessageList = true;
                 });
         };
 
         $scope.backToDisasters = function () {
+            $scope.disaster = {};
             $scope.showMessageList = false;
         };
     });

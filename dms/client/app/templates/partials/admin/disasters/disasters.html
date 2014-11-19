@@ -1,5 +1,6 @@
 <div class="section">
     <ng-include src="'/static/templates/partials/admin/disasters/disasters-modal.html'"></ng-include>
     <ng-include src="'/static/templates/partials/admin/disasters/disasters-list.html'" ng-hide="showMessageList"></ng-include>
+    <ng-include src="'/static/templates/partials/admin/disasters/disaster-info.html'" ng-show="showMessageList"></ng-include>
     <ng-include src="'/static/templates/partials/admin/disasters/associated-messages-list.html'" ng-show="showMessageList"></ng-include>
 </div>

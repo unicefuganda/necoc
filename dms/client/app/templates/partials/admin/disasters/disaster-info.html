@@ -1,0 +1,58 @@
+<div class="c-well">
+    <div class="row with-btm-margin">
+        <div class="col-md-4 sub-section-header">
+            <span class="icon icon-flash-electric"></span><span class="title">Disaster Information</span>
+        </div>
+        <div class="user-actions pull-right">
+            <ul>
+                <li>
+                    <button type="button" id="edit-disaster" class="btn btn-default user-btn btn-icon"
+                            data-toggle="modal"
+                            data-target="#disasters-modal" ng-click="editDisaster()">
+                        <span class="icon icon-edit"></span>
+                        <span class="value">Edit</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row with-btm-margin">
+        <div class="disaster-toast" growl></div>
+        <div class="col-lg-12">
+            <div class="info-container">
+                <div>
+                    <i class="icon icon-torso"></i>
+                    <span>Type:</span>
+                    <strong>{[{ disaster.name.name }]}</strong>
+                </div>
+                <div>
+                    <i class="icon icon-location"></i>
+                    <span>Location:</span>
+
+                    <div class="multi-line-details">
+                        <strong>
+                            <div>{[{ disaster.locations[0].parent.name }]}</div>
+                        </strong>
+                        <span>{[{ disaster.locations | joinNames | capitalize }]}</span>
+                    </div>
+                </div>
+                <div>
+                    <i class="icon icon-phone-on"></i>
+                    <span>Description:</span>
+                    <strong>{[{ disaster.description }]}</strong>
+                </div>
+                <div>
+                    <i class="icon icon-location"></i>
+                    <span>Status:</span>
+                    <strong>{[{ disaster.status }]}</strong>
+                </div>
+                <div>
+                    <i class="icon icon-contacts-social"></i>
+                    <span>Duration:</span>
+                    <strong>{[{ disaster.date | duration }]}</strong>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

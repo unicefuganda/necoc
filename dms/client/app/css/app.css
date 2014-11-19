@@ -633,30 +633,34 @@ div[class*="-aggregate-marker-icon"] div {
     border-radius: 3px;
 }
 
-.profile-container {
-    margin-top: 30px;
-}
-
-.profile-container > div {
+.info-container > div {
     padding: 10px 0;
 }
 
-.profile-container > div > span {
+.info-container > div > span {
     margin-left: 5px;
     font-weight: 300;
     font-size: 15px;
     width: 15%;
+    float: left;
+}
+
+.info-container > div > i {
+    color: rgba(122, 122, 122, 0.74);
+    text-shadow: 1px 1px 2px #fff;
+    float: left;
+}
+
+.info-container > div > strong {
+    font-weight: 500;
+    font-size: 15px;
+    width: 60%;
     display: inline-block;
 }
 
-.profile-container > div > i {
-    color: rgba(122, 122, 122, 0.74);
-    text-shadow: 1px 1px 2px #fff;
-}
-
-.profile-container > div > strong {
-    font-weight: 500;
-    font-size: 15px;
+.info-container > div > .multi-line-details {
+    width: 60%;
+    display: inline-block;
 }
 
 .profile-title {
@@ -684,7 +688,10 @@ div[class*="-aggregate-marker-icon"] div {
 }
 
 .user-actions {
-    position: absolute;
     top: 0;
     right: 0;
+}
+
+.user-actions-absolute {
+    position: absolute;
 }

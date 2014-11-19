@@ -22,6 +22,8 @@ module.exports = function(config) {
             'app/bower_components/angular-growl-v2/build/angular-growl.min.js',
             'app/bower_components/moment/min/moment.min.js',
             'app/bower_components/angular-mocks/angular-mocks.js',
+            'app/bower_components/highcharts/highcharts.js',
+            'app/bower_components/highcharts-ng/dist/highcharts-ng.js',
             'app/js/**/*.js',
             'test/**/*.js'
         ],

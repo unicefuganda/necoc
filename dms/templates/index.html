@@ -24,7 +24,8 @@
                                 class="glyphicon glyphicon-user"></span>&nbsp;{{ request.user.username }}<span
                                 class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a id="user_profile_link" href="#/admin/users/{{ request.user | get_profile_id }}">Account</a></li>
+                            <li><a id="user_profile_link" href="#/admin/users/{{ request.user | get_profile_id }}">Account</a>
+                            </li>
                             <li class="divider"></li>
                             <li><a href="/logout">Logout</a></li>
                         </ul>
@@ -70,6 +71,8 @@
 <script src="{{ STATIC_URL }}bower_components/leaflet/dist/leaflet.js"></script>
 <script src="{{ STATIC_URL }}bower_components/ng-file-upload/angular-file-upload.js"></script>
 <script src="{{ STATIC_URL }}bower_components/chroma-js/chroma.js"></script>
+<script src="{{ STATIC_URL }}bower_components/highcharts/highcharts.js"></script>
+<script src="{{ STATIC_URL }}bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
 <!-- Custom files -->
 <script src="{{ STATIC_URL }}js/modules/index.js"></script>
 <script src="{{ STATIC_URL }}js/modules/config.js"></script>
@@ -88,6 +91,6 @@
 <script src="{{ STATIC_URL }}js/modules/filters.js"></script>
 <script src="{{ STATIC_URL }}js/modules/polls.js"></script>
 <script src="{{ STATIC_URL }}js/modules/poll-responses.js"></script>
-<script src="{{ STATIC_URL }}js/modules/dashboard.js"></script>
 <script src="{{ STATIC_URL }}js/modules/user-profile.js"></script>
+<script src="{{ STATIC_URL }}js/modules/dashboard.js"></script>
 {% endblock %}

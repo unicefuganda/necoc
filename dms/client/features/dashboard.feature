@@ -80,10 +80,6 @@ Feature: Dashboard
     And I have a "Fire" disaster in "Mukono" district, "goma" subcounty already registered
     When I navigate to map location "/admin/dashboard"
     Then I should see the disaster stats
-    And I click the stats summary panel chevron
-    Then I should not see the summary panel chevron
-    When I click the stats summary panel chevron
-    Then I should see the disaster stats
 
   Scenario: Show district stats summary on sliding panel
     Given I am logged in as a NECOC admin

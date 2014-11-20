@@ -1,6 +1,5 @@
 (function (module) {
 
-
     module.factory('StatsService', function ($http, Config, helpers) {
 
         return {

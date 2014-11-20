@@ -715,3 +715,63 @@ div[class*="-aggregate-marker-icon"] div {
     top: 9px;
     left: -12px;
 }
+
+#stats-overlay.open {
+    position: fixed;
+    top: 75px;
+    background-color: rgba(255, 255, 255, 0.89);
+    width: 30%;
+    left: 70%;
+    z-index: 1000;
+}
+
+#stats-overlay {
+    position: fixed;
+    top: 75px;
+    background-color: rgba(255, 255, 255, 0.69);
+    width: 30%;
+    max-height: 60%;
+    left: 70%;
+    z-index: 1000;
+}
+
+#stats-overlay .stats-container {
+    margin: 10px 20px;
+    width: 93%;
+    float: right;
+}
+
+#stats-overlay .back-arrow {
+    font-size: 37px;
+    color: #3E9CB8;
+    position: absolute;
+    padding: 65px 5px;
+    cursor: pointer;
+}
+
+
+#location-stats{
+    background: #3E9CB8;
+    color: white;
+    margin-left: 30px;
+    margin-bottom: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+#summary-stats-table{
+    margin-right: 15px;
+    margin-left: 15px;
+    border: 1px solid white;
+    width: 60%;
+}
+
+#summary-stats-table td{
+    border-right: 1px solid white;
+    padding-left: 25px;
+}
+
+
+.xl-number {
+    font-size: 40px;
+}

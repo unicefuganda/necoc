@@ -20,13 +20,14 @@ class SummaryStatsSerializer(serializers.Serializer):
 
 class SummaryStatsListView(ListAPIView):
 
-    def get_location(self, location_name):
+    def get_location(self, kwargs):
+        location_name = kwargs.get('subcounty') or kwargs.get('district') or kwargs.get('location')
         if location_name:
             return Location.objects(name__iexact=location_name.lower()).first()
 
     def get_service(self, request):
         kwargs = request.GET.dict()
-        kwargs['location'] = self.get_location(kwargs.get('location'))
+        kwargs['location'] = self.get_location(kwargs)
         return StatsSummaryService(**kwargs)
 
     def list(self, request, *args, **kwargs):

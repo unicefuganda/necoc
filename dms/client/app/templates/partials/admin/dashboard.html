@@ -1,7 +1,20 @@
 <div map="" id="map"></div>
 
-<div id="message-overlay" sliding-panel="back-arrow" ng-controller="DashboardMessagesController">
-    <span class="back-arrow icon icon-chevron-left"></span>
+<div id="stats-overlay" data-for="stats" sliding-panel="back-arrow" ng-controller="DashboardStatsController">
+    <span class="back-arrow summary-stats-panel-arrow icon icon-chevron-left"></span>
+
+    <div class="stats-container">
+        <div class="sub-section-header">
+            <span class="title">{[{locationTitles.name}]}</span>
+
+        </div>
+        <div class="stats-content">
+            <ng-include src="'/static/templates/partials/admin/stats-content.html'"></ng-include>
+        </div>
+    </div>
+</div>
+<div id="message-overlay" data-for="message" sliding-panel="back-arrow" ng-controller="DashboardMessagesController">
+    <span class="back-arrow message-panel-arrow icon icon-chevron-left"></span>
 
     <div class="message-container">
         <div class="sub-section-header">

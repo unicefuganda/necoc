@@ -49,4 +49,37 @@
         ]
     });
 
+    module.constant('ChartConfig', {
+        chart: {
+            type: 'pie',
+            plotBackgroundColor: '#3E9CB8',
+            backgroundColor: '#3E9CB8',
+            borderWidth: 0,
+            plotBorderWidth: null,
+            plotShadow: false,
+            marginBottom: 0,
+            marginTop: 0,
+            spacingTop: 0,
+            spacingBottom: 0
+        },
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.point.name + '</b>: ' + this.y.toFixed(1);
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.y}',
+                    style: {
+                        color: 'white'
+                    }
+                }
+            }
+        }
+    });
+
 })(angular.module('dms.config', []));

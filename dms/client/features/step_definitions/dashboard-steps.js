@@ -6,7 +6,7 @@ module.exports = function () {
 
     this.When(/^I click the messages panel chevron$/, function (next) {
         var animationLength = 800;
-        dashboardPage.sliderButton.click().then(function () {
+        dashboardPage.messageSliderButton.click().then(function () {
             browser.sleep(animationLength).then(next);
         });
     });
@@ -35,5 +35,43 @@ module.exports = function () {
         disasterPage.addDisasterModal.selectInput("dashboard-disaster-type-field", disasterType).then(next);
     });
 
+    this.When(/^I click the stats summary panel chevron$/, function (next) {
+        var animationLength = 800;
+        dashboardPage.summaryStatsSliderButton.click().then(function () {
+            browser.sleep(animationLength).then(next);
+        });
+    });
 
-}
+    var seeInSummaryStats = function (self, locationName, disasterCount, affectedAreas, subLocation, next) {
+
+        self.expect(dashboardPage.getTextbyBinding('locationTitles.name')).to.eventually.equal(locationName)
+            .then(function () {
+                self.expect(dashboardPage.getTextbyBinding('stats.disasters.count')).to.eventually.equal(disasterCount)
+            })
+            .then(function () {
+                self.expect(dashboardPage.getTextbyBinding('stats.disasters.affected')).to.eventually.equal(affectedAreas)
+            })
+            .then(function () {
+                self.expect(dashboardPage.getTextbyBinding('locationTitles.subLocation')).to.eventually.equal(subLocation)
+            })
+            .then(next);
+    };
+
+    this.Then(/^I should see the disaster stats$/, function (next) {
+        seeInSummaryStats(this, 'Uganda', '1', '1', 'Districts', next);
+    });
+
+    this.Then(/^I should see in "([^"]*)" district the disaster stats$/, function (districtName, next) {
+        seeInSummaryStats(this, districtName.toUpperCase() + ' District', '1', '1', 'Subcounties', next);
+    });
+
+    this.Then(/^I should see in goma the disaster stats$/, function (next) {
+        seeInSummaryStats(this, 'GOMA Subcounty', '1', '1', 'Subcounty', next);
+    });
+
+
+    this.Then(/^I should see in "([^"]*)" district zero disaster stats$/, function (districtName, next) {
+        seeInSummaryStats(this, districtName.toUpperCase() + ' District', '0', '0', 'Subcounties', next);
+    });
+
+};

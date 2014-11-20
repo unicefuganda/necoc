@@ -95,6 +95,13 @@ describe('dms.stats', function () {
                 httpMock.flush();
                 expect(obtainedStats).toBeDefined();
             });
+            it('should filter aggregate summary stats by subcounty and district', function () {
+                var options = {district: 'kampala', subcounty: 'bukoto'};
+                var obtainedStats = statsSummaryService.getSummary(options);
+                httpMock.expectGET(apiUrl + 'stats-summary/?district=kampala&subcounty=bukoto').respond({});
+                httpMock.flush();
+                expect(obtainedStats).toBeDefined();
+            });
         });
     });
 });

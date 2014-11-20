@@ -81,6 +81,10 @@ module.exports = function () {
         }).then(next);
     });
 
+    this.When(/^I click save disaster$/, function (next) {
+        disasterPage.disasterModal.saveButton.click().then(next);
+    });
+
     this.Then(/^I should see the disaster in the disasters table$/, function (next) {
         var self = this;
 
@@ -203,5 +207,6 @@ module.exports = function () {
             .then(function () {
                 self.expect(disasterInfoPage.getDisasterData('status')).to.eventually.equal(disaster.status)
                     .and.notify(next);
-            });    });
+            });
+    });
 };

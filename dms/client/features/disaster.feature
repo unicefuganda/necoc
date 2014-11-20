@@ -24,7 +24,7 @@ Feature: Disasters
     And I enter disaster description as "Bigger flood"
     And I select disaster status as "Response Team Deployed"
     And I enter disaster date as "2014/10/08 00:04"
-    And I click save and close
+    And I click save disaster
     Then I should see my disaster information
 
   Scenario: Add Disaster with un registered Disaster Type

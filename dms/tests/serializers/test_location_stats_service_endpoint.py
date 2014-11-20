@@ -1,11 +1,11 @@
 import datetime
-
 from dms.api.location_stats_service_endpoint import LocationStatsSerializer, StatsDetailsSerializer, \
-    MultiLocationStatsSerializer, DisasterStatsDetailsSerializer
+    MultiLocationStatsSerializer
 from dms.models import DisasterType, Disaster
+
 from dms.models.location import Location
 from dms.models.rapid_pro_message import RapidProMessage
-from dms.services.location_stats import LocationStatsService, StatsDetails, LocationStats, DisasterStatsDetails
+from dms.services.location_stats import LocationStatsService, StatsDetails, LocationStats
 from dms.tests.base import MongoTestCase
 
 
@@ -30,23 +30,13 @@ class LocationStatsServiceSerializersTest(MongoTestCase):
 
         self.assertEqual(serialized_data, serialized_object.data)
 
-    def test_should_serialize_disaterstats_details(self):
-        stats = DisasterStatsDetails(1, 50, 2, {'Fire': 2, 'Flood': 4})
-        serialized_object = DisasterStatsDetailsSerializer(stats)
-        serialized_data = {'count': 1, 'percentage': 50,
-                           'affected': 2, 'types': {'Fire': 2, 'Flood': 4}}
-
-        self.assertEqual(serialized_data, serialized_object.data)
-
     def test_should_serialize_disaster_and_message_stats(self):
         stats = StatsDetails(1, 50)
-        disaster_stats = DisasterStatsDetails(1, 50, 2, {'Fire': 2, 'Flood': 4})
-        location_stats = LocationStats(stats, disaster_stats)
+        location_stats = LocationStats(stats, stats)
 
         serialized_object = LocationStatsSerializer(location_stats)
         serialized_data = {'messages': {'count': 1, 'percentage': 50},
-                           'disasters': {'count': 1, 'percentage': 50,
-                                         'affected': 2, 'types': {'Fire': 2, 'Flood': 4}}}
+                           'disasters': {'count': 1, 'percentage': 50}}
 
         self.assertEqual(serialized_data, serialized_object.data)
 
@@ -63,8 +53,7 @@ class LocationStatsServiceSerializersTest(MongoTestCase):
         queryset = location_stats_service.aggregate_stats()
         serialized_object = LocationStatsSerializer(queryset)
         serialized_data = {'messages': {'count': 1, 'percentage': 50},
-                           'disasters': {'count': 1, 'percentage': 100,
-                                         'affected': 1, 'types': {'Flood': 1}}}
+                           'disasters': {'count': 1, 'percentage': 100}}
 
         self.assertEqual(serialized_data, serialized_object.data)
 
@@ -99,10 +88,9 @@ class MultiLocationStatsServiceSerializersTest(MongoTestCase):
         serialized_object = multi_location_serializer
 
         expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50},
-                                                'disasters': {'count': 1, 'percentage': 100,
-                                                              'affected': 1, 'types': {'Flood': 1}}},
+                                                'disasters': {'count': 1, 'percentage': 100}},
                                     'bukoto': {'messages': {'count': 1, 'percentage': 50},
-                                               'disasters': {'count': 0, 'percentage': 0,
-                                                             'affected': 0, 'types': {}}}}
+                                               'disasters': {'count': 0, 'percentage': 0}}
+                                   }
 
         self.assertEqual(expected_serialized_data, serialized_object.data)

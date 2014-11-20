@@ -36,11 +36,9 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         Disaster(**self.disaster_attr_bukoto).save()
 
         expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50},
-                                                'disasters': {'count': 1, 'percentage': 50,
-                                                              'affected': 1, 'types': {'Flood': 1}}},
+                                                'disasters': {'count': 1, 'percentage': 50}},
                                     'bukoto': {'messages': {'count': 1, 'percentage': 50},
-                                               'disasters': {'count': 1, 'percentage': 50,
-                                                             'affected': 1, 'types': {'Flood': 1}}}
+                                               'disasters': {'count': 1, 'percentage': 50}}
         }
 
         response = self.client.get(self.API_ENDPOINT, format='json')
@@ -63,8 +61,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         Disaster(**disaster_attr_bugolobi).save()
 
         expected_serialized_data = {'bugolobi': {'messages': {'count': 1, 'percentage': 50},
-                                                 'disasters': {'count': 1, 'percentage': 50,
-                                                               'affected': 1, 'types': {'Flood': 1}}}}
+                                                 'disasters': {'count': 1, 'percentage': 50}}}
 
         url = '%s%s/' % (self.API_ENDPOINT, str(self.kampala.name.lower()))
         response = self.client.get(url, format='json')
@@ -79,11 +76,9 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         Disaster(**self.disaster_attr_bukoto).save()
 
         expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50},
-                                                'disasters': {'count': 1, 'percentage': 50,
-                                                              'affected': 1, 'types': {'Flood': 1}}},
+                                                'disasters': {'count': 1, 'percentage': 50}},
                                     'bukoto': {'messages': {'count': 1, 'percentage': 50},
-                                               'disasters': {'count': 1, 'percentage': 50,
-                                                             'affected': 1, 'types': {'Flood': 1}}}
+                                               'disasters': {'count': 1, 'percentage': 50}}
         }
 
         from_ = self.date_time - datetime.timedelta(days=1)
@@ -96,11 +91,9 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         self.assertEqual(expected_serialized_data, response.data)
 
         expected_serialized_data = {'kampala': {'messages': {'count': 0, 'percentage': 0},
-                                                'disasters': {'count': 0, 'percentage': 0,
-                                                              'affected': 0, 'types': {}}},
+                                                'disasters': {'count': 0, 'percentage': 0}},
                                     'bukoto': {'messages': {'count': 0, 'percentage': 0},
-                                               'disasters': {'count': 0, 'percentage': 0,
-                                                             'affected': 0, 'types': {}}}
+                                               'disasters': {'count': 0, 'percentage': 0}}
                                     }
 
 
@@ -128,8 +121,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         Disaster(**disaster_attr_bugolobi).save()
 
         expected_serialized_data = {'bugolobi': {'messages': {'count': 1, 'percentage': 50},
-                                                 'disasters': {'count': 1, 'percentage': 50,
-                                                               'affected': 1, 'types': {'Flood': 1}}}}
+                                                 'disasters': {'count': 1, 'percentage': 50}}}
 
         from_ = self.date_time - datetime.timedelta(days=1)
         from_ = str(from_.date())
@@ -144,8 +136,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         self.assertEqual(expected_serialized_data, response.data)
 
         expected_serialized_data = {'bugolobi': {'messages': {'count': 0, 'percentage': 0},
-                                                'disasters': {'count': 0, 'percentage': 0,
-                                                              'affected': 0, 'types': {}}}}
+                                                'disasters': {'count': 0, 'percentage': 0}}}
 
         url = self.API_ENDPOINT + '%s/?format=json&from=%s' % (str(self.kampala.name.lower()), to_)
         response = self.client.get(url, format='json')
@@ -169,11 +160,9 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         RapidProMessage(**self.message_bukoto).save()
 
         expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 100},
-                                                'disasters': {'count': 1, 'percentage': 50,
-                                                              'affected': 1, 'types': {'Flood': 1}}},
+                                                'disasters': {'count': 1, 'percentage': 50}},
                                     'bukoto': {'messages': {'count': 0, 'percentage': 0},
-                                               'disasters': {'count': 1, 'percentage': 50,
-                                                             'affected': 1, 'types': {'Flood': 1}}}
+                                               'disasters': {'count': 1, 'percentage': 50}}
         }
 
         response = self.client.get(self.API_ENDPOINT + '?format=json&disaster_type=%s' % str(self.disaster_type.id))
@@ -188,11 +177,9 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
 
 
         expected_serialized_data = {'kampala': {'messages': {'count': 0, 'percentage': 0},
-                                                'disasters': {'count': 1, 'percentage': 100,
-                                                              'affected': 1, 'types': {'Fire': 1}}},
+                                                'disasters': {'count': 1, 'percentage': 100}},
                                     'bukoto': {'messages': {'count': 0, 'percentage': 0},
-                                               'disasters': {'count': 0, 'percentage': 0,
-                                                             'affected': 0, 'types': {}}}
+                                               'disasters': {'count': 0, 'percentage': 0}}
                                     }
 
         response = self.client.get(self.API_ENDPOINT + '?format=json&disaster_type=%s' % str(disaster_type2.id))
@@ -217,8 +204,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         RapidProMessage(**message_bugolobi).save()
 
         expected_serialized_data = {'bugolobi': {'messages': {'count': 1, 'percentage': 100},
-                                                 'disasters': {'count': 1, 'percentage': 50,
-                                                               'affected': 1, 'types': {'Flood': 1}}}}
+                                                 'disasters': {'count': 1, 'percentage': 50}}}
 
         url = self.API_ENDPOINT + '%s/?format=json&disaster_type=%s' % (str(self.kampala.name.lower()), str(self.disaster_type.id))
         response = self.client.get(url, format='json')
@@ -236,11 +222,9 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         RapidProMessage(**self.message_bukoto).save()
 
         expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 100},
-                                                'disasters': {'count': 1, 'percentage': 50,
-                                                              'affected': 1, 'types': {'Flood': 1}}},
+                                                'disasters': {'count': 1, 'percentage': 50}},
                                     'bukoto': {'messages': {'count': 0, 'percentage': 0},
-                                               'disasters': {'count': 1, 'percentage': 50,
-                                                             'affected': 1, 'types': {'Flood': 1}}}
+                                               'disasters': {'count': 1, 'percentage': 50}}
         }
 
         from_ = self.date_time - datetime.timedelta(days=1)
@@ -253,17 +237,13 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(expected_serialized_data, response.data)
 
-        other_type = DisasterType(**dict(name='Fire', description="Some flood")).save()
-
         expected_serialized_data = {'kampala': {'messages': {'count': 0, 'percentage': 0},
-                                                'disasters': {'count': 0, 'percentage': 0,
-                                                              'affected': 0, 'types': {}}},
+                                                'disasters': {'count': 0, 'percentage': 0}},
                                     'bukoto': {'messages': {'count': 0, 'percentage': 0},
-                                               'disasters': {'count': 0, 'percentage': 0,
-                                                             'affected': 0, 'types': {}}}
+                                               'disasters': {'count': 0, 'percentage': 0}}
                                     }
 
-
+        other_type = DisasterType(**dict(name='Fire', description="Some flood")).save()
 
         url = self.API_ENDPOINT + '?format=json&from=%s&to=%s&disaster_type=%s' % (from_, to_, str(other_type.id))
         response = self.client.get(url, format='json')
@@ -298,8 +278,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         RapidProMessage(**message_bugolobi).save()
 
         expected_serialized_data = {'bugolobi': {'messages': {'count': 1, 'percentage': 100},
-                                                 'disasters': {'count': 1, 'percentage': 50,
-                                                               'affected': 1, 'types': {'Flood': 1}}}}
+                                                 'disasters': {'count': 1, 'percentage': 50}}}
 
         from_ = self.date_time - datetime.timedelta(days=1)
         from_ = str(from_.date())
@@ -313,8 +292,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         self.assertEqual(expected_serialized_data, response.data)
 
         expected_serialized_data = {'bugolobi': {'messages': {'count': 0, 'percentage': 0},
-                                                'disasters': {'count': 0, 'percentage': 0,
-                                                              'affected': 0, 'types': {}}}}
+                                                'disasters': {'count': 0, 'percentage': 0}}}
 
         other_type = DisasterType(**dict(name='Fire', description="Some flood")).save()
 
@@ -344,11 +322,9 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         Disaster(**self.disaster_attr_bukoto).save()
 
         expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50},
-                                                'disasters': {'count': 1, 'percentage': 50,
-                                                              'affected': 1, 'types': {'Flood': 1}}},
+                                                'disasters': {'count': 1, 'percentage': 50}},
                                     'bukoto': {'messages': {'count': 1, 'percentage': 50},
-                                               'disasters': {'count': 1, 'percentage': 50,
-                                                             'affected': 1, 'types': {'Flood': 1}}}
+                                               'disasters': {'count': 1, 'percentage': 50}}
         }
 
         from_ = self.date_time - datetime.timedelta(days=1)
@@ -361,11 +337,9 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         self.assertEqual(expected_serialized_data, response.data)
 
         expected_serialized_data = {'kampala': {'messages': {'count': 0, 'percentage': 0},
-                                                'disasters': {'count': 0, 'percentage': 0,
-                                                              'affected': 0, 'types': {}}},
+                                                'disasters': {'count': 0, 'percentage': 0}},
                                     'bukoto': {'messages': {'count': 0, 'percentage': 0},
-                                               'disasters': {'count': 0, 'percentage': 0,
-                                                             'affected': 0, 'types': {}}}
+                                               'disasters': {'count': 0, 'percentage': 0}}
                                     }
 
 
@@ -393,8 +367,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         Disaster(**disaster_attr_bugolobi).save()
 
         expected_serialized_data = {'bugolobi': {'messages': {'count': 1, 'percentage': 50},
-                                                 'disasters': {'count': 1, 'percentage': 50,
-                                                               'affected': 1, 'types': {'Flood': 1}}}}
+                                                 'disasters': {'count': 1, 'percentage': 50}}}
 
         from_ = self.date_time - datetime.timedelta(days=1)
         from_ = str(from_.date())
@@ -409,8 +382,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         self.assertEqual(expected_serialized_data, response.data)
 
         expected_serialized_data = {'bugolobi': {'messages': {'count': 0, 'percentage': 0},
-                                                'disasters': {'count': 0, 'percentage': 0,
-                                                              'affected': 0, 'types': {}}}}
+                                                'disasters': {'count': 0, 'percentage': 0}}}
 
         url = self.API_ENDPOINT + '%s/?format=json&from=%s&disaster_type=&to=' % (str(self.kampala.name.lower()), to_)
         response = self.client.get(url, format='json')
@@ -418,9 +390,8 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
 
         self.assertEqual(expected_serialized_data, response.data)
 
-        url = self.API_ENDPOINT + '%s/?format=json&to=%s' % (str(self.kampala.name.lower()), from_)
+        url = self.API_ENDPOINT + '%s/?format=json&to=%s&disaster_type=&from=' % (str(self.kampala.name.lower()), from_)
         response = self.client.get(url, format='json')
         self.assertEqual(200, response.status_code)
 
         self.assertEqual(expected_serialized_data, response.data)
-

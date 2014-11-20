@@ -81,11 +81,25 @@
                         callback(options);
                         var defaultValue = scope.$eval(attrs.defaultChildValue);
                         if (defaultValue) {
-                            scope.select[type].setValue(helpers.stringToArray(defaultValue, ','));
+                            if (defaultValue.indexOf(",") > -1) {
+                                console.log('1mmmmm1');
+                                scope.select[type].setValue(helpers.stringToArray(defaultValue, ','));
+                            } else {
+                                console.log('1sssss1');
+                                console.log(scope.select[type]);
+                                console.log(defaultValue);
+                                scope.select[type].setValue(defaultValue);
+                            }
                         }
                         scope.$watch(attrs.defaultChildValue, function (defaultChildValue) {
                             if (defaultChildValue) {
-                                scope.select[type].setValue(helpers.stringToArray(defaultChildValue, ','));
+                                if (defaultChildValue.indexOf(",") > -1) {
+                                    console.log('mmmmm');
+                                    scope.select[type].setValue(helpers.stringToArray(defaultChildValue, ','));
+                                } else {
+                                    console.log('ssssss');
+                                    scope.select[type].setValue(defaultChildValue);
+                                }
                             }
                         });
                     });

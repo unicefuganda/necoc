@@ -52,6 +52,12 @@
 
             if ($scope.form.user_form.$valid) {
                 $scope.saveStatus = true;
+                user.location = user.subcounty;
+                var subcounty = user.subcounty,
+                    district = user.district;
+                delete user.subcounty;
+                delete user.district;
+
                 MobileUserService.create(user, selectedFile)
                     .then(function (response) {
                         $scope.saveStatus = false;
@@ -59,12 +65,14 @@
                         $scope.hasErrors = false;
                         $scope.users.push(response.data);
                     }, function (error) {
+                        user.subcounty = subcounty;
+                        user.district = district;
+                        user.location = {};
                         $scope.errors = error.data;
                         helpers.invalidate($scope.form.user_form, $scope.errors);
                         $scope.saveStatus = false;
                         $scope.hasErrors = true;
                     });
-
             } else {
                 $scope.hasErrors = true;
             }
@@ -85,6 +93,9 @@
             if ($scope.form.user_form.$valid) {
                 $scope.successful = false;
                 $scope.saveStatus = true;
+                user.location = user.subcounty;
+                delete user.subcounty;
+                delete user.district;
                 delete user.username;
                 MobileUserService.update(user, selectedFile)
                     .then(function (response) {

@@ -52,7 +52,7 @@ describe('dms.disaster', function () {
             httpMock.flush();
 
             expect(scope.saveStatus).toBeFalsy();
-            expect(scope.disaster).toBeNull();
+            expect(scope.disaster).toEqual({});
             expect(scope.hasErrors).toBeFalsy();
             expect(scope.disasters).toEqual([disastersStub]);
         });

@@ -77,7 +77,7 @@ describe('dms.mobile-user', function () {
 
             it('should post the user to the api endpoint given the form has no errors', function () {
                 initController(true);
-                scope.saveUser();
+                scope.saveUser({subcounty: '', district: ''});
 
                 httpMock.expectPOST(apiUrl + 'mobile-users/');
                 expect(scope.saveStatus).toBeTruthy();
@@ -98,7 +98,7 @@ describe('dms.mobile-user', function () {
             it('should add error to the scope given the post returns an error code', function () {
                 httpMock.expectPOST(apiUrl + 'mobile-users/').respond(400, errorMessage);
                 initController(true);
-                scope.saveUser();
+                scope.saveUser({subcounty: '', district: ''});
                 httpMock.flush();
 
                 expect(scope.form.user_form.phone.$invalid).toBeTruthy();
@@ -124,10 +124,10 @@ describe('dms.mobile-user', function () {
 
             beforeEach(function () {
                 inject(function ($controller) {
-                    httpMock.when('POST', apiUrl + 'mobile-users/').respond(responseStub);
+                    httpMock.when('POST', apiUrl + 'mobile-users/', {}).respond(responseStub);
 
                     initController = function (isFormValid) {
-                        scope.user = { name: "Timothy" };
+                        scope.user = { name: "Timothy", subcounty: "", district: "" };
                         scope.users = [];
                         scope.setProfile = jasmine.createSpy();
                         $controller('EditUserController', { $scope: scope });
@@ -152,7 +152,7 @@ describe('dms.mobile-user', function () {
                 expect(scope.hasErrors).toBeFalsy();
             });
 
-            it('should not send username to server', function () {
+            it('should not send username or subcounty to server', function () {
                 initController(true);
                 responseStub.phone_no = '2560760540321';
                 responseStub.id = '1';

@@ -123,6 +123,7 @@ module.exports = function () {
 
     this.Then(/^I should see other server\-side validation errors$/, function (next) {
         var self = this;
+
         mobileUsersPage.createUserModal.getPhoneFieldErrors(1)
             .then(function (error) {
                 self.expect(error).to.be.equal('Phone must be unique');

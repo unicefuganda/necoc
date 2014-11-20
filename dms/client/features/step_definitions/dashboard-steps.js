@@ -74,4 +74,8 @@ module.exports = function () {
         seeInSummaryStats(this, districtName.toUpperCase() + ' District', '0', '0', 'Subcounties', next);
     });
 
+    this.Then(/^I should not see the summary panel chevron$/, function (next) {
+        this.expect(element(by.binding('locationTitles.name')).isDisplayed()).to.be.eventually.false.and.notify(next);
+    });
+
 };

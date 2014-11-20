@@ -552,7 +552,7 @@ div[class*="-aggregate-marker-icon"] div {
     bottom: 0;
     background-color: rgba(255, 255, 255, 0.69);
     width: 74%;
-    max-height: 60%;
+    max-height: 48%;
     left: 97%;
     z-index: 1000;
 }
@@ -718,7 +718,7 @@ div[class*="-aggregate-marker-icon"] div {
 
 #stats-overlay.open {
     position: fixed;
-    top: 75px;
+    top: 55px;
     background-color: rgba(255, 255, 255, 0.89);
     width: 30%;
     left: 70%;
@@ -727,16 +727,16 @@ div[class*="-aggregate-marker-icon"] div {
 
 #stats-overlay {
     position: fixed;
-    top: 75px;
+    top: 55px;
     background-color: rgba(255, 255, 255, 0.69);
     width: 30%;
-    max-height: 60%;
     left: 70%;
     z-index: 1000;
+    max-height: 45%;
 }
 
 #stats-overlay .stats-container {
-    margin: 10px 20px;
+    margin: 5px 20px;
     width: 93%;
     float: right;
 }
@@ -745,7 +745,7 @@ div[class*="-aggregate-marker-icon"] div {
     font-size: 37px;
     color: #3E9CB8;
     position: absolute;
-    padding: 65px 5px;
+    padding: 0 0;
     cursor: pointer;
 }
 
@@ -753,10 +753,13 @@ div[class*="-aggregate-marker-icon"] div {
 #location-stats{
     background: #3E9CB8;
     color: white;
-    margin-left: 30px;
-    margin-bottom: 10px;
     padding-top: 15px;
-    padding-bottom: 15px;
+    border-left: 30px solid transparent;
+    /*padding-bottom: 10px;*/
+}
+
+#stats-numbers{
+    padding-bottom: 10px;
 }
 
 #summary-stats-table{
@@ -768,7 +771,7 @@ div[class*="-aggregate-marker-icon"] div {
 
 #summary-stats-table td{
     border-right: 1px solid white;
-    padding-left: 25px;
+    text-align: center;
 }
 
 

@@ -162,7 +162,7 @@ describe('dms.dashboard', function () {
             expect($.fn.animate).toHaveBeenCalledWith({left: '97%'});
         });
 
-        it('should animate opening on click much to the left for stats overlay', function () {
+        it('should animate closing of sliding panel for stats overlay on click', function () {
             var stats_html = "<div data-for='stats' sliding-panel='back-arrow'>" +
                 "<span class='back-arrow icon icon-chevron-right-1'></span>" +
                 "</div>";
@@ -171,7 +171,7 @@ describe('dms.dashboard', function () {
 
             spyOn($.fn, 'animate').andCallThrough();
             element.find('.back-arrow').trigger('click');
-            expect($.fn.animate).toHaveBeenCalledWith({left: '70%'});
+            expect($.fn.animate).toHaveBeenCalledWith({left: '97%'});
         });
 
     });
@@ -232,24 +232,32 @@ describe('dms.dashboard', function () {
                 scope = $rootScope.$new();
                 disasterStatsChartsData = {
                     options: ChartConfig,
-                    title: {text: ''}
-                    };
+                    title: {text: ''},
+                    size: {width: 300, height: 170}
+                };
 
                 httpMock.when('GET', apiUrl + 'stats-summary/').respond(stateSummaryStub);
+
+                scope.params = {location: {}};
                 $controller('DashboardStatsController', { $rootScope: scope, $scope: scope});
             });
         });
 
         it('should add stats summary to the scope', function () {
+
             httpMock.expectGET(apiUrl + 'stats-summary/?from=2014-11-06&to=2014-11-08').respond(stateSummaryStub);
             scope.filter = {from: '2014-11-06', to: '2014-11-07'};
             httpMock.flush();
 
             expect(scope.stats).toEqual(stateSummaryStub);
             expect(scope.disasterTypeDistribution).toEqual(disasterData);
-            expect(scope.series).toEqual([{data: disasterData}]);
+            expect(scope.series).toEqual([
+                {data: disasterData}
+            ]);
 
-            disasterStatsChartsData.series = [{data: disasterData}];
+            disasterStatsChartsData.series = [
+                {data: disasterData}
+            ];
             expect(scope.disasterStatsCharts).toEqual(disasterStatsChartsData);
         });
 
@@ -260,9 +268,13 @@ describe('dms.dashboard', function () {
 
             expect(scope.stats).toEqual(stateSummaryStub);
             expect(scope.disasterTypeDistribution).toEqual(disasterData);
-            expect(scope.series).toEqual([{data: disasterData}]);
+            expect(scope.series).toEqual([
+                {data: disasterData}
+            ]);
 
-            disasterStatsChartsData.series = [{data: disasterData}];
+            disasterStatsChartsData.series = [
+                {data: disasterData}
+            ];
             expect(scope.disasterStatsCharts).toEqual(disasterStatsChartsData);
         });
 
@@ -280,18 +292,20 @@ describe('dms.dashboard', function () {
             expect(scope.locationTitles).toEqual({name: 'KAMPALA District', subLocation: 'Subcounties'});
         });
 
-//        it('should set subcounty name and subcounties as locationTitles, when location is subcounty, and make the corresponding api call', function () {
-//            scope.params = {location: {district: 'kampala', subcounty: 'bukoto'}};
-////            scope.$apply()
-//
-//            httpMock.expectGET(apiUrl + 'stats-summary/?subcounty=bukoto').respond(stateSummaryStub);
-//            httpMock.flush();
-//
-//            expect(scope.locationTitles).toEqual({name: 'BUKOTO District', subLocation: 'Subcounties'});
-//            expect(scope.stats).toEqual(stateSummaryStub);
-//            expect(scope.disasterTypeDistribution).toEqual(disasterData);
-//            expect(scope.series).toEqual([{data: disasterData}]);
-//        });
+        it('should set subcounty name and subcounties as locationTitles, when location is subcounty, and make the corresponding api call', function () {
+            scope.filter = {};
+            scope.params.location = {district: 'kampala', subcounty: 'bukoto'};
+
+            httpMock.expectGET(apiUrl + 'stats-summary/?subcounty=bukoto').respond(stateSummaryStub);
+            httpMock.flush();
+
+            expect(scope.locationTitles).toEqual({name: 'BUKOTO Subcounty', subLocation: 'Subcounty'});
+            expect(scope.stats).toEqual(stateSummaryStub);
+            expect(scope.disasterTypeDistribution).toEqual(disasterData);
+            expect(scope.series).toEqual([
+                {data: disasterData}
+            ]);
+        });
 
     });
 

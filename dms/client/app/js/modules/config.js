@@ -56,11 +56,7 @@
             backgroundColor: '#3E9CB8',
             borderWidth: 0,
             plotBorderWidth: null,
-            plotShadow: false,
-            marginBottom: 0,
-            marginTop: 0,
-            spacingTop: 0,
-            spacingBottom: 0
+            plotShadow: false
         },
         tooltip: {
             formatter: function () {
@@ -72,14 +68,21 @@
                 allowPointSelect: true,
                 cursor: 'pointer',
                 dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.y}',
-                    style: {
-                        color: 'white'
-                    }
-                }
+                    enabled: false
+                },
+                showInLegend: true
             }
-        }
+        },
+
+        legend: {
+            enabled: true,
+            align: 'right',
+            layout: 'vertical',
+            verticalAlign: 'middle',
+            itemStyle: {'color': '#3E9CB8'},
+            backgroundColor: 'white'
+        },
+        colors: ['#90ed7d', '#8085e9', '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1', '#7cb5ec', '#434348', '#f7a35c']
     });
 
 })(angular.module('dms.config', []));

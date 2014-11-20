@@ -100,7 +100,7 @@
             title: {
                 text: ''
             },
-//            size: {width: 450, height: 450},
+            size: {width: 300, height: 170},
             series: $scope.series
         };
 
@@ -109,9 +109,11 @@
     module.directive('slidingPanel', function () {
         return {
             link: function (scope, element, attrs) {
-                var showing = true,
-                    openAnimate = {message: '26%', stats: '70%'},
+                var openAnimate = {message: '26%', stats: '75%'},
+                    showingMapping = {message: true, stats: false},
+                    showing = showingMapping[attrs.for],
                     chevron = element.find('.' + attrs.slidingPanel);
+
 
                 togglePanel();
                 chevron.on('click', togglePanel);

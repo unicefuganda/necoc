@@ -60,7 +60,7 @@
                 delete $scope.disaster.district;
                 delete $scope.disaster.subcounties;
                 DisasterService.create($scope.disaster).then(function (response) {
-                    $scope.disaster = null;
+                    $scope.disaster = {};
                     $scope.saveStatus = false;
                     $scope.hasErrors = false;
                     $scope.disasters.push(response.data);

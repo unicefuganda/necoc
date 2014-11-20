@@ -79,26 +79,37 @@
                         }, []);
                         scope.select[type].clearOptions();
                         callback(options);
-
-                        if (attrs.defaultChildValue) {
-                            scope.select[type].setValue(helpers.stringToArray(attrs.defaultChildValue, ','));
+                        var defaultValue = scope.$eval(attrs.defaultChildValue);
+                        if (defaultValue) {
+                            scope.select[type].setValue(helpers.stringToArray(defaultValue, ','));
                         }
+                        scope.$watch(attrs.defaultChildValue, function (defaultChildValue) {
+                            if (defaultChildValue) {
+                                scope.select[type].setValue(helpers.stringToArray(defaultChildValue, ','));
+                            }
+                        });
                     });
                 }
 
-                function loadParentOptions (type, input, callback) {
+                function loadParentOptions(type, input, callback) {
                     LocationService[type](input).then(function (response) {
                         callback(response.data);
-                        if (attrs.defaultParentValue) {
-                            $select[0].selectize.setValue(attrs.defaultParentValue);
+                        var defaultValue = scope.$eval(attrs.defaultParentValue);
+                        if (defaultValue) {
+                            $select[0].selectize.setValue(defaultValue);
                         }
+                        scope.$watch(attrs.defaultParentValue, function (defaultParentValue) {
+                            if (defaultParentValue) {
+                                $select[0].selectize.setValue(defaultParentValue);
+                            }
+                        });
                     });
                 }
 
                 scope.select[attrs.locationCascade] = $select[0].selectize;
 
                 scope.$watch(attrs.dataset, function (dataSet) {
-                    if (!dataSet  || Object.keys(dataSet).length == 0) {
+                    if (!dataSet || Object.keys(dataSet).length == 0) {
                         scope.select[attrs.locationCascade].clear();
                     }
                 }, true);

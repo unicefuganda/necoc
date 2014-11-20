@@ -1,4 +1,4 @@
-var AddDisasterModel = function () {
+var DisasterModel = function () {
 
     this.description = element(by.model('disaster.description'));
 
@@ -34,9 +34,11 @@ var DisasterPage = function () {
 
     this.addDisasterButton = element(by.id('add-disaster'));
 
+    this.editDisasterButton = element(by.id('edit-disaster'));
+
     this.sectionTitle = element.all(by.css('.sub-section-header .title')).get(0);
 
-    this.addDisasterModal = new AddDisasterModel();
+    this.disasterModal = new DisasterModel();
 
     this.getDisasterData = function (row, key) {
         return element(by.repeater('disaster in disasters').row(row).column('{[{ disaster.' + key + ' }]}')).getText();

@@ -95,16 +95,19 @@ describe('dms.disaster', function () {
     describe('EditDisastersModalController', function () {
         var initController,
             scope,
+            setDisasterStub,
             disasterStub = {
                 name: 'FLOOD',
                 description: 'Some description',
                 id: 'disaster_id'
-            }
+            };
 
         beforeEach(function () {
             inject(function ($controller, $rootScope) {
                 scope = $rootScope.$new();
-                httpMock.when('POST', apiUrl + 'disasters/' + disasterStub.id + '/').respond(disastersStub);
+                setDisasterStub = jasmine.createSpy('setDisaster');
+                scope.setDisaster = setDisasterStub;
+                httpMock.when('POST', apiUrl + 'disasters/' + disasterStub.id + '/').respond(disasterStub);
                 initController = function (isValid) {
                     $controller('EditDisastersModalController', {$scope: scope});
                     scope.form = {};
@@ -114,26 +117,25 @@ describe('dms.disaster', function () {
         });
 
         it('should post single disaster given the form is valid', function () {
+            var postData = {name: "Flood", date: "2014-10-02T19:13", locations: ['subcounty_id'], id: 'disaster_id' };
             initController(true);
             scope.disaster = { name: "Flood", date: "2014/10/02 19:13", subcounties: 'subcounty_id', id: 'disaster_id'};
             scope.disasters = [];
             scope.hasErrors = true;
 
             scope.saveDisaster();
-            httpMock.expectPOST(apiUrl + 'disasters/' + disasterStub.id + '/',
-                {name: "Flood", date: "2014-10-02T19:13", locations: ['subcounty_id'], id: 'disaster_id' });
+            httpMock.expectPOST(apiUrl + 'disasters/' + disasterStub.id + '/', postData);
             expect(scope.saveStatus).toBeTruthy();
             httpMock.flush();
-
+            expect(setDisasterStub).toHaveBeenCalledWith(disasterStub);
             expect(scope.saveStatus).toBeFalsy();
-            expect(scope.disaster).toBeNull();
             expect(scope.hasErrors).toBeFalsy();
-            expect(scope.disasters).toEqual([disastersStub]);
         });
 
         it('should not post the disaster given the form has errors', function () {
             initController(false);
             scope.saveDisaster();
+            expect(setDisasterStub).not.toHaveBeenCalled();
             expect(scope.hasErrors).toBeTruthy();
         });
 

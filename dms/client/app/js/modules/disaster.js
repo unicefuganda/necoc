@@ -31,16 +31,21 @@
 
     module.controller('DisasterInfoController', function ($scope, MessageService, DisasterService, $stateParams) {
         var disasterId = $stateParams.disaster;
+        $scope.disaster = {};
+        $scope.disasterInfo = {};
+        $scope.setDisaster = function (data) {
+            $scope.disaster = data;
+            $scope.disasterInfo = angular.copy($scope.disaster);
+        };
         MessageService.filter({disaster: disasterId})
             .then(function (response) {
                 $scope.associatedMessages = response.data;
             });
         DisasterService.disaster(disasterId)
             .then(function (response) {
-                $scope.disaster = response.data;
-                $scope.disasterInfo = angular.copy($scope.disaster);
+                $scope.setDisaster(response.data);
             });
-    })
+    });
 
     module.controller('AddDisastersModalController', function ($scope, DisasterService, helpers) {
         $scope.modalTitle = 'Add Disaster';
@@ -70,9 +75,10 @@
     module.controller('EditDisastersModalController', function ($scope, DisasterService, helpers) {
         $scope.modalTitle = 'Edit Disaster';
         $scope.form = {};
-        $scope.disaster = {};
+
         $scope.saveDisaster = function () {
             if ($scope.form.disasters_form.$valid) {
+                $scope.successful = false;
                 $scope.saveStatus = true;
 
                 $scope.disaster.locations = $scope.disaster.subcounties ?
@@ -82,10 +88,10 @@
                 delete $scope.disaster.subcounties;
 
                 DisasterService.update($scope.disaster).then(function (response) {
-                    $scope.disaster = null;
+                    $scope.setDisaster(response.data);
                     $scope.saveStatus = false;
+                    $scope.successful = true;
                     $scope.hasErrors = false;
-                    $scope.disasters.push(response.data);
                 });
 
             } else {

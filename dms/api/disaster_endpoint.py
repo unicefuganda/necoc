@@ -29,4 +29,7 @@ class DisasterView(MongoRetrieveUpdateView):
     model = Disaster
     serializer_class = DisasterSerializer
     queryset = Disaster.objects()
-    permission_classes = [Or(build_permission_class('dms.can_manage_disasters'), IsGetRequest)]
+    permission_classes = [Or(build_permission_class('dms.can_manage_disasters'))]
+
+    def post(self, request, *args, **kwargs):
+        return self.patch(request, *args, **kwargs)

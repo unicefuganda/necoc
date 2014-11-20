@@ -59,6 +59,18 @@ class TestDisasterEndpoint(MongoAPITestCase):
         self.assertEqual(self.disaster_to_post['date'], str(response.data['date']))
         self.assertEqual(self.disaster_to_post['description'], response.data['description'])
 
-    def test_cant_get_single_disaster_without_permission(self):
+    def test_cant_get_or_post_single_disaster_without_permission(self):
         disaster = Disaster(**self.disaster).save()
+        self.assert_permission_required_for_get(self.API_ENDPOINT + str(disaster.id) + '/')
         self.assert_permission_required_for_post(self.API_ENDPOINT + str(disaster.id) + '/')
+
+    def test_should_post_a_single_disaster(self):
+        disaster = Disaster(**self.disaster_to_post).save()
+        self.disaster_to_post['description'] = "Giant Flood"
+        response = self.client.post(self.API_ENDPOINT + str(disaster.id) + '/',
+                                    data=json.dumps(self.disaster_to_post),
+                                    content_type="application/json")
+        self.assertEqual(200, response.status_code)
+
+        retrieved_disaster = Disaster.objects(description="Giant Flood")
+        self.assertEqual(1, retrieved_disaster.count())

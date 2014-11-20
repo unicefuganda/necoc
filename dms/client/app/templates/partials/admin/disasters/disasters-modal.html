@@ -31,8 +31,8 @@
                             <input type="text" id="district" name="district" class="form-control" data-parent="true"
                                    location-cascade="districts" ng-model="disaster.district" data-max-locations="1"
                                    placeholder="select district" data-child="subcounties" data-dataset="disaster" required=""
-                                   data-default-parent-value="{[{ disaster.locations[0].parent.id }]}"
-                                   data-default-child-value="{[{ disaster.locations | idsAsString }]}">
+                                   data-default-parent-value="disaster.locations[0].parent.id"
+                                   data-default-child-value="disaster.locations | idsAsString">
 
                             <div id="district-errors" class="error-text"
                                  ng-show="form.disasters_form.district.$invalid && hasErrors">
@@ -95,6 +95,7 @@
                                 Close
                             </button>
                             <button type="submit" id="save-disaster-modal" class="btn btn-primary" save-state=""
+                                    close-modal="disasters-modal"
                                     data-loading-text="Saving...">Save
                             </button>
                         </div>

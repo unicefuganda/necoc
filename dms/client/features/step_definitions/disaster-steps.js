@@ -29,45 +29,55 @@ module.exports = function () {
         });
     });
 
+    this.When(/^I click edit disaster button$/, function (next) {
+        disasterPage.editDisasterButton.click().then(function () {
+            browser.sleep(500).then(next);
+        });
+    });
+
     this.When(/^I select the disaster type as "([^"]*)"$/, function (disasterType, next) {
         disaster.type = disasterType;
-        disasterPage.addDisasterModal.selectInput("disaster-type-field", disasterType).then(next);
+        disasterPage.disasterModal.selectInput("disaster-type-field", disasterType).then(next);
     });
 
 
     this.When(/^I select district as "([^"]*)"$/, function (district, next) {
         disaster.district = district;
-        disasterPage.addDisasterModal.selectInput("district-field", district).then(next);
+        disasterPage.disasterModal.selectInput("district-field", district).then(next);
     });
 
     this.When(/^I select subcounty as "([^"]*)"$/, function (subcounties, next) {
         disaster.subcounties = subcounties;
-        disasterPage.addDisasterModal.selectInput("subcounty-field", subcounties).then(next);
+        disasterPage.disasterModal.selectInput("subcounty-field", subcounties).then(next);
     });
 
     this.When(/^I enter disaster description as "([^"]*)"$/, function (description, next) {
         disaster.description = description;
-        disasterPage.addDisasterModal.description.sendKeys(description).then(next);
+        disasterPage.disasterModal.description.clear().then(function () {
+            disasterPage.disasterModal.description.sendKeys(description).then(next);
+        });
     });
 
     this.When(/^I select disaster status as "([^"]*)"$/, function (status, next) {
         disaster.status = status;
-        disasterPage.addDisasterModal.selectInput("status-field", status).then(next);
+        disasterPage.disasterModal.selectInput("status-field", status).then(next);
     });
 
     this.When(/^I enter the disaster type as "([^"]*)"$/, function (disasterType, next) {
         disaster.type = disasterType;
-        disasterPage.addDisasterModal.enterInput("disaster-type-field", disasterType).then(next);
+        disasterPage.disasterModal.enterInput("disaster-type-field", disasterType).then(next);
     });
 
     this.When(/^I enter disaster date as "([^"]*)"$/, function (date, next) {
         disaster.date = date;
-        disasterPage.addDisasterModal.date.sendKeys(date).then(next);
+        disasterPage.disasterModal.date.clear().then(function () {
+            disasterPage.disasterModal.date.sendKeys(date).then(next);
+        });
     });
 
     this.When(/^I click save and close$/, function (next) {
-        disasterPage.addDisasterModal.saveButton.click().then(function () {
-            return disasterPage.addDisasterModal.closeButton.click();
+        disasterPage.disasterModal.saveButton.click().then(function () {
+            return disasterPage.disasterModal.closeButton.click();
         }).then(next);
     });
 
@@ -103,27 +113,27 @@ module.exports = function () {
     });
 
     this.When(/^I click save$/, function (next) {
-        disasterPage.addDisasterModal.saveButton.click().then(next);
+        disasterPage.disasterModal.saveButton.click().then(next);
     });
 
     this.Then(/^I should see required fields error messages$/, function (next) {
         var self = this;
 
-        disasterPage.addDisasterModal.get('name-errors')
+        disasterPage.disasterModal.get('name-errors')
             .then(function (error) {
                 self.expect(error).to.equal('This field is required');
             })
             .then(function () {
-                self.expect(disasterPage.addDisasterModal.get('district-errors')).to.eventually.be.equal('This field is required');
+                self.expect(disasterPage.disasterModal.get('district-errors')).to.eventually.be.equal('This field is required');
             })
             .then(function () {
-                self.expect(disasterPage.addDisasterModal.get('description-errors')).to.eventually.empty;
+                self.expect(disasterPage.disasterModal.get('description-errors')).to.eventually.empty;
             })
             .then(function () {
-                self.expect(disasterPage.addDisasterModal.get('status-errors')).to.eventually.equal('This field is required');
+                self.expect(disasterPage.disasterModal.get('status-errors')).to.eventually.equal('This field is required');
             })
             .then(function () {
-                self.expect(disasterPage.addDisasterModal.get('date-errors')).to.eventually.equal('This field is required')
+                self.expect(disasterPage.disasterModal.get('date-errors')).to.eventually.equal('This field is required')
                     .and.notify(next);
             });
     });

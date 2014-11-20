@@ -60,8 +60,9 @@
                             <input type="text" id="district" name="district" class="form-control" data-parent="true"
                                    location-cascade="districts" ng-model="user.district" data-max-locations="1"
                                    placeholder="select district" data-child="subcounties" data-dataset="user"
-                                   required="" data-default-parent-value="{[{ user.location.parent.id }]}"
-                                   data-default-child-value="{[{ user.location.id }]}">
+                                   required=""
+                                   data-default-parent-value="user.location.parent.id"
+                                   data-default-child-value="user.location.id">
 
                             <div id="district-errors" class="error-text"
                                  ng-show="form.user_form.district.$invalid && hasErrors">
@@ -71,15 +72,15 @@
                             </div>
                         </div>
                         <div class="form-group subcounty"
-                             ng-class="{'has-error': form.user_form.location.$invalid && hasErrors}">
+                             ng-class="{'has-error': form.user_form.subcounty.$invalid && hasErrors}">
                             <label class="control-label" for="subcounty">Sub-County</label>
                             <input type="text" id="subcounty" ng-model="user.location" name="subcounty"
                                    location-cascade="subcounties" class="form-control" data-max-locations="1"
                                    placeholder="select sub-county" data-dataset="user" required="">
 
                             <div id="subcounty-errors" class="error-text"
-                                 ng-show="form.user_form.location.$invalid && hasErrors">
-                                <p class="text-danger" ng-show="form.user_form.location.$error.required">
+                                 ng-show="form.user_form.subcounty.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="form.user_form.subcounty.$error.required">
                                     This field is required
                                 </p>
                             </div>

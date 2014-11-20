@@ -214,4 +214,19 @@ module.exports = function () {
             .and.notify(next);
     });
 
+    this.Then(/^I should see a cluster legend on the map$/, function (next) {
+        var self = this;
+        mapPage.clusterLegend.title.getText().then(function (title) {
+            self.expect(title).to.equal('Clusters');
+        }).then(function () {
+            self.expect(mapPage.clusterLegend.labels.last().getText()).to.eventually.be.equal('Messages')
+        }).then(function () {
+            self.expect(mapPage.clusterLegend.labels.first().getText()).to.eventually.be.equal('Disasters');
+        }).then(function () {
+            self.expect(mapPage.clusterLegend.colors.last().isDisplayed()).to.eventually.be.true;
+        }).then(function () {
+            self.expect(mapPage.clusterLegend.colors.first().isDisplayed()).to.eventually.be.true;
+        }).then(next);
+    });
+
 };

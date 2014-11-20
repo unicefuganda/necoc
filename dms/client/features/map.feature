@@ -32,12 +32,13 @@ Feature: Map
     Then I should see the map title as "Uganda / Gulu / Awach"
     And the map zooms into "Awach"
 
-  Scenario: View Messages and Disasters cluster markers on each Subcounty
+  Scenario: View Messages and Disasters cluster markers and Cluster Legend on each Subcounty
     Given I am logged in as a NECOC admin
     And I have "Gulu" district and "Awach" subcounty already registered
     And I POST "NECOC Awach Flood" to the NECOC DMS
     When I navigate to map location "/admin/dashboard/gulu"
     Then I should see a message cluster marker with 1 incoming messages
+    Then I should see a cluster legend on the map
     Then I should not see a disaster cluster marker
 
   Scenario: View Messages HeatMap

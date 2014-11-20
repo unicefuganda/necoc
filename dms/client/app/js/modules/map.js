@@ -51,11 +51,37 @@
             }
         }
 
-        function addHeatMapLegend(map, stats) {
-            var legend = L.control({position: MapConfig.legendPosition});
+        function addClusterMarkerLegend(aggregateValue) {
+
+            var legend = L.control({position: MapConfig.clusterLegendPosition});
 
             legend.onAdd = function () {
-                var div = L.DomUtil.create('div', 'info legend'),
+                var div = L.DomUtil.create('div', 'clusters info legend');
+                div.innerHTML += '<div class="legend-title"> Clusters </div>';
+                div.innerHTML += '<div class="legend-content">' +
+                    '<div><div class="cluster" style="background:' + MapConfig.disasterClusterColor + '"></div><span>Disasters</span></div>' +
+                    '<div><div class="cluster" style="background:' + MapConfig.messageClusterColor + '"></div><span>Messages</span></div>' +
+                    '</div>';
+                return div;
+            };
+
+            try {
+                LayerMap.getControl('cluster-legend').removeFrom(map);
+            } catch (E) {
+            }
+
+            if (aggregateValue.messages.count || aggregateValue.disasters.count) {
+                LayerMap.addControl('cluster-legend', legend);
+                map.addControl(legend);
+            }
+
+        }
+
+        function addHeatMapLegend(map, stats) {
+            var legend = L.control({position: MapConfig.heatMapLegendPosition});
+
+            legend.onAdd = function () {
+                var div = L.DomUtil.create('div', 'heatmap info legend'),
                     scale = legendScale(stats),
                     intervals = 50;
 
@@ -144,6 +170,7 @@
                 angular.forEach(aggregateStats, function (aggregateValue, aggregateName) {
                     var childLayer = layer.getChildLayer(aggregateName);
                     if (childLayer) {
+                        addClusterMarkerLegend(aggregateValue);
                         addMessagesCountMarker(aggregateValue, layerGroup, childLayer);
                         addDisasterCountMarker(aggregateValue, layerGroup, childLayer);
                     }

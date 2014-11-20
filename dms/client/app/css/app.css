@@ -61,6 +61,7 @@ body > .ng-scope, .main > .ng-scope {
 .sub-section-header {
     color: #3E9CB8;
 }
+
 .sub-section-header .title {
     font-size: 20px;
     font-weight: 200;
@@ -748,8 +749,7 @@ div[class*="-aggregate-marker-icon"] div {
     cursor: pointer;
 }
 
-
-#location-stats{
+#location-stats {
     background: #3E9CB8;
     color: white;
     padding-top: 15px;
@@ -761,19 +761,39 @@ div[class*="-aggregate-marker-icon"] div {
     padding-bottom: 10px;
 }
 
-#summary-stats-table{
+#summary-stats-table {
     margin-right: 15px;
     margin-left: 15px;
     border: 1px solid white;
     width: 60%;
 }
 
-#summary-stats-table td{
+#summary-stats-table td {
     border-right: 1px solid white;
     text-align: center;
 }
 
-
 .xl-number {
     font-size: 40px;
+}
+
+.legend .cluster {
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    box-shadow: 0px 1px 1px #9c9b9b;
+    -o-box-shadow: 0px 1px 1px #9c9b9b;
+    -moz-box-shadow: 0px 1px 1px #9c9b9b;
+    -webkit-box-shadow: 0px 1px 1px #9c9b9b;
+}
+
+.legend-content {
+    padding: 5px 10px;
+}
+
+.legend-content span {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 10px;
 }

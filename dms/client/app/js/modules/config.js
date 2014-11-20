@@ -18,7 +18,10 @@
             weight: 1,
             clickable: false
         },
-        legendPosition: 'bottomleft',
+        messageClusterColor: 'rgba(28, 177, 105, 0.6)',
+        disasterClusterColor: 'rgba(232, 84, 91, 0.6)',
+        heatMapLegendPosition: 'bottomleft',
+        clusterLegendPosition: 'bottomleft',
         districtLayerStyle: {
             weight: 2,
             color: "#3E9CB8",

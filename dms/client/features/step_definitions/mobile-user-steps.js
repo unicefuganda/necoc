@@ -185,6 +185,10 @@ module.exports = function () {
         });
     });
 
+    this.Then(/^I should not see change password button$/, function (next) {
+        this.expect(element(by.id('change-password')).isDisplayed()).to.eventually.equal(false).and.notify(next);
+    });
+
     this.When(/^I select my role as "([^"]*)"$/, function (role, next) {
         user.group = role;
         mobileUsersPage.createUserModal.selectInput('user-role', role).then(next);

@@ -30,8 +30,8 @@
                 </div>
                 <div class="user-actions-absolute user-actions pull-right">
                     <ul>
-                        <li>
-                            <button type="button" id="change-password" class="btn btn-default user-btn btn-icon"
+                        <li ng-show="profile.username">
+                            <button type="button" id="change-password" class="btn btn-default btn-action btn-icon"
                                     data-toggle="modal"
                                     data-target="#change-password-modal" ng-click="changePassword()">
                                 <span class="icon icon-lock"></span>
@@ -39,7 +39,7 @@
                             </button>
                         </li>
                         <li>
-                            <button type="button" id="edit-user" class="btn btn-default user-btn btn-icon"
+                            <button type="button" id="edit-user" class="btn btn-default btn-action btn-icon"
                                     data-toggle="modal"
                                     data-target="#mobile-user-modal">
                                 <span class="icon icon-edit"></span>

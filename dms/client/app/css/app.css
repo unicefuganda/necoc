@@ -61,13 +61,12 @@ body > .ng-scope, .main > .ng-scope {
 .sub-section-header {
     color: #3E9CB8;
 }
-
 .sub-section-header .title {
     font-size: 20px;
     font-weight: 200;
     vertical-align: top;
+    margin: 5px 2% 5px 11px;
     display: inline-block;
-    margin: 5px 15%;
 }
 
 .sub-section-header .icon {
@@ -671,7 +670,7 @@ div[class*="-aggregate-marker-icon"] div {
     margin: 0 !important;
 }
 
-.user-btn {
+.btn-action {
     margin-bottom: 10px;
     float: right;
     font-size: 17px;

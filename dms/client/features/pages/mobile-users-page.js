@@ -70,8 +70,14 @@ var MobileUsersPage = function () {
         return this.createUserButton.click()
     };
 
-    this.getMobileUsersData = function (index, key) {
-        return element(by.repeater('user in users').row(index).column('{[{ ' + key + ' }]}')).getText();
+    this.getRowMatching = function (user_data) {
+        return element.all(by.repeater('user in users')).filter(function (elem) {
+            return elem.getText().then(function (text) {
+                return text.match(new RegExp(user_data)) != null;
+            });
+        }).then(function (elements) {
+            return elements[0];
+        });
     };
 };
 

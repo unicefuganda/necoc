@@ -12,7 +12,7 @@ Feature: Mobile User
     And I select my "district" as "Mukono"
     And I select my "subcounty" as "Nabbaale"
     And I click  save and close
-    Then I should see my details in mobile users table in row 1
+    Then I should see the details of "Solomon" in mobile users table
     When I click "Solomon" in the mobile users table
     Then I should see my details in the profile page
     Then I should not see change password button
@@ -52,6 +52,6 @@ Feature: Mobile User
     And I enter my "username" as "solomon1990"
     And I select my role as "IT Assistant"
     And I click  save and close
-    Then I should see my details in mobile users table in row 1
+    Then I should see the details of "Solomon" in mobile users table
     When I click "Solomon" in the mobile users table
     Then I should see my details in the profile page

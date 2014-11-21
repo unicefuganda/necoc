@@ -38,24 +38,14 @@ module.exports = function () {
             });
     });
 
-    this.Then(/^I should see my details in mobile users table in row ([0-9]+)$/, function (index, next) {
+    this.Then(/^I should see the details of "([^"]*)" in mobile users table$/, function (username, next) {
         var self = this;
 
-        mobileUsersPage.getMobileUsersData(index, 'user.name')
-            .then(function (name) {
-                self.expect(name).to.equal(user.name);
-            })
-            .then(function () {
-                self.expect(mobileUsersPage.getMobileUsersData(index, 'user.phone')).to.eventually.equal(user.phone);
-            })
-            .then(function () {
-                self.expect(mobileUsersPage.getMobileUsersData(index, 'user.email')).to.eventually.equal(user.email);
-            })
-            .then(function () {
-                self.expect(mobileUsersPage.getMobileUsersData(index, '[user.location.parent, user.location] | joinNames'))
-                    .to.eventually.equal(user.location.district + ', ' + user.location.subcounty).and.notify(next);
-            });
-
+        mobileUsersPage.getRowMatching(username).then(function (row) {
+            self.expect(row.getText()).to.eventually.equal(
+                user.name + ' ' + user.phone + ' ' + user.email + ' ' + user.location.district + ', ' + user.location.subcounty
+                ).and.notify(next);
+        });
     });
 
     this.When(/^I click the save button$/, function (next) {

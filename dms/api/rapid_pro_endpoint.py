@@ -1,16 +1,35 @@
+from django.utils.datetime_safe import datetime
+from django.utils.timezone import localtime
+import pytz
 from rest_framework.permissions import AllowAny
 from rest_framework_mongoengine.generics import ListCreateAPIView
 from rest_framework_mongoengine import serializers
 from rest_framework import fields
 from rest_framework import serializers as serialiserzz
+import time
 
 from dms.api.retrieve_update_wrapper import MongoRetrieveUpdateView
 from dms.models import Location, RapidProMessage, Disaster, DisasterType
+from necoc import settings
 
+RAPID_PRO_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
+
+
+class RapidProDateTimeField(fields.DateTimeField):
+    def to_native(self, obj):
+        if obj and not type(obj) is unicode:
+            return localtime(obj.replace(tzinfo=pytz.utc), pytz.timezone(settings.TIME_ZONE))
+        return obj
+
+    def from_native(self, data):
+        try:
+            return datetime.strptime(data, RAPID_PRO_TIME_FORMAT)
+        except:
+            return super(fields.DateTimeField, self).from_native(data)
 
 class RapidProMessageSerializer(serializers.MongoEngineModelSerializer):
     phone = fields.CharField(source='phone_no')
-    time = fields.DateTimeField(source='received_at')
+    time = RapidProDateTimeField(source='received_at')
     relayer = fields.IntegerField(source='relayer_id')
     run = fields.IntegerField(source='run_id')
     source = serialiserzz.Field(source='source')

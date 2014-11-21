@@ -1,4 +1,6 @@
 import datetime
+import pytz
+from dms.api.rapid_pro_endpoint import RAPID_PRO_TIME_FORMAT
 from dms.models import Location, UserProfile, Disaster, DisasterType
 from dms.models.rapid_pro_message import RapidProMessage
 from dms.tests.base import MongoAPITestCase
@@ -9,6 +11,7 @@ class RapidProEndPointTest(MongoAPITestCase):
 
     def setUp(self):
         self.date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
+        self.date_time = self.date_time.replace(tzinfo=pytz.utc)
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
         self.mobile_user = UserProfile(**dict(name='timothy', phone="+256775019449",
@@ -30,9 +33,11 @@ class RapidProEndPointTest(MongoAPITestCase):
         return "%s%s/" % (self.API_ENDPOINT, str(id))
 
     def test_should_create_rapid_pro_message(self):
+        self.expected_message['time'] = self.date_time.strftime(RAPID_PRO_TIME_FORMAT)
         response = self.client.post(self.API_ENDPOINT, data=self.expected_message)
         self.assertEqual(201, response.status_code)
 
+        del self.message['received_at']
         retrieved_message = RapidProMessage.objects(**self.message)
         self.assertEqual(1, retrieved_message.count())
 
@@ -100,6 +105,7 @@ class RapidProEndPointTest(MongoAPITestCase):
     def test_should_update_disaster_field_with_put(self):
         message = RapidProMessage(**self.message).save()
 
+        self.expected_message['time'] = self.date_time.replace(tzinfo=None)
         data = self.expected_message.copy()
         data['disaster'] = self.disaster.id
 
@@ -189,7 +195,7 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(1, len(response.data))
         self.assertEqual(str(message_now.id), response.data[0]['id'])
         expected_message = self.expected_message.copy()
-        expected_message['time'] = date_1_jan
+        expected_message['time'] = date_1_jan.replace(tzinfo=pytz.utc)
         self.assertDictContainsSubset(expected_message, response.data[0])
 
         response = self.client.get(self.API_ENDPOINT, {"from": "2014-01-02", "format": "json"})
@@ -198,7 +204,7 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(1, len(response.data))
         self.assertEqual(str(message_2days_later.id), response.data[0]['id'])
         expected_message2 = self.expected_message.copy()
-        expected_message2['time'] = date_3_jan
+        expected_message2['time'] = date_3_jan.replace(tzinfo=pytz.utc)
         self.assertDictContainsSubset(expected_message2, response.data[0])
 
         response = self.client.get(self.API_ENDPOINT, {"from": "2014-01-02", "to": "2014-01-02",  "format": "json"})

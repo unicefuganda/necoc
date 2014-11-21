@@ -173,8 +173,12 @@ var DataSetupPage = function () {
     };
 
     this.postMessage = function (message, callback) {
-        var now = moment().format('YYYY-MM-DDTHH:mm');
-        var formatedTime = moment().format('MMM DD, YYYY - h:mmA');
+        Date.prototype.addHours = function (h) {
+            this.setHours(this.getHours() + h);
+            return this;
+        }
+        var now = moment().format('YYYY-MM-DDTHH:mm:ss');
+        var formatedTime = moment().add(3, 'hours').format('MMM DD, YYYY - h:mmA');
 
         var sms = {
             phone: message.phone || '+25484384389434',

@@ -1,3 +1,4 @@
+import pytz
 from dms.api.rapid_pro_endpoint import RapidProMessageSerializer
 from dms.models import DisasterType, Disaster
 from dms.models.location import Location
@@ -9,21 +10,22 @@ import datetime
 
 class RapidProMessageSerializerTest(MongoTestCase):
     def setUp(self):
-        date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
+        self.date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
         phone_number = "+256775019449"
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
         self.mobile_user = UserProfile(
             **dict(name='timothy', phone=phone_number, location=self.village, email=None)).save()
         text = "NECOC %s There is a fire" % self.village.name
-        self.message = dict(phone_no=phone_number, text=text, received_at=date_time, relayer_id=234,
+        self.message = dict(phone_no=phone_number, text=text, received_at=self.date_time, relayer_id=234,
                             run_id=23243)
-        self.serialized_data = dict(phone=phone_number, time=date_time, relayer=234, run=23243,
+        self.serialized_data = dict(phone=phone_number, time=self.date_time, relayer=234, run=23243,
                             text=text)
 
     def test_should_serialize_rapid_pro_message_object(self):
         rapid_pro_message = RapidProMessage(**self.message).save()
         serialized_object = RapidProMessageSerializer(rapid_pro_message)
+        self.serialized_data['time'] = self.date_time.replace(tzinfo=pytz.utc)
         serialized_data_with_source = dict(self.serialized_data.items() +
                                            {'id': str(rapid_pro_message.id), 'source': 'NECOC Volunteer',
                                             'disaster': None, 'location': 'Kampala >> Bukoto'}.items())

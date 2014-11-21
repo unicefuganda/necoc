@@ -28,7 +28,7 @@ var MessagesPage = function () {
             source: "NECOC Volunteer" }
     ];
 
-    this.formattedTime = 'Feb 13, 2014 - 2:00AM';
+    this.formattedTime = 'Feb 13, 2014 - 5:00AM';
 
     this.actionsButton = element(by.id('actions-btn'));
 

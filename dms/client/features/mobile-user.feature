@@ -18,6 +18,7 @@ Feature: Mobile User
     Then I should not see change password button
 
   Scenario: Create Mobile User -- Validation
+    Given I am logged out
     Given I am logged in as a NECOC admin
     And I have "Mukono" district and "Nabbaale" subcounty already registered
     When I navigate to the users page

@@ -740,12 +740,15 @@ div[class*="-aggregate-marker-icon"] div {
     width: 93%;
     float: right;
 }
+#stats-overlay .sub-section-header {
+    margin-left:    20px;
+}
 
 #stats-overlay .back-arrow {
     font-size: 37px;
     color: #3E9CB8;
     position: absolute;
-    padding: 0 0;
+    padding-left: 2px;
     cursor: pointer;
 }
 

@@ -1,4 +1,8 @@
 
+from django.conf import settings
+
+
 def split_text(message):
-    split_message = message.split(' ')
-    return filter(lambda x: x.strip(), split_message)
+    separator = getattr(settings, "MESSAGE_MILITARY_SEPARATOR", ".")
+    split_message = message.split(separator)
+    return map(lambda x: x.strip(), split_message)

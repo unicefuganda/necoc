@@ -3,8 +3,8 @@ from mongoengine.django.auth import Group, ContentType, Permission
 
 
 class Command(BaseCommand):
-    args = './manage.py create_super_user <username> <password> <email> <name> <location> <phone>'
-    help = 'Creates a super user with credentials that you pass in'
+    args = './manage.py create_user_groups'
+    help = 'Creates user groups fixtures'
 
     def handle(self, *args, **options):
         try:

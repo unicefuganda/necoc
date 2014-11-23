@@ -175,11 +175,10 @@ var DataSetupPage = function () {
     this.postMessage = function (message, callback) {
         var now = moment().format('YYYY-MM-DDTHH:mm:ss');
         var timezoneOffset = (-1)* (new Date().getTimezoneOffset()) / 60;
-        var formatedTime = moment().add(timezoneOffset, 'hours').format('MMM DD, YYYY - h:mmA');
 
         var sms = {
             phone: message.phone || '+25484384389434',
-            time: message.timÏe || now,
+            time: message.time || now,
             relayer: 2,
             run: 1,
             text: message.text,
@@ -188,8 +187,8 @@ var DataSetupPage = function () {
 
         return baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {
             form: sms
-        }, function () {
-            sms.formattedTime = formatedTime;
+        }, function (error, response, body) {
+            sms.formattedTime = moment(body.time).add(timezoneOffset, 'hours').format('MMM DD, YYYY - h:mmA');
             callback(sms);
         });
     };

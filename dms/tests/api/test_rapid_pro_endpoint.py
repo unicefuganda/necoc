@@ -77,18 +77,20 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual('NECOC Volunteer', response.data[0]['source'])
         self.assertEqual(wakiso.name, response.data[0]['location'])
 
-    def test_location_filter_should_return_messages_in_all_children_location(self):
+    def test_location_filter_should_return_messages_in_all_children_location_and_in_order(self):
         bukoto_message = RapidProMessage(**self.message).save()
         wakiso = Location(**(dict(name='Wakiso', type='village', parent=self.district))).save()
         other_phone_number = '1234'
-        other_message_options = dict(phone_no=other_phone_number, text=self.text_format % wakiso.name, received_at=self.date_time,
+        one_hour_later_date = self.date_time + datetime.timedelta(hours=1)
+        one_hour_later_date = one_hour_later_date.replace(tzinfo=pytz.utc)
+        other_message_options = dict(phone_no=other_phone_number, text=self.text_format % wakiso.name, received_at=one_hour_later_date,
                                      relayer_id=234, run_id=23243)
         UserProfile(**dict(name='timothy', phone=other_phone_number, location=wakiso)).save()
         wakiso_message = RapidProMessage(**other_message_options).save()
 
         response = self.client.get(self.API_ENDPOINT, {"location": self.district.id, "format": "json"})
 
-        wakiso_expected_message = {'phone': other_phone_number, 'time': self.date_time, 'relayer': 234, 'run': 23243,
+        wakiso_expected_message = {'phone': other_phone_number, 'time': one_hour_later_date, 'relayer': 234, 'run': 23243,
                                    'text': self.text_format % wakiso.name, 'disaster': None}
         wakiso_expected_message = dict(wakiso_expected_message.items() + {
             'source': 'NECOC Volunteer', 'id': str(wakiso_message.id), 'location': str(wakiso)}.items())
@@ -99,8 +101,8 @@ class RapidProEndPointTest(MongoAPITestCase):
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(2, len(response.data))
-        self.assertIn(wakiso_expected_message, response.data)
-        self.assertIn(bukoto_expected_message, response.data)
+        self.assertEqual(wakiso_expected_message, response.data[0])
+        self.assertEqual(bukoto_expected_message, response.data[1])
 
     def test_should_update_disaster_field_with_put(self):
         message = RapidProMessage(**self.message).save()

@@ -27,6 +27,7 @@ class RapidProDateTimeField(fields.DateTimeField):
         except:
             return super(fields.DateTimeField, self).from_native(data)
 
+
 class RapidProMessageSerializer(serializers.MongoEngineModelSerializer):
     phone = fields.CharField(source='phone_no')
     time = RapidProDateTimeField(source='received_at')
@@ -57,7 +58,7 @@ class RapidProListCreateView(ListCreateAPIView):
         if disaster_type:
             queryset = self.query_by_disaster_type(disaster_type, queryset)
 
-        return queryset
+        return queryset.order_by('-received_at')
 
     def _get_param_conversion(self, fields):
         converted = {field: field for field in fields}

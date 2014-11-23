@@ -173,10 +173,6 @@ var DataSetupPage = function () {
     };
 
     this.postMessage = function (message, callback) {
-        Date.prototype.addHours = function (h) {
-            this.setHours(this.getHours() + h);
-            return this;
-        }
         var now = moment().format('YYYY-MM-DDTHH:mm:ss');
         var formatedTime = moment().add(3, 'hours').format('MMM DD, YYYY - h:mmA');
 

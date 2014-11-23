@@ -18,6 +18,8 @@ var BulkSMSModal = function () {
 };
 
 var MessagesPage = function () {
+    var moment = require('moment');
+
     this.bulkSMSButton = element(by.id('send-bulk-sms'));
 
     this.senderLocation = { "name": "Kampala", "type": "district"};
@@ -28,7 +30,14 @@ var MessagesPage = function () {
             source: "NECOC Volunteer" }
     ];
 
-    this.formattedTime = 'Feb 13, 2014 - 5:00AM';
+    this.createdFormatedTime = function() {
+        var format = 'MMM DD, YYYY - h:mmA',
+            timeAsString = 'Feb 13, 2014 - 2:00AM',
+            timezoneOffset = (-1)* (new Date().getTimezoneOffset()) / 60;
+        return moment(timeAsString, format).add(timezoneOffset, 'hours').format(format);
+    };
+
+    this.formattedTime = this.createdFormatedTime();
 
     this.actionsButton = element(by.id('actions-btn'));
 

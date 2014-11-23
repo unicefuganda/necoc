@@ -23,7 +23,9 @@ class RapidProDateTimeField(fields.DateTimeField):
 
     def from_native(self, data):
         try:
-            return datetime.strptime(data, RAPID_PRO_TIME_FORMAT)
+            parts = data.split('.')
+            time_sans_microseconds = parts[0]
+            return datetime.strptime(time_sans_microseconds, RAPID_PRO_TIME_FORMAT)
         except:
             return super(fields.DateTimeField, self).from_native(data)
 

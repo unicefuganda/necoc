@@ -41,6 +41,17 @@ class RapidProEndPointTest(MongoAPITestCase):
         retrieved_message = RapidProMessage.objects(**self.message)
         self.assertEqual(1, retrieved_message.count())
 
+    def test_should_create_rapid_pro_message_from_wacky_format(self):
+        normal_time = self.date_time.strftime(RAPID_PRO_TIME_FORMAT)
+        rapid_pro_time = normal_time + ".234567Z"
+        self.expected_message['time'] = rapid_pro_time
+        response = self.client.post(self.API_ENDPOINT, data=self.expected_message)
+        self.assertEqual(201, response.status_code)
+
+        del self.message['received_at']
+        retrieved_message = RapidProMessage.objects(**self.message)
+        self.assertEqual(1, retrieved_message.count())
+
     def test_should_get_rapid_pro_message(self):
         RapidProMessage(**self.message).save()
         response = self.client.get(self.API_ENDPOINT, format='json')

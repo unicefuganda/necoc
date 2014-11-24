@@ -50,13 +50,6 @@
             $scope.messages = messages;
         };
 
-        $interval(function () {
-            MessageService.all().then(function (response) {
-                $scope.polled = true;
-                $scope.messages = response.data;
-            });
-        }, 15000);
-
         function getAllMessages() {
             MessageService.all().then(function (response) {
                 $scope.messages = response.data;

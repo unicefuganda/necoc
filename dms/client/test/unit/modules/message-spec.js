@@ -65,14 +65,6 @@ describe('dms.message', function () {
             expect($scope.messages).toEqual(messagesStub);
         });
 
-        it('should poll messages from the \'/api/v1/rapid-pro/\' endpoint at an interval of 15 seconds', function () {
-            initController();
-
-            interval.flush(15000);
-            $scope.$apply();
-            expect($scope.polled).toBeTruthy();
-        });
-
         it('should retrieve filtered uncategorized message count', function () {
             initController();
             $scope.$apply();

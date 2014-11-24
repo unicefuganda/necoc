@@ -112,6 +112,17 @@ describe('dms.message', function () {
             initController();
             expect($scope.showMessageCheckboxes).toBeTruthy();
         });
+
+        describe('$scope.refresh()', function () {
+            it('should refresh all messages', function () {
+                initController();
+                $scope.refresh();
+                expect($scope.saveStatus).toBeTruthy();
+                $scope.$apply();
+                expect($scope.saveStatus).toBeFalsy();
+                expect(mockMessageService.all).toHaveBeenCalled();
+            });
+        });
     });
 
     describe('MessageService', function () {
@@ -197,7 +208,7 @@ describe('dms.message', function () {
 
             expect(scope.saveStatus).toBeTruthy();
             expect(scope.successful).toBeFalsy();
-            expect(mockMessageService.sendBulkSms).toHaveBeenCalledWith({ phone_numbers : [ '232', '4334' ], text : 'message' });
+            expect(mockMessageService.sendBulkSms).toHaveBeenCalledWith({ phone_numbers: [ '232', '4334' ], text: 'message' });
 
             scope.$apply();
             expect(scope.hasErrors).toBeFalsy();

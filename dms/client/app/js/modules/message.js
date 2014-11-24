@@ -44,7 +44,9 @@
         };
 
         function getAllMessages() {
+            $scope.saveStatus = true;
             MessageService.all().then(function (response) {
+                $scope.saveStatus = false;
                 $scope.messages = response.data;
             });
         }
@@ -53,8 +55,10 @@
             if (!newLocation) {
                 getAllMessages();
             } else {
+                $scope.saveStatus = true;
                 MessageService.filter({location: newLocation}).then(function (response) {
                     $scope.messages = response.data;
+                    $scope.saveStatus = false;
                 });
             }
         }

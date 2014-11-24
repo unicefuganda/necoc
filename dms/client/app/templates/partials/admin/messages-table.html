@@ -10,7 +10,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="message in messages | filter: district | filter: subcounty">
+    <tr ng-repeat="message in messages | filter:district | filter:subcounty | orderBy:time">
         <td ng-show="showMessageCheckboxes"><input type="checkbox" checklist-model="selected.messages" checklist-value="message.id"/></td>
         <td>{[{ message.source }]} <span>({[{ message.phone }]})</span></td>
         <td>{[{ message.text }]}</td>

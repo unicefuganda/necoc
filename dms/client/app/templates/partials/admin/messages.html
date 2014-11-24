@@ -30,7 +30,9 @@
                 <span class="icon icon-bubble-3"></span><span class="title">All Received Messages</span>
                 <span class="badge">{[{messages.length}]}</span>
             </div>
-
+            <div class="col-md-1">
+                <button id="message-refresh" class="icon icon-sync badge refresh-button" ng-click="refresh()"></button>
+            </div>
             <div class="col-md-3 district-filter">
                 <input type="text" id="district" ng-model="location" name="location" select-location="" data-max-locations="1"
                        class="form-control" placeholder="select location" required="">

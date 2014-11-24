@@ -262,4 +262,8 @@ module.exports = function () {
             })
             .then(next);
     });
+
+    this.When(/^I refresh my messages$/, function (next) {
+        messagesPage.refreshButton.click().then(next);
+    });
 };

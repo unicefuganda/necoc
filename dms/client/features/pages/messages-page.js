@@ -43,6 +43,8 @@ var MessagesPage = function () {
 
     this.associateToDisasterButton = element(by.id('add-to-disaster'));
 
+    this.refreshButton = element(by.id('message-refresh'));
+
     this.addToDisasterButton = element(by.id('add-to-disaster-btn'));
 
     this.associatedStatus = element(by.css('.status .label-success'));

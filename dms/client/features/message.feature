@@ -8,6 +8,21 @@ Feature: Messages
     And I visit the messages listing page
     Then I should see my messages
 
+  Scenario: Refresh Messages
+    Given I am logged in as a NECOC admin
+    And I have "Kampala" district already registered
+    And I have one Necoc Volunteer registered
+    When I POST a message to the NECOC DMS
+    And I visit the messages listing page
+    Then I should see my messages
+    When I POST "necoc.gulu.awach. Second message" to the NECOC DMS
+    And I refresh my messages
+    Then I should see 2 message
+    When I select my location as "Kampala"
+    And I POST "necoc. kampala. third message" to the NECOC DMS
+    And I refresh my messages
+    Then I should see 2 message
+
   Scenario: Message Pagination
     Given I am logged in as a NECOC admin
     When I POST a list of messages to NECOC DMS

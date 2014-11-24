@@ -25,22 +25,15 @@
         }
     });
 
-    module.controller('MessageController', function ($scope, MessageService, $interval) {
+    module.controller('MessageController', function ($scope, MessageService) {
 
         $scope.selected = {};
         $scope.showMessageCheckboxes = true;
+        $scope.refresh = function () {
+            reloadMessagesWithFilter($scope.location);
+        };
         getAllMessages();
-
-        $scope.$watch('location', function (newLocation) {
-            if (!newLocation) {
-                getAllMessages();
-            } else {
-                MessageService.filter({location: newLocation}).then(function (response) {
-                    $scope.messages = response.data;
-                });
-            }
-
-        });
+        $scope.$watch('location', reloadMessagesWithFilter);
 
         MessageService.filter({disaster: ''}).then(function (response) {
             $scope.uncategorizedMessagesCount = response.data.length;
@@ -56,6 +49,15 @@
             });
         }
 
+        function reloadMessagesWithFilter(newLocation) {
+            if (!newLocation) {
+                getAllMessages();
+            } else {
+                MessageService.filter({location: newLocation}).then(function (response) {
+                    $scope.messages = response.data;
+                });
+            }
+        }
     });
 
 

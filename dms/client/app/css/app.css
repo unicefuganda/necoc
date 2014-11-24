@@ -800,3 +800,11 @@ div[class*="-aggregate-marker-icon"] div {
     vertical-align: top;
     margin-left: 10px;
 }
+
+.refresh-button {
+    font-size: 23px;
+    display: inline !important;
+    float: right;
+    margin-top: 0px;
+    padding-top: 3px;
+}

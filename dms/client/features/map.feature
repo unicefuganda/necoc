@@ -35,7 +35,7 @@ Feature: Map
   Scenario: View Messages and Disasters cluster markers and Cluster Legend on each Subcounty
     Given I am logged in as a NECOC admin
     And I have "Gulu" district and "Awach" subcounty already registered
-    And I POST "NECOC Awach Flood" to the NECOC DMS
+    And I POST "NECOC.Awach. Flood" to the NECOC DMS
     When I navigate to map location "/admin/dashboard/gulu"
     Then I should see a message cluster marker with 1 incoming messages
     Then I should see a cluster legend on the map
@@ -49,7 +49,7 @@ Feature: Map
     Then I should see "lira" district with layer color "#dfff67"
     Given I am logged in as a NECOC admin
     And I have "Gulu" district and "Awach" subcounty already registered
-    And I POST "NECOC Awach Fire" to the NECOC DMS
+    And I POST "NECOC.Awach. Fire" to the NECOC DMS
     When I navigate to map location "/admin/dashboard"
     And I click "Gulu" district
     Then I should see "gulu" district with layer color "#ef2602"
@@ -61,10 +61,10 @@ Feature: Map
     Then I should see map legend displayed
     Then I should see the legend title as "Messages"
     Then I should see the legend labels as "0,,1"
-    When I POST "NECOC Awach Fire" to the NECOC DMS
-    And I POST "NECOC Awach Fire is killing us" to the NECOC DMS
-    And I POST "NECOC Awach There is a fire here" to the NECOC DMS
-    And I POST "NECOC Awach Fire please" to the NECOC DMS
+    When I POST "NECOC.Awach. Fire" to the NECOC DMS
+    And I POST "NECOC.Awach. Fire is killing us" to the NECOC DMS
+    And I POST "NECOC.Awach. There is a fire here" to the NECOC DMS
+    And I POST "NECOC.Awach. Fire please" to the NECOC DMS
     And I navigate to map location "/admin/dashboard"
     Then I should see the legend labels as "0,2,4"
 

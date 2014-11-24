@@ -26,7 +26,7 @@ var MessagesPage = function () {
 
     this.messages = [
         { phone: "023020302", time: "2014-02-13T02:00:00", relayer: 2, run: '1',
-            text: "NECOC " + this.senderLocation['name'] + " Fire ayoyoooo",
+            text: "NECOC." + this.senderLocation['name'] + ". Fire ayoyoooo",
             source: "NECOC Volunteer" }
     ];
 

@@ -10,14 +10,14 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
 
     def setUp(self):
         self.location_name = 'Kampala'
-        text = "NECOC %s fire baba fire" % self.location_name
+        text = "NECOC.%s. fire baba fire" % self.location_name
         self.date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
         phone_number = "+256775019449"
         self.message = dict(phone_no=phone_number, text=text, received_at=self.date_time, relayer_id=234, run_id=23243)
         self.kampala = Location(**dict(name=self.location_name, parent=None, type='district')).save()
         self.bukoto_name = 'Bukoto'
         self.bukoto = Location(**dict(name=self.bukoto_name, parent=None, type='district')).save()
-        text = "NECOC %s flood" % self.bukoto_name
+        text = "NECOC.%s. flood" % self.bukoto_name
         self.message_bukoto = dict(phone_no=phone_number, text=text, received_at=self.date_time, relayer_id=234,
                                    run_id=23243)
 
@@ -50,7 +50,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
 
         bugolobi_name = 'Bugolobi'
         bugolobi = Location(**dict(name=bugolobi_name, parent=self.kampala, type='subcounty')).save()
-        text = "NECOC %s flood" % bugolobi_name
+        text = "NECOC.%s. flood" % bugolobi_name
         message_bugolobi = dict(phone_no='123444', text=text, received_at=self.date_time, relayer_id=234, run_id=23243)
 
         RapidProMessage(**message_bugolobi).save()
@@ -110,7 +110,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
 
         bugolobi_name = 'Bugolobi'
         bugolobi = Location(**dict(name=bugolobi_name, parent=self.kampala, type='subcounty')).save()
-        text = "NECOC %s flood" % bugolobi_name
+        text = "NECOC.%s. flood" % bugolobi_name
         message_bugolobi = dict(phone_no='123444', text=text, received_at=self.date_time, relayer_id=234, run_id=23243)
 
         RapidProMessage(**message_bugolobi).save()
@@ -192,7 +192,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
 
         bugolobi_name = 'Bugolobi'
         bugolobi = Location(**dict(name=bugolobi_name, parent=self.kampala, type='subcounty')).save()
-        text = "NECOC %s flood" % bugolobi_name
+        text = "NECOC.%s. flood" % bugolobi_name
         message_bugolobi = dict(phone_no='123444', text=text, received_at=self.date_time, relayer_id=234, run_id=23243)
 
         Disaster(**self.disaster_attr).save()
@@ -266,7 +266,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
 
         bugolobi_name = 'Bugolobi'
         bugolobi = Location(**dict(name=bugolobi_name, parent=self.kampala, type='subcounty')).save()
-        text = "NECOC %s flood" % bugolobi_name
+        text = "NECOC.%s. flood" % bugolobi_name
         message_bugolobi = dict(phone_no='123444', text=text, received_at=self.date_time, relayer_id=234, run_id=23243)
 
         Disaster(**self.disaster_attr).save()
@@ -356,7 +356,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
 
         bugolobi_name = 'Bugolobi'
         bugolobi = Location(**dict(name=bugolobi_name, parent=self.kampala, type='subcounty')).save()
-        text = "NECOC %s flood" % bugolobi_name
+        text = "NECOC.%s. flood" % bugolobi_name
         message_bugolobi = dict(phone_no='123444', text=text, received_at=self.date_time, relayer_id=234, run_id=23243)
 
         RapidProMessage(**message_bugolobi).save()

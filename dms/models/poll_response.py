@@ -19,7 +19,12 @@ class PollResponse(RapidProMessageBase):
         return super(PollResponse, self).save(*args, **kwargs)
 
     def _assign_poll(self):
-        text = split_text(self.text)
+        text = self.split_text()
         if len(text) > settings.POLL_RESPONSE_LOCATION_INDEX-1:
             keyword = text[settings.POLL_RESPONSE_LOCATION_INDEX - 1]
             return Poll.objects(keyword=keyword).first()
+
+    def split_text(self):
+        separator = getattr(settings, "POLL_RESPONSE_SEPARATOR", " ")
+        split_message = self.text.split(separator)
+        return map(lambda x: x.strip(), split_message)

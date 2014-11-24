@@ -22,7 +22,7 @@ class RapidProEndPointTest(MongoAPITestCase):
                                    description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
         self.disaster = Disaster(**disaster_attributes).save()
 
-        self.text_format = "NECOC %s There is a fire"
+        self.text_format = "NECOC.%s. There is a fire"
         text = self.text_format % self.village.name
         self.expected_message = dict(phone="+256775019449", text=text, time=self.date_time, relayer=234,
                                      run=23243)

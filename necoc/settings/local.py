@@ -19,7 +19,7 @@ if ('test' in sys.argv) or ('0.0.0.0:7999' in sys.argv) or ('test_user' in sys.a
 
     MESSAGE_LOCATION_INDEX = 2
     POLL_RESPONSE_LOCATION_INDEX = 2
-    MESSAGE_MILITARY_SEPARATOR = ' '
+    MESSAGE_MILITARY_SEPARATOR = '.'
 
     MONGODB_HOST = 'localhost'
     MONGODB_NAME = 'dms_test'

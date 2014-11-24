@@ -16,7 +16,7 @@ class RapidProMessageSerializerTest(MongoTestCase):
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
         self.mobile_user = UserProfile(
             **dict(name='timothy', phone=phone_number, location=self.village, email=None)).save()
-        text = "NECOC %s There is a fire" % self.village.name
+        text = "NECOC.%s. There is a fire" % self.village.name
         self.message = dict(phone_no=phone_number, text=text, received_at=self.date_time, relayer_id=234,
                             run_id=23243)
         self.serialized_data = dict(phone=phone_number, time=self.date_time, relayer=234, run=23243,

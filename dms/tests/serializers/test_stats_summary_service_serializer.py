@@ -11,7 +11,7 @@ from dms.tests.base import MongoTestCase
 class StatsSummaryServiceSerializersTest(MongoTestCase):
     def setUp(self):
         self.location_name = 'Kampala'
-        text = "NECOC %s fire baba fire" % self.location_name
+        text = "NECOC.%s. fire baba fire" % self.location_name
         date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
         phone_number = "+256775019449"
         self.message = dict(phone_no=phone_number, text=text, received_at=date_time, relayer_id=234, run_id=23243)

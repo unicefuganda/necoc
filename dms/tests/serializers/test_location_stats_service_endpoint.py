@@ -12,7 +12,7 @@ from dms.tests.base import MongoTestCase
 class LocationStatsServiceSerializersTest(MongoTestCase):
     def setUp(self):
         self.location_name = 'Kampala'
-        text = "NECOC %s fire baba fire" % self.location_name
+        text = "NECOC.%s. fire baba fire" % self.location_name
         date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
         phone_number = "+256775019449"
         self.message = dict(phone_no=phone_number, text=text, received_at=date_time, relayer_id=234, run_id=23243)
@@ -61,14 +61,14 @@ class LocationStatsServiceSerializersTest(MongoTestCase):
 class MultiLocationStatsServiceSerializersTest(MongoTestCase):
     def setUp(self):
         self.location_name = 'Kampala'
-        text = "NECOC %s fire baba fire" % self.location_name
+        text = "NECOC.%s. fire baba fire" % self.location_name
         date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
         phone_number = "+256775019449"
         self.message = dict(phone_no=phone_number, text=text, received_at=date_time, relayer_id=234, run_id=23243)
         self.district = Location(**dict(name=self.location_name, parent=None, type='district')).save()
         self.bukoto_name = 'Bukoto'
         self.bukoto = Location(**dict(name=self.bukoto_name, parent=None, type='district')).save()
-        text = "NECOC %s flood" % self.bukoto_name
+        text = "NECOC.%s. flood" % self.bukoto_name
         self.message_bukoto = dict(phone_no=phone_number, text=text, received_at=date_time, relayer_id=234,
                                    run_id=23243)
 

@@ -15,7 +15,7 @@ class PollResponseTest(MongoTestCase):
         phone_number = "+256775019449"
 
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
-        self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
+        self.village = Location(**dict(name='Bukoto', parent=self.district, type='subcounty')).save()
         self.mobile_user = UserProfile(**dict(name='timothy', phone=phone_number, location=self.village, email=None)).save()
 
         self.poll_response = dict(phone_no=phone_number, text="NECOC There is a fire", received_at=date_time, relayer_id=234,

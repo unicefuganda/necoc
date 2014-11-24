@@ -3,7 +3,7 @@ Feature: Dashboard
   Scenario: Show messages on the message panel
     Given I am logged in as a NECOC admin
     And I have "Kampala" district already registered
-    And I POST "NECOC Kampala Fire" to the NECOC DMS
+    And I POST "NECOC.Kampala. Fire" to the NECOC DMS
     When I navigate to map location "/admin/dashboard"
     And I click the messages panel chevron
     Then I should see my messages
@@ -12,8 +12,8 @@ Feature: Dashboard
     Given I am logged in as a NECOC admin
     And I have "Gulu" district already registered
     And I have "Kampala" district already registered
-    And I POST "NECOC Gulu water everywhere" to the NECOC DMS
-    And I POST "NECOC Kampala there are mosquitoes here" to the NECOC DMS
+    And I POST "NECOC.Gulu. water everywhere" to the NECOC DMS
+    And I POST "NECOC.Kampala. there are mosquitoes here" to the NECOC DMS
     When I navigate to map location "/admin/dashboard/gulu"
     And I click the messages panel chevron
     Then I should only see my message in "Gulu"
@@ -22,8 +22,8 @@ Feature: Dashboard
     Given I am logged in as a NECOC admin
     And I have "Gulu" district and "Awach" subcounty already registered
     And I have "Kampala" district already registered
-    And I POST "NECOC Awach water everywhere" to the NECOC DMS
-    And I POST "NECOC Kampala there are mosquitoes here" to the NECOC DMS
+    And I POST "NECOC.Awach. water everywhere" to the NECOC DMS
+    And I POST "NECOC.Kampala. there are mosquitoes here" to the NECOC DMS
     When I navigate to map location "/admin/dashboard/gulu/awach"
     And I click the messages panel chevron
     Then I should see my message with location "Gulu >> Awach"
@@ -37,7 +37,7 @@ Feature: Dashboard
   Scenario: Apply time filters to map and sliding panel
     Given I am logged in as a NECOC admin
     And I have a "Flood" disaster in "Gulu" district, "Awach" subcounty already registered
-    And I POST "NECOC Awach Flood here" to the NECOC DMS
+    And I POST "NECOC.Awach. Flood here" to the NECOC DMS
     And I navigate to map location "/admin/dashboard"
     Then I see should see 1 disasters bubble on the map
     When I navigate to map location "/admin/dashboard/gulu"
@@ -57,7 +57,7 @@ Feature: Dashboard
   Scenario: Apply disaster filter to map and sliding panel
     Given I am logged in as a NECOC admin
     And I have a "Flood" disaster in "Gulu" district, "Awach" subcounty already registered
-    And I POST "NECOC Awach Flood here" to the NECOC DMS
+    And I POST "NECOC.Awach. Flood here" to the NECOC DMS
     And I navigate to map location "/admin/dashboard"
     Then I see should see 1 disasters bubble on the map
     When I add the disaster type as "Fire"

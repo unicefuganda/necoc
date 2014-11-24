@@ -18,7 +18,7 @@ class TestRapidProMessage(MongoTestCase):
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
         self.mobile_user = UserProfile(**dict(name='timothy', phone=phone_number, location=self.village, email=None)).save()
         
-        self.message = dict(phone_no=phone_number, text="NECOC There is a fire", received_at=date_time, relayer_id=234,
+        self.message = dict(phone_no=phone_number, text="NECOC. There is a fire", received_at=date_time, relayer_id=234,
                         run_id=23243)
 
     def test_fields(self):
@@ -40,10 +40,10 @@ class TestRapidProMessage(MongoTestCase):
         rp_messages = RapidProMessage.objects(**self.message)
         self.assertEqual(1, rp_messages.count())
 
-    @override_settings(MESSAGE_LOCATION_INDEX=3)
+    @override_settings(MESSAGE_LOCATION_INDEX=2)
     def test_message_gets_the_location_if_it_is_militarily_coded_and_matched(self):
         message = self.message.copy()
-        message['text'] = "NECOC Fire Kampala"
+        message['text'] = "NECOC . Kampala. Fire"
         rapid_pro_message = RapidProMessage(**message).save()
 
         message_location = rapid_pro_message.location
@@ -85,7 +85,7 @@ class TestRapidProMessage(MongoTestCase):
 
     def test_message_location_str_returns_the_to_str_of_its_location(self):
         message = self.message.copy()
-        message['text'] = "NECOC Bukoto there are some serious fire over here"
+        message['text'] = "NECOC.Bukoto. there are some serious fire over here"
 
         rapid_pro_message = RapidProMessage(**message).save()
 
@@ -93,7 +93,7 @@ class TestRapidProMessage(MongoTestCase):
 
     def test_message_location_str_is_empty_if_no_location(self):
         message = self.message.copy()
-        message['text'] = "NECOC UnknownLocation there are some serious fire over here"
+        message['text'] = "NECOC.UnknownLocation. there are some serious fire over here"
 
         rapid_pro_message = RapidProMessage(**message).save()
 
@@ -101,7 +101,7 @@ class TestRapidProMessage(MongoTestCase):
 
     def test_get_messages_from_a_location(self):
         location_name = 'Abim'
-        text = "NECOC %s fire baba fire" % location_name
+        text = "NECOC.%s. fire baba fire" % location_name
         district = Location(**dict(name=location_name, parent=None, type='district')).save()
         message_attr = self.message.copy()
         message_attr['text'] = text
@@ -119,7 +119,7 @@ class TestRapidProMessage(MongoTestCase):
 
     def test_get_messages_from_children_are_also_added(self):
         location_name = 'Abim'
-        text = "NECOC %s fire baba fire" % location_name
+        text = "NECOC.%s. fire baba fire" % location_name
         district = Location(**dict(name=location_name, parent=None, type='district')).save()
         message_attr = self.message.copy()
         message_attr['text'] = text
@@ -127,7 +127,7 @@ class TestRapidProMessage(MongoTestCase):
 
         message1_attr = message_attr.copy()
         location_name = 'Wakiso'
-        text = "NECOC %s fire baba fire" % location_name
+        text = "NECOC.%s. fire baba fire" % location_name
         district_son = Location(**dict(name=location_name, parent=district, type='village')).save()
         message1_attr["text"] = text
         message1 = RapidProMessage(**message1_attr).save()

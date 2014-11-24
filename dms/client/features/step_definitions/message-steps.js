@@ -2,6 +2,7 @@ module.exports = function () {
     var messagesPage = require("../pages/messages-page"),
         homePage = require("../pages/home-page"),
         dataSetupPage = require("../pages/data-setup-page"),
+        moment = require('moment'),
         disasterLocation = null,
         numberOfMassMessages = 15,
         messages = [];
@@ -38,23 +39,25 @@ module.exports = function () {
         should_see_my_messages(this, next);
     });
 
-    var should_see_my_messages = function (self, next, location) {
-        var message = messages[0];
+    var should_see_my_messages = function (self, next, location, index, numberOfMessages, messageIndex) {
+        var _index = index || 0;
+        var _numberOfMessages = numberOfMessages || 1;
+        var message = messages[ messageIndex || _index];
         messagesPage.numberOfMessages()
             .then(function (noOfMessages) {
-                self.expect(noOfMessages).to.equal(1);
+                self.expect(noOfMessages).to.equal(_numberOfMessages);
             })
             .then(function () {
-                self.expect(messagesPage.getMessageData('text', 0)).to.eventually.equal(message.text);
+                self.expect(messagesPage.getMessageData('text', _index)).to.eventually.equal(message.text);
             })
             .then(function () {
-                self.expect(messagesPage.getMessageData('time | date:"MMM dd, yyyy - h:mma"', 0)).to.eventually.equal(message.formattedTime);
+                self.expect(messagesPage.getMessageData('time | date:"MMM dd, yyyy - h:mma"', _index)).to.eventually.equal(message.formattedTime);
             })
             .then(function () {
-                self.expect(messagesPage.getMessageData('location', 0)).to.eventually.equal(location || messagesPage.senderLocation.name);
+                self.expect(messagesPage.getMessageData('location', _index)).to.eventually.equal(location || messagesPage.senderLocation.name);
             })
             .then(function () {
-                self.expect(messagesPage.getMessageData('source', 0)).to.eventually.equal(message.source + ' (' + message.phone + ')')
+                self.expect(messagesPage.getMessageData('source', _index)).to.eventually.equal(message.source + ' (' + message.phone + ')')
                     .and.notify(next);
             })
     };
@@ -265,5 +268,24 @@ module.exports = function () {
 
     this.When(/^I refresh my messages$/, function (next) {
         messagesPage.refreshButton.click().then(next);
+    });
+
+    this.Then(/^I should see the (\d+) messages in "([^"]*)" ordered$/, function (numberOfRows, location, next) {
+        for (index = 0; index < numberOfRows; index++) {
+            should_see_my_messages(this, next, location, index, parseInt(numberOfRows), numberOfRows - index - 1);
+        }
+        ;
+    });
+
+    this.Given(/^I POST "([^"]*)" at "([^"]*)" to the NECOC DMS$/, function (text, time, next) {
+        dataSetupPage.postMessage({
+            text: text,
+            time: time
+        }, function (message) {
+            var format = 'MMM DD, YYYY - h:mmA';
+            message.formattedTime = moment(message.time).format(format);
+            messages.push(message);
+            next();
+        });
     });
 };

@@ -27,6 +27,8 @@ class UserProfileSerializer(serializers.MongoEngineModelSerializer):
     def validate_email(self, attrs, source):
         email = attrs.get(source)
         updated_value = email != getattr(self.object, 'email', '')
+        if not email:
+            return attrs
         self.__check_uniqueness(attrs, 'email', UserProfile.objects(email=email), updated_value)
         return attrs
 

@@ -233,6 +233,15 @@ table.style-header thead {
     color: #fff;
 }
 
+table.style-header thead a {
+    color: #fff;
+}
+
+table.style-header thead .sort-caret {
+    font-size: 10px;
+    vertical-align: middle;
+}
+
 table.table-clickable tbody td {
     cursor: pointer;
 }
@@ -740,8 +749,9 @@ div[class*="-aggregate-marker-icon"] div {
     width: 93%;
     float: right;
 }
+
 #stats-overlay .sub-section-header {
-    margin-left:    20px;
+    margin-left: 20px;
 }
 
 #stats-overlay .back-arrow {
@@ -760,7 +770,7 @@ div[class*="-aggregate-marker-icon"] div {
     /*padding-bottom: 10px;*/
 }
 
-#stats-numbers{
+#stats-numbers {
     padding-bottom: 10px;
 }
 

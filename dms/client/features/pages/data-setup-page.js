@@ -182,9 +182,8 @@ var DataSetupPage = function () {
             relayer: 2,
             run: 1,
             text: message.text,
-            source: 'NECOC Volunteer'
+            source: message.source || 'NECOC Volunteer'
         };
-
         return baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {
             form: sms
         }, function (error, response, body) {

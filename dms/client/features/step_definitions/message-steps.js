@@ -176,6 +176,10 @@ module.exports = function () {
         messagesPage.checkMessage().then(next);
     });
 
+    this.When(/^I check message (\d+)$/, function (index, next) {
+        messagesPage.checkMessageByIndex(index - 1).then(next);
+    });
+
     this.When(/^I click on associate to disaster button$/, function (next) {
         messagesPage.actionsButton.click().then(function () {
             return messagesPage.associateToDisasterButton.click();
@@ -287,5 +291,46 @@ module.exports = function () {
             messages.push(message);
             next();
         });
+    });
+
+    this.Given(/^I have the following messages in the NECOC DMS:$/, function (table, next) {
+        table.hashes().map(function (row) {
+            dataSetupPage.postMessage(row, function (message) {
+                var format = 'MMM DD, YYYY - h:mmA';
+                message.formattedTime = moment(message.time).format(format);
+                messages.push(message);
+            });
+        });
+        browser.sleep(3000).then(function () {
+            next();
+        })
+    });
+
+    this.When(/^I sort by "([^"]*)" ascending$/, function (sortKey, next) {
+        browser.refresh().then(function () {
+            element(by.cssContainingText(".sort", "Date Time")).click().then(function () {
+                element(by.cssContainingText(".sort", sortKey)).click().then(next);
+            })
+        });
+    });
+
+    this.When(/^I sort by "([^"]*)" descending$/, function (sortKey, next) {
+        browser.refresh().then(function () {
+            element(by.cssContainingText(".sort", "Date Time")).click().then(function () {
+                element(by.cssContainingText(".sort", sortKey)).click().then(function () {
+                    element(by.cssContainingText(".sort", sortKey)).click().then(next);
+                })
+            })
+        });
+    });
+
+    this.Then(/^I should see the messages in the following order:$/, function (table, next) {
+        var self = this;
+        table.hashes().forEach(function (message, index) {
+            self.expect(messagesPage.getMessageData('text', index)).to.eventually.equal(message.text);
+        });
+        browser.sleep(1000).then(function () {
+            next();
+        })
     });
 };

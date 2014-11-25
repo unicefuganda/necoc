@@ -2,15 +2,15 @@
     <thead>
     <tr>
         <th class="xsm-column" ng-show="showMessageCheckboxes "></th>
-        <th class="md-column">Source</th>
-        <th>SMS Body</th>
-        <th class="sm-column">Location</th>
-        <th>Date Time</th>
-        <th class="sm-column">Status {[{ filter.location }]}</th>
+        <th sort-by="phone" class="md-column">Source</th>
+        <th sort-by="text" >SMS Body</th>
+        <th sort-by="location" class="sm-column">Location</th>
+        <th sort-by="time" sort-init="desc" >Date Time</th>
+        <th sort-by="disaster == undefined" class="sm-column">Status {[{ filter.location }]}</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="message in messages | filter:district | filter:subcounty | orderBy:time">
+    <tr ng-repeat="message in messages | filter:district | filter:subcounty">
         <td ng-show="showMessageCheckboxes"><input type="checkbox" checklist-model="selected.messages" checklist-value="message.id"/></td>
         <td>{[{ message.source }]} <span>({[{ message.phone }]})</span></td>
         <td>{[{ message.text }]}</td>

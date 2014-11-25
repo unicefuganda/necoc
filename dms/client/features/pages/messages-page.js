@@ -55,6 +55,10 @@ var MessagesPage = function () {
         return element(by.css('input[type="checkbox"]')).click();
     };
 
+    this.checkMessageByIndex = function (index) {
+        return element.all(by.css('input[type="checkbox"]')).get(index).click();
+    };
+
     this.getTextByCss = function (selector) {
         return element(by.css(selector)).getText();
     };
@@ -88,7 +92,6 @@ var MessagesPage = function () {
     this.getAddToDisasterErrors = function () {
         return element(by.css("#disaster-errors .text-danger")).getText();
     };
-
 };
 
 module.exports = new MessagesPage();

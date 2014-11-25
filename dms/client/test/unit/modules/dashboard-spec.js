@@ -8,7 +8,8 @@ describe('dms.dashboard', function () {
         var scope,
             apiUrl,
             httpMock,
-            messagesStub;
+            messagesStub,
+            mockUsSpinnerService;
 
         beforeEach(function () {
             module('dms.dashboard');
@@ -64,9 +65,9 @@ describe('dms.dashboard', function () {
                 httpMock = $httpBackend;
                 apiUrl = Config.apiUrl;
                 scope = $rootScope.$new();
-
+                mockUsSpinnerService = jasmine.createSpyObj('usSpinnerService', ['spin', 'stop']);
                 httpMock.when('GET', apiUrl + 'rapid-pro/').respond(messagesStub);
-                $controller('DashboardMessagesController', { $rootScope: scope, $scope: scope});
+                $controller('DashboardMessagesController', { $rootScope: scope, $scope: scope, usSpinnerService: mockUsSpinnerService});
             });
         });
 
@@ -115,6 +116,16 @@ describe('dms.dashboard', function () {
             expect(scope.district).toEqual('gulu');
             expect(scope.subcounty).toEqual('awach');
         });
+
+        it('should show spinner when filter changes', function () {
+            httpMock.expectGET(apiUrl + 'rapid-pro/?from=2014-11-06').respond(messagesStub);
+            scope.filter = {from: '2014-11-06', disaster_type: undefined};
+            scope.$apply();
+            expect(mockUsSpinnerService.spin).toHaveBeenCalledWith('map-spinner');
+            expect(mockUsSpinnerService.stop).not.toHaveBeenCalledWith('map-spinner');
+            httpMock.flush();
+            expect(mockUsSpinnerService.stop).toHaveBeenCalledWith('map-spinner');
+        })
     });
 
     describe('slidingPanel', function () {

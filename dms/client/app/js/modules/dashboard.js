@@ -8,21 +8,22 @@
         }
     });
 
-    module.controller('DashboardMessagesController', function ($rootScope, $scope, MessageService, $moment) {
+    module.controller('DashboardMessagesController', function ($rootScope, $scope, MessageService, $moment, usSpinnerService) {
 
         $scope.$watch('params.location', function (location) {
             $scope.district = (location && location.district) ? location.district : '';
             $scope.subcounty = (location && location.subcounty) ? location.subcounty : '';
         }, true);
-
         $rootScope.$watch('filter', function (filter) {
             if (!filter) return;
 
+            usSpinnerService.spin('map-spinner');
             var newFilter = angular.copy(filter);
             newFilter.to ? newFilter.to = addDay(newFilter.to) : null;
             if (!newFilter.disaster_type) delete newFilter.disaster_type;
 
             MessageService.filter(newFilter).then(function (response) {
+                usSpinnerService.stop('map-spinner');
                 $scope.messages = response.data;
             });
         }, true);
@@ -135,4 +136,4 @@
     });
 
 })
-(angular.module('dms.dashboard', ['dms.message', 'dms.utils', 'highcharts-ng', 'dms.config']));
+(angular.module('dms.dashboard', ['angularSpinner', 'dms.message', 'dms.utils', 'highcharts-ng', 'dms.config']));

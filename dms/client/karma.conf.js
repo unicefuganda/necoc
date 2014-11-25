@@ -24,6 +24,8 @@ module.exports = function(config) {
             'app/bower_components/angular-mocks/angular-mocks.js',
             'app/bower_components/highcharts/highcharts.js',
             'app/bower_components/highcharts-ng/dist/highcharts-ng.js',
+            'app/bower_components/spin.js/spin.js',
+            'app/bower_components/angular-spinner/angular-spinner.js',
             'app/js/**/*.js',
             'test/**/*.js'
         ],

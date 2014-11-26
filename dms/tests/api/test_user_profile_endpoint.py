@@ -148,6 +148,30 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         retrieved_user = User.objects(username='akampa').first()
         self.assertEqual(group, retrieved_user.group)
 
+    def test_update_with_group_associates_user_to_new_group(self):
+        attr = self.mobile_user_to_post.copy()
+        attr['username'] = 'akampa'
+        group = Group.objects().first()
+        attr['group'] = str(group.id)
+        self.client.post(self.API_ENDPOINT, data=attr)
+
+        retrieved_user = User.objects(username='akampa').first()
+        retrieved_user_profile = UserProfile.objects(user=retrieved_user).first()
+        new_group = Group.objects().all()[2]
+
+        new_attr = self.mobile_user_to_post.copy()
+        new_attr['username'] = 'akampa'
+        new_attr['location'] = str(new_attr['location'])
+        new_attr['group'] = str(new_group.id)
+        new_attr['id'] = str(retrieved_user_profile.id)
+
+        url = self.API_ENDPOINT + str(retrieved_user_profile.id) + '/'
+        response = self.client.post(url,
+                                    data=new_attr)
+        self.assertEqual(200, response.status_code)
+        retrieved_user = User.objects(username='akampa').first()
+        self.assertEqual(new_group, retrieved_user.group)
+
     @mock.patch('dms.utils.image_resizer.ImageResizer', FakeImageResizer)
     def test_post_with_photo_file(self):
         attr = self.mobile_user_to_post.copy()

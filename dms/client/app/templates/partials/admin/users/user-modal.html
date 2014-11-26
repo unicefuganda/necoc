@@ -63,6 +63,7 @@
                                    required=""
                                    data-default-parent-value="user.location.parent.id"
                                    data-default-child-value="user.location.id">
+
                             <div id="district-errors" class="error-text"
                                  ng-show="form.user_form.district.$invalid && hasErrors">
                                 <p class="text-danger" ng-show="form.user_form.district.$error.required">
@@ -92,40 +93,40 @@
                             <label class="control-label">Grant Web Access: </label>
 
                             <div class="btn-group btn-toggle" id="grant-web-access-button" button-switch=""
-                                 data-on="Yes"
-                                 data-off="No" data-toggle-section="online-user-info"></div>
+                                 data-on="Yes" data-off="No" ng-click="webAccessGranted = !webAccessGranted"></div>
                         </div>
-                        <div id="online-user-info" class="hide">
-                            <div id="username-section" class="form-group"
-                                 ng-class="{'has-error': form.user_form.username.$invalid && hasErrors }">
-                                <label class="control-label" for="username">Username</label>
-                                <input type="text" id="username" ng-model="user.username" name="username"
-                                       class="form-control" placeholder="enter username"
-                                       ng-required="webAccessGranted">
+                        <div id="username-section" class="form-group"
+                             ng-class="{'has-error': form.user_form.username.$invalid && hasErrors }"
+                             ng-show="webAccessGranted">
+                            <label class="control-label" for="username">Username</label>
+                            <input type="text" id="username" ng-model="user.username" name="username"
+                                   class="form-control" placeholder="enter username"
+                                   ng-required="webAccessGranted">
 
-                                <div id="username-errors" class="error-text"
-                                     ng-show="form.user_form.username.$invalid && hasErrors">
-                                    <p class="text-danger" ng-repeat="error in errors.username">
-                                        {[{ error }]}
-                                    </p>
-                                    <p class="text-danger" ng-show="form.user_form.username.$error.required">
-                                        This field is required
-                                    </p>
-                                </div>
+                            <div id="username-errors" class="error-text"
+                                 ng-show="form.user_form.username.$invalid && hasErrors">
+                                <p class="text-danger" ng-repeat="error in errors.username">
+                                    {[{ error }]}
+                                </p>
+
+                                <p class="text-danger" ng-show="form.user_form.username.$error.required">
+                                    This field is required
+                                </p>
                             </div>
-                            <div class="form-group user-role"
-                                 ng-class="{'has-error':  form.user_form.role.$invalid && hasErrors }">
-                                <label class="control-label">Role</label>
-                                <input type="text" ng-model="user.group" name="role" class="form-control"
-                                       placeholder="select role" user-role="user"
-                                       ng-required="webAccessGranted">
+                        </div>
+                        <div class="form-group user-role"
+                             ng-class="{'has-error':  form.user_form.role.$invalid && hasErrors }"
+                             ng-show="webAccessGranted || (user.group != undefined)">
+                            <label class="control-label">Role</label>
+                            <input type="text" ng-model="user.group" name="role" class="form-control"
+                                   placeholder="select role" user-role="user"
+                                   ng-required="webAccessGranted" data-default-value="user.group">
 
-                                <div id="role-errors" class="error-text"
-                                     ng-show="form.user_form.role.$invalid && hasErrors">
-                                    <p class="text-danger" ng-show="form.user_form.role.$error.required">
-                                        This field is required
-                                    </p>
-                                </div>
+                            <div id="role-errors" class="error-text"
+                                 ng-show="form.user_form.role.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="form.user_form.role.$error.required">
+                                    This field is required
+                                </p>
                             </div>
                         </div>
                     </div>

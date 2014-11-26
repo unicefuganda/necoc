@@ -2,7 +2,8 @@
 
 
     module.factory('User', function ($http, Config, $q) {
-        var cachedPromise;
+        var cachedPromise,
+            cachedGroupPromise
 
         return {
             getPermissions: function () {
@@ -23,7 +24,10 @@
                 });
             },
             getAllGroups: function () {
-                return $http.get(Config.apiUrl + 'groups/');
+                if (!cachedGroupPromise) {
+                    cachedGroupPromise = $http.get(Config.apiUrl + 'groups/');
+                }
+                return cachedGroupPromise;
             }
         };
     });

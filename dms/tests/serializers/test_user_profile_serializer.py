@@ -107,7 +107,7 @@ class UserProfileSerializerTest(MongoTestCase):
         mobile_user = UserProfile(**mobile_user_attr).save()
 
         serialized_object = UserProfileSerializer(mobile_user)
-        self.assertEqual(group.name, serialized_object.data['group'])
+        self.assertEqual(str(group.id), serialized_object.data['group'])
 
     def test_serializing_group_name_when_absent(self):
         mobile_user_attr = self.mobile_user.copy()

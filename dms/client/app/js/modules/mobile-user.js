@@ -192,20 +192,15 @@
         return {
             link: function (scope, element, attrs) {
                 var onText = attrs.on,
-                    offText = attrs.off,
-                    sectionIdToToggle = attrs.toggleSection;
+                    offText = attrs.off;
 
-                scope.webAccessGranted = false;
                 element.html('<a class="btn btn-xs btn-default">' + onText + '</a>' +
                     '<a class="btn btn-xs btn-primary active">' + offText + '</a>');
 
                 element.find('.btn').click(function () {
-                    scope.webAccessGranted = !scope.webAccessGranted;
                     element.find('.btn').toggleClass('active');
                     element.find('.btn').toggleClass('btn-primary');
                     element.find('.btn').toggleClass('btn-default');
-                    console.log($('#' + sectionIdToToggle));
-                    $('#' + sectionIdToToggle).toggleClass('hide');
                 });
             }
         }
@@ -225,6 +220,13 @@
                     load: function (query, callback) {
                         User.getAllGroups().then(function (response) {
                             callback(response.data)
+
+                            scope.$watch(attrs.defaultValue, function (defaultValue) {
+                                console.log(defaultValue);
+                                if (defaultValue) {
+                                    $select[0].selectize.setValue(defaultValue);
+                                }
+                            });
                         });
                     }
                 });

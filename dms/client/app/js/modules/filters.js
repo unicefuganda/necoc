@@ -44,4 +44,4 @@
         }
     })
 
-})(angular.module('dms.filters', []));
+})(angular.module('dms.filters', ['dms.user']));

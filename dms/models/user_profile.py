@@ -21,6 +21,10 @@ class UserProfile(BaseModel):
 
     def group(self):
         has_group = self.user and self.user.group
+        return self.user.group.id if has_group else ''
+
+    def group_name(self):
+        has_group = self.user and self.user.group
         return self.user.group.name if has_group else ''
 
     def photo_uri(self):

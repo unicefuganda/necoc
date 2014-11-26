@@ -1,3 +1,4 @@
+from mongoengine.django.auth import Group
 from rest_condition import Or
 from rest_framework.permissions import BasePermission
 from rest_framework_mongoengine.generics import ListCreateAPIView
@@ -16,6 +17,7 @@ from dms.utils.permission_class_factory import build_permission_class
 class UserProfileSerializer(serializers.MongoEngineModelSerializer):
     username = fields.CharField(source='username', required=False)
     group = fields.CharField(source='group', required=False)
+    group_name = fields.CharField(source='group_name', required=False, read_only=True)
     photo_uri = fields.CharField(source='photo_uri', required=False)
 
     def validate_phone(self, attrs, source):
@@ -111,4 +113,8 @@ class UserProfileView(MongoRetrieveUpdateView):
             obj.save()
 
     def post_save(self, obj, created=False):
+        group_id = self.request.DATA.get('group', None)
+        if(group_id):
+            obj.user.group = Group.objects(id=group_id).first()
+            obj.user.save()
         self.replace_image(obj)

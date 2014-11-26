@@ -47,16 +47,20 @@ class RapidProMessageBase (ReceivedMessage):
         return ""
 
     @classmethod
+    def map_kwargs_to_db_params(cls, kwargs):
+        return {value: kwargs.get(key) for key, value in cls.MAPPING.items() if kwargs.get(key, None)}
+
+    @classmethod
     def from_(cls, location, _queryset=None, **kwargs):
         if not _queryset:
             _queryset = cls.objects()
-        mapping = {value: kwargs.get(key) for key, value in cls.MAPPING.items() if kwargs.get(key, None)}
+        mapping = cls.map_kwargs_to_db_params(kwargs)
         mapping['location__in'] = location.children(include_self=True)
         return _queryset.filter(**mapping)
 
     @classmethod
     def count_(cls, **kwargs):
-        mapping = {value: kwargs.get(key) for key, value in cls.MAPPING.items() if kwargs.get(key, None)}
+        mapping = cls.map_kwargs_to_db_params(kwargs)
         return cls.objects.filter(**mapping).count()
 
     class Meta:

@@ -6,8 +6,7 @@ from dms.tests.base import MongoTestCase
 
 class UserProfileSerializerTest(MongoTestCase):
     def setUp(self):
-        self.district = Location(**dict(name='Kampala', type='district', parent=None))
-        self.district.save()
+        self.district = Location(**dict(name='Kampala', type='district', parent=None)).save()
 
         self.serialized_location = dict(created_at=self.district.created_at, type=self.district.type,
                                         name=self.district.name, id=str(self.district.id))
@@ -76,6 +75,19 @@ class UserProfileSerializerTest(MongoTestCase):
         self.serialized_mobile_user['location'] = self.district.id
         del self.serialized_mobile_user['email']
         serializer = UserProfileSerializer(data=self.serialized_mobile_user)
+        self.assertTrue(serializer.is_valid())
+
+    def test_empty_email_is_not_unique(self):
+        self.serialized_mobile_user['location'] = self.district.id
+        del self.serialized_mobile_user['email']
+        serializer = UserProfileSerializer(data=self.serialized_mobile_user)
+        serializer.is_valid()
+        user_without_email = serializer.save()
+
+        another_user_attr = dict(name='Haha', phone='+2567711111', location=self.district.id)
+
+        serializer = UserProfileSerializer(data=another_user_attr)
+
         self.assertTrue(serializer.is_valid())
 
     def test_only_username_is_serialized_if_user_profile_has_a_user(self):

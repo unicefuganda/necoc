@@ -7,7 +7,6 @@ class GroupsEndpointTest(MongoAPITestCase):
     GROUPS_ENDPOINT = '/api/v1/groups/'
 
     def setUp(self):
-        self.login_user()
         ct = ContentType(app_label='dms', model='test_ct', name='test_ct').save()
         self.permission = Permission(name='can manage something', codename='can_manage_something',
                                      content_type=ct.id).save()
@@ -23,5 +22,4 @@ class GroupsEndpointTest(MongoAPITestCase):
             self.assertIn(dict(id=str(group.id), name=group.name), response.data)
 
     def test_raise_403_if_user_doesnt_have_manage_user_permissions(self):
-        self.assert_permission_required_for_get(self.GROUPS_ENDPOINT)
         self.assert_permission_required_for_post(self.GROUPS_ENDPOINT)

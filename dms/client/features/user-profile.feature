@@ -12,6 +12,7 @@ Feature: User Profile
     And I update my "phone" as "0775019449"
     And I update by selecting my "district" as "Mukono"
     And I update by selecting my "subcounty" as "Nabbaale"
+    And I update by selecting my role as "Management Team"
     And I save the updated user details
     Then I should see my updated profile
 

@@ -14,6 +14,13 @@ var UpdateUsersModal = function () {
             return element(by.cssContainingText('.' + className + ' .selectize-dropdown-content .option', location)).click()
         });
     };
+
+    this.selectRole = function (role) {
+        return element(by.css('.user-role .selectize-input')).click().then(function () {
+            browser.sleep(200);
+            return element(by.cssContainingText('.user-role .selectize-dropdown-content .option', role)).click()
+        });
+    };
 };
 
 var changePasswordModal = function () {
@@ -38,6 +45,8 @@ var UserProfilePage = function () {
     this.userPhone = element(by.binding('profile.phone'));
     this.userEmail = element(by.binding('profile.email'));
     this.changePasswordButton = element(by.id('change-password'));
+    this.role = element(by.binding('profile.group_name'));
+
 
     this.notification = element(by.css('.profile-toast .growl-message'));
 

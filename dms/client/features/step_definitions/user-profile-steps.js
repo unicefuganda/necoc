@@ -25,6 +25,9 @@ module.exports = function () {
                 self.expect(userProfilePage.userEmail.getText()).to.eventually.equal(user.email);
             })
             .then(function () {
+                self.expect(userProfilePage.role.getText()).to.eventually.equal(user.role);
+            })
+            .then(function () {
                 self.expect(userProfilePage.location.getText())
                     .to.eventually.equal(user.location.district + ', ' + user.location.subcounty);
             })
@@ -54,6 +57,11 @@ module.exports = function () {
         user.location = user.location || {};
         user.location[className] = location;
         userProfilePage.updateUserModal.selectLocation(className, location).then(next);
+    });
+
+    this.When(/^I update by selecting my role as "([^"]*)"$/, function (role, next) {
+        user.role = role
+        userProfilePage.updateUserModal.selectRole(role).then(next);
     });
 
     this.When(/^I change my password$/, function (next) {

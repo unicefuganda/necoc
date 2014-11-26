@@ -474,6 +474,7 @@ label {
     width: 84%;
     height: 93%;
     position: fixed;
+    pointer-events: none;
 }
 
 .spinner:before {

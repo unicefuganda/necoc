@@ -1,4 +1,6 @@
 import json
+import datetime
+
 from dms.models import Location, DisasterType, Disaster
 from dms.tests.base import MongoAPITestCase
 
@@ -74,3 +76,79 @@ class TestDisasterEndpoint(MongoAPITestCase):
 
         retrieved_disaster = Disaster.objects(description="Giant Flood")
         self.assertEqual(1, retrieved_disaster.count())
+
+    def test_filter_disaster_by_status(self):
+        Disaster(**self.disaster).save()
+        disaster_attr2 = self.disaster.copy()
+        disaster_attr2['status'] = "Closed"
+        Disaster(**disaster_attr2).save()
+
+        response = self.client.get(self.API_ENDPOINT+'?status=Closed&format=json')
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertEqual('Closed', response.data[0]['status'])
+        self.assertEqual(self.disaster_to_post['date'], str(response.data[0]['date']))
+        self.assertEqual(self.disaster_to_post['description'], response.data[0]['description'])
+
+    def test_filter_disaster_by_date(self):
+        disaster_attr = self.disaster.copy()
+        date_1_jan = "2014-01-01"
+        disaster_attr['date'] = date_1_jan
+
+        disaster_attr2 = self.disaster.copy()
+        date_3_jan = "2014-01-03"
+        disaster_attr2['date'] = date_3_jan
+
+        Disaster(**disaster_attr).save()
+        Disaster(**disaster_attr2).save()
+
+        response = self.client.get(self.API_ENDPOINT+'?from=%s&to=%s&format=json' % (date_1_jan, date_3_jan))
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(2, len(response.data))
+        self.assertEqual(datetime.datetime.strptime(date_1_jan, "%Y-%m-%d"), response.data[0]['date'])
+        self.assertEqual(datetime.datetime.strptime(date_3_jan, "%Y-%m-%d"), response.data[1]['date'])
+
+        response = self.client.get(self.API_ENDPOINT+'?from=%s&format=json' % date_3_jan)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertEqual(datetime.datetime.strptime(date_3_jan, "%Y-%m-%d"), response.data[0]['date'])
+
+        response = self.client.get(self.API_ENDPOINT+'?to=%s&format=json' % date_1_jan)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertEqual(datetime.datetime.strptime(date_1_jan, "%Y-%m-%d"), response.data[0]['date'])
+
+    def test_filter_disaster_by_date_and_date(self):
+        disaster_attr = self.disaster.copy()
+        date_1_jan = "2014-01-01"
+        disaster_attr['date'] = date_1_jan
+
+        disaster_attr2 = self.disaster.copy()
+        date_3_jan = "2014-01-03"
+        disaster_attr2['status'] = "Closed"
+        disaster_attr2['date'] = date_3_jan
+
+        Disaster(**disaster_attr).save()
+        Disaster(**disaster_attr2).save()
+
+        response = self.client.get(self.API_ENDPOINT+'?from=%s&to=%s&status=Closed&format=json' % (date_1_jan, date_3_jan))
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertEqual(datetime.datetime.strptime(date_3_jan, "%Y-%m-%d"), response.data[0]['date'])
+
+        response = self.client.get(self.API_ENDPOINT+'?from=%s&status=closed&format=json' % date_3_jan)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertEqual(datetime.datetime.strptime(date_3_jan, "%Y-%m-%d"), response.data[0]['date'])
+
+        response = self.client.get(self.API_ENDPOINT+'?to=%s&status=assessment&format=json' % date_1_jan)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertEqual(datetime.datetime.strptime(date_1_jan, "%Y-%m-%d"), response.data[0]['date'])

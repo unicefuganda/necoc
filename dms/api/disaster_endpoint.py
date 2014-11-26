@@ -24,6 +24,10 @@ class DisasterListCreateView(ListCreateAPIView):
     queryset = Disaster.objects()
     permission_classes = [Or(build_permission_class('dms.can_manage_disasters'), IsGetRequest)]
 
+    def get_queryset(self):
+        query_params = Disaster.map_kwargs_to_db_params(self.request.GET.dict())
+        return Disaster.objects(**query_params)
+
 
 class DisasterView(MongoRetrieveUpdateView):
     model = Disaster

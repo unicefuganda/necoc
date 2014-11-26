@@ -33,9 +33,19 @@
                         <li ng-show="profile.username">
                             <button type="button" id="change-password" class="btn btn-default btn-action btn-icon"
                                     data-toggle="modal"
-                                    data-target="#change-password-modal" ng-click="changePassword()">
+                                    data-target="#change-password-modal">
                                 <span class="icon icon-lock"></span>
                                 <span class="value">Change Password</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button"
+                                    id="reset-password"
+                                    class="btn btn-default btn-action btn-icon"
+                                    data-toggle="modal"
+                                    data-target="#reset-password-modal">
+                                <span class="icon icon-lock"></span>
+                                <span class="value">Reset Password</span>
                             </button>
                         </li>
                         <li>
@@ -56,4 +66,6 @@
                 src="'/static/templates/partials/admin/users/user-modal.html'"></ng-include>
     <ng-include ng-controller="ChangePasswordController"
                 src="'/static/templates/partials/admin/users/change-password-modal.html'"></ng-include>
+    <ng-include ng-controller="ResetPasswordController"
+                src="'/static/templates/partials/admin/users/reset-password-modal.html'"></ng-include>
 </div>

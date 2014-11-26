@@ -262,7 +262,49 @@ describe('dms.mobile-user', function () {
                 expect(scope.hasErrors).toBeTruthy();
             });
         });
+        describe('ResetPasswordController', function () {
+            var initController, mockGrowl,
+                newUser = {
+                    "id": "54257147d6f45f6fc1eac346"
+                };
 
+            beforeEach(function () {
+                inject(function ($controller) {
+                    mockGrowl = jasmine.createSpyObj('growl', ['success', 'error']);
+
+                    initController = function () {
+                        scope.user = { name: "Timothy" };
+                        $controller('ResetPasswordController', { $scope: scope, growl: mockGrowl });
+                    };
+                })
+            });
+
+            it('should update password given form is valid', function () {
+                initController();
+                httpMock.expectPOST(apiUrl + 'mobile-users/' + newUser.id + '/password_reset/', newUser).respond(200, {});
+
+                scope.resetPassword(newUser);
+
+                expect(scope.saveStatus).toBeTruthy();
+                expect(scope.successful).toBeFalsy();
+                httpMock.flush();
+                expect(scope.saveStatus).toBeFalsy();
+                expect(scope.successful).toBeTruthy();
+                expect(mockGrowl.success).toHaveBeenCalledWith('Password successfully reset', { ttl: 3000 });
+            });
+
+            it('should flash an error if there is a problem resetting', function () {
+                initController();
+                httpMock.expectPOST(apiUrl + 'mobile-users/' + newUser.id + '/password_reset/', newUser).respond(400, {});
+
+                scope.resetPassword(newUser);
+                expect(scope.saveStatus).toBeTruthy();
+                httpMock.flush();
+                expect(scope.saveStatus).toBeFalsy();
+                expect(scope.successful).toBeFalsy();
+                expect(mockGrowl.error).toHaveBeenCalledWith('There was a problem resetting this password', { ttl: 3000 });
+            });
+        })
     });
 
     describe('Stubbed uploading', function () {

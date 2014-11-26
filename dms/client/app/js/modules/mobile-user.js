@@ -21,6 +21,9 @@
             },
             changePassword: function (user) {
                 return $http.post(Config.apiUrl + 'mobile-users/' + user.id + '/password/', user);
+            },
+            resetPassword: function (user) {
+                return $http.post(Config.apiUrl + 'mobile-users/' + user.id + '/password_reset/', user);
             }
         };
     });
@@ -138,6 +141,24 @@
             } else {
                 $scope.hasErrors = true;
             }
+        }
+    });
+
+    module.controller('ResetPasswordController', function ($scope, MobileUserService, growl) {
+        $scope.form = {};
+        $scope.resetPassword = function (user) {
+            $scope.successful = false;
+            $scope.saveStatus = true;
+            MobileUserService.resetPassword(user)
+                .then(function () {
+                    $scope.saveStatus = false;
+                    $scope.successful = true;
+                    growl.success('Password successfully reset', {ttl: 3000});
+                }, function () {
+                    $scope.successful = false;
+                    $scope.saveStatus = false;
+                    growl.error('There was a problem resetting this password', {ttl: 3000});
+                });
         }
     });
 

@@ -22,7 +22,7 @@ module.exports = function () {
                 self.expect(browser.wait(homePage.title.getText)).to.eventually.equal('NECOC DMS')
                     .and.notify(function () {
                         browser.wait(homePage.loggedInUser.getText).then(function (currentUsername) {
-                            if(currentUsername != username) {
+                            if (currentUsername != username) {
                                 browser.get('/logout').then(function () {
                                     login(self, username, password, next)
                                 });

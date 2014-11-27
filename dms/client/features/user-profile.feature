@@ -30,6 +30,16 @@ Feature: User Profile
     And I try to login in with username "test_user" and password "password1"
     Then I should be logged In
 
+  Scenario: Reset password
+    Given I have no users
+    And I am logged in as a NECOC admin
+    When I navigate to the users page
+    And I click "Test User" in the mobile users table
+    And I reset my password
+    When I logout
+    And I try to login in with username "test_user" and password "password"
+    Then I should see "* Username or Password is invalid"
+
   Scenario: Change Password validation
     Given I have no users
     And I am logged in as a NECOC admin

@@ -31,14 +31,16 @@
                 <div class="user-actions-absolute user-actions pull-right">
                     <ul>
                         <li ng-show="profile.username">
-                            <button type="button" id="change-password" class="btn btn-default btn-action btn-icon"
+                            <button type="button"
+                                    id="change-password"
+                                    class="btn btn-default btn-action btn-icon"
                                     data-toggle="modal"
                                     data-target="#change-password-modal">
                                 <span class="icon icon-lock"></span>
                                 <span class="value">Change Password</span>
                             </button>
                         </li>
-                        <li>
+                        <li ng-if-permissions="can_manage_users" class="hide">
                             <button type="button"
                                     id="reset-password"
                                     class="btn btn-default btn-action btn-icon"

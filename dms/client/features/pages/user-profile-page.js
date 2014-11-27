@@ -35,16 +35,21 @@ var changePasswordModal = function () {
 };
 
 
+var resetPasswordModal = function () {
+    this.resetButton = element(by.id('submit-reset-password-modal'));
+};
 
 var UserProfilePage = function () {
     this.editUserButton = element(by.id('edit-user'));
     this.updateUserModal = new UpdateUsersModal();
     this.changePasswordModal = new changePasswordModal();
+    this.resetPasswordModal = new resetPasswordModal();
     this.location = element(by.binding('{[{ [profile.location.parent, profile.location] | joinNames }]}'));
     this.userName = element(by.binding('profile.name'));
     this.userPhone = element(by.binding('profile.phone'));
     this.userEmail = element(by.binding('profile.email'));
     this.changePasswordButton = element(by.id('change-password'));
+    this.resetPasswordButton = element(by.id('reset-password'));
     this.role = element(by.binding('profile.group_name'));
 
 

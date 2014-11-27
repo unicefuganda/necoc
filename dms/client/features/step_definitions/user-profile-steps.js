@@ -101,4 +101,23 @@ module.exports = function () {
         this.expect(userProfilePage.getFieldErrors(fieldId + '-errors', number)).to
             .eventually.be.equal(error).and.notify(next);
     });
+
+    this.When(/^I reset my password$/, function (next) {
+        userProfilePage.resetPasswordButton.click().then(function () {
+            browser.wait(userProfilePage.resetPasswordModal.resetButton.isDisplayed).then(function () {
+                userProfilePage.resetPasswordModal.resetButton.click().then(next);
+            })
+        })
+    });
+
+    this.Then(/^I should see the reset password button$/, function (next) {
+        this.expect(userProfilePage.resetPasswordButton.isDisplayed()).to.eventually.be.true
+            .and.notify(next)
+    });
+
+    this.Then(/^I should not see the change password button$/, function (next) {
+        this.expect(userProfilePage.changePasswordButton.isDisplayed()).to.eventually.be.false
+            .and.notify(next)
+    });
+
 };

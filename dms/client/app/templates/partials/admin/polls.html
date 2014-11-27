@@ -1,24 +1,20 @@
-
 <div class="section">
-    <div class="row" ng-if-permissions="can_manage_polls" class="hide">
-        <div class="c-well col-md-offset-3 col-md-4 page-summary">
-            <ul>
-                <li>
-                    <button id="new-poll-btn" type="button" class="btn btn-info btn-big" data-toggle="modal"
-                            data-target="#new-poll-modal">
-                        <span class="icon icon-pie-2"></span>
-                        <div class="value">New Poll</div>
-                    </button>
-                </li>
-            </ul>
-        </div>
-    </div>
-
     <div class="c-well">
 
         <div class="row with-btm-margin">
             <div class="col-md-5 sub-section-header">
                 <span class="icon icon-pie-2"></span><span class="title">All Polls</span>
+            </div>
+            <div class="user-actions pull-right" ng-if-permissions="can_manage_polls">
+                <ul>
+                    <li>
+                        <button type="button" id="new-poll-btn" class="btn btn-default btn-action btn-icon"
+                                data-toggle="modal" data-target="#new-poll-modal">
+                            <span class="icon icon-plus-circle"></span>
+                            <span class="value">New Poll</span>
+                        </button>
+                    </li>
+                </ul>
             </div>
         </div>
 

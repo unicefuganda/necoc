@@ -37,7 +37,7 @@ Feature: Messages
     Given I am logged in as a NECOC admin
     When I POST a list of messages to NECOC DMS
     And I visit the messages listing page
-    Then I should see 10 messages in the first pagination
+    Then I should see 15 messages in the first pagination
     When I click on the second pagination
     Then I should see 5 messages in the second pagination
     And I should see the total number of messages displayed

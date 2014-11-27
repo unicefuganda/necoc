@@ -4,7 +4,7 @@ module.exports = function () {
         dataSetupPage = require("../pages/data-setup-page"),
         moment = require('moment'),
         disasterLocation = null,
-        numberOfMassMessages = 15,
+        numberOfMassMessages = 20,
         messages = [];
 
     this.Before(function (next) {

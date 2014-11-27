@@ -458,8 +458,8 @@ label {
     display: inline-block
 }
 
-.page-summary ul li {
-    display: inline;
+.ul-horizontal li {
+    display: inline-table;
     list-style-type: none;
     margin-right: 10px;
 }
@@ -712,10 +712,6 @@ div[class*="-aggregate-marker-icon"] div {
     border-right: 4px solid #3E9CB8;
 }
 
-.user-actions ul li {
-    list-style-type: none;
-}
-
 .user-actions {
     top: 0;
     right: 0;
@@ -723,6 +719,10 @@ div[class*="-aggregate-marker-icon"] div {
 
 .user-actions-absolute {
     position: absolute;
+}
+
+.user-actions ul li {
+list-style-type: none;
 }
 
 .legend i {
@@ -843,4 +843,8 @@ div[class*="-aggregate-marker-icon"] div {
     font-size: 15px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #333;
+}
+
+.selectize-in-horizontal .selectize-input{
+    min-width: 215px;
 }

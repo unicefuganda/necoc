@@ -56,6 +56,20 @@ var DisasterPage = function () {
         return element.all(by.repeater("message in associatedMessages")).count();
     };
 
+    this.selectStatus = function (value) {
+        return element(by.css('#status-filter .selectize-input')).click().then(function () {
+            return element(by.cssContainingText('.selectize-dropdown-content .option', value)).click()
+        });
+    };
+
+    this.numberOfDistasters = function () {
+        return element.all(by.repeater("disaster in disasters")).count();
+    };
+
+    this.dateField = function(field){
+        return element(by.model('disasterFilter.' + field))};
+
+
 };
 
 module.exports = new DisasterPage();

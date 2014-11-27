@@ -1,6 +1,6 @@
 (function (module) {
 
-    module.factory('DisasterService', function ($http, Config, $moment) {
+    module.factory('DisasterService', function ($http, Config, $moment, helpers) {
         return {
             create: function (disaster) {
                 disaster.date = $moment(disaster.date, "YYYY/MM/DD hh:mm").format('YYYY-MM-DDTHH:mm');
@@ -13,6 +13,10 @@
             all: function () {
                 return $http.get(Config.apiUrl + 'disasters/');
             },
+            filter: function(options){
+                var queryString = helpers.buildQueryString(options);
+                return   $http.get(Config.apiUrl + 'disasters/'+ queryString);
+            },
             disaster: function (disasterId) {
                 return $http.get(Config.apiUrl + 'disasters/' + disasterId + '/');
             }
@@ -20,9 +24,17 @@
     });
 
     module.controller('DisastersController', function ($scope, DisasterService, $state) {
+        $scope.disasterFilter ={};
         DisasterService.all().then(function (response) {
             $scope.disasters = response.data;
         });
+
+        $scope.$watch('disasterFilter', function(filter){
+            DisasterService.filter(filter)
+                .then(function(response){
+                    $scope.disasters = response.data;
+                });
+        }, true);
 
         $scope.showDisasterInfo = function (disaster) {
             $state.go('admin.disaster-info', {'disaster': disaster.id});

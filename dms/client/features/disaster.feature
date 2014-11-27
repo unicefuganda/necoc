@@ -46,3 +46,18 @@ Feature: Disasters
     And I click add disaster button
     And I click save
     Then I should see required fields error messages
+
+  Scenario: Filter Disaster list by date and status
+    Given I am logged in as a NECOC admin
+    And I have a "Fire" disaster in "Mukono" district, "goma" subcounty already registered
+    When I navigate to "/admin/disasters"
+    And I select the status "Response Team Deployed"
+    When I should see 0 disaster in the disasters table
+    And I select the status "Assessment"
+    Then I should see 1 disaster in the disasters table
+    When I select disaster "from" date as "2114-11-01"
+    Then I should see 0 disaster in the disasters table
+    When I select disaster "from" date as "2014-11-01"
+    Then I should see 1 disaster in the disasters table
+    When I select disaster "to" date as "2014-11-01"
+    Then I should see 0 disaster in the disasters table

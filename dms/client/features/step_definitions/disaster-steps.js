@@ -209,4 +209,23 @@ module.exports = function () {
                     .and.notify(next);
             });
     });
+
+    this.Then(/^I should see (\d+) disaster in the disasters table$/, function (number, next) {
+        var self = this;
+        disasterPage.numberOfDistasters().then(function (result) {
+            self.expect(result).equal(parseInt(number))
+        }).then(next);
+    });
+
+    this.Then(/^I select the status "([^"]*)"$/, function (status, next) {
+        disaster.status = status;
+        disasterPage.selectStatus(status).then(next);
+    });
+
+    this.When(/^I select disaster "([^"]*)" date as "([^"]*)"$/, function (field, value, next) {
+        disasterPage.dateField(field).clear().then(function () {
+            disasterPage.dateField(field).sendKeys(value);
+        }).then(next);
+    });
+
 };

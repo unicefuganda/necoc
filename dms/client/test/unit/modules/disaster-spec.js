@@ -210,6 +210,24 @@ describe('dms.disaster', function () {
             expect(scope.disasters).toEqual(disastersStub);
         });
 
+        it('should filter disaster lists by date on the scope', function () {
+            initController();
+            httpMock.expectGET(apiUrl + 'disasters/?from=2014-11-06&to=2014-11-08').respond(disastersStub);
+            scope.disasterFilter = {from: '2014-11-06', to: '2014-11-08'};
+            httpMock.flush();
+
+            expect(scope.disasters).toEqual(disastersStub);
+        });
+
+        it('should filter disaster lists by status on the scope', function () {
+            initController();
+            httpMock.expectGET(apiUrl + 'disasters/?from=2014-11-06&status=Closed').respond(disastersStub);
+            scope.disasterFilter = {from: '2014-11-06', status: 'Closed'};
+            httpMock.flush();
+
+            expect(scope.disasters).toEqual(disastersStub);
+        });
+
         describe('showDisasterInfo()', function () {
             it('should direct user to disaster info page on click', function () {
                 initController();

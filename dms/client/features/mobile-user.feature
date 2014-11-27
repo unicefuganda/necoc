@@ -46,6 +46,9 @@ Feature: Mobile User
     And I choose to grant web access
     And I click the save button
     Then I should see fields required error messages
+    When I enter my "phone" as "invalid"
+    And I click the save button
+    Then I should see the error "Phone number must be in 256XXXXXXXXX or 0XXXXXXXXX format"
     When I have a Mobile User with email "solomon@gmail.com" and phone "0775019449"
     And I enter my "name" as "Ayoyo"
     And I enter my "email" as "solomon@gmail.com"

@@ -18,7 +18,9 @@ module.exports = function () {
 
     this.When(/^I enter my "([^"]*)" as "([^"]*)"$/, function (field, text, next) {
         user[field] = text;
-        mobileUsersPage.createUserModal[field].sendKeys(text).then(next);
+        mobileUsersPage.createUserModal[field].clear().then(function () {
+            mobileUsersPage.createUserModal[field].sendKeys(text).then(next);
+        });
     });
 
     this.When(/^I select my "([^"]*)" as "([^"]*)"$/, function (className, location, next) {
@@ -43,8 +45,8 @@ module.exports = function () {
 
         mobileUsersPage.getRowMatching(username).then(function (row) {
             self.expect(row.getText()).to.eventually.equal(
-                user.name + ' ' + user.phone + ' ' + user.email + ' ' + user.location.district + ', ' + user.location.subcounty
-                ).and.notify(next);
+                    user.name + ' ' + user.phone + ' ' + user.email + ' ' + user.location.district + ', ' + user.location.subcounty
+            ).and.notify(next);
         });
     });
 
@@ -114,7 +116,7 @@ module.exports = function () {
     this.Then(/^I should see other server\-side validation errors$/, function (next) {
         var self = this;
 
-        mobileUsersPage.createUserModal.getPhoneFieldErrors(1)
+        mobileUsersPage.createUserModal.getPhoneFieldErrors(2)
             .then(function (error) {
                 self.expect(error).to.be.equal('Phone must be unique');
             })
@@ -182,5 +184,13 @@ module.exports = function () {
     this.When(/^I select my role as "([^"]*)"$/, function (role, next) {
         user.group = role;
         mobileUsersPage.createUserModal.selectInput('user-role', role).then(next);
+    });
+
+    this.Then(/^I should see the error "([^"]*)"$/, function (error, next) {
+        var self = this;
+        mobileUsersPage.createUserModal.getPhoneFieldErrors(1)
+            .then(function (error) {
+                self.expect(error).to.be.equal(error);
+            }).then(next)
     });
 };

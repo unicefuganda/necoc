@@ -25,14 +25,16 @@
                         <div class="form-group" ng-class="{'has-error': form.user_form.phone.$invalid && hasErrors }">
                             <label class="control-label" for="phone-number">Phone Number</label>
                             <input type="text" id="phone-number" ng-model="user.phone" name="phone" class="form-control"
-                                   placeholder="enter phone number" required="">
+                                   placeholder="enter phone number" required="" ng-pattern="/^0\d{9}$|^256\d{9}$/">
 
                             <div id="phone-errors" class="error-text"
                                  ng-show="form.user_form.phone.$invalid && hasErrors">
                                 <p class="text-danger" ng-show="form.user_form.phone.$error.required">
                                     This field is required
                                 </p>
-
+                                <p class="text-danger" ng-show="form.user_form.phone.$error.pattern">
+                                    Phone number must be in 256XXXXXXXXX or 0XXXXXXXXX format
+                                </p>
                                 <p class="text-danger" ng-repeat="error in errors.phone">
                                     {[{ error }]}
                                 </p>

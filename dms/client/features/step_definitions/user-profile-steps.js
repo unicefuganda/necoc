@@ -102,7 +102,7 @@ module.exports = function () {
             .eventually.be.equal(error).and.notify(next);
     });
 
-    this.When(/^I reset my password$/, function (next) {
+    this.When(/^I reset the password$/, function (next) {
         userProfilePage.resetPasswordButton.click().then(function () {
             browser.wait(userProfilePage.resetPasswordModal.resetButton.isDisplayed).then(function () {
                 userProfilePage.resetPasswordModal.resetButton.click().then(next);
@@ -110,8 +110,8 @@ module.exports = function () {
         })
     });
 
-    this.Then(/^I should see the reset password button$/, function (next) {
-        this.expect(userProfilePage.resetPasswordButton.isDisplayed()).to.eventually.be.true
+    this.Then(/^I should see the change password button$/, function (next) {
+        this.expect(userProfilePage.changePasswordButton.isDisplayed()).to.eventually.be.true
             .and.notify(next)
     });
 
@@ -120,4 +120,13 @@ module.exports = function () {
             .and.notify(next)
     });
 
+    this.Then(/^I should see the reset password button$/, function (next) {
+        this.expect(userProfilePage.resetPasswordButton.isDisplayed()).to.eventually.be.true
+            .and.notify(next)
+    });
+
+    this.Then(/^I should not see the reset password button$/, function (next) {
+        this.expect(userProfilePage.resetPasswordButton.isDisplayed()).to.eventually.be.false
+            .and.notify(next)
+    });
 };

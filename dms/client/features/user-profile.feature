@@ -30,13 +30,46 @@ Feature: User Profile
     And I try to login in with username "test_user" and password "password1"
     Then I should be logged In
 
-  Scenario: Reset password
+  Scenario: Reset password not visible on current users profile
     Given I have no users
     And I am logged in as a NECOC admin
     When I navigate to the users page
     And I click "Test User" in the mobile users table
-    And I reset my password
-    When I logout
+    Then I should not see the reset password button
+    And I should see the change password button
+
+  Scenario: Reset password visible on other users profiles
+    Given I am logged out
+    And I have no users
+    And I am logged in as a NECOC admin
+    And I have "Mukono" district and "Nabbaale" subcounty already registered
+    When I navigate to the users page
+    And I click the create new user button
+    And I enter my "name" as "Solomon"
+    And I enter my "email" as "solomon@gmail.com"
+    And I enter my "phone" as "0775019449"
+    And I select my "district" as "Mukono"
+    And I select my "subcounty" as "Nabbaale"
+    And I choose to grant web access
+    And I enter my "username" as "solomon1990"
+    And I select my role as "IT Assistant"
+    And I click  save and close
+    Given I log in with "can_manage_users" permission
+    When I navigate to the users page
+    And I click "Solomon" in the mobile users table
+    Then I should see the reset password button
+    And I should not see the change password button
+
+  Scenario: Reset password
+    Given I am logged out
+    And I have no users
+    And I am logged in as a NECOC admin
+    And I am logged out
+    And I log in with "can_manage_users" permission
+    When I navigate to the users page
+    And I click "Test User" in the mobile users table
+    And I reset the password
+    And I am logged out
     And I try to login in with username "test_user" and password "password"
     Then I should see "* Username or Password is invalid"
 

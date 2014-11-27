@@ -19,6 +19,9 @@ class UserProfile(BaseModel):
     def username(self):
         return self.user.username if self.user else ''
 
+    def user_id(self):
+        return str(self.user.id) if self.user else ''
+
     def group(self):
         has_group = self.user and self.user.group
         return self.user.group.id if has_group else ''

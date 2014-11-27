@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from rest_condition import And
 from dms.models import User
 from rest_framework_mongoengine.generics import UpdateAPIView
 from rest_framework_mongoengine import serializers
@@ -6,6 +7,7 @@ from rest_framework import serializers as rest_serializers
 
 from dms.models.user_profile import UserProfile
 from dms.services.user_profile_service import UserProfileService
+from dms.utils.permission_class_factory import build_permission_class, UrlMatchesCurrentUser, LoggedIn
 
 
 class UserPasswordChangeSerializer(serializers.MongoEngineModelSerializer):
@@ -39,12 +41,10 @@ class PasswordChangeView(UpdateAPIView):
     serializer_class = UserPasswordChangeSerializer
     queryset = UserProfile.objects()
     model = UserProfile
+    permission_classes = [And(LoggedIn, UrlMatchesCurrentUser)]
 
     def get_object(self, queryset=None):
         profile = super(PasswordChangeView, self).get_object()
-        if not profile.user:
-            from django.http import Http404
-            raise Http404('%s is not a web user.' % profile.name)
         return profile.user
 
     def pre_save(self, obj):
@@ -53,6 +53,7 @@ class PasswordChangeView(UpdateAPIView):
 
     def post(self, request, *args, **kwargs):
         return self.patch(request, *args, **kwargs)
+
 
 class UserPasswordResetSerializer(serializers.MongoEngineModelSerializer):
     id = rest_serializers.CharField(write_only=True)
@@ -65,6 +66,7 @@ class PasswordResetView(UpdateAPIView):
     serializer_class = UserPasswordResetSerializer
     queryset = UserProfile.objects()
     model = UserProfile
+    permission_classes = (build_permission_class('dms.can_manage_users'),)
 
     def get_object(self, queryset=None):
         profile = super(PasswordResetView, self).get_object()

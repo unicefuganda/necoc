@@ -30,7 +30,7 @@
                 </div>
                 <div class="user-actions-absolute user-actions pull-right">
                     <ul>
-                        <li ng-show="profile.username">
+                        <li ng-show="profile.username && (current_user_id == profile.user_id)">
                             <button type="button"
                                     id="change-password"
                                     class="btn btn-default btn-action btn-icon"
@@ -40,7 +40,7 @@
                                 <span class="value">Change Password</span>
                             </button>
                         </li>
-                        <li ng-if-permissions="can_manage_users" class="hide">
+                        <li ng-if-permissions="can_manage_users" ng-hide="(current_user_id == profile.user_id)" class="hide">
                             <button type="button"
                                     id="reset-password"
                                     class="btn btn-default btn-action btn-icon"

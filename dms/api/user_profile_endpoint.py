@@ -16,6 +16,7 @@ from dms.utils.permission_class_factory import build_permission_class
 
 class UserProfileSerializer(serializers.MongoEngineModelSerializer):
     username = fields.CharField(source='username', required=False)
+    user_id = fields.CharField(source='user_id', required=False)
     group = fields.CharField(source='group', required=False)
     group_name = fields.CharField(source='group_name', required=False, read_only=True)
     photo_uri = fields.CharField(source='photo_uri', required=False)

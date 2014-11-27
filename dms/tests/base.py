@@ -18,6 +18,7 @@ class MongoTestCase(TestCase):
         user.group = Group.objects(name='Administrator').first()
         user.set_password('password')
         self.client.login(username='test_user', password='password')
+        return user
 
     def login_with_permission(self, permission_codename):
         self.client.logout()

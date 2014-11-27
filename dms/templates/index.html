@@ -23,7 +23,7 @@
                         <a href="" class="dropdown-toggle" data-toggle="dropdown" id="logged-in-user"><span
                                 class="glyphicon glyphicon-user"></span>&nbsp;{{ request.user.username }}<span
                                 class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
+                        <ul ng-init="current_user_id = '{{ request.user.id }}'" class="dropdown-menu" role="menu">
                             <li><a id="user_profile_link" href="#/admin/users/{{ request.user | get_profile_id }}">Account</a>
                             </li>
                             <li class="divider"></li>

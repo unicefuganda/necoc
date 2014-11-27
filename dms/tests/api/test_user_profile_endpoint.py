@@ -56,7 +56,8 @@ class TestUserProfileEndpoint(MongoAPITestCase):
 
     def test_should_get_a_single_user(self):
         attr = self.mobile_user.copy()
-        attr['user'] = User(username='cage', password='haha').save()
+        user = User(username='cage', password='haha').save()
+        attr['user'] = user
         profile = UserProfile(**attr).save()
 
         response = self.client.get(self.API_ENDPOINT + str(profile.id) + '/')
@@ -67,6 +68,7 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.assertEqual(self.mobile_user['email'], response.data['email'])
         self.assertEqual(self.district.name, response.data['location']['name'])
         self.assertEqual('cage', response.data['username'])
+        self.assertEqual(str(user.id), response.data['user_id'])
 
 
     def test_should_update_a_single_user(self):

@@ -11,7 +11,7 @@ class TestPasswordChangeEndpoint(MongoAPITestCase):
     API_ENDPOINT = '/api/v1/mobile-users/'
 
     def setUp(self):
-        self.user = User(username='haha')
+        self.user = self.login_user()
         self.initial_password = 'hehe'
         self.user.set_password(self.initial_password)
         self.password_data = dict(old_password=self.initial_password, new_password='hoho', confirm_password='hoho')
@@ -35,19 +35,24 @@ class TestPasswordChangeEndpoint(MongoAPITestCase):
         response = self.client.login(username=self.user.username, password=self.password_data['new_password'])
         self.assertTrue(response)
 
-    def test_non_web_user_raises_404(self):
+    def test_user_can_only_change_their_password(self):
         attr = self.mobile_user_attr.copy()
         del attr['user']
         profile = UserProfile(**attr).save()
         response = self.client.post(self.API_ENDPOINT + str(profile.id) + '/password/', self.password_data)
-
-        profiles = UserProfile.objects()
         users = User.objects(username=self.user.username)
 
-        self.assertEqual(404, response.status_code)
-        self.assertEqual({"detail": "Not found"}, response.data)
-        self.assertEqual(1, profiles.count())
-        self.assertEqual(1, users.count())
+        self.assertEqual(403, response.status_code)
+        self.assertTrue(users.first().check_password(self.password_data['old_password']))
+
+    def test_user_must_be_logged_in_to_change_their_password(self):
+        profile = UserProfile(**(self.mobile_user_attr.copy())).save()
+
+        self.client.logout()
+        response = self.client.post(self.API_ENDPOINT + str(profile.id) + '/password/', self.password_data)
+
+        users = User.objects(username=self.user.username)
+        self.assertEqual(403, response.status_code)
         self.assertTrue(users.first().check_password(self.password_data['old_password']))
 
     @mock.patch('dms.tasks.send_email.delay')
@@ -62,7 +67,7 @@ class TestPasswordChangeEndpoint(MongoAPITestCase):
 
     def test_should_reset_password_of_user(self):
         profile = UserProfile(**self.mobile_user_attr).save()
-        response = self.client.post(self.API_ENDPOINT + str(profile.id) + '/password_reset/', self.password_data)
+        response = self.client.post(self.API_ENDPOINT + str(profile.id) + '/password_reset/')
         self.assertEqual(200, response.status_code)
         self.assertEqual({}, response.data)
         self.assertFalse((User.objects(username=self.user.username)).first().check_password(self.initial_password))
@@ -71,16 +76,21 @@ class TestPasswordChangeEndpoint(MongoAPITestCase):
         attr = self.mobile_user_attr.copy()
         del attr['user']
         profile = UserProfile(**attr).save()
-        response = self.client.post(self.API_ENDPOINT + str(profile.id) + '/password_reset/', self.password_data)
+        response = self.client.post(self.API_ENDPOINT + str(profile.id) + '/password_reset/')
         self.assertEqual(404, response.status_code)
         self.assertEqual({"detail": "Not found"}, response.data)
 
     @mock.patch('dms.tasks.send_email.delay')
     def test_reseting_password_sends_email(self, mock_send_email):
         profile = UserProfile(**self.mobile_user_attr).save()
-        response = self.client.post(self.API_ENDPOINT + str(profile.id) + '/password_reset/', self.password_data)
+        response = self.client.post(self.API_ENDPOINT + str(profile.id) + '/password_reset/')
         self.assertEqual(200, response.status_code)
         mock_send_email.assert_called_with('NECOC Password Reset',
                                            mock.ANY,
                                            settings.DEFAULT_FROM_EMAIL,
                                            [profile.email])
+
+    def test_cant_post_reset_password_without_manage_user_permission(self):
+        profile = UserProfile(**self.mobile_user_attr).save()
+        self.assert_permission_required_for_get(self.API_ENDPOINT + str(profile.id) + '/password_reset/')
+        self.assert_permission_required_for_post(self.API_ENDPOINT + str(profile.id) + '/password_reset/')

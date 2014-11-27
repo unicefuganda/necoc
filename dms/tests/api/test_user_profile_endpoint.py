@@ -125,17 +125,17 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.assertEqual(1, retrieved_user.count())
         self.assertEqual(retrieved_user.first(), retrieved_user_profile.first().user)
 
-    @mock.patch('dms.tasks.send_new_user_email.delay')
-    def test_posting_new_system_user_sends_email(self, mock_send_new_user_email):
+    @mock.patch('dms.tasks.send_email.delay')
+    def test_posting_new_system_user_sends_email(self, mock_send_email):
         attr = self.mobile_user_to_post.copy()
         attr['username'] = 'akampa'
         attr['email'] = 'email@email.email'
         response = self.client.post(self.API_ENDPOINT, data=attr)
         self.assertEqual(201, response.status_code)
-        mock_send_new_user_email.assert_called_with('Your NECOC Account',
-                                                    mock.ANY,
-                                                    settings.DEFAULT_FROM_EMAIL,
-                                                    ['email@email.email'])
+        mock_send_email.assert_called_with('Your NECOC Account',
+                                           mock.ANY,
+                                           settings.DEFAULT_FROM_EMAIL,
+                                           ['email@email.email'])
 
     def test_post_with_group_associates_user_to_group(self):
         attr = self.mobile_user_to_post.copy()

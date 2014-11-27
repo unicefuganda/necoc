@@ -35,5 +35,5 @@ def _log(response, obj):
         obj.log = "%d: %s" % (status_code, str(response_data))
 
 @task
-def send_new_user_email(subject, message, from_email, recipient_list):
+def send_email(subject, message, from_email, recipient_list):
     send_mail(subject, message, from_email, recipient_list, fail_silently=False)

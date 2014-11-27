@@ -227,6 +227,22 @@ CHANGE_PASSWD_MESSAGE = """
                 NECOC DMS team
                 """
 
+RESET_PASSWORD_MESSAGE = """
+                Dear %(name)s,
+
+                This is to notify you that your password for NECOC DMS was recently reset to:
+
+                        password: %(password)s
+
+                You will need to use the new password to login to %(hostname)s.
+
+                If you think this is a mistake, please contact immediately the NECOC DMS
+                administrator in %(admin_email)s.
+
+                Thank you,
+                NECOC DMS team
+                """
+
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # TEST_RUNNER = 'dms.tests.runner.NoSQLTestRunner'

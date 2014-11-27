@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from dms.models import User
 from rest_framework_mongoengine.generics import UpdateAPIView
 from rest_framework_mongoengine import serializers
@@ -49,6 +50,32 @@ class PasswordChangeView(UpdateAPIView):
     def pre_save(self, obj):
         profile = super(PasswordChangeView, self).get_object()
         UserProfileService(profile).notify_password_change()
+
+    def post(self, request, *args, **kwargs):
+        return self.patch(request, *args, **kwargs)
+
+class UserPasswordResetSerializer(serializers.MongoEngineModelSerializer):
+    id = rest_serializers.CharField(write_only=True)
+    class Meta:
+        model = User
+        fields = ('id',)
+
+
+class PasswordResetView(UpdateAPIView):
+    serializer_class = UserPasswordResetSerializer
+    queryset = UserProfile.objects()
+    model = UserProfile
+
+    def get_object(self, queryset=None):
+        profile = super(PasswordResetView, self).get_object()
+        if not profile.user:
+            from django.http import Http404
+            raise Http404('%s is not a web user.' % profile.name)
+        return profile.user
+
+    def pre_save(self, obj):
+        profile = super(PasswordResetView, self).get_object()
+        UserProfileService(profile).reset_password()
 
     def post(self, request, *args, **kwargs):
         return self.patch(request, *args, **kwargs)

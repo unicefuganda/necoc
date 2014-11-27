@@ -56,7 +56,7 @@ class PasswordChangeView(UpdateAPIView):
 
 
 class UserPasswordResetSerializer(serializers.MongoEngineModelSerializer):
-    id = rest_serializers.CharField(write_only=True)
+    id = rest_serializers.CharField(write_only=True, required=False)
     class Meta:
         model = User
         fields = ('id',)

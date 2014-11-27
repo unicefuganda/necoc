@@ -23,7 +23,7 @@
                 return $http.post(Config.apiUrl + 'mobile-users/' + user.id + '/password/', user);
             },
             resetPassword: function (user) {
-                return $http.post(Config.apiUrl + 'mobile-users/' + user.id + '/password_reset/', user);
+                return $http.post(Config.apiUrl + 'mobile-users/' + user.id + '/password_reset/');
             }
         };
     });

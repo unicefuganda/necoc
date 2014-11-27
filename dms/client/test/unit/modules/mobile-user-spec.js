@@ -279,9 +279,9 @@ describe('dms.mobile-user', function () {
                 })
             });
 
-            it('should update password given form is valid', function () {
+            it('should reset password', function () {
                 initController();
-                httpMock.expectPOST(apiUrl + 'mobile-users/' + newUser.id + '/password_reset/', newUser).respond(200, {});
+                httpMock.expectPOST(apiUrl + 'mobile-users/' + newUser.id + '/password_reset/').respond(200, {});
 
                 scope.resetPassword(newUser);
 
@@ -295,7 +295,7 @@ describe('dms.mobile-user', function () {
 
             it('should flash an error if there is a problem resetting', function () {
                 initController();
-                httpMock.expectPOST(apiUrl + 'mobile-users/' + newUser.id + '/password_reset/', newUser).respond(400, {});
+                httpMock.expectPOST(apiUrl + 'mobile-users/' + newUser.id + '/password_reset/').respond(400, {});
 
                 scope.resetPassword(newUser);
                 expect(scope.saveStatus).toBeTruthy();

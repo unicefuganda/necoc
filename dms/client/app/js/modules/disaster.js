@@ -112,9 +112,17 @@
         }
     });
 
-    module.directive('disasterStatus', function () {
+    module.directive('disasterStatus', function (DisasterConfig) {
         return {
             link: function (scope, element, attrs) {
+                var createOptions = function(){
+                    var opts = [];
+                    DisasterConfig.statuses.forEach(function(status){
+                        opts.push({value: status, name: status});
+                    });
+                    return opts;
+                };
+
                 var $select = element.selectize({
                     valueField: 'value',
                     labelField: 'name',
@@ -122,11 +130,7 @@
                     maxItems: 1,
                     create: false,
                     preload: true,
-                    options: [
-                        {value: 'Assessment', name: 'Assessment'},
-                        {value: 'Response Team Deployed', name: 'Response Team Deployed'},
-                        {value: 'Closed', name: 'Closed'}
-                    ]
+                    options: createOptions()
                 });
 
                 scope.$watch(attrs.defaultValue, function (defaultValue) {

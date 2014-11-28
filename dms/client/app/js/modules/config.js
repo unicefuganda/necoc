@@ -9,6 +9,10 @@
         exportPollUrl: window.location.origin + '/export/poll-responses/'
     });
 
+    module.constant('DisasterConfig', {
+        statuses: ['Registered', 'Situation Report Field', 'Verification', 'Assessment', 'Deployed Response Team', 'Closed']
+    });
+
     module.constant('MapConfig', {
         maxBubbleRadius: 50,
         disasterBubbleStyle: {

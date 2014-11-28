@@ -2,12 +2,11 @@ from mongoengine import ReferenceField, StringField, DateTimeField, ListField
 from dms.models.disaster_type import DisasterType
 from dms.models.location import Location
 from dms.models.base import BaseModel
+from django.conf import settings
 
 
 class Disaster(BaseModel):
-    DISASTER_STATUS = (('Assessment', 'Assessment'), ('Evaluation', 'Evaluation'),
-                       ('Response Team Deployed', 'Response Team Deployed'),
-                       ('Closed', 'Closed'))
+    DISASTER_STATUS = [(status, status) for status in settings.DISASTER_STATUSES]
 
     MAPPING = {'from': 'date__gte', 'to': 'date__lte', 'disaster_type': 'name', 'status': 'status__iexact'}
 

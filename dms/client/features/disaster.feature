@@ -22,7 +22,7 @@ Feature: Disasters
     And I select district as "BUGIRI"
     And I select subcounty as "Bulesa"
     And I enter disaster description as "Bigger flood"
-    And I select disaster status as "Response Team Deployed"
+    And I select disaster status as "Deployed Response Team"
     And I enter disaster date as "2014/10/08 00:04"
     And I click save disaster
     Then I should see my disaster information
@@ -51,7 +51,7 @@ Feature: Disasters
     Given I am logged in as a NECOC admin
     And I have a "Fire" disaster in "Mukono" district, "goma" subcounty already registered
     When I navigate to "/admin/disasters"
-    And I select the status "Response Team Deployed"
+    And I select the status "Deployed Response Team"
     When I should see 0 disaster in the disasters table
     And I select the status "Assessment"
     Then I should see 1 disaster in the disasters table

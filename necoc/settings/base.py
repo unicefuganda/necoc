@@ -22,6 +22,7 @@ POLL_RESPONSE_LOCATION_INDEX = 2
 POLL_RESPONSE_SEPARATOR = ' '
 MESSAGE_MILITARY_SEPARATOR = '.'
 INTERNATIONAL_PHONE_PREFIX = '+'
+DISASTER_STATUSES = ['Registered', 'Situation Report Field', 'Verification', 'Assessment', 'Deployed Response Team', 'Closed']
 
 MANAGERS = ADMINS
 

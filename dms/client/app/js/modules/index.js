@@ -108,7 +108,7 @@
     });
 
 
-    module.run(function ($rootScope, $state, $stateParams, Permission, User, Permissions) {
+    module.run(function ($rootScope, $state, $stateParams, $templateCache, Permission, User, Permissions) {
         $rootScope.$state = $state;
         $rootScope.params = {location: $stateParams};
 
@@ -117,6 +117,13 @@
                 return User.hasPermission(permission);
             });
         });
+
+        $rootScope.$on('$stateChangeStart', function (event, toState) {
+            if (typeof(toState) !== 'undefined') {
+                $templateCache.remove(toState.templateUrl);
+            }
+        });
+
     });
 
 })(angular.module('dms', ['ui.router', 'permission', 'siTable', 'checklist-model', 'angularFileUpload', 'dms.message', 'dms.admin-panel', 'dms.location', 'dms.mobile-user',

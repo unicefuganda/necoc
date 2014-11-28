@@ -333,4 +333,12 @@ module.exports = function () {
             next();
         })
     });
+
+    this.When(/^I enter a to date message filter as "([^"]*)"$/, function (toDate, next) {
+        messagesPage.toDateField.sendKeys(toDate).then(next);
+    });
+
+    this.When(/^I enter a from date message filter as "([^"]*)"$/, function (fromDate, next) {
+        messagesPage.fromDateField.sendKeys(fromDate).then(next);
+    });
 };

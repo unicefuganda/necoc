@@ -97,6 +97,29 @@ class TestRapidProMessageBase(MongoTestCase):
         location_messages = RapidProMessageBase.from_(district, **{'from': None, 'to': None})
         self.assertEqual(2, location_messages.count())
 
+    def test_messages_by_from_and_to_date_and_location_when_initial_queryset_is_empty(self):
+        location_name = 'Abim'
+        district = Location(**dict(name=location_name, parent=None, type='district')).save()
+        message_attr = self.message.copy()
+        message_attr['location'] = district
+        message_attr['received_at'] = datetime.datetime(2014, 12, 17, 16, 0, 49, 807000)
+        message = RapidProMessageBase(**message_attr).save()
+
+        self.message['location'] = district
+        message1 = RapidProMessageBase(**self.message).save()
+
+        location_messages = RapidProMessageBase.from_(district, **{'from': '2014-09-17', 'to': '2014-10-17'})
+
+        self.assertEqual(1, location_messages.count())
+        self.assertIn(message1, location_messages)
+        self.assertNotIn(message, location_messages)
+
+        empty_queryset = RapidProMessageBase.objects().none()
+
+        location_messages = RapidProMessageBase.from_(district, empty_queryset, **{'from': '2014-09-17', 'to': '2014-10-17'})
+
+        self.assertEqual(0, location_messages.count())
+
     def test_get_message_count_given_from_and_to_date(self):
         message_attr = self.message.copy()
         message_attr['received_at'] = datetime.datetime(2014, 11, 17, 16, 0, 49, 807000)

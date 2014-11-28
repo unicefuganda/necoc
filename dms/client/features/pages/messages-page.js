@@ -51,6 +51,11 @@ var MessagesPage = function () {
 
     this.bulkSMSModal = new BulkSMSModal();
 
+    this.fromDateField = element(by.model('messageFilter.from'));
+
+    this.toDateField = element(by.model('messageFilter.to'));
+
+
     this.checkMessage = function () {
         return element(by.css('input[type="checkbox"]')).click();
     };

@@ -1,0 +1,23 @@
+<li class="filter" ng-show="$state.current.data.pageTitle == 'Messages'">
+    <h4 class="bar-content text-center">Message Filters</h4>
+    <form role="form" class="time-filter">
+        <label>Filter by</label>
+        <div id="messages-district-filter" class="form-group district-filter">
+            <input type="text" id="district" ng-model="messageFilter.location" name="location" select-location=""
+                   data-max-locations="1"
+                   class="form-control"
+                   placeholder="select location">
+        </div>
+        <div>
+            <label for="from-date">Show messages from</label>
+            <input id="from-date" class="form-control" ng-model="messageFilter.from" data-datepicker="" data-timepicker="false"
+                   placeholder="select from date"/>
+        </div>
+
+        <div>
+            <label for="to-date">To</label>
+            <input id="to-date" class="form-control" ng-model="messageFilter.to" data-datepicker="" data-timepicker="false"
+                   placeholder="select from date"/></select>
+        </div>
+    </form>
+</li>

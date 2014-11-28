@@ -66,6 +66,8 @@ class RapidProListCreateView(ListCreateAPIView):
         converted = {field: field for field in fields}
         converted['to'] = 'received_at__lte'
         converted['from'] = 'received_at__gte'
+        converted.pop('location', None)
+        converted.pop('disaster_type', None)
         return converted
 
     def _non_location_queried_messages(self):

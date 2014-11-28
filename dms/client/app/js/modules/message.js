@@ -1,5 +1,4 @@
 (function (module) {
-
     module.config(['growlProvider', function (growlProvider) {
         growlProvider.globalTimeToLive(3000);
     }]);
@@ -25,15 +24,19 @@
         }
     });
 
-    module.controller('MessageController', function ($scope, MessageService) {
-
+    module.controller('MessageController', function ($scope, MessageService, MessagesPageFilters) {
+        $scope.messageFilter = MessagesPageFilters;
         $scope.selected = {};
         $scope.showMessageCheckboxes = true;
         $scope.refresh = function () {
-            reloadMessagesWithFilter($scope.location);
+            reloadMessagesWithFilter($scope.messageFilter);
         };
         getAllMessages();
-        $scope.$watch('location', reloadMessagesWithFilter);
+        $scope.$watch(function () {
+                return MessagesPageFilters;
+            },
+            reloadMessagesWithFilter,
+            objectEquality = true);
 
         MessageService.filter({disaster: ''}).then(function (response) {
             $scope.uncategorizedMessagesCount = response.data.length;
@@ -51,12 +54,23 @@
             });
         }
 
-        function reloadMessagesWithFilter(newLocation) {
-            if (!newLocation) {
+        function withoutEmptyValues(obj) {
+            var newObject = angular.copy(obj);
+            for (var i in newObject) {
+                if (newObject[i] === null || newObject[i] === undefined || newObject[i] == '') {
+                    delete newObject[i];
+                }
+            }
+            return newObject
+        }
+
+        function reloadMessagesWithFilter(filter) {
+            if (!filter) {
                 getAllMessages();
             } else {
+
                 $scope.saveStatus = true;
-                MessageService.filter({location: newLocation}).then(function (response) {
+                MessageService.filter(withoutEmptyValues(filter)).then(function (response) {
                     $scope.messages = response.data;
                     $scope.saveStatus = false;
                 });
@@ -114,4 +128,4 @@
         }
     });
 
-})(angular.module('dms.message', ['dms.config', 'angular-growl', 'dms.utils']));
+})(angular.module('dms.message', ['dms.config', 'angular-growl', 'dms.utils', 'dms.admin-panel']));

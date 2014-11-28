@@ -52,6 +52,17 @@ Feature: Messages
     When I select my location as "Kampala"
     Then I should only see my message in "Kampala"
 
+  Scenario: Message Filter by date
+    Given I am logged in as a NECOC admin
+    And I have a "Flood" disaster in "Gulu" district, "Awach" subcounty already registered
+    And I have one Necoc Volunteer registered
+    And I POST "NECOC.Awach. Flood here" to the NECOC DMS
+    And I visit the messages listing page
+    Then I should see 1 messages in the first pagination
+    When I enter a from date message filter as "2014-01-06"
+    And I enter a to date message filter as "2014-02-06"
+    Then I should see 0 messages in the first pagination
+
   Scenario: Send Bulk SMS
     Given I am logged in as a NECOC admin
     And I navigate to messages page

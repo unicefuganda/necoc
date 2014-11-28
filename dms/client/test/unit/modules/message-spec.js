@@ -73,7 +73,7 @@ describe('dms.message', function () {
 
         it('should filter message by location given location id', function () {
             initController();
-            $scope.location = "location-id";
+            $scope.messageFilter.location = "location-id";
             var messageStub = { text: "Some text", phone: "45678909876543"};
             mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
 
@@ -82,29 +82,48 @@ describe('dms.message', function () {
             expect($scope.messages).toEqual(messageStub);
         });
 
+        it('should filter message by from date given from', function () {
+            initController();
+            $scope.messageFilter.from = "from-date";
+            var messageStub = { text: "Some text", phone: "45678909876543"};
+            mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
+
+            $scope.$apply();
+            expect(mockMessageService.filter.mostRecentCall.args).toEqual([{ from : 'from-date' }]);
+            expect($scope.messages).toEqual(messageStub);
+        });
+
+        it('should filter message by to date given to', function () {
+            initController();
+            $scope.messageFilter.to= "to-date";
+            var messageStub = { text: "Some text", phone: "45678909876543"};
+            mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
+
+            $scope.$apply();
+            expect(mockMessageService.filter.mostRecentCall.args).toEqual([{ to : 'to-date' }]);
+            expect($scope.messages).toEqual(messageStub);
+        });
+
         it('should retrieve all messages when location not supplied', function () {
             initController();
-            $scope.location = "location-id";
 
+            $scope.messageFilter.location = "location-id";
             var messageStub = [
                 { text: "Some text", phone: "45678909876543"}
             ];
-
             mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
-
             $scope.$apply();
             expect(mockMessageService.filter.mostRecentCall.args).toEqual([{ location : 'location-id' }]);
             expect($scope.messages).toEqual(messageStub);
 
-            $scope.location = "";
+            $scope.messageFilter.location = "";
             messageStub = [
                 { text: "Some text", phone: "45678909876543"},
                 { text: "Other text", phone: "45678909876543"}
             ];
-            mockMessageService.when('all').returnPromiseOf({ data: messageStub });
-
+            mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
             $scope.$apply();
-            expect(mockMessageService.all).toHaveBeenCalled();
+            expect(mockMessageService.filter.mostRecentCall.args).toEqual([{}]);
             expect($scope.messages).toEqual(messageStub);
         });
 

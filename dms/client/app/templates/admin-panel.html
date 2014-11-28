@@ -37,29 +37,8 @@
                         <span class="bar-content">Users</span>
                     </a>
                 </li>
-                <li  class="filter" ng-show="$state.current.data.pageTitle == 'Dashboard'">
-                    <h4 class="bar-content text-center">Map Options</h4>
-                    <form role="form" class="time-filter">
-                        <label>Filter by</label>
-                        <div id="dashboard-disaster-type-field" class="form-group">
-                            <input type="text" ng-model="filter.disaster_type" disaster-types="disaster" name="type"
-                                   class="form-control"
-                                   placeholder="select disaster type" />
-                        </div>
-                        <!--<div class="form-group">-->
-                            <!--<select class="form-control"></select>-->
-                        <!--</div>-->
-                        <div>
-                            <label for="from-date">Show data from</label>
-                            <input id="from-date" class="form-control" ng-model="filter.from" data-datepicker="" data-timepicker="false"  placeholder="select from date"/>
-                        </div>
-
-                        <div>
-                            <label for="to-date">To</label>
-                            <input id="to-date" class="form-control" ng-model="filter.to" data-datepicker="" data-timepicker="false" placeholder="select from date"/></select>
-                        </div>
-                    </form>
-                </li>
+                <ng-include src="'/static/templates/partials/admin/dashboard/dashboard-filters.html'"></ng-include>
+                <ng-include src="'/static/templates/partials/admin/messages/message-filters.html'"></ng-include>
             </ul>
         </div>
     </div>

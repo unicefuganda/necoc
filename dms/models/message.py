@@ -55,7 +55,7 @@ class RapidProMessageBase (ReceivedMessage):
 
     @classmethod
     def from_(cls, location, _queryset=None, **kwargs):
-        if not _queryset:
+        if _queryset is None:
             _queryset = cls.objects()
         mapping = cls.map_kwargs_to_db_params(kwargs)
         mapping['location__in'] = location.children(include_self=True)

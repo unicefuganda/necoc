@@ -120,7 +120,9 @@
 
         $rootScope.$on('$stateChangeStart', function (event, toState) {
             if (typeof(toState) !== 'undefined') {
-                $templateCache.remove(toState.templateUrl);
+                if (toState.templateUrl && !toState.templateUrl.match(/dashboard/)) {
+                    $templateCache.remove(toState.templateUrl);
+                }
             }
         });
 

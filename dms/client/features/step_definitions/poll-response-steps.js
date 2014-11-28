@@ -13,7 +13,7 @@ module.exports = function () {
         pollResponseAttr.text = 'NECOCPoll ' + keyword + ' It has been very slow.';
         pollResponseAttr.location = location;
         pollResponseAttr.keyword = keyword;
-        pollResponseAttr.phone = '+234567';
+        pollResponseAttr.phone = '234567';
 
         dataSetupPage.createPollAndResponseFrom(pollResponseAttr, function (poll) {
             pollId = poll.id;

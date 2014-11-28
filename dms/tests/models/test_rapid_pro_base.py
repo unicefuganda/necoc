@@ -1,4 +1,5 @@
 import datetime
+from django.test import override_settings
 
 from dms.models.location import Location
 from dms.models.user_profile import UserProfile
@@ -10,7 +11,7 @@ class TestRapidProMessageBase(MongoTestCase):
 
     def setUp(self):
         date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
-        phone_number = "+256775019449"
+        phone_number = "256775019449"
 
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
@@ -38,6 +39,14 @@ class TestRapidProMessageBase(MongoTestCase):
 
     def test_message_knows_its_mobile_user(self):
         rapid_pro_message = RapidProMessageBase(**self.message)
+
+        self.assertEqual(self.mobile_user, rapid_pro_message.mobile_user())
+
+    @override_settings(INTERNATIONAL_PHONE_PREFIX='00')
+    def test_international_sign_is_stripped_from_phone_number_to_identify_mobile_user(self):
+        message_attr = self.message.copy()
+        message_attr['phone_no'] = '00' + self.mobile_user.phone
+        rapid_pro_message = RapidProMessageBase(**message_attr)
 
         self.assertEqual(self.mobile_user, rapid_pro_message.mobile_user())
 

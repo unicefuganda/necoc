@@ -12,7 +12,7 @@ class PollResponseTest(MongoTestCase):
 
     def setUp(self):
         date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
-        phone_number = "+256775019449"
+        phone_number = "256775019449"
 
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='subcounty')).save()

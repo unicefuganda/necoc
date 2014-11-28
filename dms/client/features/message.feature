@@ -56,7 +56,7 @@ Feature: Messages
     Given I am logged in as a NECOC admin
     And I navigate to messages page
     And I click send bulk sms button
-    And I enter a sender number as "+256775019449"
+    And I enter a sender number as "256775019449"
     And I enter the message as "Hello"
     And I click the send button
     Then I should see message successfully sent
@@ -67,7 +67,7 @@ Feature: Messages
     And I click send bulk sms button
     And I click the send button
     Then I should see the sms fields required error messages
-    And I enter a sender number as "+256775019449"
+    And I enter a sender number as "256775019449"
     And I enter a more than 160 characters message
     Then I should not see the fields required error messages
     And I should see please enter not more that 160 characters

@@ -177,7 +177,7 @@ var DataSetupPage = function () {
         var timezoneOffset = (-1)* (new Date().getTimezoneOffset()) / 60;
 
         var sms = {
-            phone: message.phone || '+25484384389434',
+            phone: message.phone || '25484384389434',
             time: message.time || now,
             relayer: 2,
             run: 1,

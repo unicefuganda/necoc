@@ -1,6 +1,8 @@
 import datetime
 from mongoengine import *
+
 from dms.models import UserProfile
+from django.conf import settings
 
 
 class Message(Document):
@@ -36,7 +38,8 @@ class RapidProMessageBase (ReceivedMessage):
         return self.SENDER
 
     def mobile_user(self):
-        return UserProfile.objects(phone=self.phone_no).first()
+        phone_no = self.phone_no.replace(settings.INTERNATIONAL_PHONE_PREFIX, '')
+        return UserProfile.objects(phone=phone_no).first()
 
     def _assign_location(self):
         pass

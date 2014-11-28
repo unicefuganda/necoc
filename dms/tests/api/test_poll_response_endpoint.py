@@ -11,7 +11,7 @@ class PollResponseEndPointTest(MongoAPITestCase):
         self.date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
         self.district = Location(**dict(name='Kampala', parent=None, type='district')).save()
         self.village = Location(**dict(name='Bukoto', parent=self.district, type='village')).save()
-        self.mobile_user = UserProfile(**dict(name='timothy', phone="+256775019449",
+        self.mobile_user = UserProfile(**dict(name='timothy', phone="256775019449",
                                              location=self.village, email=None)).save()
 
         self.poll_attr = dict(name="Disaster", question="How many disasters are in your area?", keyword="some_word",
@@ -21,9 +21,9 @@ class PollResponseEndPointTest(MongoAPITestCase):
 
         self.text_format = "NECOCPoll %s there are 4 or 5"
         text = self.text_format % self.poll_attr['keyword']
-        self.expected_poll_response = dict(phone="+256775019449", text=text, time=self.date_time, relayer=234,
+        self.expected_poll_response = dict(phone="256775019449", text=text, time=self.date_time, relayer=234,
                                      run=23243)
-        self.poll_response = dict(phone_no="+256775019449", text=text, received_at=self.date_time,
+        self.poll_response = dict(phone_no="256775019449", text=text, received_at=self.date_time,
                             relayer_id=234, run_id=23243)
         self.client.logout()
 

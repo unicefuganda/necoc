@@ -28,11 +28,11 @@ module.exports = function () {
     });
 
     this.When(/^I add the disaster type as "([^"]*)"$/, function (disasterType, next) {
-        disasterPage.disasterModal.enterInput("dashboard-disaster-type-field", disasterType).then(next);
+        dashboardPage.enterInput("dashboard-disaster-type-field", disasterType).then(next);
     });
 
     this.When(/^I select in the dashboard the disaster type as "([^"]*)"$/, function (disasterType, next) {
-        disasterPage.disasterModal.selectInput("dashboard-disaster-type-field", disasterType).then(next);
+        dashboardPage.selectInput("dashboard-disaster-type-field", disasterType).then(next);
     });
 
     this.When(/^I click the stats summary panel chevron$/, function (next) {

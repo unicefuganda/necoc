@@ -9,23 +9,23 @@ var DisasterModal = function () {
     this.closeButton = element(by.id('close-disaster-modal'));
 
     this.selectInput = function (id, value) {
-        return element(by.css('#' + id + ' .selectize-input')).click().then(function () {
-            return element(by.cssContainingText('.selectize-dropdown-content .option', value)).click()
+        return element(by.css('#disasters-modal #' + id + ' .selectize-input')).click().then(function () {
+            return element(by.cssContainingText('#disasters-modal #' + id + ' .selectize-dropdown-content .option', value)).click()
         });
     };
 
     this.enterInput = function (id, value) {
-        return element(by.css('#' + id + ' .selectize-input')).click()
+        return element(by.css('#disasters-modal #' + id + ' .selectize-input')).click()
             .then(function () {
-                return element(by.css('#' + id + ' .selectize-input input')).sendKeys(value)
+                return element(by.css('#disasters-modal #' + id + ' .selectize-input input')).sendKeys(value)
             })
             .then(function () {
-                return element(by.css('.selectize-dropdown-content .create')).click();
+                return element(by.css('#disasters-modal #' + id + ' .selectize-dropdown-content .create')).click();
             });
     };
 
     this.get = function (errorId) {
-        return element(by.css('#' + errorId + ' .text-danger')).getText();
+        return element(by.css('#disasters-modal #' + errorId + ' .text-danger')).getText();
     };
 };
 
@@ -58,7 +58,7 @@ var DisasterPage = function () {
 
     this.selectStatus = function (value) {
         return element(by.css('#status-filter .selectize-input')).click().then(function () {
-            return element(by.cssContainingText('.selectize-dropdown-content .option', value)).click()
+            return element(by.cssContainingText('#status-filter .selectize-dropdown-content .option', value)).click()
         });
     };
 

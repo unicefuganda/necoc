@@ -19,8 +19,9 @@ module.exports = function () {
     });
 
     this.When(/^I navigate to "([^"]*)"$/, function (url, next) {
-        browser.setLocation(url);
-        next();
+        browser.setLocation(url).then(function () {
+            browser.refresh().then(next);
+        });
     });
 
     this.When(/^I click add disaster button$/, function (next) {

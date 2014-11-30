@@ -174,7 +174,7 @@ var DataSetupPage = function () {
 
     this.postMessage = function (message, callback) {
         var now = moment().format('YYYY-MM-DDTHH:mm:ss');
-        var timezoneOffset = (-1)* (new Date().getTimezoneOffset()) / 60;
+        var timezoneOffset = (-1) * (new Date().getTimezoneOffset()) / 60;
 
         var sms = {
             phone: message.phone || '25484384389434',

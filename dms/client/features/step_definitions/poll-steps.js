@@ -9,7 +9,9 @@ module.exports = function () {
     this.sectionTitle = element.all(by.css('.sub-section-header .title')).get(0);
 
     this.Given(/^I navigate to polls page$/, function (next) {
-        homePage.pollsTab.click().then(next);
+        homePage.pollsTab.click().then(function() {
+            browser.refresh().then(next);
+        });
     });
 
     this.Given(/^I click new poll button$/, function (next) {

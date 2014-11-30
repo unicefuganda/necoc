@@ -17,9 +17,9 @@ var MobileUsersModal = function () {
     };
 
     this.selectInput = function (className, location) {
-        return element(by.css('.' + className + ' .selectize-input')).click().then(function () {
+        return element(by.css('#mobile-user-modal .' + className + ' .selectize-input')).click().then(function () {
             browser.sleep(200);
-            return element(by.cssContainingText('.' + className + ' .selectize-dropdown-content .option', location)).click()
+            return element(by.cssContainingText('#mobile-user-modal .' + className + ' .selectize-dropdown-content .option', location)).click()
         });
     };
 

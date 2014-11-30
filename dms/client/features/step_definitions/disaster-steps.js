@@ -20,7 +20,9 @@ module.exports = function () {
 
     this.When(/^I navigate to "([^"]*)"$/, function (url, next) {
         browser.setLocation(url).then(function () {
-            browser.refresh().then(next);
+            browser.refresh().then(function() {
+                browser.sleep(500).then(next);
+            });
         });
     });
 

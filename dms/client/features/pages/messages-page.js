@@ -81,9 +81,9 @@ var MessagesPage = function () {
     };
 
     this.selectLocation = function (location) {
-        return element(by.css('.district-filter .selectize-input')).click().then(function () {
+        return element(by.css('#messages-filter .district-filter .selectize-input')).click().then(function () {
             browser.sleep(200);
-            return element(by.cssContainingText('.district-filter .selectize-dropdown-content .option', location)).click()
+            return element(by.cssContainingText('#messages-filter .district-filter .selectize-dropdown-content .option', location)).click()
         });
     };
 

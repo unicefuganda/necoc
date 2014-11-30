@@ -29,7 +29,9 @@ module.exports = function () {
     });
 
     this.When(/^I navigate to the users page$/, function (next) {
-        homePage.usersTab.click().then(next);
+        homePage.usersTab.click().then(function () {
+            browser.refresh().then(next);
+        });
     });
 
     this.When(/^I click  save and close$/, function (next) {

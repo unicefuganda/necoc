@@ -31,8 +31,9 @@ module.exports = function () {
     });
 
     this.When(/^I visit the messages listing page$/, function (next) {
-        browser.setLocation('/admin/messages');
-        next();
+        browser.setLocation('/admin/messages').then(function () {
+            browser.refresh().then(next);
+        });
     });
 
     this.Then(/^I should see my messages$/, function (next) {

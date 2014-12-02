@@ -38,7 +38,8 @@
                     </a>
                 </li>
                 <ng-include src="'/static/templates/partials/admin/dashboard/dashboard-filters.html'"></ng-include>
-                <ng-include src="'/static/templates/partials/admin/messages/message-filters.html'"></ng-include>
+                <ng-include ng-controller="MessagesAdminPanelController" src="'/static/templates/partials/admin/messages/message-filters.html'"></ng-include>
+                <ng-include ng-controller="DisastersAdminPanelController" src="'/static/templates/partials/admin/disasters/disasters-filters.html'"></ng-include>
             </ul>
         </div>
     </div>

@@ -1,0 +1,20 @@
+<li id="disasters-filter" class="filter" ng-show="$state.current.data.pageTitle == 'Disasters'">
+    <h4 class="bar-content text-center">Disaster Filters</h4>
+    <form role="form" class="time-filter">
+        <label>Filter by</label>
+        <div id="status-filter" class="selectize-in-horizontal">
+            <input type="text" ng-model="disasterFilter.status" disaster-status="disaster" name="status"
+                   class="form-control" placeholder="status"/>
+        </div>
+        <div>
+            <label for="from-date">Show messages from</label>
+            <input id="from-date" class="form-control" ng-model="disasterFilter.from" data-datepicker=""
+                   data-timepicker="false" placeholder="select from date"/>
+        </div>
+        <div>
+            <label for="to-date">To</label>
+            <input id="to-date" class="form-control" ng-model="disasterFilter.to" data-datepicker=""
+                   data-timepicker="false" placeholder="select to date"/>
+        </div>
+    </form>
+</li>

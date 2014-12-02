@@ -4,33 +4,18 @@
         <div class="col-md-3 sub-section-header">
             <span class="icon icon-flash-electric"></span><span class="title">Registered Disasters</span>
         </div>
-        <div class="pull-right">
-            <form role="form">
-                <ul class="ul-horizontal">
-                    <li id="status-filter" class="selectize-in-horizontal">
-                        <input type="text" ng-model="disasterFilter.status" disaster-status="disaster" name="status"
-                               class="form-control" placeholder="Filter by status"/>
-                    </li>
-                    <li>
-                        <input id="from-date" class="form-control" ng-model="disasterFilter.from" data-datepicker=""
-                               data-timepicker="false" placeholder="from"/>
-                    </li>
-                    <li>
-                        <input id="to-date" class="form-control" ng-model="disasterFilter.to" data-datepicker=""
-                               data-timepicker="false" placeholder="to"/></select>
-                    </li>
-                    <li class="user-actions pull-right">
-                        <button type="button" id="add-disaster" class="btn btn-default btn-action btn-icon"
-                                data-toggle="modal" data-target="#disasters-modal" ng-click="addDisaster()">
-                            <span class="icon icon-plus-circle"></span>
-                            <span class="value">Add Disasters</span>
-                        </button>
-                    </li>
-                </ul>
-            </form>
+        <div class="user-actions pull-right">
+            <ul>
+                <li>
+                    <button type="button" id="add-disaster" class="btn btn-default user-btn btn-icon"
+                            data-toggle="modal" data-target="#disasters-modal" ng-click="addDisaster()">
+                        <span class="icon icon-plus-circle"></span>
+                        <span class="value">Add Disasters</span>
+                    </button>
+                </li>
+            </ul>
         </div>
     </div>
-
 
     <table si-table="" class="table table-hover table-striped style-header table-clickable">
         <thead>

@@ -1,7 +1,14 @@
 (function (module) {
 
-    module.controller('AdminPanelController', function ($scope, MessageService, MessagesPageFilters) {
+    module.controller('MessagesAdminPanelController', function ($scope, MessagesPageFilters) {
         $scope.messageFilter = MessagesPageFilters;
+    });
+
+    module.controller('DisastersAdminPanelController', function ($scope, DisastersPageFilters) {
+        $scope.disasterFilter = DisastersPageFilters;
+    });
+
+    module.controller('AdminPanelController', function ($scope, MessageService) {
         MessageService.all()
             .then(function (response) {
                 $scope.messages = response.data;
@@ -15,6 +22,10 @@
 
     module.factory('MessagesPageFilters', function () {
         return {};
-    })
+    });
+
+    module.factory('DisastersPageFilters', function () {
+        return {};
+    });
 
 })(angular.module('dms.admin-panel', ['dms.message']));

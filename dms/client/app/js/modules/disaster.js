@@ -13,9 +13,9 @@
             all: function () {
                 return $http.get(Config.apiUrl + 'disasters/');
             },
-            filter: function(options){
+            filter: function (options) {
                 var queryString = helpers.buildQueryString(options);
-                return   $http.get(Config.apiUrl + 'disasters/'+ queryString);
+                return   $http.get(Config.apiUrl + 'disasters/' + queryString);
             },
             disaster: function (disasterId) {
                 return $http.get(Config.apiUrl + 'disasters/' + disasterId + '/');
@@ -23,18 +23,20 @@
         };
     });
 
-    module.controller('DisastersController', function ($scope, DisasterService, $state) {
-        $scope.disasterFilter ={};
+    module.controller('DisastersController', function ($scope, DisasterService, $state, DisastersPageFilters) {
         DisasterService.all().then(function (response) {
             $scope.disasters = response.data;
         });
 
-        $scope.$watch('disasterFilter', function(filter){
-            DisasterService.filter(filter)
-                .then(function(response){
-                    $scope.disasters = response.data;
-                });
-        }, true);
+        $scope.$watch(function () {
+                return DisastersPageFilters;
+            }, function (filter) {
+                DisasterService.filter(filter)
+                    .then(function (response) {
+                        $scope.disasters = response.data;
+                    });
+
+            }, true);
 
         $scope.showDisasterInfo = function (disaster) {
             $state.go('admin.disaster-info', {'disaster': disaster.id});
@@ -115,9 +117,9 @@
     module.directive('disasterStatus', function (DisasterConfig) {
         return {
             link: function (scope, element, attrs) {
-                var createOptions = function(){
+                var createOptions = function () {
                     var opts = [];
-                    DisasterConfig.statuses.forEach(function(status){
+                    DisasterConfig.statuses.forEach(function (status) {
                         opts.push({value: status, name: status});
                     });
                     return opts;
@@ -206,4 +208,4 @@
 
     });
 
-})(angular.module('dms.disaster', ['dms.config', 'dms.utils', 'dms.message', 'dms.utils']));
+})(angular.module('dms.disaster', ['dms.config', 'dms.utils', 'dms.message', 'dms.utils', 'dms.admin-panel']));

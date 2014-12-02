@@ -195,15 +195,17 @@ describe('dms.disaster', function () {
                 httpMock.when('GET', apiUrl + 'disasters/').respond(disastersStub);
                 stateMock = jasmine.createSpyObj('stateMock', ['go']);
 
-                initController = function () {
+                initController = function (disasterPageFilters) {
                     scope.associatedMessages = [];
-                    $controller('DisastersController', { $scope: scope, MessageService: mockMessageService, $state: stateMock });
+                    $controller('DisastersController', { $scope: scope, MessageService: mockMessageService,
+                                                         $state: stateMock, DisastersPageFilters: disasterPageFilters });
                 };
             });
         });
 
         it('should add a list of existing disasters to the scope', function () {
-            initController();
+            var disasterPageFilters = {};
+            initController(disasterPageFilters);
             httpMock.expectGET(apiUrl + 'disasters/');
             httpMock.flush();
 
@@ -211,18 +213,19 @@ describe('dms.disaster', function () {
         });
 
         it('should filter disaster lists by date on the scope', function () {
-            initController();
+            var disasterPageFilters = {from: '2014-11-06', to: '2014-11-08'};
+            initController(disasterPageFilters);
+
             httpMock.expectGET(apiUrl + 'disasters/?from=2014-11-06&to=2014-11-08').respond(disastersStub);
-            scope.disasterFilter = {from: '2014-11-06', to: '2014-11-08'};
             httpMock.flush();
 
             expect(scope.disasters).toEqual(disastersStub);
         });
 
         it('should filter disaster lists by status on the scope', function () {
-            initController();
+            var disasterPageFilters = {from: '2014-11-06', status: 'Closed'};
+            initController(disasterPageFilters);
             httpMock.expectGET(apiUrl + 'disasters/?from=2014-11-06&status=Closed').respond(disastersStub);
-            scope.disasterFilter = {from: '2014-11-06', status: 'Closed'};
             httpMock.flush();
 
             expect(scope.disasters).toEqual(disastersStub);

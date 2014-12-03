@@ -1,0 +1,4 @@
+---
+ansible_ssh_host: 178.62.100.49
+ansible_ssh_user: necoc
+server_name: 178.62.100.49

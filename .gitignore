@@ -3,4 +3,5 @@
 .pyc
 *.pyc
 *.log
+geoserver/data_files/
 

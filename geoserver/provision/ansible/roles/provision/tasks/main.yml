@@ -1,0 +1,42 @@
+---
+  - name: Update Repositories cache
+    apt: update-cache=yes cache_valid_time=3600
+
+  - name: Install packages
+    apt: pkg={{item}} state=latest
+    with_items:
+      - git
+      - python-dev
+      - python-pip
+
+  - name: Install pip packages
+    pip: name={{item}} state=present
+    with_items:
+      - virtualenv
+      - docker-py
+
+  - name: Remove old geoserver data directory
+    file: path=/geoserver/data state=absent
+    when: clean_data
+
+  - name: Create new geoserver data directory
+    file: path=/geoserver/data state=directory
+    when: clean_data
+
+  - name: Copy shape files to the data directory
+    synchronize: src=../../../../../data_files/ dest=/geoserver/data/
+    when: load_data
+
+  - name: Pull docker image
+    command: docker pull timothyakampa/geoserver
+
+  - name: Stop docker container if exists
+    docker: image=timothyakampa/geoserver name=geoserver state=absent
+
+  - name: Start docker container
+    docker:
+      image: timothyakampa/geoserver
+      name: geoserver
+      ports: "8080:8080"
+      volumes: "/geoserver/data:/opt/geoserver/data_dir"
+      command: /opt/geoserver/bin/startup.sh

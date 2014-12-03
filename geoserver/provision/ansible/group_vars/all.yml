@@ -1,0 +1,4 @@
+---
+app_name: necoc geoserver
+clean_data: true
+load_data: true

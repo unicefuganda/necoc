@@ -1,0 +1,7 @@
+---
+  - name: Deploy geoserver
+    hosts: webservers
+    remote_user: necoc
+    sudo: yes
+    roles:
+      - provision

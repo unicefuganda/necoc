@@ -15,9 +15,10 @@
         }
 
         function geoServerUrlFilter(dataset, filter, propertyNames) {
-            var url = Config.geoServerUrl + '&typeName=geonode:' + dataset;
+            var url = Config.geoServerUrl + '&typeNames=subcounties:' + dataset;
             url += propertyNames ? '&propertyName=' + propertyNames.join(',') : '';
-            url += filter ? '&filter=' + filterQuery(filter) + '&format_options=callback:JSONPCallback' : '';
+            url += filter ? '&filter=' + filterQuery(filter) : '';
+            url += '&format_options=callback:JSON_CALLBACK';
             return url;
         }
 
@@ -28,17 +29,10 @@
             },
 
             subCounties: function (district) {
-                var deferred = $q.defer();
-                JSONPCallback = function (data) {
-                    deferred.resolve(data);
-                };
-                var propertyNames = ['the_geom', "DNAME_2010", 'SNAME_2010'],
-                    filter = { 'DNAME_2010': district.toUpperCase() },
-                    url = geoServerUrlFilter('subcounties_2011_0005', filter, propertyNames);
-
-                $http.jsonp(url, {cache: true});
-
-                return deferred.promise;
+                var propertyNames = ["the_geom","DNAME2014", 'SNAME2014'],
+                    filter = { DNAME2014: district.toUpperCase() },
+                    url = geoServerUrlFilter('UGANDA_SUBCOUNTIES_2014', filter, propertyNames);
+                return $http.jsonp(url, {cache: true});
             }
         }
     });

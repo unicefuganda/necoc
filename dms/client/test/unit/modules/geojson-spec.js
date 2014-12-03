@@ -30,12 +30,11 @@ describe('dms.geojson', function () {
                 }
             };
 
-        var subCountyUrlForGulu = 'http://ec2-54-218-182-219.us-west-2.compute.amazonaws.com/geoserver/geonode/ows?' +
-                    'service=WFS&version=1.0.0&request=GetFeature&outputFormat=json' +
-                    '&typeName=geonode:subcounties_2011_0005&propertyName=the_geom,DNAME_2010,SNAME_2010' +
-                    '&filter=<Filter xmlns="http://www.opengis.net/ogc"><PropertyIsEqualTo>' +
-                    '<PropertyName>DNAME_2010</PropertyName><Literal>GULU</Literal></PropertyIsEqualTo></Filter>' +
-                    '&format_options=callback:JSONPCallback';
+        var subCountyUrlForGulu = 'http://178.62.69.21:8080/geoserver/wfs?service=WFS&version=1.0.0&' +
+            'request=GetFeature&outputFormat=text/javascript&typeNames=subcounties:UGANDA_SUBCOUNTIES_2014' +
+            '&propertyName=the_geom,DNAME2014,SNAME2014&filter=<Filter xmlns="http://www.opengis.net/ogc">' +
+            '<PropertyIsEqualTo><PropertyName>DNAME2014</PropertyName><Literal>GULU</Literal></PropertyIsEqualTo>' +
+            '</Filter>&format_options=callback:JSON_CALLBACK';
 
 
         beforeEach(function () {

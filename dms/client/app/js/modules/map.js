@@ -290,11 +290,11 @@
         function addSubCountyLayer(district) {
             var layerGroup = L.layerGroup();
 
-            return GeoJsonService.subCounties(district).then(function (data) {
-                L.geoJson(data, {
+            return GeoJsonService.subCounties(district).then(function (response) {
+                L.geoJson(response.data, {
                     style: MapConfig.districtLayerStyle,
                     onEachFeature: function (feature, layer) {
-                        var subCountyName = feature.properties.SNAME_2010 || 'unknown',
+                        var subCountyName = feature.properties.SNAME2014 || 'unknown',
                             subCountyLayer = Layer.build(subCountyName, map, layer, self.subCountyLayerOptions);
                         LayerMap.getLayer(district).addChildLayer(subCountyLayer);
                         layerGroup.addLayer(layer);

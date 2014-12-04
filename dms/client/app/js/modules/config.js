@@ -1,10 +1,10 @@
 (function (module) {
 
     function geoserverHost() {
-        if (window.location.host.match(/localhost/)) {
+        if (window.location.origin.match(/localhost/)) {
             return 'http://178.62.69.21:8080/'
         }
-        return window.location.host + ':8080/'
+        return window.location.origin + ':8080/'
     }
 
     module.constant('Config', {

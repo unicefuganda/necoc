@@ -47,7 +47,10 @@
             if (map.getZoom() < zoomLevel && !map.hasLayer(layerGroup)) {
                 layerGroup && map.addLayer(layerGroup);
             } else if (map.getZoom() >= zoomLevel && map.hasLayer(layerGroup)) {
-                layerGroup && map.removeLayer(layerGroup);
+                try {
+                    layerGroup && map.removeLayer(layerGroup);
+                } catch (E) {
+                }
             }
         }
 

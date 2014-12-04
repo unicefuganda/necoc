@@ -216,7 +216,10 @@
                 }
             });
             var savedGroup = LayerMap.getLayerGroup('disaster_bubbles');
-            map.hasLayer(savedGroup) && map.removeLayer(savedGroup);
+            try {
+                map.hasLayer(savedGroup) && map.removeLayer(savedGroup);
+            } catch (E) {
+            }
             LayerMap.addLayerGroup('disaster_bubbles', layerGroup);
             map.addLayer(layerGroup);
         }

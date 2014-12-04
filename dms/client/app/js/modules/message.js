@@ -24,19 +24,20 @@
         }
     });
 
-    module.controller('MessageController', function ($scope, MessageService, MessagesPageFilters) {
+    module.controller('MessageController', function ($scope, $moment, MessageService, MessagesPageFilters) {
         $scope.messageFilter = MessagesPageFilters;
         $scope.selected = {};
         $scope.showMessageCheckboxes = true;
+        $scope.messageFilter.from = lastWeek();
+
         $scope.refresh = function () {
-            reloadMessagesWithFilter($scope.messageFilter);
+            loadMessagesWithFilter($scope.messageFilter);
         };
-        getAllMessages();
+
         $scope.$watch(function () {
-                return MessagesPageFilters;
+                return $scope.messageFilter;
             },
-            reloadMessagesWithFilter,
-            objectEquality = true);
+            loadMessagesWithFilter, true);
 
         MessageService.filter({disaster: ''}).then(function (response) {
             $scope.uncategorizedMessagesCount = response.data.length;
@@ -46,12 +47,8 @@
             $scope.messages = messages;
         };
 
-        function getAllMessages() {
-            $scope.saveStatus = true;
-            MessageService.all().then(function (response) {
-                $scope.saveStatus = false;
-                $scope.messages = response.data;
-            });
+        function lastWeek() {
+            return $moment().subtract(7, 'days').format('YYYY-MM-DD');
         }
 
         function withoutEmptyValues(obj) {
@@ -64,11 +61,8 @@
             return newObject
         }
 
-        function reloadMessagesWithFilter(filter) {
-            if (!filter) {
-                getAllMessages();
-            } else {
-
+        function loadMessagesWithFilter(filter) {
+            if (filter) {
                 $scope.saveStatus = true;
                 MessageService.filter(withoutEmptyValues(filter)).then(function (response) {
                     $scope.messages = response.data;

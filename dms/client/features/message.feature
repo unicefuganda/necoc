@@ -27,9 +27,9 @@ Feature: Messages
     Given I am logged in as a NECOC admin
     And I have "Kisoro" district already registered
     And I have one Necoc Volunteer registered
-    And I POST "necoc.Kisoro. first message" at "2014-11-01T01:01:01.012345Z" to the NECOC DMS
+    And I POST "necoc.Kisoro. first message" as the "first" message to NECOC DMS
     And I visit the messages listing page
-    And I POST "necoc.Kisoro. Second message" at "2014-11-02T01:01:01.012345Z" to the NECOC DMS
+    And I POST "necoc.Kisoro. Second message" as the "second" message to NECOC DMS
     And I refresh my messages
     Then I should see the 2 messages in "Kisoro" ordered
 

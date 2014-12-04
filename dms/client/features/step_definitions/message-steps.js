@@ -1,10 +1,12 @@
 module.exports = function () {
     var messagesPage = require("../pages/messages-page"),
         homePage = require("../pages/home-page"),
+        disasterPage = require("../pages/disaster-page"),
         dataSetupPage = require("../pages/data-setup-page"),
         moment = require('moment'),
         disasterLocation = null,
         numberOfMassMessages = 20,
+        associatedMessage,
         messages = [];
 
     this.Before(function (next) {
@@ -15,8 +17,9 @@ module.exports = function () {
     this.World = require("../support/world").World;
 
     this.When(/^I POST a message to the NECOC DMS$/, function (next) {
-        dataSetupPage.postFullMessage(messagesPage.messages[0], function (message) {
+        dataSetupPage.postMessage({text: 'NECOC.Kampala. Fire ayoyoooo'}, function (message) {
             messages.push(message);
+            associatedMessage = message;
             next();
         });
     });
@@ -279,13 +282,13 @@ module.exports = function () {
         for (index = 0; index < numberOfRows; index++) {
             should_see_my_messages(this, next, location, index, parseInt(numberOfRows), numberOfRows - index - 1);
         }
-        ;
     });
 
-    this.Given(/^I POST "([^"]*)" at "([^"]*)" to the NECOC DMS$/, function (text, time, next) {
+    this.Given(/^I POST "([^"]*)" as the "([^"]*)" message to NECOC DMS$/, function (text, order, next) {
         dataSetupPage.postMessage({
             text: text,
-            time: time
+            time: order == "first" ? moment().subtract(1, 'days').format('YYYY-MM-DDTHH:mm:ss') + '.012345Z' :
+                moment().format('YYYY-MM-DDTHH:mm:ss') + '.012345Z'
         }, function (message) {
             var format = 'MMM DD, YYYY - h:mmA';
             message.formattedTime = moment(message.time).format(format);
@@ -295,12 +298,15 @@ module.exports = function () {
     });
 
     this.Given(/^I have the following messages in the NECOC DMS:$/, function (table, next) {
+        var days = 0;
         table.hashes().map(function (row) {
+            row.time = moment().subtract(days, 'days').format('YYYY-MM-DDTHH:mm:ss') + '.000000Z';
             dataSetupPage.postMessage(row, function (message) {
                 var format = 'MMM DD, YYYY - h:mmA';
                 message.formattedTime = moment(message.time).format(format);
                 messages.push(message);
             });
+            days++
         });
         browser.sleep(3000).then(function () {
             next();
@@ -333,6 +339,30 @@ module.exports = function () {
         browser.sleep(1000).then(function () {
             next();
         })
+    });
+
+    this.Then(/^I should see the associated message$/, function (next) {
+        var self = this;
+
+        disasterPage.numberOfAssociatedMessages()
+            .then(function (noOfMessages) {
+                self.expect(noOfMessages).to.equal(1);
+            })
+            .then(function () {
+                self.expect(disasterPage.associatedMessages(0, 'source')).to
+                    .eventually.equal(associatedMessage.source + " (" + associatedMessage.phone + ")");
+            })
+
+            .then(function () {
+                self.expect(disasterPage.associatedMessages(0, 'text')).to.eventually.equal(associatedMessage.text);
+            })
+            .then(function () {
+                self.expect(disasterPage.associatedMessages(0, 'location')).to.eventually.exist;
+            })
+            .then(function () {
+                self.expect(disasterPage.associatedMessages(0, 'time | date:"MMM dd, yyyy - h:mma"')).to.eventually.equal(associatedMessage.formattedTime);
+            })
+            .then(next);
     });
 
     this.When(/^I enter a to date message filter as "([^"]*)"$/, function (toDate, next) {

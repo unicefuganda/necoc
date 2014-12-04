@@ -5,11 +5,11 @@ Feature: Sorting
     And I have a "Fire" disaster in "Gulu" district, "Awach" subcounty already registered
     And I have a "Flood" disaster in "Mukono" district, "Goma" subcounty already registered
     And I have the following messages in the NECOC DMS:
-    | phone      | text                          | time                        |
-    | 111111     | NECOC.Goma Disasters!         | 2014-11-25T12:00:01.000000Z |
-    | 222222     | NECOC.Awach. 1                | 2014-11-25T12:00:00.000000Z |
-    | 333333     | NECOC.Mukono.Goma Disasters!  | 2014-11-24T12:00:00.000000Z |
-    | 444444     | NECOC.Awach. 2                | 2014-11-23T12:00:00.000000Z |
+    | phone      | text                          |
+    | 111111     | NECOC.Goma Disasters!         |
+    | 222222     | NECOC.Awach. 1                |
+    | 333333     | NECOC.Mukono.Goma Disasters!  |
+    | 444444     | NECOC.Awach. 2                |
     And I visit the messages listing page
     And I check message 2
     And I click on associate to disaster button

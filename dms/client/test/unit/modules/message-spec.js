@@ -4,7 +4,9 @@ describe('dms.message', function () {
     var messagesStub;
     var initController;
     var interval;
-    var yesterday = '2014-11-03';
+    var mockMoment;
+    var lastWeek;
+    var yesterday = lastWeek = '2014-11-03';
 
     beforeEach(function () {
         module('dms.message');
@@ -24,7 +26,7 @@ describe('dms.message', function () {
             }
         ];
 
-        var mockMoment = function () {
+        mockMoment = function () {
             return {
                 format: function () {
                     return yesterday;
@@ -38,7 +40,6 @@ describe('dms.message', function () {
         module(function ($provide) {
             $provide.value('$moment', mockMoment)
         });
-
     });
 
     describe('MessageController', function () {
@@ -48,20 +49,22 @@ describe('dms.message', function () {
             mockMessageService.when('all').returnPromiseOf({ data: messagesStub });
             mockMessageService.when('filter').returnPromiseOf({ data: messagesStub });
 
-            inject(function ($controller, $rootScope, $httpBackend, $interval, Config) {
+            inject(function ($controller, $rootScope, $httpBackend, $interval) {
                 httpMock = $httpBackend;
                 interval = $interval;
                 $scope = $rootScope.$new();
+
                 initController = function () {
-                    $controller('MessageController', {$scope: $scope, MessageService: mockMessageService });
+                    $controller('MessageController', {$scope: $scope, MessageService: mockMessageService,
+                        $moment: mockMoment });
                 };
             });
         });
 
-        it('should retrieve messages from the \'/api/v1/rapid-pro/\' endpoint and add them to the scope.', function () {
+        it('should retrieve messages last weeks messages from the \'/api/v1/rapid-pro/\' endpoint and add them to the scope.', function () {
             initController();
-            expect(mockMessageService.all).toHaveBeenCalled();
             $scope.$apply();
+            expect(mockMessageService.filter).toHaveBeenCalledWith({ from : lastWeek });
             expect($scope.messages).toEqual(messagesStub);
         });
 
@@ -78,33 +81,40 @@ describe('dms.message', function () {
             mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
 
             $scope.$apply();
-            expect(mockMessageService.filter.mostRecentCall.args).toEqual([{ location : 'location-id' }]);
+            expect(mockMessageService.filter.mostRecentCall.args).toEqual([
+                { location: 'location-id', from : lastWeek }
+            ]);
             expect($scope.messages).toEqual(messageStub);
         });
 
         it('should filter message by from date given from', function () {
             initController();
+            $scope.$apply();
             $scope.messageFilter.from = "from-date";
             var messageStub = { text: "Some text", phone: "45678909876543"};
             mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
 
             $scope.$apply();
-            expect(mockMessageService.filter.mostRecentCall.args).toEqual([{ from : 'from-date' }]);
+            expect(mockMessageService.filter.mostRecentCall.args).toEqual([
+                { from: 'from-date' }
+            ]);
             expect($scope.messages).toEqual(messageStub);
         });
 
         it('should filter message by to date given to', function () {
             initController();
-            $scope.messageFilter.to= "to-date";
+            $scope.messageFilter.to = "to-date";
             var messageStub = { text: "Some text", phone: "45678909876543"};
             mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
 
             $scope.$apply();
-            expect(mockMessageService.filter.mostRecentCall.args).toEqual([{ to : 'to-date' }]);
+            expect(mockMessageService.filter.mostRecentCall.args).toEqual([
+                { to: 'to-date' , from : lastWeek }
+            ]);
             expect($scope.messages).toEqual(messageStub);
         });
 
-        it('should retrieve all messages when location not supplied', function () {
+        it('should retrieve last weeks messages messages when location not supplied', function () {
             initController();
 
             $scope.messageFilter.location = "location-id";
@@ -113,7 +123,9 @@ describe('dms.message', function () {
             ];
             mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
             $scope.$apply();
-            expect(mockMessageService.filter.mostRecentCall.args).toEqual([{ location : 'location-id' }]);
+            expect(mockMessageService.filter.mostRecentCall.args).toEqual([
+                { location: 'location-id', from : lastWeek }
+            ]);
             expect($scope.messages).toEqual(messageStub);
 
             $scope.messageFilter.location = "";
@@ -123,7 +135,9 @@ describe('dms.message', function () {
             ];
             mockMessageService.when('filter').returnPromiseOf({ data: messageStub });
             $scope.$apply();
-            expect(mockMessageService.filter.mostRecentCall.args).toEqual([{}]);
+            expect(mockMessageService.filter.mostRecentCall.args).toEqual([
+                { from : lastWeek }
+            ]);
             expect($scope.messages).toEqual(messageStub);
         });
 
@@ -139,7 +153,7 @@ describe('dms.message', function () {
                 expect($scope.saveStatus).toBeTruthy();
                 $scope.$apply();
                 expect($scope.saveStatus).toBeFalsy();
-                expect(mockMessageService.all).toHaveBeenCalled();
+                expect(mockMessageService.filter).toHaveBeenCalled();
             });
         });
     });

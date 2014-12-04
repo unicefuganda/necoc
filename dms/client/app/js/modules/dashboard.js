@@ -14,6 +14,7 @@
             $scope.district = (location && location.district) ? location.district : '';
             $scope.subcounty = (location && location.subcounty) ? location.subcounty : '';
         }, true);
+
         $rootScope.$watch('filter', function (filter) {
             if (!filter) return;
 

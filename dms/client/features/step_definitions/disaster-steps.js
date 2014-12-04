@@ -149,30 +149,6 @@ module.exports = function () {
         disasterPage.clickDisaster(0, 'locations[0].parent.name').then(next);
     });
 
-    this.Then(/^I should see the associated message$/, function (next) {
-        var self = this;
-
-        disasterPage.numberOfAssociatedMessages()
-            .then(function (noOfMessages) {
-                self.expect(noOfMessages).to.equal(1);
-            })
-            .then(function () {
-                self.expect(disasterPage.associatedMessages(0, 'source')).to
-                    .eventually.equal(associatedMessage.source + " (" + associatedMessage.phone + ")");
-            })
-
-            .then(function () {
-                self.expect(disasterPage.associatedMessages(0, 'text')).to.eventually.equal(associatedMessage.text);
-            })
-            .then(function () {
-                self.expect(disasterPage.associatedMessages(0, 'location')).to.eventually.equal('');
-            })
-            .then(function () {
-                self.expect(disasterPage.associatedMessages(0, 'time | date:"MMM dd, yyyy - h:mma"')).to.eventually.equal(associatedMessage.formattedTime);
-            })
-            .then(next);
-    });
-
     this.When(/^I click the back button$/, function (next) {
         undefined.doSomethingToRaise();
     });

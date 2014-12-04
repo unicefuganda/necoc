@@ -177,7 +177,7 @@ var DataSetupPage = function () {
         var timezoneOffset = (-1) * (new Date().getTimezoneOffset()) / 60;
 
         var sms = {
-            phone: message.phone || '25484384389434',
+            phone: message.phone || '023020302',
             time: message.time || now,
             relayer: 2,
             run: 1,
@@ -192,14 +192,10 @@ var DataSetupPage = function () {
         });
     };
 
-    this.postFullMessage = function (content, callback) {
-        baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {form: content}, callback.bind({}, content));
-    };
-
     this.postMessages = function (number, callback) {
         var messages = [];
         for (var index = 0; index < number; index++) {
-            var message = { phone: "023020302" + index, time: "2014-02-13T02:00:00", relayer: 2, run: String(index),
+            var message = { phone: "023020302" + index, time: moment().format('YYYY-MM-DDTHH:mm:ss'), relayer: 2, run: String(index),
                 text: "I am message" + index, source: "NECOC Volunteer" };
             baseRequest.post('http://localhost:7999/api/v1/rapid-pro/', {form: message});
             messages.push(message);

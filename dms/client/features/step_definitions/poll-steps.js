@@ -27,7 +27,7 @@ module.exports = function () {
     });
 
     this.Then(/^I should see the new poll button/, function (next) {
-        this.expect(pollsPage.newPollButton.isDisplayed()).to.eventually.be.true.and.notify(next);
+        this.expect(browser.wait(pollsPage.newPollButton.isDisplayed)).to.eventually.be.true.and.notify(next);
     });
 
     this.Given(/^I enter a poll name as "([^"]*)"$/, function (pollName, next) {

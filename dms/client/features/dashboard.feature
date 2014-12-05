@@ -100,7 +100,7 @@ Feature: Dashboard
     And I navigate to map location "/admin/dashboard/kampala"
     Then I should see in "kampala" district zero disaster stats
 
-  Scenario: Apply time filters to stats summary pannel
+  Scenario: Apply time filters to stats summary panel
     Given I am logged in as a NECOC admin
     And I have a "Fire" disaster in "Mukono" district, "goma" subcounty already registered
     And I navigate to map location "/admin/dashboard/mukono"
@@ -108,7 +108,7 @@ Feature: Dashboard
     And I enter a to date filter as "2014-02-06"
     Then I should see in "mukono" district zero disaster stats
 
-  Scenario: Apply disaster type filter to stats summary pannel
+  Scenario: Apply disaster type filter to stats summary panel
     Given I am logged in as a NECOC admin
     And I have a "Flood" disaster in "Gulu" district, "Awach" subcounty already registered
     And I navigate to map location "/admin/dashboard/gulu"

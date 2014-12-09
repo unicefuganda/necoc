@@ -20,8 +20,8 @@ class PollResponse(RapidProMessageBase):
 
     def _assign_poll(self):
         text = self.split_text()
-        if len(text) > settings.POLL_RESPONSE_LOCATION_INDEX-1:
-            keyword = text[settings.POLL_RESPONSE_LOCATION_INDEX - 1]
+        if len(text) > settings.POLL_RESPONSE_KEYWORD_INDEX-1:
+            keyword = text[settings.POLL_RESPONSE_KEYWORD_INDEX - 1]
             return Poll.objects(keyword=keyword).first()
 
     def split_text(self):

@@ -59,7 +59,7 @@ class PollResponseTest(MongoTestCase):
         poll_response = PollResponse(**self.poll_response).save()
         self.assertIsNone(poll_response.location)
 
-    @override_settings(POLL_RESPONSE_LOCATION_INDEX=3)
+    @override_settings(POLL_RESPONSE_KEYWORD_INDEX=3)
     def test_responses_with_keyword_is_automatically_associated_to_poll(self):
         poll_response_attr = self.poll_response.copy()
         poll_response_attr['text'] = "NECOCPoll haha %s she no want designer" % self.poll.keyword
@@ -70,7 +70,7 @@ class PollResponseTest(MongoTestCase):
 
         self.assertEqual(self.poll, poll_response.poll)
 
-    @override_settings(POLL_RESPONSE_LOCATION_INDEX=2)
+    @override_settings(POLL_RESPONSE_KEYWORD_INDEX=2)
     def test_responses_with_no_matching_keyword_is_do_not_get_poll(self):
         poll_response_attr = self.poll_response.copy()
         poll_response_attr['text'] = "NECOCPoll not_keyword haha she no want designer"
@@ -81,7 +81,7 @@ class PollResponseTest(MongoTestCase):
 
         self.assertIsNone(poll_response.poll)
 
-    @override_settings(POLL_RESPONSE_LOCATION_INDEX=3)
+    @override_settings(POLL_RESPONSE_KEYWORD_INDEX=3)
     def test_responses_get_both_poll_and_location(self):
         poll_response_attr = self.poll_response.copy()
         poll_response_attr['text'] = "NECOCPoll haha %s she no want designer" % self.poll.keyword

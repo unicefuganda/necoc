@@ -18,7 +18,7 @@ if ('test' in sys.argv) or ('0.0.0.0:7999' in sys.argv) or ('test_user' in sys.a
     TEST_RUNNER = 'dms.tests.runner.NoSQLTestRunner'
 
     MESSAGE_LOCATION_INDEX = 2
-    POLL_RESPONSE_LOCATION_INDEX = 2
+    POLL_RESPONSE_KEYWORD_INDEX = 2
     MESSAGE_MILITARY_SEPARATOR = '.'
 
     MONGODB_HOST = 'localhost'

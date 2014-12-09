@@ -25,6 +25,10 @@ class UserProfileService(object):
         self.profile.save()
         send_email.delay('NECOC Password Reset', message, settings.DEFAULT_FROM_EMAIL, [self.profile.email])
 
+    def notify_password_change(self):
+        message = self._build_change_password_notification_message()
+        send_email.delay('Your NECOC Account', message, settings.DEFAULT_FROM_EMAIL, [self.profile.email])
+
     @classmethod
     def set_new_password(cls, user):
         password = UserManager().make_random_password()
@@ -42,10 +46,6 @@ class UserProfileService(object):
                   'hostname': settings.HOSTNAME,
                   'admin_email': settings.ADMIN_EMAIL or settings.DEFAULT_FROM_EMAIL}
         return settings.RESET_PASSWORD_MESSAGE % params
-
-    def notify_password_change(self):
-        message = self._build_change_password_notification_message()
-        send_email.delay('Your NECOC Account', message, settings.DEFAULT_FROM_EMAIL, [self.profile.email])
 
     def _build_change_password_notification_message(self):
         params = {'name': self.profile.name, 'hostname': settings.HOSTNAME,

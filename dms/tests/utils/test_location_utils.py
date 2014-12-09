@@ -17,14 +17,14 @@ class LocationUtilsTest(MongoTestCase):
         locator = MessageLocationExtractor('')
         self.assertEqual(None, locator.best_match())
 
-    @override_settings(MESSAGE_LOCATION_INDEX=3, MESSAGE_MILITARY_SEPARATOR='*')
+    @override_settings(MESSAGE_LOCATION_INDEX=3, MESSAGE_SEPARATOR='*')
     def test_district_identified_if_it_is_militarily_coded_and_matched(self):
         text = "NECOC * Fire * Kampala * There is fire over here baba"
         locator = MessageLocationExtractor(text)
 
         self.assertEqual(self.district, locator.best_match())
 
-    @override_settings(LOCATION_MATCH_LEVEL=0.7, MESSAGE_LOCATION_INDEX=3, MESSAGE_MILITARY_SEPARATOR='*')
+    @override_settings(LOCATION_MATCH_LEVEL=0.7, MESSAGE_LOCATION_INDEX=3, MESSAGE_SEPARATOR='*')
     def test_location_is_fuzzy_matched(self):
         text = "NECOC * Fire * Kampalaa * There is fire over here baba"
         locator = MessageLocationExtractor(text)
@@ -36,7 +36,7 @@ class LocationUtilsTest(MongoTestCase):
 
         self.assertEqual(self.district, locator.best_match())
 
-    @override_settings(LOCATION_MATCH_LEVEL=0.7, MESSAGE_LOCATION_INDEX=3, MESSAGE_MILITARY_SEPARATOR='*')
+    @override_settings(LOCATION_MATCH_LEVEL=0.7, MESSAGE_LOCATION_INDEX=3, MESSAGE_SEPARATOR='*')
     def test_subcounty_is_identified_if_district_supplied(self):
         kampala_tc = Location(**dict(name='Kampala TC', parent=self.district, type='subcounty')).save()
         text = "NECOC * Fire * Kampala * Kampala TC * There is fire over here baba"
@@ -44,14 +44,14 @@ class LocationUtilsTest(MongoTestCase):
 
         self.assertEqual(kampala_tc, locator.best_match())
 
-    @override_settings(LOCATION_MATCH_LEVEL=0.7, MESSAGE_LOCATION_INDEX=3, MESSAGE_MILITARY_SEPARATOR='*')
+    @override_settings(LOCATION_MATCH_LEVEL=0.7, MESSAGE_LOCATION_INDEX=3, MESSAGE_SEPARATOR='*')
     def test_subcounty_is_fuzzy_matched_even_if_no_district_supplied(self):
         text = "NECOC * Fire * bukotoo * There is fire over here baba"
         locator = MessageLocationExtractor(text)
 
         self.assertEqual(self.bukoto, locator.best_match())
 
-    @override_settings(MESSAGE_MILITARY_SEPARATOR=' ', MESSAGE_LOCATION_INDEX=3, LOCATION_MATCH_LEVEL=0.7)
+    @override_settings(MESSAGE_SEPARATOR=' ', MESSAGE_LOCATION_INDEX=3, LOCATION_MATCH_LEVEL=0.7)
     def test_blank_space_separator_still_fetches_subcounty(self):
         text = "NECOC Fire bukotoo There is fire over here baba"
         locator = MessageLocationExtractor(text)

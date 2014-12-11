@@ -23,7 +23,6 @@ module.exports = function () {
     });
 
     this.Then(/^I should not see the new poll button/, function (next) {
-        browser.sleep(2000);
         this.expect(pollsPage.newPollButton.isDisplayed()).to.eventually.be.false.and.notify(next);
     });
 

@@ -1,10 +1,10 @@
 from rest_condition import And, Or
-from rest_framework.permissions import BasePermission
 from rest_framework_mongoengine import serializers
 from rest_framework import fields
 from rest_framework import serializers as serialiserzz
 from rest_framework_mongoengine.generics import ListCreateAPIView
 from rest_framework import serializers as rest_serializers
+
 from dms.models import Poll, Location, UserProfile
 from dms.tasks import send_bulk_sms
 from dms.utils.general_helpers import flatten
@@ -40,7 +40,7 @@ class PollListCreateView(ListCreateAPIView):
 
     def get_location(self, obj):
         locations = Location.objects(id__in=obj.target_locations)
-        if locations.filter(type='sub_county'):
+        if locations.filter(type='subcounty'):
             return locations
         districts_children = [district.children() for district in locations]
         return flatten(districts_children)

@@ -15,7 +15,7 @@ ADMINS = (
 )
 
 API_TOKEN = os.environ['API_TOKEN']
-API_URL = 'https://rapidpro.io/api/v1/sms.json'
+API_URL = 'https://app.rapidpro.io/api/v1/sms.json'
 LOCATION_MATCH_LEVEL = 0.9
 MESSAGE_LOCATION_INDEX = 2
 POLL_RESPONSE_KEYWORD_INDEX = 2

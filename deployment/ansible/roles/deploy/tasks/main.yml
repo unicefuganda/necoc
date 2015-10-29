@@ -36,7 +36,7 @@
       name: necoc
       ports: "80:80,7555:22"
       volumes: "/data/db:/data/db"
-      env: "LOAD_DATA={{load_data}},NGINX_SERVER_NAME={{server_name}},API_TOKEN={{api_token}},EMAIL_PASSWORD={{email_password}}"
+      env: "LOAD_DATA={{load_data}},NGINX_SERVER_NAME={{ansible_ssh_host}},API_TOKEN={{api_token}},EMAIL_PASSWORD={{email_password}}"
       command: /scripts/run.sh
 
   - name: Clean up old docker image

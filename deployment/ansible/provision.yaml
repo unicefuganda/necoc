@@ -1,7 +1,7 @@
 ---
   - name: Provision and deploy to the web server
     hosts: webservers
-    remote_user: necoc
+    remote_user: naval
     sudo: yes
     roles:
       - provision

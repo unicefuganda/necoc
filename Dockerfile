@@ -1,5 +1,5 @@
 # DOCKER-VERSION 0.0.1
-FROM dockerfile/java
+FROM ubuntu:14.04
 MAINTAINER Timothy Akampa timothyakampa@gmail.com
 
 ENV NGINX_SERVER_NAME 127.0.0.1
@@ -48,14 +48,6 @@ RUN sed -i "s/# server_names_hash_bucket_size 64/server_names_hash_bucket_size 6
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 ADD deployment/configs/necoc-uwsgi.ini  /etc/uwsgi/apps-enabled/necoc-uwsgi.ini
 
-# --- Add SSH for debugging ---
-RUN apt-get update
-RUN apt-get install -y openssh-server
-RUN mkdir /var/run/sshd
-RUN echo 'root:root' |chpasswd
-RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
-RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
-
 
 #--- Install Supervisord to run all background processes ---
 RUN apt-get -qq update
@@ -73,9 +65,6 @@ ADD deployment/scripts  /scripts
 RUN chmod +x /scripts/run.sh
 RUN chmod +x /necoc/deployment/scripts/load_fixtures.sh
 RUN chmod +x /necoc/deployment/scripts/start_uwsgi.sh
-
-# --- SSH ----
-EXPOSE 22
 
 # ---MONGO ----
 EXPOSE 27017

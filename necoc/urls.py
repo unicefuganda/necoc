@@ -4,6 +4,7 @@ from django.conf.urls import patterns, url, include
 # from django.contrib import admin
 # admin.autodiscover()
 from django.contrib.auth.decorators import login_required
+from dms.api.admin_setting_endpoint import AdminSettingListCreateView, AdminSettingUpdateView
 from dms.api.bulk_sms_endpoint import SentMessageListCreateView
 from dms.api.current_permissions_endpoint import CurrentPermissionsView
 from dms.api.disaster_endpoint import DisasterListCreateView, DisasterView
@@ -51,6 +52,8 @@ urlpatterns = patterns('',
     url(r'^api/v1/stats-summary/$', SummaryStatsListView.as_view()),
     url(r'^api/v1/location-stats/$', LocationStatsListView.as_view()),
     url(r'^api/v1/location-stats/(?P<district>[0-9a-z]+)/$', DistrictStatsListView.as_view()),
+    url(r'^api/v1/admin-settings/$', AdminSettingListCreateView.as_view()),
+    url(r'^api/v1/admin-settings/(?P<name>[0-9a-zA-Z_]+)/$', AdminSettingUpdateView.as_view()),
     url(r'^export/poll-responses/(?P<poll_id>[0-9a-z]+)/$',
         login_required(ExportPollResponsesView.as_view(), login_url='login/')),
 

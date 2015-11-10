@@ -1,0 +1,37 @@
+<div class="modal fade" id="admin-settings-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog sm-2">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 id="mu-modal-title" class="modal-title">Edit Settings </h4>
+            </div>
+            <div ng-controller="AdminSettingsController">
+                <form role="form" novalidate="" name="form.settings_form" ng-submit="submitSettings()">
+                    <div class="modal-body">
+                        <div class="row gray">
+                            <div class="col-xs-12 col-md-8"><h4>Setting Name</h4></div>
+                            <div class="col-xs-6 col-md-4"><h4>Setting</h4></div>
+                        </div>
+                        <div class="row" ng-repeat="nm in name">
+                            <div class="col-xs-12 col-md-8 capitalize">
+                                <input type="hidden" ng-model="name[$index]"> {[{no_underscores(nm)}]}</div>
+                            <div class="col-xs-6 col-md-4" ng-if="!value_str[$index] == ''"><input type="text" ng-model="value_str[$index]" placeholder="text..."></div>
+                            <div class="col-xs-6 col-md-4" ng-if="!value_int[$index] == ''"><input type="text" ng-model="value_int[$index]" placeholder="number..."></div>
+                            <div class="col-xs-6 col-md-4" ng-if="yes_no[$index]"><input type="checkbox" ng-model="yes_no[$index]"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="close-settings-modal" class="btn btn-default" data-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button type="submit" id="submit-settings-modal" close-modal="admin-settings-modal"
+                                class="btn btn-info" save-state="" data-loading-text="Editing settings...">Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

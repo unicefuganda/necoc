@@ -168,6 +168,7 @@ THIRD_PARTY_APPS = (
     'djcelery',
     'mongoengine.django.mongo_auth',
     'imagekit',
+    'django_extensions',
 )
 
 LOCAL_APPS = (
@@ -180,6 +181,8 @@ REST_FRAMEWORK = {
    'DEFAULT_AUTHENTICATION_CLASSES': (
        'rest_framework.authentication.SessionAuthentication',
        'dms.services.token_authentication.TokenAuth',
+       'rest_framework.authentication.BasicAuthentication',
+       'dms.utils.internal_auth.InternalCallAuth',
    ),
 
    'DEFAULT_PERMISSION_CLASSES': (
@@ -244,7 +247,10 @@ RESET_PASSWORD_MESSAGE = """
                 Thank you,
                 NECOC DMS team
                 """
-
+AUTO_RESPONSE_MESSAGE = """Thank you for your message. A response team will be deployed to your area. \
+Please continue sending messages using NECOC.District.Subcounty.Message to 6700
+"""
+AUTO_RESPONSE_ENDPOINT = '/api/v1/sent-messages/'
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # TEST_RUNNER = 'dms.tests.runner.NoSQLTestRunner'

@@ -848,3 +848,12 @@ list-style-type: none;
 .selectize-in-horizontal .selectize-input{
     min-width: 215px;
 }
+
+.gray {
+    background-color: lavender;
+    /*border-bottom: 1px solid lightgrey;*/
+}
+
+.capitalize {
+    text-transform: capitalize;
+}

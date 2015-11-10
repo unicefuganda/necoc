@@ -8,6 +8,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
+            # ct, created = ContentType.objects.get_or_create(app_label='dms', model='', name='')
             ct = ContentType(app_label='dms', model='', name='').save()
             manage_users = Permission(name='can manage users', codename='can_manage_users', content_type=ct.id).save()
             manage_polls = Permission(name='can manage polls', codename='can_manage_polls', content_type=ct.id).save()
@@ -16,12 +17,14 @@ class Command(BaseCommand):
                                           content_type=ct.id).save()
             manage_messages = Permission(name='can manage messages', codename='can_manage_messages',
                                          content_type=ct.id).save()
+            manage_settings = Permission(name='can manage settings', codename='can_manage_settings', content_type=ct.id).save()
 
             Group(name='Administrator', permissions=[manage_users,
                                                      manage_polls,
                                                      view_polls,
                                                      manage_disasters,
-                                                     manage_messages]).save()
+                                                     manage_messages,
+                                                     manage_settings,]).save()
 
             Group(name='IT Assistant', permissions=[view_polls,
                                                     manage_disasters,

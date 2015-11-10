@@ -7,9 +7,11 @@ from rest_framework_mongoengine import serializers
 from rest_framework import fields
 from rest_framework import serializers as serialiserzz
 import time
+from dms.api.bulk_sms_endpoint import SentMessageListCreateView
 
 from dms.api.retrieve_update_wrapper import MongoRetrieveUpdateView
-from dms.models import Location, RapidProMessage, Disaster, DisasterType
+from dms.models import Location, RapidProMessage, Disaster, DisasterType, AdminSetting
+from dms.utils.internal_api_calls_utils import post_to_api
 from necoc import settings
 
 RAPID_PRO_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
@@ -48,6 +50,11 @@ class RapidProListCreateView(ListCreateAPIView):
     permission_classes = (AllowAny,)
     model = RapidProMessage
 
+    def post_save(self, obj, created=True):
+        auto_responses_enabled = AdminSetting.objects.get(**dict(name='enable_automatic_response')).yes_no
+        if auto_responses_enabled:
+            self._send_auto_response(obj)
+
     def get_queryset(self):
         queryset = self._non_location_queried_messages()
         location_queried = self.request.GET.get('location', None)
@@ -80,6 +87,10 @@ class RapidProListCreateView(ListCreateAPIView):
         disaster_type = DisasterType.objects(id=disaster_type).first()
         disasters = Disaster.objects(name=disaster_type)
         return queryset.filter(disaster__in=disasters)
+
+    def _send_auto_response(self, obj):
+        data_dict = dict(phone_numbers=[obj.phone_no], text=settings.AUTO_RESPONSE_MESSAGE)
+        post_to_api(settings.AUTO_RESPONSE_ENDPOINT, data_dict)
 
 
 class RapidProRetrieveUpdateView(MongoRetrieveUpdateView):

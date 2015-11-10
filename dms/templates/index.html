@@ -26,6 +26,7 @@
                         <ul ng-init="current_user_id = '{{ request.user.id }}'" class="dropdown-menu" role="menu">
                             <li><a id="user_profile_link" href="#/admin/users/{{ request.user | get_profile_id }}">Account</a>
                             </li>
+                            {% autoescape off %}{{ request.user | can_manage_settings }}{% endautoescape %}
                             <li class="divider"></li>
                             <li><a href="/logout">Logout</a></li>
                         </ul>
@@ -49,8 +50,8 @@
     </div>
 
     <div ui-view></div>
-
 </div>
+<ng-include ng-controller="AdminSettingsController" src="'/static/templates/partials/admin/settings/admin-settings-modal.html'"></ng-include>
 {% endblock %}
 
 {% block before_scripts %}
@@ -94,5 +95,6 @@
 <script src="{{ STATIC_URL }}js/modules/polls.js"></script>
 <script src="{{ STATIC_URL }}js/modules/poll-responses.js"></script>
 <script src="{{ STATIC_URL }}js/modules/user-profile.js"></script>
+<script src="{{ STATIC_URL }}js/modules/admin-settings.js"></script>
 <script src="{{ STATIC_URL }}js/modules/dashboard.js"></script>
 {% endblock %}

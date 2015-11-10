@@ -8,6 +8,7 @@ from dms.models.location import Location
 from dms.models.poll_response import PollResponse
 from dms.models.poll import Poll
 from dms.models.rapid_pro_message import RapidProMessage
+from dms.models.admin_setting import AdminSetting
 
 
 __all__=[
@@ -20,6 +21,7 @@ __all__=[
     'Poll',
     'PollResponse',
     'User',
+    'AdminSetting',
     'Group',
     'ContentType'
 ]

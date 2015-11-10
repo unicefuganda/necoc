@@ -25,3 +25,4 @@ rest-condition==1.0.1
 six==1.8.0
 uWSGI==2.0.7
 wsgiref==0.1.2
+blinker==1.4

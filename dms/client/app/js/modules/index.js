@@ -105,6 +105,13 @@
                 templateUrl: '/static/templates/partials/admin/users/profile.html',
                 controller: 'UserProfileController'
             })
+
+            .state('admin.admin-settings', {
+                url: '/admin-settings/',
+                data: { pageTitle: 'Admin Settings'},
+                templateUrl: '/static/templates/partials/admin/settings/admin-settings.html',
+                controller: 'AdminSettingsController'
+            })
     });
 
 
@@ -130,5 +137,5 @@
 
 })(angular.module('dms', ['ui.router', 'permission', 'siTable', 'checklist-model', 'angularFileUpload', 'dms.message', 'dms.admin-panel', 'dms.location', 'dms.mobile-user',
     'dms.utils', 'dms.disaster', 'dms.disaster-type', 'dms.map', 'dms.polls', 'dms.poll-responses', 'dms.filters', 'dms.dashboard',
-    'dms.user-profile', 'dms.user', 'angularSpinner']));
+    'dms.user-profile', 'dms.admin-settings', 'dms.user', 'angularSpinner']));
 

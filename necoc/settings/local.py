@@ -31,3 +31,6 @@ if ('test' in sys.argv) or ('0.0.0.0:7999' in sys.argv) or ('test_user' in sys.a
 
 from mongoengine.connection import connect
 connect(MONGODB_NAME, host=MONGODB_DATABASE_HOST)
+
+HOST_NAME = 'http://localhost:8000' #No trailing slash
+API_USER_PASS = '10123456'

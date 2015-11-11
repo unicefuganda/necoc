@@ -15,6 +15,7 @@ class UserProfileServiceTest(MongoTestCase):
     @patch('mongoengine.django.auth.UserManager.make_random_password')
     @patch('dms.tasks.send_email.delay')
     @override_settings(NEW_USER_MESSAGE="%(name)s %(hostname)s %(username)s %(password)s")
+    @override_settings(HOSTNAME="http://necoc.org.ug")
     def test_new_password_is_sent_in_email(self, mock_send_mail, mock_make_password):
         message = "Andrew http://necoc.org.ug andrew blabla"
         mock_make_password.return_value = 'blabla'
@@ -47,6 +48,7 @@ class UserProfileServiceTest(MongoTestCase):
     @override_settings(CHANGE_PASSWD_MESSAGE="%(name)s %(hostname)s %(admin_email)s")
     @override_settings(ADMIN_EMAIL="")
     @override_settings(DEFAULT_FROM_EMAIL="alfred@al.fred")
+    @override_settings(HOSTNAME="http://necoc.org.ug")
     def test_password_change_notification_sends_email(self, mock_send_mail):
         message = "Andrew http://necoc.org.ug alfred@al.fred"
         profile = UserProfile(name='Andrew', email='andrew@some.where')
@@ -73,6 +75,7 @@ class UserProfileServiceTest(MongoTestCase):
     @override_settings(ADMIN_EMAIL="")
     @patch('mongoengine.django.auth.UserManager.make_random_password')
     @patch('dms.tasks.send_email.delay')
+    @override_settings(HOSTNAME="http://necoc.org.ug")
     def test_password_reset_sends_email(self, mock_send_mail, mock_make_password):
         message = "Andrew blabla http://necoc.org.ug alfred@al.fred"
         mock_make_password.return_value = 'blabla'

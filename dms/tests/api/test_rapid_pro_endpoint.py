@@ -1,4 +1,5 @@
 import datetime
+from django.test import override_settings
 import pytz
 import urllib2
 import json
@@ -7,6 +8,13 @@ from dms.models import Location, UserProfile, Disaster, DisasterType, SentMessag
 from dms.models.rapid_pro_message import RapidProMessage
 from dms.tests.base import MongoAPITestCase
 from necoc import settings
+
+
+def dict_replace(param, replace, datadict):
+    for key, value in datadict.items():
+        if key == param:
+            datadict[key] = replace
+    return datadict
 
 
 class RapidProEndPointTest(MongoAPITestCase):
@@ -233,25 +241,19 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(0, len(response.data))
 
     def test_should_autorespond_to_messages(self):
-        api_url = settings.HOST_NAME + settings.AUTO_RESPONSE_ENDPOINT
+        api_url = settings.HOSTNAME + settings.AUTO_RESPONSE_ENDPOINT
+        resp_count = len(urllib2.urlopen(api_url).read())
         RapidProMessage(**self.message).save()
 
         response = urllib2.urlopen(api_url)
         json_response = json.loads(response.read())
-        response_count = len(json_response)
-        print response_count
 
         self.assertEqual(200, response.getcode())
         self.assertDictContainsSubset(self.auto_message_response, json_response[0])
         self.assertEqual(settings.AUTO_RESPONSE_MESSAGE, json_response[0]['text'])
 
-        RapidProMessage(**self.message).save()
-        response = urllib2.urlopen(api_url)
-        # json_response = json.loads(response.read())
-        self.assertEqual(response_count + 1, len(json.loads(response.read())))
-
     def test_should_not_autorespond_if_setting_off(self):
-        api_url = settings.HOST_NAME + settings.AUTO_RESPONSE_ENDPOINT
+        api_url = settings.HOSTNAME + settings.AUTO_RESPONSE_ENDPOINT
         enable_auto = AdminSetting.objects.get(**dict(name='enable_automatic_response'))
         enable_auto.yes_no = False
         enable_auto.save()

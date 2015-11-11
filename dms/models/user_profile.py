@@ -1,3 +1,4 @@
+import datetime
 from mongoengine import *
 from dms.models import User
 from dms.models.base import BaseModel
@@ -15,6 +16,10 @@ class UserProfile(BaseModel):
     email = StringField()
     photo = MongoFileField()
     user = ReferenceField(User)
+    ordering = ['-created_at',]
+
+    def __unicode__(self):
+        return self.name
 
     def username(self):
         return self.user.username if self.user else ''

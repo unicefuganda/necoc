@@ -1,6 +1,8 @@
+from collections import OrderedDict
 from django.conf import settings
 import mock
 from mongoengine.django.auth import Group
+import time
 from dms.models import User, Location, UserProfile
 from dms.tests.base import MongoAPITestCase
 
@@ -16,6 +18,13 @@ class FakeImageResizer:
 class BadImageResizer:
     def __init__(self, image):
         raise Exception('Something has gone wrong')
+
+
+def dict_replace(param, replace, datadict):
+    for key, value in datadict.items():
+        if key == param:
+            datadict[key] = replace
+    return datadict
 
 
 class TestUserProfileEndpoint(MongoAPITestCase):
@@ -49,6 +58,38 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.assertEqual(self.mobile_user['phone'], response.data[0]['phone'])
         self.assertEqual(self.mobile_user['email'], response.data[0]['email'])
         self.assertEqual(self.district.name, response.data[0]['location']['name'])
+
+    def test_should_get_ordered_list_of_users(self):
+        mob_users = [('aa', '+256775019441'), ('zz', '+256775019442'), ('tim', '+256775019443'), ('abu' , '+256775019444')]
+        for user_name, mob in mob_users:
+            new_dict = dict_replace('name', user_name, self.mobile_user)
+            new_dict = dict_replace('phone', mob, new_dict)
+            UserProfile(**new_dict).save()
+            time.sleep(1)
+        response = self.client.get(self.API_ENDPOINT, format='json')
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(len(mob_users), len(response.data))
+        self.assertEqual(response.data[0]['name'], 'abu')
+        self.assertEqual(response.data[3]['name'], 'aa')
+
+        #post order by name
+        response = self.client.get(self.API_ENDPOINT + '?ordering=name', format='json')
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(response.data[0]['name'], 'aa')
+        self.assertEqual(response.data[1]['name'], 'abu')
+        self.assertEqual(response.data[2]['name'], 'tim')
+        self.assertEqual(response.data[3]['name'], 'zz')
+
+        #post order by name desc
+        response = self.client.get(self.API_ENDPOINT + '?ordering=-name', format='json')
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(response.data[0]['name'], 'zz')
+        self.assertEqual(response.data[1]['name'], 'tim')
+        self.assertEqual(response.data[2]['name'], 'abu')
+        self.assertEqual(response.data[3]['name'], 'aa')
+
+
 
     def test_raise_403_if_user_doesnt_have_manage_permission(self):
         self.assert_permission_required_for_get(self.API_ENDPOINT)

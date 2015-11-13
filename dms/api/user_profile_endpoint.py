@@ -13,7 +13,6 @@ from dms.models.user_profile import UserProfile
 from dms.services.user_profile_service import UserProfileService
 from dms.utils import image_resizer
 from dms.utils.permission_class_factory import build_permission_class
-from dms.utils.related_ordering import RelatedOrderingFilter
 
 
 class UserProfileSerializer(serializers.MongoEngineModelSerializer):

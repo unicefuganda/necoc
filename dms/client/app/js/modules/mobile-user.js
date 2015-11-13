@@ -9,8 +9,8 @@
                     data: user
                 });
             },
-            all: function () {
-                return $http.get(Config.apiUrl + 'mobile-users/');
+            all: function (sort_field) {
+                return $http.get(Config.apiUrl + 'mobile-users/?ordering=' + sort_field);
             },
             update: function (user, file) {
                 return $upload.upload({
@@ -30,14 +30,65 @@
 
     module.controller('MobileUserController', function ($scope, $state, MobileUserService) {
         $scope.users = [];
+        $scope.sort_field = '-created_at';
+        $scope.toggled = false
 
-        MobileUserService.all().then(function (response) {
-            $scope.users = response.data;
-        });
+        listUsers = function(sort_fields){
+            MobileUserService.all(sort_fields).then(function (response) {
+                $scope.users = response.data;
+            });
+        }
 
         $scope.showUserProfile = function (user) {
             $state.go('admin.user', {'user': user.id});
         }
+
+        $scope.notSorted = function(obj){
+            if (!obj) {
+                return [];
+            }
+            var sorted = Object.keys(obj);
+            //return sorted.sort()
+            return sorted
+        }
+
+        $scope.toggleAndrebuildList = function(property){
+            $scope.toggle(property);
+            $scope.rebuildUsersList();
+        }
+
+        $scope.toggle = function (property) {
+            if(property === 'name'){
+                $sort_field = 'name';
+                if($scope.nameDesc){
+                    $scope.nameDesc = false;
+                    $scope.sort_field = 'name';
+                }else{
+                    $scope.nameDesc = true;
+                     $scope.sort_field = '-name';
+                }
+            }
+
+            if(property === 'location'){
+                $sort_field = 'location';
+                if($scope.locationDesc){
+                    $scope.locationDesc = false;
+                    $scope.sort_field = 'location';
+                }else{
+                    $scope.locationDesc = true;
+                     $scope.sort_field = '-location';
+                }
+            }
+        }
+
+        $scope.rebuildUsersList = function() {
+            console.log( "Rebuilding list..." );
+            $scope.users = listUsers($scope.sort_field);
+        };
+
+        //By default list users ordered by created_at descending
+        listUsers($scope.sort_field);
+
     });
 
     module.controller('AddUserController', function ($scope, MobileUserService, helpers) {

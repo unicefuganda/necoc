@@ -34,7 +34,7 @@
     "grunt-run": "^0.2.4",
     "request": "^2.44.0",
     "mongodb": "^1.4.12",
-    "selenium-standalone": "~2.43.1",
+    "selenium-standalone": "~2.43.1-5",
     "lodash": "^2.4.1",
     "moment": "^2.8.3"
   }

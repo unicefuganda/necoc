@@ -21,7 +21,7 @@ def post_to_api(api_endpoint, data_dict, auth='custom'):
 
 
 def _post_with_custom_auth(api_endpoint, data_dict):
-    api_url = settings.HOST_NAME + api_endpoint
+    api_url = settings.HOSTNAME + api_endpoint
     data = json.dumps(data_dict)
     api_user = User.objects.order_by('-id').first()
 
@@ -31,7 +31,7 @@ def _post_with_custom_auth(api_endpoint, data_dict):
 
 
 def _post_with_basic_auth(api_endpoint, data_dict):
-    api_url = settings.HOST_NAME + api_endpoint
+    api_url = settings.HOSTNAME + api_endpoint
     data = json.dumps(data_dict)
     payload = {'username': 'api_user', 'password': settings.API_USER_PASS}
     api_user = User.objects.order_by('-id').first()
@@ -47,7 +47,7 @@ def _post_with_basic_auth(api_endpoint, data_dict):
 
 
 def _post_with_token_auth(api_endpoint, data_dict):
-    api_url = settings.HOST_NAME + api_endpoint
+    api_url = settings.HOSTNAME + api_endpoint
     payload = {'username': 'api_user', 'password': settings.API_USER_PASS}
     api_user = User.objects.order_by('-id').first()
     if api_user is None:

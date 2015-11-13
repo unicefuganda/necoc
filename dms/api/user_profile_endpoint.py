@@ -1,5 +1,6 @@
 from mongoengine.django.auth import Group
 from rest_condition import Or
+from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import BasePermission
 from rest_framework_mongoengine.generics import ListCreateAPIView
 from rest_framework_mongoengine import serializers
@@ -12,6 +13,7 @@ from dms.models.user_profile import UserProfile
 from dms.services.user_profile_service import UserProfileService
 from dms.utils import image_resizer
 from dms.utils.permission_class_factory import build_permission_class
+from dms.utils.related_ordering import RelatedOrderingFilter
 
 
 class UserProfileSerializer(serializers.MongoEngineModelSerializer):
@@ -58,8 +60,9 @@ class UserProfileListCreateView(ListCreateAPIView):
     queryset = UserProfile.objects()
     model = UserProfile
     permission_classes = (build_permission_class('dms.can_manage_users'),)
-    ordering_fields = '__all__'
-    ordering = ('-created_at',)
+    # filter_backends = (OrderingFilter,)
+    # ordering_fields = '__all__'
+    # ordering = ('-created_at',)
 
     def get_queryset(self):
         query_params = {key: value or None for key, value in self.request.GET.items()}

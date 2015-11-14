@@ -1,5 +1,6 @@
 from django.core.management import BaseCommand
-from dms.models import  AdminSetting
+from mongoengine.django.auth import Permission
+from dms.models import  AdminSetting, User
 
 
 class Command(BaseCommand):
@@ -13,6 +14,19 @@ class Command(BaseCommand):
 
             AdminSetting.objects(**dict(name='send_this_number_of_automatic_responses_then_stop', value_int=10)).first() or \
                           AdminSetting(**dict(name='send_this_number_of_automatic_responses_then_stop', value_int=10)).save()
+
+            #Attach ability to manage these settings to admin user by default
+            # (This is hack since mongo engine Permissions is broken
+            admin_user = User.objects(**dict(username='admin')).first()
+            ct_id = admin_user.group.permissions[0].content_type
+            manage_settings = Permission(name='can manage settings', codename='can_manage_settings', content_type=ct_id).save()
+
+            if not manage_settings in admin_user.group.permissions:
+                user_group = admin_user.group
+                group_permissions = user_group.permissions
+                new_permissions = group_permissions.append(manage_settings)
+                user_group.permissions = new_permissions
+                user_group.save()
         else:
             if len(args) is 4:
                 if AdminSetting.objects(**dict(name='enable_automatic_response')).first():

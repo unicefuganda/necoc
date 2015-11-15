@@ -11,7 +11,7 @@ class InternalCallAuth(authentication.BaseAuthentication):
         query_string = request.META.get('QUERY_STRING')
         query_dict = self.parse_query_string(query_string)
         user = User.objects.order_by('-created_at').first()
-        if query_dict['step'] == settings.API_AUTHORIZED_STEP:
+        if query_dict.get('step', None) == settings.API_AUTHORIZED_STEP:
             return (user, None)
         else:
             return None

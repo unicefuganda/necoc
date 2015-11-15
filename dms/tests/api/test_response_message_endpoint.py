@@ -17,7 +17,8 @@ class TestLocationEndpoint(MongoAPITestCase):
         self.login_user()
         phone = '+256775019449'
         self.response_text = settings.AUTO_RESPONSE_MESSAGE
-        self.response_message_to_post = dict(text=self.response_text, phone=phone)
+        self.response_message_to_post = dict(text='some random text', phone=phone)
+        self.response_message_to_retrieve = dict(text=self.response_text, phone=phone)
         self.headers = {'Authorization': 'Token ' + API_TOKEN,
                         'content-type': 'application/json'}
 
@@ -36,7 +37,7 @@ class TestLocationEndpoint(MongoAPITestCase):
         self.assertTrue(mock_requests.post.called_once_with(API_URL, json.dumps(self.response_message_to_post), self.headers))
         self.assertEqual(201, response.status_code)
 
-        retrieved_sms = ResponseMessage.objects(**self.response_message_to_post)
+        retrieved_sms = ResponseMessage.objects(**self.response_message_to_retrieve)
         self.assertEqual(1, retrieved_sms.count())
         self.assertEqual(success_log, retrieved_sms[0].log)
 
@@ -52,7 +53,7 @@ class TestLocationEndpoint(MongoAPITestCase):
         self.assertTrue(mock_requests.post.called_once_with(API_URL, json.dumps(self.response_message_to_post), self.headers))
         self.assertEqual(201, response.status_code)
 
-        retrieved_sms = ResponseMessage.objects(**self.response_message_to_post)
+        retrieved_sms = ResponseMessage.objects(**self.response_message_to_retrieve)
         self.assertEqual(1, retrieved_sms.count())
         self.assertEqual("RequestException: %s" % some_error, retrieved_sms[0].log)
 

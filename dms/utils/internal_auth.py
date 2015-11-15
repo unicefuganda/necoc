@@ -12,5 +12,5 @@ class InternalCallAuth(authentication.BaseAuthentication):
             username = User.objects.order_by('-created_at').first()
         if not username:
             return None
-
-        return (username, None)
+        else:
+            return (username, None)

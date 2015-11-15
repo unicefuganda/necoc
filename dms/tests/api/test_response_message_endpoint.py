@@ -5,6 +5,7 @@ from requests import RequestException
 
 from dms.models import ResponseMessage
 from dms.tests.base import MongoAPITestCase
+from necoc import settings
 from necoc.settings import API_URL, API_TOKEN
 
 
@@ -14,8 +15,9 @@ class TestLocationEndpoint(MongoAPITestCase):
 
     def setUp(self):
         self.login_user()
-        phone_numbers = ['256775019449', '2345']
-        self.response_message_to_post = dict(text="There is a fire", phone_numbers=phone_numbers)
+        phone_numbers = ['+256775019449', '2345']
+        self.response_text = settings.AUTO_RESPONSE_MESSAGE
+        self.response_message_to_post = dict(text=self.response_text, phone_numbers=phone_numbers)
         self.headers = {'Authorization': 'Token ' + API_TOKEN,
                         'content-type': 'application/json'}
 

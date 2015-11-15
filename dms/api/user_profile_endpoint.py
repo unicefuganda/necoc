@@ -59,9 +59,6 @@ class UserProfileListCreateView(ListCreateAPIView):
     queryset = UserProfile.objects()
     model = UserProfile
     permission_classes = (build_permission_class('dms.can_manage_users'),)
-    # filter_backends = (OrderingFilter,)
-    # ordering_fields = '__all__'
-    # ordering = ('-created_at',)
 
     def get_queryset(self):
         query_params = {key: value or None for key, value in self.request.GET.items()}

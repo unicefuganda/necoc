@@ -3,7 +3,7 @@ from rest_framework_mongoengine import serializers
 from rest_framework_mongoengine.generics import ListCreateAPIView
 from dms.models import RapidProMessage
 from dms.models.response_message import ResponseMessage
-from dms.tasks import send_bulk_sms
+from dms.tasks import send_one_sms
 from dms.utils.permission_class_factory import build_permission_class, IsGetRequest
 from necoc import settings
 
@@ -32,4 +32,4 @@ class ResponseMessageListCreateView(ListCreateAPIView):
     permission_classes = [Or(build_permission_class('dms.can_manage_messages'), IsGetRequest)]
 
     def post_save(self, obj, created=True):
-        send_bulk_sms.delay(obj)
+        send_one_sms.delay(obj)

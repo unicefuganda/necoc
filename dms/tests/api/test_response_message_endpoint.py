@@ -3,7 +3,7 @@ import json
 from mock import patch, MagicMock
 from requests import RequestException
 
-from dms.models import ResponseMessage
+from dms.models import ResponseMessage, AdminSetting
 from dms.tests.base import MongoAPITestCase
 from necoc import settings
 from necoc.settings import API_URL, API_TOKEN
@@ -21,6 +21,7 @@ class TestResponseMessagepoint(MongoAPITestCase):
         self.response_message_to_retrieve = dict(text=self.response_text, phone=phone)
         self.headers = {'Authorization': 'Token ' + API_TOKEN,
                         'content-type': 'application/json'}
+        AdminSetting(**dict(name='enable_automatic_response')).save()
 
     @patch('dms.tasks.requests')
     def test_should_post_response_messages_and_save_logs(self, mock_requests):
@@ -41,19 +42,18 @@ class TestResponseMessagepoint(MongoAPITestCase):
         self.assertEqual(1, retrieved_sms.count())
         self.assertEqual(success_log, retrieved_sms[0].log)
 
-    # @patch('dms.tasks.requests')
-    def test_should_post_with_alternate_authentication(self):
-        # success_log = '201: rapid_pro_id = 1234'
-        # some_id = 1234
-        # mock_response = MagicMock()
-        # mock_response.status_code = 201
-        # mock_response.json.return_value = {"messages": [some_id], "sms": [some_id]}
-        # mock_requests.post.return_value = mock_response
+    @patch('dms.tasks.requests')
+    def test_should_post_with_alternate_authentication(self, mock_requests):
+        success_log = '201: rapid_pro_id = 1234'
+        some_id = 1234
+        mock_response = MagicMock()
+        mock_response.status_code = 201
+        mock_response.json.return_value = {"messages": [some_id], "sms": [some_id]}
+        mock_requests.post.return_value = mock_response
         data = json.dumps(self.response_message_to_post)
 
-        response = self.client.post(self.RESPONSE_MESSAGE_ENDPOINT +'/?step=123445', data=data, content_type="application/json")
-
-        # self.assertTrue(mock_requests.post.called_once_with(API_URL, json.dumps(self.response_message_to_post), self.headers))
+        response = self.client.post(self.RESPONSE_MESSAGE_ENDPOINT +'/?step=somestring', data=data, content_type="application/json")
+        self.assertTrue(mock_requests.post.called_once_with(API_URL, json.dumps(self.response_message_to_post), self.headers))
         # self.assertEqual(201, response.status_code)
         #
         # retrieved_sms = ResponseMessage.objects(**self.response_message_to_retrieve)

@@ -1,6 +1,7 @@
 from rest_condition import Or
 from rest_framework_mongoengine import serializers
 from rest_framework_mongoengine.generics import ListCreateAPIView
+from dms.models import AdminSetting
 from dms.models.response_message import ResponseMessage
 from dms.tasks import send_one_sms
 from dms.utils.permission_class_factory import build_permission_class, IsGetRequest
@@ -27,4 +28,6 @@ class ResponseMessageListCreateView(ListCreateAPIView):
         obj.response_to = in_response_to
 
     def post_save(self, obj, created=True):
-        send_one_sms.delay(obj)
+        auto_response_enabled = AdminSetting.objects(**dict(name='enable_automatic_response', yes_no=True)).first()
+        if auto_response_enabled:
+            send_one_sms.delay(obj)

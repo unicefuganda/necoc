@@ -50,10 +50,10 @@ class RapidProListCreateView(ListCreateAPIView):
     permission_classes = (AllowAny,)
     model = RapidProMessage
 
-    def post_save(self, obj, created=True):
-        auto_responses_enabled = AdminSetting.objects.get(**dict(name='enable_automatic_response')).yes_no
-        if auto_responses_enabled:
-            self._send_auto_response(obj)
+    # def post_save(self, obj, created=True):
+    #     auto_responses_enabled = AdminSetting.objects.get(**dict(name='enable_automatic_response')).yes_no
+    #     if auto_responses_enabled:
+    #         self._send_auto_response(obj)
 
     def get_queryset(self):
         queryset = self._non_location_queried_messages()

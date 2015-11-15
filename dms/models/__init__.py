@@ -9,6 +9,7 @@ from dms.models.poll_response import PollResponse
 from dms.models.poll import Poll
 from dms.models.rapid_pro_message import RapidProMessage
 from dms.models.admin_setting import AdminSetting
+from dms.models.response_message import ResponseMessage
 
 
 __all__=[
@@ -17,6 +18,7 @@ __all__=[
     'UserProfile',
     'RapidProMessage',
     'SentMessage',
+    'ResponseMessage',
     'Disaster',
     'Poll',
     'PollResponse',

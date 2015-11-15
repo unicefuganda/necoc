@@ -16,6 +16,7 @@ from dms.api.poll_endpoint import PollListCreateView
 from dms.api.poll_response_endpoint import PollResponseListCreateView
 from dms.api.rapid_pro_endpoint import RapidProListCreateView, RapidProRetrieveUpdateView
 from dms.api.location_endpoint import LocationListCreateView
+from dms.api.response_message_endpoint import ResponseMessageListCreateView
 from dms.api.stats_summary_service_endpoint import SummaryStatsListView
 from dms.api.user_profile_endpoint import UserProfileListCreateView, UserProfileView
 from dms.views.api_token import ObtainAPIToken
@@ -46,6 +47,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/mobile-users/(?P<id>[0-9a-z]+)/password/$', PasswordChangeView.as_view()),
     url(r'^api/v1/mobile-users/(?P<id>[0-9a-z]+)/password_reset/$', PasswordResetView.as_view()),
     url(r'^api/v1/sent-messages/$', SentMessageListCreateView.as_view()),
+    url(r'^api/v1/response-messages/$', ResponseMessageListCreateView.as_view()),
     url(r'^api/v1/disaster-types/$', DisasterTypeListCreateView.as_view()),
     url(r'^api/v1/disasters/$', DisasterListCreateView.as_view()),
     url(r'^api/v1/disasters/(?P<id>[0-9a-z]+)/$', DisasterView.as_view()),

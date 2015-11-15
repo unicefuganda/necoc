@@ -240,30 +240,30 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(0, len(response.data))
 
-    def test_should_autorespond_to_messages(self):
-        api_url = settings.HOSTNAME + settings.AUTO_RESPONSE_ENDPOINT
-        resp_count = len(urllib2.urlopen(api_url).read())
-        RapidProMessage(**self.message).save()
-
-        response = urllib2.urlopen(api_url)
-        json_response = json.loads(response.read())
-
-        self.assertEqual(200, response.getcode())
-        self.assertDictContainsSubset(self.auto_message_response, json_response[0])
-        self.assertEqual(settings.AUTO_RESPONSE_MESSAGE, json_response[0]['text'])
-
-    def test_should_not_autorespond_if_setting_off(self):
-        api_url = settings.HOSTNAME + settings.AUTO_RESPONSE_ENDPOINT
-        enable_auto = AdminSetting.objects.get(**dict(name='enable_automatic_response'))
-        enable_auto.yes_no = False
-        enable_auto.save()
-
-        response = urllib2.urlopen(api_url)
-        json_response = json.loads(response.read())
-        response_count = len(json_response)
-
-        RapidProMessage(**self.message).save()
-        response = urllib2.urlopen(api_url)
-        json_response = json.loads(response.read())
-        self.assertEqual(response_count, len(json_response))
+    # def test_should_autorespond_to_messages(self):
+    #     api_url = settings.HOSTNAME + settings.AUTO_RESPONSE_ENDPOINT
+    #     resp_count = len(urllib2.urlopen(api_url).read())
+    #     RapidProMessage(**self.message).save()
+    #
+    #     response = urllib2.urlopen(api_url)
+    #     json_response = json.loads(response.read())
+    #
+    #     self.assertEqual(200, response.getcode())
+    #     self.assertDictContainsSubset(self.auto_message_response, json_response[0])
+    #     self.assertEqual(settings.AUTO_RESPONSE_MESSAGE, json_response[0]['text'])
+    #
+    # def test_should_not_autorespond_if_setting_off(self):
+    #     api_url = settings.HOSTNAME + settings.AUTO_RESPONSE_ENDPOINT
+    #     enable_auto = AdminSetting.objects.get(**dict(name='enable_automatic_response'))
+    #     enable_auto.yes_no = False
+    #     enable_auto.save()
+    #
+    #     response = urllib2.urlopen(api_url)
+    #     json_response = json.loads(response.read())
+    #     response_count = len(json_response)
+    #
+    #     RapidProMessage(**self.message).save()
+    #     response = urllib2.urlopen(api_url)
+    #     json_response = json.loads(response.read())
+    #     self.assertEqual(response_count, len(json_response))
 

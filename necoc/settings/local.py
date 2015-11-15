@@ -34,5 +34,3 @@ if ('test' in sys.argv) or ('0.0.0.0:7999' in sys.argv) or ('test_user' in sys.a
 from mongoengine.connection import connect
 connect(MONGODB_NAME, host=MONGODB_DATABASE_HOST)
 
-HOSTNAME = 'http://41.210.128.37:80' #No trailing slash
-

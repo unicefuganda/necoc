@@ -22,7 +22,7 @@ class ResponseMessageListCreateView(ListCreateAPIView):
     permission_classes = [Or(build_permission_class('dms.can_manage_messages'), IsGetRequest)]
 
     def pre_save(self, obj):
-        in_response_to = self.request.DATA['text']
+        in_response_to = self.request.DATA.get('text', '')
         phone_no = self.request.DATA.get('phone', None)
         if not phone_no is None:
             self.request.DATA['response_to'] = in_response_to

@@ -19,13 +19,14 @@ def send_bulk_sms(obj, phone_numbers=[], text=""):
 
     obj.save()
 
+
 @task
-def send_one_sms(obj, phone_number='', text=""):
+def send_one_sms(obj, phone='', text=""):
 
     try:
-        phone_number = phone_number or getattr(obj, 'phone_number', '')
+        phone = phone or getattr(obj, 'phone', '')
         text = text or getattr(obj, 'text', '')
-        response = _sendone(phone_number, text)
+        response = _sendone(phone, text)
         _log(response, obj)
     except RequestException as e:
         obj.log = "%s: %s" % (e.__class__.__name__, str(e.message))
@@ -33,8 +34,8 @@ def send_one_sms(obj, phone_number='', text=""):
     obj.save()
 
 
-def _sendone(phone_number, text):
-    data = dict(phone=phone_number, text=text)
+def _sendone(phone, text):
+    data = dict(phone=phone, text=text)
     headers = {'Authorization': 'Token ' + API_TOKEN,
                'content-type': 'application/json'}
     return requests.post(API_URL, data=json.dumps(data), headers=headers)

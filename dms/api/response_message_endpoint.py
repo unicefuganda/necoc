@@ -1,4 +1,5 @@
 from rest_condition import Or
+from rest_framework import fields
 from rest_framework_mongoengine import serializers
 from rest_framework_mongoengine.generics import ListCreateAPIView
 from dms.models import RapidProMessage
@@ -14,11 +15,10 @@ class ResponseMessageSerializer(serializers.MongoEngineModelSerializer):
 
     def pre_save(self, obj):
         self.request.DATA['text'] = settings.AUTO_RESPONSE_MESSAGE
-        phone_no = self.request.DATA.get('phone_numbers', None)
+        phone_no = self.request.DATA.get('phone', None)
         if not phone_no is None:
-            phone = phone_no[0]
-        self.request.DATA['response_to'] = \
-        RapidProMessage.objects.filter(phone_no=phone).order_by('-created_at').first()
+            self.request.DATA['response_to'] = \
+                RapidProMessage.objects.filter(phone_no=phone_no).order_by('-created_at').first()
 
     class Meta:
         model = ResponseMessage

@@ -15,9 +15,9 @@ class TestLocationEndpoint(MongoAPITestCase):
 
     def setUp(self):
         self.login_user()
-        phone_number = '+256775019449'
+        phone = '+256775019449'
         self.response_text = settings.AUTO_RESPONSE_MESSAGE
-        self.response_message_to_post = dict(text=self.response_text, phone_number=phone_number)
+        self.response_message_to_post = dict(text=self.response_text, phone=phone)
         self.headers = {'Authorization': 'Token ' + API_TOKEN,
                         'content-type': 'application/json'}
 

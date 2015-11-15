@@ -15,6 +15,7 @@ ADMINS = (
 )
 
 API_TOKEN = os.environ['API_TOKEN']
+API_AUTHORIZED_STEP = os.environ['API_AUTHORIZED_STEP']
 API_URL = 'https://app.rapidpro.io/api/v1/sms.json'
 LOCATION_MATCH_LEVEL = 0.9
 MESSAGE_LOCATION_INDEX = 2
@@ -250,7 +251,7 @@ RESET_PASSWORD_MESSAGE = """
 AUTO_RESPONSE_MESSAGE = """Thank you for your message. A response team will be deployed to your area. \
 Please continue sending messages using NECOC.District.Subcounty.Message to 6700
 """
-AUTO_RESPONSE_ENDPOINT = '/api/v1/sent-messages/'
+# AUTO_RESPONSE_ENDPOINT = '/api/v1/sent-messages/'
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # TEST_RUNNER = 'dms.tests.runner.NoSQLTestRunner'

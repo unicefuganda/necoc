@@ -24,10 +24,8 @@ class ResponseMessageListCreateView(ListCreateAPIView):
     def pre_save(self, obj):
         in_response_to = self.request.DATA.get('text', '')
         phone_no = self.request.DATA.get('phone', None)
-        if not phone_no is None:
-            self.request.DATA['response_to'] = in_response_to
         obj.text = settings.AUTO_RESPONSE_MESSAGE
-        obj.response_to = self.request.DATA['response_to']
+        obj.response_to = in_response_to
 
     def post_save(self, obj, created=True):
         send_one_sms.delay(obj)

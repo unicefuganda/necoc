@@ -42,6 +42,25 @@ class TestLocationEndpoint(MongoAPITestCase):
         self.assertEqual(success_log, retrieved_sms[0].log)
 
     @patch('dms.tasks.requests')
+    def test_should_post_with_alternate_authentication(self, mock_requests):
+        success_log = '201: rapid_pro_id = 1234'
+        some_id = 1234
+        mock_response = MagicMock()
+        mock_response.status_code = 201
+        mock_response.json.return_value = {"messages": [some_id], "sms": [some_id]}
+        mock_requests.post.return_value = mock_response
+        data = json.dumps(self.response_message_to_post)
+
+        response = self.client.post(self.RESPONSE_MESSAGE_ENDPOINT +'/?step=123445', data=data, content_type="application/json")
+
+        # self.assertTrue(mock_requests.post.called_once_with(API_URL, json.dumps(self.response_message_to_post), self.headers))
+        # self.assertEqual(201, response.status_code)
+        #
+        # retrieved_sms = ResponseMessage.objects(**self.response_message_to_retrieve)
+        # self.assertEqual(1, retrieved_sms.count())
+        # self.assertEqual(success_log, retrieved_sms[0].log)
+
+    @patch('dms.tasks.requests')
     def test_should_save_exception_message(self, mock_requests):
         some_error = 'I do not accept your message'
         mock_requests.post.side_effect = RequestException(some_error)

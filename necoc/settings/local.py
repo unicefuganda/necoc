@@ -30,6 +30,7 @@ if ('test' in sys.argv) or ('0.0.0.0:7999' in sys.argv) or ('test_user' in sys.a
     EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
     HOSTNAME = 'http://localhost:8000' #No trailing slash
     API_USER_PASS = '10123456'
+    API_AUTHORIZATION_STEP = '123445'
 
 from mongoengine.connection import connect
 connect(MONGODB_NAME, host=MONGODB_DATABASE_HOST)

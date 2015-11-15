@@ -23,7 +23,6 @@ class ResponseMessageListCreateView(ListCreateAPIView):
 
     def pre_save(self, obj):
         in_response_to = self.request.DATA.get('text', '')
-        phone_no = self.request.DATA.get('phone', None)
         obj.text = settings.AUTO_RESPONSE_MESSAGE
         obj.response_to = in_response_to
 

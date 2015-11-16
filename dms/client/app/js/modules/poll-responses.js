@@ -7,6 +7,9 @@
             },
             filter: function (filter, filter_id) {
                 return $http.get(Config.apiUrl + 'poll-responses/?' + filter + '=' + filter_id);
+            },
+            uncategorized: function() {
+                return $http.get(Config.apiUrl + 'poll-responses/?uncategorized=True');
             }
         }
     });
@@ -26,6 +29,20 @@
         $scope.backToPolls = function () {
             $state.go('admin.polls');
         };
+
+        $scope.uncategorizedResponses = function () {
+            PollResponsesService.uncategorized().then(function(response){
+                $scope.poll_responses = response.data;
+            });
+        };
+
+        $scope.notSorted = function(obj){
+            if (!obj) {
+                return [];
+            }
+            var sorted = Object.keys(obj);
+            return sorted
+        }
 
     });
 

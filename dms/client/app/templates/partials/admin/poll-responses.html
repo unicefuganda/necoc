@@ -38,6 +38,14 @@
                 {[{ poll_text }]} Responses </span>
                 <span class="badge"> {[{poll_responses.length}]}</span>
             </div>
+
+            <div class="col-md-2">
+                <button id="back-to-polls-btn" type="button" class="btn btn-default btn-icon"
+                        ng-click="uncategorizedResponses()">
+                    <span class="value">Uncategorized Responses</span>
+                    <span class="icon icon-arrow-line-right"></span>
+                </button>
+            </div>
         </div>
 
         <table si-table="" class="table table-hover table-striped style-header">
@@ -51,7 +59,7 @@
             </thead>
 
             <tbody>
-            <tr ng-repeat="poll_response in poll_responses | orderBy: 'created_at': true">
+            <tr ng-repeat="key in notSorted(poll_responses)" ng-init="poll_response = poll_responses[key]">
                 <td>{[{ poll_response.source }]} <span>({[{ poll_response.phone }]})</span></td>
                 <td>{[{ poll_response.text }]}</td>
                 <td>{[{ poll_response.location }]}</td>

@@ -32,6 +32,16 @@ class PollListCreateView(ListCreateAPIView):
     permission_classes = [Or(build_permission_class('dms.can_manage_polls'),
                              And(build_permission_class('dms.can_view_polls'), IsGetRequest))]
 
+    def get_queryset(self):
+        query_params = {key: value or None for key, value in self.request.GET.items()}
+        if 'ordering' in query_params:
+            ordering_params = query_params['ordering']
+            del query_params['ordering']
+            query_set = Poll.objects(**query_params).order_by('%s' % ordering_params)
+        else:
+            query_set = Poll.objects(**query_params).order_by('-created_at')
+        return query_set
+
     def post_save(self, obj, created=True):
         locations = self.get_location(obj)
         phone_numbers = list(UserProfile.objects(location__in=locations).values_list('phone'))

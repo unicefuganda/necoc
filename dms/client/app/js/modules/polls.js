@@ -20,6 +20,14 @@
             $state.go('admin.poll-responses', {poll: poll.id, pollName: poll.name});
         };
 
+        $scope.notSorted = function(obj){
+            if (!obj) {
+                return [];
+            }
+            var sorted = Object.keys(obj);
+            return sorted
+        }
+
     });
 
     module.controller('NewPollController', function ($scope, PollService, growl, helpers) {

@@ -26,6 +26,9 @@ class PollResponseListCreateView(ListCreateAPIView):
     model = PollResponse
 
     def get_queryset(self):
-        fields = PollResponse._fields_ordered
-        query_params = {key: value or None for key, value in self.request.GET.items() if key in fields}
-        return PollResponse.objects(**query_params)
+        if self.request.DATA.get('not_assigned'):
+            return PollResponse.objects(**dict(poll=None)).order_by('-created_at')
+        else:
+            fields = PollResponse._fields_ordered
+            query_params = {key: value or None for key, value in self.request.GET.items() if key in fields}
+            return PollResponse.objects(**query_params).order_by('-created_at')

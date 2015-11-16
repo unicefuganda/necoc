@@ -29,7 +29,7 @@
             </thead>
 
             <tbody>
-            <tr ng-repeat="poll in polls | orderBy: 'created_at': true" ng-click="showPollResponses(poll)">
+            <tr ng-repeat="key in notSorted(polls)" ng-init="poll = polls[key]" ng-click="showPollResponses(poll)">
                 <td>{[{ poll.name }]}</td>
                 <td>{[{ poll.question }]}</td>
                 <td>{[{ poll.number_of_responses }]}</td>

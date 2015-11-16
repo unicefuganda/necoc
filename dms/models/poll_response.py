@@ -26,5 +26,8 @@ class PollResponse(RapidProMessageBase):
 
     def split_text(self):
         separator = getattr(settings, "POLL_RESPONSE_SEPARATOR", " ")
-        split_message = self.text.split(separator)
+        try:
+            split_message = self.text.split(separator)
+        except AttributeError:
+            split_message = []
         return map(lambda x: x.strip(), split_message)

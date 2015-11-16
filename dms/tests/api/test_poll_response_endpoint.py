@@ -1,5 +1,5 @@
 import datetime
-from dms.models import Location, UserProfile, Poll
+from dms.models import Location, UserProfile, Poll, RapidProMessage
 from dms.models.poll_response import PollResponse
 from dms.tests.base import MongoAPITestCase
 
@@ -20,11 +20,18 @@ class PollResponseEndPointTest(MongoAPITestCase):
 
 
         self.text_format = "NECOCPoll %s there are 4 or 5"
+        self.no_keyword = ''
         text = self.text_format % self.poll_attr['keyword']
-        self.expected_poll_response = dict(phone="256775019449", text=text, time=self.date_time, relayer=234,
-                                     run=23243)
-        self.poll_response = dict(phone_no="256775019449", text=text, received_at=self.date_time,
-                            relayer_id=234, run_id=23243)
+        self.expected_poll_response = dict(phone="256775019449", text=text, time=self.date_time, relayer=234, run=23243)
+        self.poll_response = dict(phone_no="256775019449", text=text, received_at=self.date_time, relayer_id=234, run_id=23243)
+        self.no_keyword_response = dict(phone="256775019449", text=(self.text_format % self.no_keyword), time=self.date_time, relayer=234, run=23243)
+        self.no_keyword_message = dict(phone_no="256775019449", text=(self.text_format % self.no_keyword), received_at=self.date_time, relayer_id=234, run_id=23243)
+        self.wrong_format_response = dict(phone="256775019449", text="there are 4 or 5", time=self.date_time, relayer=234, run=23243)
+        self.wrong_format_message = dict(phone_no="256775019449", text="there are 4 or 5", received_at=self.date_time, relayer_id=234, run_id=23243)
+        self.no_text_response = dict(phone="256775019449", text="NECOCPoll ", time=self.date_time, relayer=234, run=23243)
+        self.no_text_message = dict(phone_no="256775019449", text="NECOCPoll ", received_at=self.date_time, relayer_id=234, run_id=23243)
+        self.special_response_for_rapidtester = dict(phone="256775019449", text=None, time=self.date_time, relayer=234, run=23243)
+        self.special_response = dict(phone_no="256775019449", text=None, received_at=self.date_time, relayer_id=234, run_id=23243)
         self.client.logout()
 
     def _api_url(self, id):
@@ -36,6 +43,36 @@ class PollResponseEndPointTest(MongoAPITestCase):
 
         retrieved_poll_response = PollResponse.objects(**self.poll_response)
         self.assertEqual(1, retrieved_poll_response.count())
+
+    def test_should_save_no_keyword_poll_response(self):
+        response = self.client.post(self.API_ENDPOINT, data=self.no_keyword_response)
+        self.assertEqual(201, response.status_code)
+
+        retrieved_poll_response = PollResponse.objects(**self.no_keyword_message)
+        self.assertEqual(1, retrieved_poll_response.count())
+
+    def test_should_save_wrong_format_poll_response(self):
+        response = self.client.post(self.API_ENDPOINT, data=self.wrong_format_response)
+        self.assertEqual(201, response.status_code)
+
+        retrieved_poll_response = PollResponse.objects(**self.wrong_format_message)
+        self.assertEqual(1, retrieved_poll_response.count())
+        # retrieved_message = RapidProMessage.objects(**self.wrong_format_message)
+        # self.assertEqual(1, retrieved_message.count())
+
+    def test_should_save_no_text_poll_response(self):
+        response = self.client.post(self.API_ENDPOINT, data=self.no_text_response)
+        self.assertEqual(201, response.status_code)
+
+        retrieved_poll_response = PollResponse.objects(**self.no_text_message)
+        self.assertEqual(1, retrieved_poll_response.count())
+
+    def test_should_process_special_test_response(self):
+        response = self.client.post(self.API_ENDPOINT, data=self.special_response_for_rapidtester)
+        self.assertEqual(201, response.status_code)
+
+        retrieved_poll_response = PollResponse.objects(**self.special_response)
+        self.assertEqual(0, retrieved_poll_response.count())
 
     def test_should_get_rapid_pro_poll_response(self):
         PollResponse(**self.poll_response).save()

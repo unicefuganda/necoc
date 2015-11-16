@@ -1,3 +1,4 @@
+import re
 from django.conf import settings
 from mongoengine import *
 from dms.models.poll import Poll
@@ -25,9 +26,8 @@ class PollResponse(RapidProMessageBase):
             return Poll.objects(keyword=keyword).first()
 
     def split_text(self):
-        separator = getattr(settings, "POLL_RESPONSE_SEPARATOR", " ")
         try:
-            split_message = self.text.split(separator)
-        except AttributeError:
+            split_message = re.findall(r"[\w']+", self.text)
+        except TypeError:
             split_message = []
         return map(lambda x: x.strip(), split_message)

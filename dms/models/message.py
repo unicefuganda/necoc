@@ -43,7 +43,7 @@ class RapidProMessageBase (ReceivedMessage):
             try:
                 user_profile = UserProfile.objects.get(phone=self.phone_no)
                 return user_profile.name
-            except user_profile.DoesNotExist:
+            except DoesNotExist:
                 return self.SENDER
         else:
             return self.SENDER

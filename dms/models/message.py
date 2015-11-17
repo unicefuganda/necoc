@@ -1,4 +1,5 @@
 import datetime
+from django.db.models.loading import get_model, get_models, get_app
 from mongoengine import *
 
 from dms.models import UserProfile
@@ -35,7 +36,17 @@ class RapidProMessageBase (ReceivedMessage):
         return super(RapidProMessageBase, self).save(*args, **kwargs)
 
     def source(self):
-        return self.SENDER
+        app = get_app('dms')
+        SettingModel = app.admin_setting.AdminSetting
+        volunteer_profiles = SettingModel._lookup("enable_volunteer_profiles")
+        if volunteer_profiles and volunteer_profiles.yes_no:
+            try:
+                user_profile = UserProfile.objects.get(phone=self.phone_no)
+                return user_profile.name
+            except user_profile.DoesNotExist:
+                return self.SENDER
+        else:
+            return self.SENDER
 
     def mobile_user(self):
         phone_no = self.phone_no.replace(settings.INTERNATIONAL_PHONE_PREFIX, '')

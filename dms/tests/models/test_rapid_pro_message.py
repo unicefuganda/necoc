@@ -1,6 +1,6 @@
 import datetime
 from django.test import override_settings
-from dms.models import DisasterType, Disaster
+from dms.models import DisasterType, Disaster, AdminSetting
 from dms.models.location import Location
 from dms.models.user_profile import UserProfile
 
@@ -20,6 +20,7 @@ class TestRapidProMessage(MongoTestCase):
         
         self.message = dict(phone_no=phone_number, text="NECOC. There is a fire", received_at=date_time, relayer_id=234,
                         run_id=23243)
+        AdminSetting(**dict(name='enable_volunteer_profiles')).save()
 
     def test_fields(self):
         expected_fields = ['text', 'created_at', 'phone_no', 'received_at', 'location', 'disaster']
@@ -137,4 +138,17 @@ class TestRapidProMessage(MongoTestCase):
         self.assertEqual(2, location_messages.count())
         self.assertIn(message, location_messages)
         self.assertIn(message1, location_messages)
+
+    def test_get_user_profile_name_if_exists(self):
+        self.message['location'] = self.village
+        disaster_type = DisasterType(**dict(name="Fire", description="Fire")).save()
+        disaster_attributes = dict(name=disaster_type, locations=[self.village],
+                                   description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
+        disaster = Disaster(**disaster_attributes).save()
+        self.message['disaster'] = disaster
+
+        RapidProMessage(**self.message).save()
+
+        rp_messages = RapidProMessage.objects(**self.message)
+        self.assertEqual(self.mobile_user.name, rp_messages[0].source())
 

@@ -50,11 +50,6 @@ class RapidProListCreateView(ListCreateAPIView):
     permission_classes = (AllowAny,)
     model = RapidProMessage
 
-    # def post_save(self, obj, created=True):
-    #     auto_responses_enabled = AdminSetting.objects.get(**dict(name='enable_automatic_response')).yes_no
-    #     if auto_responses_enabled:
-    #         self._send_auto_response(obj)
-
     def get_queryset(self):
         queryset = self._non_location_queried_messages()
         location_queried = self.request.GET.get('location', None)
@@ -87,10 +82,6 @@ class RapidProListCreateView(ListCreateAPIView):
         disaster_type = DisasterType.objects(id=disaster_type).first()
         disasters = Disaster.objects(name=disaster_type)
         return queryset.filter(disaster__in=disasters)
-
-    def _send_auto_response(self, obj):
-        data_dict = dict(phone_numbers=[obj.phone_no], text=settings.AUTO_RESPONSE_MESSAGE)
-        post_to_api(settings.AUTO_RESPONSE_ENDPOINT, data_dict)
 
 
 class RapidProRetrieveUpdateView(MongoRetrieveUpdateView):

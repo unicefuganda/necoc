@@ -24,3 +24,19 @@ class AdminSetting(BaseModel):
             return cls.objects.get(name=setting)
         except DoesNotExist:
             return None
+
+    @classmethod
+    def _set_attr(cls, setting, new_value, attribute='yes_no'):
+        setting.__setattr__(attribute, new_value)
+        setting.save()
+
+    @classmethod
+    def _set(cls, setting_name, new_value):
+        setting = cls._lookup(str(setting_name))
+        if setting:
+            if type(new_value) == bool:
+                cls._set_attr(setting, new_value)
+            elif type(new_value) == str:
+                cls._set_attr(setting, new_value, 'value_str')
+            else:
+                cls._set_attr(setting, new_value, 'value_int')

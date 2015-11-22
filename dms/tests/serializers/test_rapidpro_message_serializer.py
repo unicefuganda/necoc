@@ -1,6 +1,6 @@
 import pytz
 from dms.api.rapid_pro_endpoint import RapidProMessageSerializer
-from dms.models import DisasterType, Disaster
+from dms.models import DisasterType, Disaster, AdminSetting
 from dms.models.location import Location
 from dms.models.user_profile import UserProfile
 from dms.models.rapid_pro_message import RapidProMessage
@@ -21,14 +21,18 @@ class RapidProMessageSerializerTest(MongoTestCase):
                             run_id=23243)
         self.serialized_data = dict(phone=phone_number, time=self.date_time, relayer=234, run=23243,
                             text=text)
+        AdminSetting(**dict(name='enable_volunteer_profiles')).save()
 
     def test_should_serialize_rapid_pro_message_object(self):
         rapid_pro_message = RapidProMessage(**self.message).save()
         serialized_object = RapidProMessageSerializer(rapid_pro_message)
         self.serialized_data['time'] = self.date_time.replace(tzinfo=pytz.utc)
         serialized_data_with_source = dict(self.serialized_data.items() +
-                                           {'id': str(rapid_pro_message.id), 'source': 'NECOC Volunteer',
-                                            'disaster': None, 'location': 'Kampala >> Bukoto'}.items())
+                                           {'id': str(rapid_pro_message.id),
+                                            'source': self.mobile_user.name,
+                                            'disaster': None,
+                                            'location': 'Kampala >> Bukoto',
+                                            'profile_id':str(self.mobile_user.id)}.items())
         self.assertEqual(serialized_data_with_source, serialized_object.data)
 
     def test_should_deserialize_rapid_pro_message_object(self):

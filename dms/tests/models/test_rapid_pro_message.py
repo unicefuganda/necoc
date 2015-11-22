@@ -152,3 +152,17 @@ class TestRapidProMessage(MongoTestCase):
         rp_messages = RapidProMessage.objects(**self.message)
         self.assertEqual(self.mobile_user.name, rp_messages[0].source())
 
+    def test_default_user_profile_name_if_profile_names_not_enabled(self):
+        AdminSetting._set("enable_volunteer_profiles", False)
+        self.message['location'] = self.village
+        disaster_type = DisasterType(**dict(name="Fire", description="Fire")).save()
+        disaster_attributes = dict(name=disaster_type, locations=[self.village],
+                                   description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
+        disaster = Disaster(**disaster_attributes).save()
+        self.message['disaster'] = disaster
+
+        RapidProMessage(**self.message).save()
+
+        rp_messages = RapidProMessage.objects(**self.message)
+        self.assertEqual("NECOC Volunteer", rp_messages[0].source())
+

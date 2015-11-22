@@ -1,5 +1,5 @@
 import datetime
-from django.db.models.loading import get_model, get_models, get_app
+from django.db.models.loading import get_app
 from mongoengine import *
 
 from dms.models import UserProfile
@@ -47,6 +47,13 @@ class RapidProMessageBase (ReceivedMessage):
                 return self.SENDER
         else:
             return self.SENDER
+
+    def profile_id(self):
+        try:
+            user = UserProfile.objects.get(phone=self.phone_no)
+            return user.id
+        except DoesNotExist:
+            return None
 
     def mobile_user(self):
         phone_no = self.phone_no.replace(settings.INTERNATIONAL_PHONE_PREFIX, '')

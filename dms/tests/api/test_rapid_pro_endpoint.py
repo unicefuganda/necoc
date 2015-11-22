@@ -42,7 +42,9 @@ class RapidProEndPointTest(MongoAPITestCase):
 
         self.api_user, created = User.objects.get_or_create(**dict(username='admin'))
         self.auto_message_response = dict(phone_numbers=[u'+256775019449'], text=settings.AUTO_RESPONSE_MESSAGE)
+
         AdminSetting(**dict(name='enable_automatic_response')).save()
+        AdminSetting(**dict(name='enable_volunteer_profiles')).save()
 
     def _api_url(self, id):
         return "%s%s/" % (self.API_ENDPOINT, str(id))
@@ -74,7 +76,7 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, len(response.data))
         self.assertDictContainsSubset(self.expected_message, response.data[0])
-        self.assertEqual('NECOC Volunteer', response.data[0]['source'])
+        self.assertEqual(self.mobile_user.name, response.data[0]['source'])
         self.assertEqual('Kampala >> Bukoto', response.data[0]['location'])
         self.assertIsNotNone(response.data[0]['id'])
 
@@ -111,7 +113,7 @@ class RapidProEndPointTest(MongoAPITestCase):
         one_hour_later_date = one_hour_later_date.replace(tzinfo=pytz.utc)
         other_message_options = dict(phone_no=other_phone_number, text=self.text_format % wakiso.name, received_at=one_hour_later_date,
                                      relayer_id=234, run_id=23243)
-        UserProfile(**dict(name='timothy', phone=other_phone_number, location=wakiso)).save()
+        user_profile = UserProfile(**dict(name='timothy', phone=other_phone_number, location=wakiso)).save()
         wakiso_message = RapidProMessage(**other_message_options).save()
 
         response = self.client.get(self.API_ENDPOINT, {"location": self.district.id, "format": "json"})
@@ -119,11 +121,17 @@ class RapidProEndPointTest(MongoAPITestCase):
         wakiso_expected_message = {'phone': other_phone_number, 'time': one_hour_later_date, 'relayer': 234, 'run': 23243,
                                    'text': self.text_format % wakiso.name, 'disaster': None}
         wakiso_expected_message = dict(wakiso_expected_message.items() + {
-            'source': 'NECOC Volunteer', 'id': str(wakiso_message.id), 'location': str(wakiso)}.items())
+            'source': user_profile.name,
+            'id': str(wakiso_message.id),
+            'location': str(wakiso),
+            'profile_id': str(user_profile.id)}.items())
 
         bukoto_expected_message = dict(self.expected_message.items() + {
-            'source': 'NECOC Volunteer', 'id': str(bukoto_message.id), 'disaster': None,
-            'location': str(self.village)}.items())
+            'source': self.mobile_user.name,
+            'id': str(bukoto_message.id),
+            'disaster': None,
+            'location': str(self.village),
+             'profile_id': str(self.mobile_user.id)}.items())
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(2, len(response.data))

@@ -112,6 +112,13 @@
                 templateUrl: '/static/templates/partials/admin/settings/admin-settings.html',
                 controller: 'AdminSettingsController'
             })
+
+            .state('admin.sender-profile', {
+                url: '/sender/:userId',
+                data: { pageTitle: 'Sender Profile' },
+                templateUrl: '/static/templates/partials/admin/users/sender-profile.html',
+                controller: 'SenderProfileController'
+            })
     });
 
 

@@ -140,19 +140,4 @@
         }
     });
 
-    //module.directive('openProfile',
-    //   function() {
-    //      return {
-    //         link :   function($document, element, attrs) {
-    //            function openProfile() {
-    //                var element = angular.element('#sender-profile-modal');
-    //                var ctrl = element.controller();
-    //                ctrl.setModel($scope.userId);
-    //                element.modal('show');
-    //            }
-    //            element.bind('click', openProfile);
-    //       }
-    //   }
-    //});
-
 })(angular.module('dms.message', ['dms.config', 'angular-growl', 'dms.utils', 'dms.admin-panel']));

@@ -32,7 +32,8 @@ class RapidProMessageSerializerTest(MongoTestCase):
                                             'source': self.mobile_user.name,
                                             'disaster': None,
                                             'location': 'Kampala >> Bukoto',
-                                            'profile_id':str(self.mobile_user.id)}.items())
+                                            'profile_id':str(self.mobile_user.id),
+                                            'auto_associated': False}.items())
         self.assertEqual(serialized_data_with_source, serialized_object.data)
 
     def test_should_deserialize_rapid_pro_message_object(self):

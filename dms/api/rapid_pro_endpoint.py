@@ -43,7 +43,7 @@ class RapidProMessageSerializer(serializers.MongoEngineModelSerializer):
 
     class Meta:
         model = RapidProMessage
-        fields = ('id', 'phone', 'time', 'relayer', 'run', 'text', 'source', 'location', 'disaster', 'profile_id')
+        fields = ('id', 'phone', 'time', 'relayer', 'run', 'text', 'source', 'location', 'disaster', 'profile_id', 'auto_associated')
 
 
 class RapidProListCreateView(ListCreateAPIView):

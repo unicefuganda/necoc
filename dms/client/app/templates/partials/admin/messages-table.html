@@ -7,6 +7,7 @@
         <th sort-by="location" class="sm-column">Location</th>
         <th sort-by="time" sort-init="desc" >Date Time</th>
         <th sort-by="disaster == undefined" class="sm-column">Status {[{ filter.location }]}</th>
+        <th sort-by="disaster == undefined" class="md-column" title="Automatically Associated Disaster">Auto Disaster</th>
     </tr>
     </thead>
     <tbody>
@@ -20,6 +21,10 @@
         <td class="status">
             <span ng-show="message.disaster" class="label label-success">Associated</span>
             <span ng-hide="message.disaster" class="label label-warning">Pending</span>
+        </td>
+        <td class="status">
+            <span ng-show="message.auto_associated" class="label label-success">Auto: {[{ message.disaster }]}</span>
+            <span ng-hide="message.auto_assoicated" class="label label-warning"></span>
         </td>
     </tr>
     </tbody>

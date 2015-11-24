@@ -14,7 +14,9 @@ def associate_disaster(sender, instance=None, created=False, **kwargs):
             disaster = instance.disaster or instance._associate_to_disaster()
             if disaster and type(disaster) == str:
                 disaster_type = dTModel.objects(**dict(name=disaster)).order_by('-created_at').first()
-                disaster_obj = dModel.objects(**dict(name=disaster_type, locations=instance.location)).first()
+                disaster_obj = dModel.objects(**dict(name=disaster_type, locations=instance.location))\
+                    .order_by('-created_at').first()
                 instance.disaster = disaster_obj
-                instance.auto_associated = True
+                if disaster_obj:
+                    instance.auto_associated = True
                 instance.save()

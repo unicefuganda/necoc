@@ -30,7 +30,7 @@ class RapidProEndPointTest(MongoAPITestCase):
 
         self.fire_type = DisasterType(**dict(name="Fire", description="Fire")).save()
         disaster_attributes = dict(name=self.fire_type, locations=[self.district],
-                                   description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
+                                   description="Big Fire", date="2014-12-01 00:00:00", status="Assessment")
         self.disaster = Disaster(**disaster_attributes).save()
 
         self.text_format = "NECOC.%s. There is a fire"
@@ -124,14 +124,16 @@ class RapidProEndPointTest(MongoAPITestCase):
             'source': user_profile.name,
             'id': str(wakiso_message.id),
             'location': str(wakiso),
-            'profile_id': str(user_profile.id)}.items())
+            'profile_id': str(user_profile.id),
+            'auto_associated': False}.items())
 
         bukoto_expected_message = dict(self.expected_message.items() + {
             'source': self.mobile_user.name,
             'id': str(bukoto_message.id),
             'disaster': None,
             'location': str(self.village),
-             'profile_id': str(self.mobile_user.id)}.items())
+            'profile_id': str(self.mobile_user.id),
+            'auto_associated': False}.items())
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(2, len(response.data))
@@ -249,13 +251,27 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(0, len(response.data))
 
     def test_should_auto_associate_message_to_disaster(self):
-        self.disaster_type = DisasterType(**dict(name='Flood', description="Some flood")).save()
-        self.disaster_attr = dict(name=self.disaster_type, locations=[self.district], description="Big Flood",
+        disaster_type = DisasterType(**dict(name='Flood', description="Some flood")).save()
+        disaster_attr = dict(name=disaster_type, locations=[self.district], description="Big Flood",
                                   date=self.date_time,
                                   status="Assessment")
-        kampala_disaster = Disaster(**self.disaster_attr).save()
+        kampala_disaster = Disaster(**disaster_attr).save()
         text = "NECOC.%s. flood here and allover the place!" % self.district.name
         self.message['text'] = text
         saved_message = RapidProMessage(**self.message).save()
         self.assertEqual(saved_message.disaster, kampala_disaster)
+
+    def test_should_save_post_message_and_associate_to_disaster(self):
+        disaster_type = DisasterType(**dict(name='Flood', description="Some flood")).save()
+        disaster_attr = dict(name=disaster_type, locations=[self.district], description="Big Flood",
+                                  date=self.date_time,
+                                  status="Assessment")
+        kampala_disaster = Disaster(**disaster_attr).save()
+        text = "NECOC.%s. flood here and allover the place!" % self.district.name
+        self.expected_message['text'] = text
+        self.expected_message['time'] = self.date_time.strftime(RAPID_PRO_TIME_FORMAT)
+
+        response = self.client.post(self.API_ENDPOINT, data=self.expected_message)
+        self.assertEqual(201, response.status_code)
+        self.assertEqual(response.data['disaster']['id'], str(kampala_disaster.id))
 

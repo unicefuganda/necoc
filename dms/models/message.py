@@ -47,6 +47,13 @@ class RapidProMessageBase (ReceivedMessage):
                 else:
                     user_profile = UserProfile.objects.get(phone=self.phone_no)
                 return user_profile.name
+            except MultipleObjectsReturned:
+                char_index = settings.NUMBER_OF_CHARS_IN_PHONE_NUMBER
+                if len(self.phone_no) > char_index:
+                    user_profile = UserProfile.objects(phone__endswith=self.phone_no[-1*char_index:len(self.phone_no)]).first()
+                else:
+                    user_profile = UserProfile.objects(phone=self.phone_no).first()
+                return user_profile.name
             except DoesNotExist:
                 return self.SENDER
         else:

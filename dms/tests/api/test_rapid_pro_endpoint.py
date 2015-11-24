@@ -248,3 +248,14 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(0, len(response.data))
 
+    def test_should_auto_associate_message_to_disaster(self):
+        self.disaster_type = DisasterType(**dict(name='Flood', description="Some flood")).save()
+        self.disaster_attr = dict(name=self.disaster_type, locations=[self.district], description="Big Flood",
+                                  date=self.date_time,
+                                  status="Assessment")
+        kampala_disaster = Disaster(**self.disaster_attr).save()
+        text = "NECOC.%s. flood here and allover the place!" % self.district.name
+        self.message['text'] = text
+        saved_message = RapidProMessage(**self.message).save()
+        self.assertEqual(saved_message.disaster, kampala_disaster)
+

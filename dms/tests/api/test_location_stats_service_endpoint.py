@@ -159,9 +159,12 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         RapidProMessage(**message_attr).save()
         RapidProMessage(**self.message_bukoto).save()
 
-        expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 100},
+        # unless auto-association with disaster fails, it changes this test.
+        # Bukoto should automatically get associated with a disaster
+        # after incoming report is saved
+        expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50},
                                                 'disasters': {'count': 1, 'percentage': 50}},
-                                    'bukoto': {'messages': {'count': 0, 'percentage': 0},
+                                    'bukoto': {'messages': {'count': 1, 'percentage': 50},
                                                'disasters': {'count': 1, 'percentage': 50}}
         }
 
@@ -221,9 +224,9 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         RapidProMessage(**message_attr).save()
         RapidProMessage(**self.message_bukoto).save()
 
-        expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 100},
+        expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50},
                                                 'disasters': {'count': 1, 'percentage': 50}},
-                                    'bukoto': {'messages': {'count': 0, 'percentage': 0},
+                                    'bukoto': {'messages': {'count': 1, 'percentage': 50},
                                                'disasters': {'count': 1, 'percentage': 50}}
         }
 

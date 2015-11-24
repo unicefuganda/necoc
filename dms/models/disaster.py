@@ -16,6 +16,9 @@ class Disaster(BaseModel):
     status = StringField(choices=DISASTER_STATUS)
     date = DateTimeField(required=True)
 
+    def __unicode__(self):
+        return self.name.name
+
     @classmethod
     def map_kwargs_to_db_params(cls, kwargs):
         return {value: kwargs.get(key) for key, value in cls.MAPPING.items() if kwargs.get(key, None)}

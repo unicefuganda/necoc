@@ -2,13 +2,19 @@ from mongoengine import *
 
 from dms.models.message import RapidProMessageBase
 from dms.utils.location_utils import MessageLocationExtractor
-
+from dms.utils.message_utils import MessageDisasterAssociator
+from mongoengine import post_save
+from dms.utils.signal_receivers import associate_disaster
 
 class RapidProMessage(RapidProMessageBase):
     disaster = ReferenceField('Disaster')
+    auto_associated = BooleanField(default=False)
 
     def _assign_location(self):
         return MessageLocationExtractor(self.text).best_match()
+
+    def _associate_to_disaster(self):
+        return MessageDisasterAssociator(self.text).match_disaster()
 
     @classmethod
     def get_fields(cls):
@@ -34,3 +40,5 @@ class RapidProMessage(RapidProMessageBase):
                 return _queryset.filter(disaster__in=disasters)
             return _queryset.none()
         return _queryset
+
+post_save.connect(associate_disaster)

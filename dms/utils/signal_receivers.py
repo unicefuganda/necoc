@@ -1,12 +1,20 @@
-from mongoengine import post_save
-from dms.models.token import Token
+from django.db.models.loading import get_app
 from dms.utils.decorators import signal_receiver
 
 __author__ = 'asseym'
 
 
-@signal_receiver(post_save)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    import pdb;pdb.set_trace()
-    if created:
-        Token.objects.create(user=instance)
+def associate_disaster(sender, instance=None, created=False, **kwargs):
+    app = get_app('dms')
+    dModel = app.disaster.Disaster
+    dTModel = app.disaster_type.DisasterType
+    if sender.__name__ == 'RapidProMessage':
+        if created:
+            instance = kwargs.get('document')
+            disaster = instance.disaster or instance._associate_to_disaster()
+            if disaster and type(disaster) == str:
+                disaster_type = dTModel.objects(**dict(name=disaster)).order_by('-created_at').first()
+                disaster_obj = dModel.objects(**dict(name=disaster_type, locations=instance.location)).first()
+                instance.disaster = disaster_obj
+                instance.auto_associated = True
+                instance.save()

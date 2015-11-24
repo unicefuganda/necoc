@@ -24,6 +24,9 @@ POLL_RESPONSE_SEPARATORS = [' ','.']
 MESSAGE_SEPARATOR = '.'
 INTERNATIONAL_PHONE_PREFIX = '+'
 DISASTER_STATUSES = ['Registered', 'Situation Report Field', 'Verification', 'Assessment', 'Deployed Response Team', 'Closed']
+DISASTER_ASSOCIATION_MATCH_RATIO = 50 #Expressed in absolute percentage value
+COUNTRY_CALLING_CODE = 256
+NUMBER_OF_CHARS_IN_PHONE_NUMBER = 9 #Without country code and leading zero(s)
 
 MANAGERS = ADMINS
 

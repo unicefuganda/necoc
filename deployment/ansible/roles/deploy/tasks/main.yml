@@ -40,4 +40,4 @@
       command: /scripts/run.sh
 
   - name: Clean up old docker image
-    shell: docker rmi $(docker images -q --filter 'dangling=true')
+    shell: docker rmi -f $(docker images -q --filter 'dangling=true')

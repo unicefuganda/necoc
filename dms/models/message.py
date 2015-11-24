@@ -61,8 +61,19 @@ class RapidProMessageBase (ReceivedMessage):
 
     def profile_id(self):
         try:
-            user = UserProfile.objects.get(phone=self.phone_no)
-            return user.id
+            char_index = settings.NUMBER_OF_CHARS_IN_PHONE_NUMBER
+            if len(self.phone_no) > char_index:
+                user_profile = UserProfile.objects.get(phone__endswith=self.phone_no[-1*char_index:len(self.phone_no)])
+            else:
+                user_profile = UserProfile.objects.get(phone=self.phone_no)
+            return user_profile.id
+        except MultipleObjectsReturned:
+            char_index = settings.NUMBER_OF_CHARS_IN_PHONE_NUMBER
+            if len(self.phone_no) > char_index:
+                user_profile = UserProfile.objects(phone__endswith=self.phone_no[-1*char_index:len(self.phone_no)]).first()
+            else:
+                user_profile = UserProfile.objects(phone=self.phone_no).first()
+            return user_profile.id
         except DoesNotExist:
             return None
 
@@ -77,15 +88,6 @@ class RapidProMessageBase (ReceivedMessage):
         if self.location:
             return str(self.location)
         return ""
-
-    # def _sanitize_number(self, phone_number):
-    #     ctry_code_chars = settings.COUNTRY_CALLING_CODE
-    #     if phone_number.startswith("+"):
-    #         return phone_number[1:len(phone_number)]
-    #     elif phone_number.startswith(ctry_code_chars):
-    #         return phone_number
-    #     else:
-    #         return ctry_code_chars + phone_number
 
     @classmethod
     def map_kwargs_to_db_params(cls, kwargs):

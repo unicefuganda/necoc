@@ -2,17 +2,19 @@ from django.utils.datetime_safe import datetime
 from django.utils.timezone import localtime
 import pytz
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 from rest_framework_mongoengine.generics import ListCreateAPIView
 from rest_framework_mongoengine import serializers
 from rest_framework import fields
 from rest_framework import serializers as serialiserzz
-import time
-from dms.api.bulk_sms_endpoint import SentMessageListCreateView
+
 
 from dms.api.retrieve_update_wrapper import MongoRetrieveUpdateView
-from dms.models import Location, RapidProMessage, Disaster, DisasterType, AdminSetting
-from dms.utils.internal_api_calls_utils import post_to_api
+from dms.models import Location, RapidProMessage, Disaster, DisasterType
 from necoc import settings
+from rest_framework_csv import renderers as r
+from rest_framework.settings import api_settings
+from rest_framework.views import APIView
 
 RAPID_PRO_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
 
@@ -83,6 +85,48 @@ class RapidProListCreateView(ListCreateAPIView):
         disaster_type = DisasterType.objects(id=disaster_type).first()
         disasters = Disaster.objects(name=disaster_type)
         return queryset.filter(disaster__in=disasters)
+
+
+class CSVMessageSerializer(serializers.MongoEngineModelSerializer):
+    phone = fields.CharField(source='phone_no')
+    time = RapidProDateTimeField(source='received_at')
+    source = serialiserzz.Field(source='source')
+    location = serialiserzz.Field(source='location_str')
+    disaster = serialiserzz.Field(source='disaster_str')
+
+    class Meta:
+        model = RapidProMessage
+        fields = ('phone', 'text', 'source', 'location', 'time', 'disaster')
+
+
+class CSVMessageView(ListCreateAPIView):
+    serializer_class = CSVMessageSerializer
+    permission_classes = (AllowAny,)
+    model = RapidProMessage
+    renderer_classes = [r.CSVRenderer, ] + api_settings.DEFAULT_RENDERER_CLASSES
+
+    def get_queryset(self):
+        params = self._filter_params(self.request)
+        queryset = RapidProMessage.objects.filter(**params)
+        return queryset.order_by('-received_at')
+
+    def _filter_params(self, req):
+        start_date = req.GET.get('dfrom')
+        end_date = req.GET.get('dto')
+        params = {}
+        if start_date and end_date:
+            if not self._undefined(start_date) and not self._undefined(end_date):
+                params = {'received_at__gte' : start_date, 'received_at__lte' : end_date}
+            elif self._undefined(start_date) and not self._undefined(end_date):
+                params = {'received_at__lte' : end_date}
+            elif not self._undefined(start_date) and self._undefined(end_date):
+                params = {'received_at__gte' : start_date }
+            else:
+                params = {}
+        return params
+
+    def _undefined(self, strValue):
+        return strValue == u'undefined'
 
 
 class RapidProRetrieveUpdateView(MongoRetrieveUpdateView):

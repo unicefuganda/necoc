@@ -14,7 +14,7 @@ from dms.api.location_stats_service_endpoint import LocationStatsListView, Distr
 from dms.api.password_change_endpoint import PasswordChangeView, PasswordResetView
 from dms.api.poll_endpoint import PollListCreateView
 from dms.api.poll_response_endpoint import PollResponseListCreateView
-from dms.api.rapid_pro_endpoint import RapidProListCreateView, RapidProRetrieveUpdateView
+from dms.api.rapid_pro_endpoint import RapidProListCreateView, RapidProRetrieveUpdateView, CSVMessageView
 from dms.api.location_endpoint import LocationListCreateView
 from dms.api.response_message_endpoint import ResponseMessageListCreateView
 from dms.api.stats_summary_service_endpoint import SummaryStatsListView
@@ -58,6 +58,8 @@ urlpatterns = patterns('',
     url(r'^api/v1/location-stats/(?P<district>[0-9a-z]+)/$', DistrictStatsListView.as_view()),
     url(r'^api/v1/admin-settings/$', AdminSettingListCreateView.as_view()),
     url(r'^api/v1/admin-settings/(?P<name>[0-9a-zA-Z_]+)/$', AdminSettingUpdateView.as_view()),
+    url(r'^api/v1/csv-messages/$', CSVMessageView.as_view()),
+    # url(r'^api/v1/csvm/$', CSVMView.as_view()),
     url(r'^export/poll-responses/(?P<poll_id>[0-9a-z]+)/$',
         login_required(ExportPollResponsesView.as_view(), login_url='login/')),
 

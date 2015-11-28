@@ -22,3 +22,10 @@ class MessageDisasterAssociator(object):
             if not obj in distinct_list:
                 distinct_list.append(obj)
         return distinct_list
+
+
+def location_ids(location_objects):
+    locs = []
+    for loc in location_objects:
+        locs.append(loc.id)
+    return locs

@@ -16,6 +16,10 @@ class RapidProMessage(RapidProMessageBase):
     def _associate_to_disaster(self):
         return MessageDisasterAssociator(self.text).match_disaster()
 
+    def disaster_str(self):
+        if self.disaster:
+            return self.disaster.name.name
+
     @classmethod
     def get_fields(cls):
         return cls._fields_ordered

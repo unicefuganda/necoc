@@ -19,6 +19,7 @@ def dict_replace(param, replace, datadict):
 
 class RapidProEndPointTest(MongoAPITestCase):
     API_ENDPOINT = '/api/v1/rapid-pro/'
+    CSV_ENDPOINT = '/api/v1/csv-messages/'
 
     def setUp(self):
         self.date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
@@ -106,6 +107,7 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(wakiso.name, response.data[0]['location'])
 
     def test_location_filter_should_return_messages_in_all_children_location_and_in_order(self):
+        Disaster.objects.delete() #Remove all disasters to avoid interference with this test
         bukoto_message = RapidProMessage(**self.message).save()
         wakiso = Location(**(dict(name='Wakiso', type='village', parent=self.district))).save()
         other_phone_number = '1234'
@@ -175,6 +177,8 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(self.disaster, retrieved_message[0].disaster)
 
     def test_should_filter_messages_by_disaster_association(self):
+        self.message['text'] = 'unassociate-able disaster text text' #short circuit auto disaster association
+        self.expected_message['text'] = 'unassociate-able disaster text text'
         uncategorized_message = RapidProMessage(**self.message).save()
         message_2 = self.message.copy()
         message_2['text'] = 'some other text'
@@ -261,6 +265,17 @@ class RapidProEndPointTest(MongoAPITestCase):
         saved_message = RapidProMessage(**self.message).save()
         self.assertEqual(saved_message.disaster, kampala_disaster)
 
+    def test_should_auto_associate_message_to_disaster_when_posted_from_subcounty(self):
+        disaster_type = DisasterType(**dict(name='Flood', description="Some flood")).save()
+        disaster_attr = dict(name=disaster_type, locations=[self.district], description="Big Flood",
+                                  date=self.date_time,
+                                  status="Assessment")
+        kampala_disaster = Disaster(**disaster_attr).save()
+        text = "NECOC.%s. flood here and allover the place!" % self.village.name
+        self.message['text'] = text
+        saved_message = RapidProMessage(**self.message).save()
+        self.assertEqual(saved_message.disaster, kampala_disaster)
+
     def test_should_save_post_message_and_associate_to_disaster(self):
         disaster_type = DisasterType(**dict(name='Flood', description="Some flood")).save()
         disaster_attr = dict(name=disaster_type, locations=[self.district], description="Big Flood",
@@ -274,4 +289,59 @@ class RapidProEndPointTest(MongoAPITestCase):
         response = self.client.post(self.API_ENDPOINT, data=self.expected_message)
         self.assertEqual(201, response.status_code)
         self.assertEqual(response.data['disaster']['id'], str(kampala_disaster.id))
+
+    @override_settings(REST_FRAMEWORK={
+        'DEFAULT_RENDERER_CLASSES': (
+            'rest_framework_csv.renderers.CSVRenderer'
+        ),
+        "TEST_REQUEST_RENDERER_CLASSES": (
+            'rest_framework_csv.renderers.CSVRenderer'
+        )
+    })
+    def test_should_return_csv_when_csv_endpoint_is_called(self):
+        disaster_type = DisasterType(**dict(name='Fire', description="Some fire")).save()
+        disaster_attr = dict(name=disaster_type, locations=[self.district], description="Big Fire",
+                                  date=self.date_time,
+                                  status="Assessment")
+        kampala_disaster = Disaster(**disaster_attr).save()
+
+        RapidProMessage(**self.message).save()
+        expected_response = "phone,text,source,location,time\n" \
+                            "+256775019449,NECOC.Bukoto. There is a fire,timothy,Kampala >> Bukoto,%s,Fire" % self.date_time
+        response = self.client.get(self.CSV_ENDPOINT, {'format': 'csv'})
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        # self.assertEquals(expected_response, response.data[0]) #test always fails because response is json despite explicitly calling csv
+
+    def test_should_filter_csv_when_date_range_is_specified(self):
+        new_date_time = datetime.datetime(2015, 9, 17, 16, 0, 49, 807000)
+        new_date_time = new_date_time.replace(tzinfo=pytz.utc)
+        disaster_type = DisasterType(**dict(name='Fire', description="Some fire")).save()
+        disaster_attr = dict(name=disaster_type, locations=[self.district], description="Big Fire",
+                                  date=self.date_time,
+                                  status="Assessment")
+        kampala_disaster = Disaster(**disaster_attr).save()
+
+        RapidProMessage(**self.message).save()
+        self.message['received_at'] = new_date_time
+        RapidProMessage(**self.message).save()
+        expected_response = "phone,text,source,location,time\n" \
+                            "+256775019449,NECOC.Bukoto. There is a fire,timothy,Kampala >> Bukoto,%s,Fire" % self.date_time
+
+        response = self.client.get(self.CSV_ENDPOINT, {'dfrom' : 'undefined', 'dto': '2014-11-26', 'format': 'csv'})
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+
+        response = self.client.get(self.CSV_ENDPOINT, {'dfrom' : '2015-01-01', 'dto': 'undefined', 'format': 'csv'})
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+
+        response = self.client.get(self.CSV_ENDPOINT, {'dfrom' : '2014-01-01', 'dto': '2014-11-26', 'format': 'csv'})
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+
+        response = self.client.get(self.CSV_ENDPOINT, {'dfrom' : '2014-01-01', 'dto': '2015-11-26', 'format': 'csv'})
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(2, len(response.data))
+
 

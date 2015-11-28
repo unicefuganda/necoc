@@ -1,0 +1,37 @@
+<div class="modal fade" modal-close id="download-messages-modal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog sm-2">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 id="download-messages-modal-title" class="modal-title">Download Messages</h4>
+            </div>
+            <div>
+                <form ng-controller="DownloadMessagesModalController" role="form" novalidate="" name="download_messages_form" ng-submit="downloadMessages(mfilter)" novalidate>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="from-date">Show data from</label>
+                            <input id="from-date" class="form-control" ng-model="mfilter.dfrom" data-datepicker="" data-timepicker="false"
+                                   placeholder="Select start date... (defaults to all)"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="to-date">To</label>
+                            <input id="to-date" class="form-control" ng-model="mfilter.dto" data-datepicker="" data-timepicker="false"
+                                   placeholder="Select to date... (defaults to all)"/></select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="close-sms-modal" class="btn btn-default"
+                                data-dismiss="modal">Close
+                        </button>
+                        <button type="submit" id="download-messages-btn" close-modal="download-messages-modal" class="btn btn-info" save-state=""
+                                data-loading-text="Downloading..." ng-click="loading()">Download
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

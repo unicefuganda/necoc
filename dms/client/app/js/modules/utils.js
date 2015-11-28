@@ -64,6 +64,20 @@
                     queryString += key + '=' + value + '&';
                 });
                 return queryString.slice(0, -1);
+            },
+            objArrayToCsv: function(arr) {
+                var ret = [];
+                ret.push('"' + Object.keys(arr[0]).join('","') + '"');
+                for (var i = 0, len = arr.length; i < len; i++) {
+                    var line = [];
+                    for (var key in arr[i]) {
+                        if (arr[i].hasOwnProperty(key)) {
+                            line.push('"' + arr[i][key] + '"');
+                        }
+                    }
+                    ret.push(line.join(','));
+                }
+                return ret.join('\n');
             }
         }
     });

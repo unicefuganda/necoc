@@ -20,6 +20,9 @@
                     return $http.post(Config.apiUrl + 'rapid-pro/' + messageId + '/', {disaster: disasterId});
                 });
                 return $q.all(messages);
+            },
+            downloadMessages: function (dfrom, dto) {
+                return $http.get(Config.apiUrl + 'csv-messages/?dfrom=' + dfrom + '&dto=' + dto);
             }
         }
     });
@@ -113,6 +116,55 @@
                 $scope.hasErrors = true;
             }
         };
+    });
+
+    module.controller('DownloadMessagesModalController', function ($scope, growl, MessageService, helpers) {
+        $scope.mfilter = {}
+
+        $scope.downloadMessages = function (mfilter) {
+            console.log(mfilter)
+            //var mfilter = '' ? (mform.mfilter == undefined) : mform.mfilter
+
+            MessageService.downloadMessages(mfilter.dfrom, mfilter.dto).then(function (response) {
+                //var data = Papa.parse(response.data);
+                var data = helpers.objArrayToCsv(response.data);
+                var anchor = angular.element('<a/>');
+                 anchor.attr({
+                     href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
+                     target: '_blank',
+                     download: 'messages.csv'
+                 })[0].click();
+
+                //Clean up, remove anchor and call directive to close modal
+                anchor.remove();
+                $scope.dismiss();
+
+                growl.success('Messages downloaded successfully', {
+                    ttl: 5000
+                });
+            });
+
+        };
+
+        $scope.loading = function(){
+            var btn = angular.element('#download-messages-btn');
+            btn.click(function () {
+                btn.button('loading');
+                setTimeout(function () {
+                    btn.button('reset');
+                }, 5000);
+            });
+        };
+    })
+    .directive('modalClose', function() {
+       return {
+         restrict: 'A',
+         link: function(scope, element, attr) {
+           scope.dismiss = function() {
+               element.modal('hide');
+           };
+         }
+       }
     });
 
     module.controller('AddToDisasterController', function ($scope, MessageService) {

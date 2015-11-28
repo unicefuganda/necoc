@@ -19,9 +19,20 @@ class Location(BaseModel):
     def _children(self):
         return Location.objects(parent=self)
 
+    def _parent(self):
+        if self.parent:
+            return self.parent
+
     def children(self, include_self=False):
         children = list(self._children())
         if not include_self:
             return self._children()
         children.insert(0, self)
         return children
+
+    def full_tree(self):
+        if self._parent():
+            locs = [self._parent()]
+            return locs + self.children(include_self=True)
+        else:
+            return self.children(include_self=True)

@@ -122,7 +122,7 @@
         $scope.mfilter = {}
 
         $scope.downloadMessages = function (mfilter) {
-            console.log(mfilter)
+            $scope.saveStatus = true;
             //var mfilter = '' ? (mform.mfilter == undefined) : mform.mfilter
 
             MessageService.downloadMessages(mfilter.dfrom, mfilter.dto).then(function (response) {
@@ -134,6 +134,7 @@
                      target: '_blank',
                      download: 'messages.csv'
                  })[0].click();
+                $scope.saveStatus = false;
 
                 //Clean up, remove anchor and call directive to close modal
                 anchor.remove();
@@ -146,15 +147,6 @@
 
         };
 
-        $scope.loading = function(){
-            var btn = angular.element('#download-messages-btn');
-            btn.click(function () {
-                btn.button('loading');
-                setTimeout(function () {
-                    btn.button('reset');
-                }, 5000);
-            });
-        };
     })
     .directive('modalClose', function() {
        return {

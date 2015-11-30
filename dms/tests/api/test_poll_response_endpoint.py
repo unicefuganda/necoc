@@ -133,3 +133,11 @@ class PollResponseEndPointTest(MongoAPITestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, len(response.data))
         # self.assertEquals(expected_response, response.data[0]) #test always fails because response is json despite explicitly calling csv
+
+    def test_should_assign_response_location_to_mobile_user_location(self):
+        response = self.client.post(self.API_ENDPOINT, data=self.expected_poll_response)
+        retrieved_poll_response = PollResponse.objects(**self.poll_response)
+
+        self.assertEqual(201, response.status_code)
+        self.assertEqual(self.village, retrieved_poll_response[0].location)
+

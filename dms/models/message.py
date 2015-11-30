@@ -40,46 +40,37 @@ class RapidProMessageBase (ReceivedMessage):
         SettingModel = app.admin_setting.AdminSetting
         volunteer_profiles = SettingModel._lookup("enable_volunteer_profiles")
         if volunteer_profiles and volunteer_profiles.yes_no:
-            try:
-                char_index = settings.NUMBER_OF_CHARS_IN_PHONE_NUMBER
-                if len(self.phone_no) > char_index:
-                    user_profile = UserProfile.objects.get(phone__endswith=self.phone_no[-1*char_index:len(self.phone_no)])
-                else:
-                    user_profile = UserProfile.objects.get(phone=self.phone_no)
-                return user_profile.name
-            except MultipleObjectsReturned:
-                char_index = settings.NUMBER_OF_CHARS_IN_PHONE_NUMBER
-                if len(self.phone_no) > char_index:
-                    user_profile = UserProfile.objects(phone__endswith=self.phone_no[-1*char_index:len(self.phone_no)]).first()
-                else:
-                    user_profile = UserProfile.objects(phone=self.phone_no).first()
-                return user_profile.name
-            except DoesNotExist:
-                return self.SENDER
+            profile = self._mobile_user()
+            return profile.name if profile else self.SENDER
         else:
             return self.SENDER
 
     def profile_id(self):
+        profile = self._mobile_user()
+        return profile.id if profile else None
+
+    def mobile_user(self):
+        # phone_no = self.phone_no.replace(settings.INTERNATIONAL_PHONE_PREFIX, '')
+        # return UserProfile.objects(phone=phone_no).first()
+        return self._mobile_user()
+
+    def _mobile_user(self):
+        char_index = settings.NUMBER_OF_CHARS_IN_PHONE_NUMBER
         try:
-            char_index = settings.NUMBER_OF_CHARS_IN_PHONE_NUMBER
             if len(self.phone_no) > char_index:
-                user_profile = UserProfile.objects.get(phone__endswith=self.phone_no[-1*char_index:len(self.phone_no)])
+                mobile_user = UserProfile.objects.get(phone__endswith=self.phone_no[-1*char_index:len(self.phone_no)])
             else:
-                user_profile = UserProfile.objects.get(phone=self.phone_no)
-            return user_profile.id
+                mobile_user = UserProfile.objects.get(phone=self.phone_no)
+            return mobile_user
         except MultipleObjectsReturned:
-            char_index = settings.NUMBER_OF_CHARS_IN_PHONE_NUMBER
             if len(self.phone_no) > char_index:
-                user_profile = UserProfile.objects(phone__endswith=self.phone_no[-1*char_index:len(self.phone_no)]).first()
+                mobile_user = UserProfile.objects(phone__endswith=self.phone_no[-1*char_index:len(self.phone_no)]).first()
             else:
-                user_profile = UserProfile.objects(phone=self.phone_no).first()
-            return user_profile.id
+                mobile_user = UserProfile.objects(phone=self.phone_no).first()
+            return mobile_user
         except DoesNotExist:
             return None
 
-    def mobile_user(self):
-        phone_no = self.phone_no.replace(settings.INTERNATIONAL_PHONE_PREFIX, '')
-        return UserProfile.objects(phone=phone_no).first()
 
     def _assign_location(self):
         pass

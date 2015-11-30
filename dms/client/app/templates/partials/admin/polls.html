@@ -25,6 +25,7 @@
                 <th>Question</th>
                 <th>Responses</th>
                 <th>Created</th>
+                <th>Actions</th>
             </tr>
             </thead>
 
@@ -34,6 +35,10 @@
                 <td>{[{ poll.question }]}</td>
                 <td>{[{ poll.number_of_responses }]}</td>
                 <td>{[{ poll.created_at | date:"MMM dd, yyyy - h:mma" }]}</td>
+                <td><button type="button"  class="btn btn-default btn-action btn-icon" id="download-poll-btn" ng-click="$event.stopPropagation();downloadPoll(poll.id)">
+                    <span class="icon icon-download"></span>
+                    <span class="value">Download</span>
+                </button></td>
             </tr>
             </tbody>
 

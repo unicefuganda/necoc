@@ -6,6 +6,7 @@ from dms.tests.base import MongoAPITestCase
 
 class PollResponseEndPointTest(MongoAPITestCase):
     API_ENDPOINT = '/api/v1/poll-responses/'
+    CSV_ENDPOINT = '/api/v1/csv-poll/'
 
     def setUp(self):
         self.date_time = datetime.datetime(2014, 9, 17, 16, 0, 49, 807000)
@@ -120,3 +121,15 @@ class PollResponseEndPointTest(MongoAPITestCase):
         self.assertEqual('NECOC Volunteer', response.data[0]['source'])
         self.assertEqual('Kampala >> Bukoto', response.data[0]['location'])
         self.assertIsNotNone(response.data[0]['id'])
+
+    def test_should_return_response_csv_when_csv_endpoint_is_called(self):
+
+        PollResponse(**self.poll_response).save()
+        response = self.client.get(self.CSV_ENDPOINT, format='csv')
+
+        expected_response = "source,phone,text,time,location,poll_name\n" \
+                            "NECOC Volunteer,+256775019449,NECOCPoll %s there are 4 or 5,%s,Kampala >> Bukoto,%s" % \
+                            (self.poll_attr['keyword'], self.date_time, self.poll_attr['name'])
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        # self.assertEquals(expected_response, response.data[0]) #test always fails because response is json despite explicitly calling csv

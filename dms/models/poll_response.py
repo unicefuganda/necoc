@@ -31,3 +31,7 @@ class PollResponse(RapidProMessageBase):
         except TypeError:
             split_message = []
         return map(lambda x: x.strip(), split_message)
+
+    def poll_name(self):
+        if self.poll:
+            return self.poll.name

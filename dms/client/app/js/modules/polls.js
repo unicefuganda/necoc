@@ -7,11 +7,15 @@
             },
             all: function () {
                 return $http.get(Config.apiUrl + 'polls/');
+            },
+            downloadPoll: function(poll){
+                return $http.get(Config.apiUrl + 'csv-poll/?poll='+poll)
             }
         }
     });
 
-    module.controller('PollsController', function ($scope, PollService, PollResponsesService, $state) {
+    module.controller('PollsController', function ($scope, PollService, PollResponsesService, $state, growl, helpers) {
+        $scope.saveStatus = true;
         PollService.all().then(function (response) {
             $scope.polls = response.data;
         });
@@ -19,6 +23,25 @@
         $scope.showPollResponses = function (poll) {
             $state.go('admin.poll-responses', {poll: poll.id, pollName: poll.name});
         };
+
+        $scope.downloadPoll = function (poll) {
+            PollService.downloadPoll(poll).then(function(response) {
+                var data = helpers.objArrayToCsv(response.data);
+                var anchor = angular.element('<a/>');
+                 anchor.attr({
+                     href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
+                     target: '_blank',
+                     download: 'poll-'+poll+'.csv'
+                 })[0].click();
+                $scope.saveStatus = false;
+
+                anchor.remove();
+                growl.success('Poll ['+poll+ '] downloaded successfully', {
+                    ttl: 5000
+                });
+
+            });
+        }
 
         $scope.notSorted = function(obj){
             if (!obj) {

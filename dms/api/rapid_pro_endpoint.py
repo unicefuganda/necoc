@@ -14,7 +14,6 @@ from dms.models import Location, RapidProMessage, Disaster, DisasterType
 from necoc import settings
 from rest_framework_csv import renderers as r
 from rest_framework.settings import api_settings
-from rest_framework.views import APIView
 
 RAPID_PRO_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
 

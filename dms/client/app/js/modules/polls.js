@@ -15,7 +15,7 @@
     });
 
     module.controller('PollsController', function ($scope, PollService, PollResponsesService, $state, growl, helpers) {
-        $scope.saveStatus = true;
+
         PollService.all().then(function (response) {
             $scope.polls = response.data;
         });
@@ -33,7 +33,6 @@
                      target: '_blank',
                      download: 'poll-'+poll+'.csv'
                  })[0].click();
-                $scope.saveStatus = false;
 
                 anchor.remove();
                 growl.success('Poll ['+poll+ '] downloaded successfully', {

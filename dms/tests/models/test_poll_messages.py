@@ -1,6 +1,8 @@
+import time
+from django.test.utils import override_settings
 from mongoengine import NotUniqueError, ValidationError
-from dms.models import Location, PollResponse
-from dms.models.poll import Poll
+from dms.models import Location, PollResponse, ResponseCategory
+from dms.models.poll import Poll, Rule
 from dms.tests.base import MongoTestCase
 
 
@@ -44,3 +46,35 @@ class TestPoll(MongoTestCase):
 
         self.assertEqual(1, poll.number_of_responses())
         self.assertIn(poll_response, poll.responses())
+
+
+    @override_settings(STARTSWITH_PATTERN_TEMPLATE='some%sregex')
+    @override_settings(YES_WORDS=['YES', 'Yeah'])
+    @override_settings(NO_WORDS=['No', 'NAh'])
+    def test_should_save_yesno_poll_with_default_yesno_categories(self):
+        self.poll['type'] = 'yesno'
+        poll = Poll(**self.poll).save()
+
+        self.assertEqual(1, Poll.objects.count())
+        self.assertEqual(True, poll.is_yesno_poll())
+
+        yes_category = ResponseCategory.objects(**dict(poll=poll, name='yes')).first()
+        no_category = ResponseCategory.objects(**dict(poll=poll, name='no')).first()
+        self.assertEqual(2, Rule.objects.count())
+        self.assertEqual(u'someYES|Yeahregex', Rule.objects(**dict(response_category=yes_category)).first().regex)
+        self.assertEqual(u'someNo|NAhregex', Rule.objects(**dict(response_category=no_category)).first().regex)
+
+    @override_settings(ALWAYS_OPEN_POLLS=2)
+    def test_should_auto_close_old_polls(self):
+        keywords = ['someword', 'otherkey', 'another']
+        for kw in keywords:
+            self.poll['keyword'] = kw
+            Poll(**self.poll).save()
+            time.sleep(1)
+
+        self.assertEqual(3, Poll.objects.count())
+        self.assertEqual(2, Poll.objects(open=True).count())
+        self.assertEqual(1, Poll.objects(open=False).count())
+        self.assertEqual(True, Poll.objects(keyword='otherkey').first().open)
+        self.assertEqual(True, Poll.objects(keyword='another').first().open)
+        self.assertEqual(False, Poll.objects(keyword='someword').first().open)

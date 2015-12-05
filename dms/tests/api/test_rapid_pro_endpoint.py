@@ -7,7 +7,7 @@ from dms.api.rapid_pro_endpoint import RAPID_PRO_TIME_FORMAT
 from dms.models import Location, UserProfile, Disaster, DisasterType, SentMessage, User, AdminSetting
 from dms.models.rapid_pro_message import RapidProMessage
 from dms.tests.base import MongoAPITestCase
-from necoc import settings
+from django.conf import settings
 
 
 def dict_replace(param, replace, datadict):

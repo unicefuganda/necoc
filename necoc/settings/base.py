@@ -20,13 +20,32 @@ API_URL = 'https://app.rapidpro.io/api/v1/sms.json'
 LOCATION_MATCH_LEVEL = 0.9
 MESSAGE_LOCATION_INDEX = 2
 POLL_RESPONSE_KEYWORD_INDEX = 2
+ALWAYS_OPEN_POLLS = 3
 POLL_RESPONSE_SEPARATORS = [' ','.']
 MESSAGE_SEPARATOR = '.'
 INTERNATIONAL_PHONE_PREFIX = '+'
+DEFAULT_STR_MATCH_RATIO = 90 #expressed in absolute percentange values
 DISASTER_STATUSES = ['Registered', 'Situation Report Field', 'Verification', 'Assessment', 'Deployed Response Team', 'Closed']
 DISASTER_ASSOCIATION_MATCH_RATIO = 50 #Expressed in absolute percentage value
 COUNTRY_CALLING_CODE = 256
 NUMBER_OF_CHARS_IN_PHONE_NUMBER = 9 #Without country code and leading zero(s)
+
+# accepted yes keywords
+YES_WORDS = ['yes', 'yeah', 'yep', 'yay', 'y']
+
+# accepted no keywords
+NO_WORDS = ['no', 'nope', 'nah', 'nay', 'n']
+
+# Poll Response Evaluation Templates
+# The standard template allows for any amount of whitespace at the beginning,
+# followed by the alias(es) for a particular category, followed by any non-
+# alphabetical character, or the end of the message
+STARTSWITH_PATTERN_TEMPLATE = '^\s*(%s)(\s|[^a-zA-Z]|$)'
+CONTAINS_PATTERN_TEMPLATE = '^.*\s*(%s)(\s|[^a-zA-Z]|$)'
+DEFAULT_POLL_RESPONSE = (True, 'Thank you for your response')
+POLL_RESPONSE_START_STR = 'NECOCPoll'
+
+
 
 MANAGERS = ADMINS
 

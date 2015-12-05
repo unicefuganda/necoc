@@ -1,9 +1,9 @@
+from django.conf import settings
 from django.db.models.loading import get_app
 from dms.utils.decorators import signal_receiver
 from dms.utils.message_utils import location_ids
 
 __author__ = 'asseym'
-
 
 def associate_disaster(sender, instance=None, created=False, **kwargs):
     app = get_app('dms')
@@ -23,3 +23,31 @@ def associate_disaster(sender, instance=None, created=False, **kwargs):
                 if disaster_obj:
                     instance.auto_associated = True
                 instance.save()
+
+
+def add_yesno_categories_to_poll(sender, instance=None, created=False, **kwargs):
+    if sender.__name__ == 'Poll':
+        if created:
+            instance = kwargs.get('document')
+            if instance.type == 'yesno':
+                sender.add_yesno_categories(instance)
+
+
+def categorise_yesno_response(sender, instance=None, created=False, **kwargs):
+    if sender.__name__ == 'PollResponse':
+        if created:
+            instance = kwargs.get('document')
+            if instance.poll and instance.poll.type == 'yesno':
+                sender.process_response(instance)
+
+
+def auto_close_old_polls(sender, instance=None, created=False, **kwargs):
+    always_open = settings.ALWAYS_OPEN_POLLS
+    if sender.__name__ == 'Poll':
+        if created:
+            instance = kwargs.get('document')
+            open_polls = sender.objects(open=True).order_by('-created_at')
+            if open_polls.count() > always_open:
+                to_close = open_polls[always_open:(always_open+1)]
+                open_polls.filter(id__in=[to_close[0].id]).update(set__open=False)
+                # to_close.update(set__open=False)

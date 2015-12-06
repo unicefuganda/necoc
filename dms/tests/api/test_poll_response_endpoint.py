@@ -86,6 +86,21 @@ class PollResponseEndPointTest(MongoAPITestCase):
         retrieved_poll_response = PollResponse.objects(**self.dotted_message)
         self.assertEqual(1, retrieved_poll_response.count())
 
+    def test_should_create_yesno_poll_response(self):
+        self.poll_attr['type'] = 'yesno'
+        self.poll_attr['keyword'] = 'weiredkey'
+        self.poll_attr['question'] = 'Are there any disasters in your area? YES or NO'
+        self.poll = Poll(**self.poll_attr).save()
+        self.expected_poll_response['text'] = 'NECOCPoll.yes'
+        self.poll_response['text'] = 'NECOCPoll.yes'
+
+        response = self.client.post(self.API_ENDPOINT, data=self.expected_poll_response)
+        self.assertEqual(201, response.status_code)
+
+        retrieved_poll_response = PollResponse.objects(**self.poll_response)
+        self.assertEqual(1, retrieved_poll_response.count())
+        self.assertTrue(retrieved_poll_response[0].is_categorized())
+
     def test_should_get_rapid_pro_poll_response(self):
         PollResponse(**self.poll_response).save()
         response = self.client.get(self.API_ENDPOINT, format='json')

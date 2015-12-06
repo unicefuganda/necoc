@@ -49,6 +49,27 @@ class TestPollEndpoint(MongoAPITestCase):
         retrieved_poll = Poll.objects(**self.poll_to_post)
         self.assertEqual(1, retrieved_poll.count())
 
+    @patch('dms.tasks.requests')
+    def test_should_post_a_yesno_poll_and_save_logs(self, mock_requests):
+        some_id = 1234
+        mock_response = MagicMock()
+        mock_response.status_code = 201
+        mock_response.json.return_value = {"messages": [some_id], "sms": [some_id]}
+        self.poll_to_post['question'] = 'Will you comply, yes or no?'
+        self.poll_to_post['type'] = 'yesno'
+        self.poll_to_send['text'] = 'Will you comply, yes or no? Reply with NECOCPoll Yes or No'
+
+        mock_requests.post.return_value = mock_response
+
+        response = self.client.post(self.POLL_ENDPOINT, data=json.dumps(self.poll_to_post),
+                                    content_type="application/json")
+        self.assertEqual(201, response.status_code)
+        self.assertTrue(mock_requests.post.called_once_with(API_URL, json.dumps(self.poll_to_send), self.headers))
+
+        retrieved_poll = Poll.objects(**self.poll_to_post)
+        self.assertEqual(1, retrieved_poll.count())
+        self.assertTrue(retrieved_poll[0].is_yesno_poll())
+
     @patch('dms.tasks.send_bulk_sms.delay')
     def test_should_post_to_all_contacts_in_sub_counties_under_district(self, mock_send_bulk_sms):
         poll_to_post_payload = self.poll_to_post.copy()

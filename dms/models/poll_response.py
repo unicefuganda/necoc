@@ -42,13 +42,13 @@ class PollResponse(RapidProMessageBase):
 
     def _assign_if_is_yesno(self):
         if self.text.strip() in settings.YES_WORDS or self.text.strip() in settings.NO_WORDS:
-            return Poll.objects(type='yesno', open=True).order_by('-created_at').first()
+            return Poll.objects(ptype='yesno', open=True).order_by('-created_at').first()
         elif fuzzy_match_strings(self.text, settings.YES_WORDS) or fuzzy_match_strings(self.text, settings.NO_WORDS):
-            return Poll.objects(type='yesno', open=True).order_by('-created_at').first()
+            return Poll.objects(ptype='yesno', open=True).order_by('-created_at').first()
         else:
             # return None
             #always asign uninteligibal responses to the last yes/no poll (possibility to distort poll results)
-            return Poll.objects(type='yesno', open=True).order_by('-created_at').first()
+            return Poll.objects(ptype='yesno', open=True).order_by('-created_at').first()
 
     def _open(self):
         return Poll.objects(open=True).order_by('-created_at')

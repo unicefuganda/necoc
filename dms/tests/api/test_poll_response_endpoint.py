@@ -87,7 +87,7 @@ class PollResponseEndPointTest(MongoAPITestCase):
         self.assertEqual(1, retrieved_poll_response.count())
 
     def test_should_create_yesno_poll_response(self):
-        self.poll_attr['type'] = 'yesno'
+        self.poll_attr['ptype'] = 'yesno'
         self.poll_attr['keyword'] = 'weiredkey'
         self.poll_attr['question'] = 'Are there any disasters in your area? YES or NO'
         self.poll = Poll(**self.poll_attr).save()

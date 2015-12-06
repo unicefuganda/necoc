@@ -105,7 +105,7 @@ class PollResponseTest(MongoTestCase):
         self.assertEqual('Kampala >> Bukoto', poll_response.location_str())
 
     def test_should_process_and_categorise_yesno_poll_responses(self):
-        self.poll_attr['type'] = 'yesno'
+        self.poll_attr['ptype'] = 'yesno'
         self.poll_attr['keyword']  = 'akeyword'
         poll = Poll(**self.poll_attr).save()
 
@@ -145,7 +145,7 @@ class PollResponseTest(MongoTestCase):
         self.assertEqual(1, PollResponseCategory.objects(**dict(response_category=unknown_category, poll_response=poll_response.first())).count())
 
     def test_should_process_and_categorise_yesno_poll_responses_with_starting_keyword(self):
-        self.poll_attr['type'] = 'yesno'
+        self.poll_attr['ptype'] = 'yesno'
         self.poll_attr['keyword']  = 'akeyword'
         poll = Poll(**self.poll_attr).save()
 
@@ -185,7 +185,7 @@ class PollResponseTest(MongoTestCase):
         self.assertEqual(1, PollResponseCategory.objects(**dict(response_category=unknown_category, poll_response=poll_response.first())).count())
 
     def test_should_process_and_categorise_yesno_poll_responses_when_yesno_is_misplaced(self):
-        self.poll_attr['type'] = 'yesno'
+        self.poll_attr['ptype'] = 'yesno'
         self.poll_attr['keyword']  = 'akeyword'
         poll = Poll(**self.poll_attr).save()
 

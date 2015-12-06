@@ -15,6 +15,13 @@
     });
 
     module.controller('PollsController', function ($scope, PollService, PollResponsesService, $state, growl, helpers) {
+        $scope.ptypes = {
+            selectOptions: [
+                {ptype: 'text', label: 'Free Text Poll'},
+                {ptype: 'yesno', label: 'Yes/No Poll'}
+                ],
+            selectedOption: {ptype: 'text', label: 'Free Text Poll'}
+            }
 
         PollService.all().then(function (response) {
             $scope.polls = response.data;
@@ -61,7 +68,7 @@
                     helpers.stringToArray($scope.poll.subcounties, ',') : helpers.stringToArray($scope.poll.districts, ',');
                 delete $scope.poll.districts;
                 delete $scope.poll.subcounties;
-
+                console.log($scope.poll)
                 PollService.sendPoll($scope.poll)
                     .then(function (response) {
                         $scope.saveStatus = false;

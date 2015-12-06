@@ -29,7 +29,7 @@ def add_yesno_categories_to_poll(sender, instance=None, created=False, **kwargs)
     if sender.__name__ == 'Poll':
         if created:
             instance = kwargs.get('document')
-            if instance.type == 'yesno':
+            if instance.ptype == 'yesno':
                 sender.add_yesno_categories(instance)
 
 
@@ -37,7 +37,7 @@ def categorise_yesno_response(sender, instance=None, created=False, **kwargs):
     if sender.__name__ == 'PollResponse':
         if created:
             instance = kwargs.get('document')
-            if instance.poll and instance.poll.type == 'yesno':
+            if instance.poll and instance.poll.ptype == 'yesno':
                 sender.process_response(instance)
 
 

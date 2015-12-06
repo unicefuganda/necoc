@@ -29,9 +29,10 @@ class Poll(BaseModel):
     keyword = StringField(max_length=10, unique=True)
     target_locations = ListField()
     log = StringField()
-    type = StringField(max_length=5, choices=POLL_TYPE_CHOICES, default=POLL_TYPE_CHOICES[1])
+    ptype = StringField(max_length=5, choices=POLL_TYPE_CHOICES, default=POLL_TYPE_CHOICES[1])
     default_response = StringField(default=settings.DEFAULT_POLL_RESPONSE[1])
     open = BooleanField(default=True)
+
 
     def add_yesno_categories(self):
         app = get_app('dms')

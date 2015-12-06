@@ -56,7 +56,7 @@ class TestPollEndpoint(MongoAPITestCase):
         mock_response.status_code = 201
         mock_response.json.return_value = {"messages": [some_id], "sms": [some_id]}
         self.poll_to_post['question'] = 'Will you comply, yes or no?'
-        self.poll_to_post['type'] = 'yesno'
+        self.poll_to_post['ptype'] = 'yesno'
         self.poll_to_send['text'] = 'Will you comply, yes or no? Reply with NECOCPoll Yes or No'
 
         mock_requests.post.return_value = mock_response

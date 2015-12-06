@@ -52,7 +52,7 @@ class TestPoll(MongoTestCase):
     @override_settings(YES_WORDS=['YES', 'Yeah'])
     @override_settings(NO_WORDS=['No', 'NAh'])
     def test_should_save_yesno_poll_with_default_yesno_categories(self):
-        self.poll['type'] = 'yesno'
+        self.poll['ptype'] = 'yesno'
         poll = Poll(**self.poll).save()
 
         self.assertEqual(1, Poll.objects.count())

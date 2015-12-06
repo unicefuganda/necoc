@@ -10,6 +10,20 @@
             <div ng-controller="NewPollController">
                 <form role="form" novalidate="" name="new_poll_form" ng-submit="sendPoll()">
                     <div class="modal-body">
+                        <div id="poll-ptype-field" class="form-group"
+                             ng-class="{'has-error': new_poll_form.ptype.$invalid && hasErrors }">
+                            <label class="control-label">Poll Type</label>
+                            <select ng-model="poll.ptype" name="ptype" class="form-control" required="">
+                                <option ng-repeat="option in ptypes.selectOptions" value="{[{option.ptype}]}">{[{option.label}]}</option>
+                            </select>
+
+                            <div id="poll-ptype-errors" class="error-text"
+                                 ng-show="new_poll_form.ptype.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="new_poll_form.ptype.$error.required">
+                                    This field is required
+                                </p>
+                            </div>
+                        </div>
                         <div id="poll-name-field" class="form-group"
                              ng-class="{'has-error': new_poll_form.name.$invalid && hasErrors }">
                             <label class="control-label">Poll Name</label>

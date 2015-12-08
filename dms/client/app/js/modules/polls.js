@@ -28,7 +28,9 @@
         });
 
         $scope.showPollResponses = function (poll) {
-            $state.go('admin.poll-responses', {poll: poll.id, pollName: poll.name});
+            $state.go('admin.poll-responses', {poll: poll.id, pollName: poll.name,
+                pollType: poll.ptype, t: poll.yesno_poll_stats.total, pt: poll.yesno_poll_stats.participants, y: poll.yesno_poll_stats.yes,
+                n: poll.yesno_poll_stats.no, u: poll.yesno_poll_stats.unknown});
         };
 
         $scope.downloadPoll = function (poll) {
@@ -68,7 +70,7 @@
                     helpers.stringToArray($scope.poll.subcounties, ',') : helpers.stringToArray($scope.poll.districts, ',');
                 delete $scope.poll.districts;
                 delete $scope.poll.subcounties;
-                console.log($scope.poll)
+
                 PollService.sendPoll($scope.poll)
                     .then(function (response) {
                         $scope.saveStatus = false;

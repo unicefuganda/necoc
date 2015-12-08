@@ -14,6 +14,8 @@ from dms.utils.permission_class_factory import build_permission_class, IsGetRequ
 class PollSerializer(serializers.MongoEngineModelSerializer):
     created_at = fields.DateTimeField(source='created_at', required=False)
     number_of_responses = serialiserzz.Field(source='number_of_responses')
+    yesno_poll_stats = serialiserzz.Field(source='yesno_poll_stats')
+    participants = serialiserzz.Field(source='number_of_participants')
 
     def validate_keyword(self, attrs, source):
         if len(Poll.objects(keyword=attrs[source])):

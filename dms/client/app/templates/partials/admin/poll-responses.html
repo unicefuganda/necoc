@@ -47,7 +47,49 @@
                 </button>
             </div>
         </div>
-
+        <div class="row" ng-if="isYesnoPoll()">
+                <div class="col-md-3 pull-left">
+                    <table class="table"> <caption>Summary of Results.</caption>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Stat</th>
+                            <th>Count</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td># of Participants:</td>
+                            <td>{[{ ysCount.pt }]}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td># of Responses:</td>
+                            <td>{[{ ysCount.total }]}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td># of YES:</td>
+                            <td>{[{ ysCount.yes }]}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">4</th>
+                            <td># of NO:</td>
+                            <td>{[{ ysCount.no }]}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">5</th>
+                            <td># of UNKNOWN:</td>
+                            <td>{[{ ysCount.unknown }]}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            <div class="col-md-9 pull-right">
+                <highchart id="chart1" config="chartConfig" class="span10"></highchart>
+            </div>
+        </div>
         <table si-table="" class="table table-hover table-striped style-header">
             <thead>
             <tr>

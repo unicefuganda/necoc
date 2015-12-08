@@ -1,7 +1,7 @@
 import time
 from django.test.utils import override_settings
 from mongoengine import NotUniqueError, ValidationError
-from dms.models import Location, PollResponse, ResponseCategory
+from dms.models import Location, PollResponse, ResponseCategory, UserProfile
 from dms.models.poll import Poll, Rule
 from dms.tests.base import MongoTestCase
 
@@ -9,8 +9,15 @@ from dms.tests.base import MongoTestCase
 class TestPoll(MongoTestCase):
 
     def setUp(self):
+        self.phone_number = "256775019449"
+
         kampala = Location(**dict(name='Kampala', parent=None, type='district')).save()
         gulu = Location(**dict(name='Gulu', parent=None, type='district')).save()
+        self.village = Location(**dict(name='Bukoto', parent=kampala, type='subcounty')).save()
+        self.mobile_user = UserProfile(**dict(name='timothy', phone=self.phone_number, location=self.village, email=None)).save()
+        self.mobile_user2 = UserProfile(**dict(name='mobile_user2', phone='256775019441', location=self.village, email=None)).save()
+        self.mobile_user3 = UserProfile(**dict(name='mobile_user3', phone='256775019442', location=gulu, email=None)).save()
+        self.mobile_user4 = UserProfile(**dict(name='mobile_user4', phone='256775019443', location=kampala, email=None)).save()
 
         self.target_locations = [str(kampala.id), str(gulu.id)]
         self.poll = dict(name="Disaster", question="How many disasters are in your area?", keyword="some word",
@@ -78,3 +85,8 @@ class TestPoll(MongoTestCase):
         self.assertEqual(True, Poll.objects(keyword='otherkey').first().open)
         self.assertEqual(True, Poll.objects(keyword='another').first().open)
         self.assertEqual(False, Poll.objects(keyword='someword').first().open)
+
+    def test_should_know_its_number_of_participants(self):
+        poll = Poll(**self.poll).save()
+
+        self.assertEqual(4, poll.number_of_participants())

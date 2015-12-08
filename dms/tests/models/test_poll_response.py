@@ -144,6 +144,12 @@ class PollResponseTest(MongoTestCase):
         self.assertEqual(3, PollResponseCategory.objects.count()) #bad response not associated with poll
         self.assertEqual(1, PollResponseCategory.objects(**dict(response_category=unknown_category, poll_response=poll_response.first())).count())
 
+        #should count results
+        results_count = poll.yesno_poll_stats()
+        self.assertEqual(1, results_count['yes'])
+        self.assertEqual(1, results_count['unknown'])
+        self.assertEqual(1, results_count['no'])
+
     def test_should_process_and_categorise_yesno_poll_responses_with_starting_keyword(self):
         self.poll_attr['ptype'] = 'yesno'
         self.poll_attr['keyword']  = 'akeyword'

@@ -1,5 +1,6 @@
 from django.db.models.loading import get_app
 from mongoengine import *
+from dms.models import UserProfile, Location
 
 from dms.models.base import BaseModel
 from dms.utils.signal_receivers import add_yesno_categories_to_poll, auto_close_old_polls
@@ -80,7 +81,40 @@ class Poll(BaseModel):
         return PollResponse.objects(poll=self)
 
     def number_of_responses(self):
+        # resps = self.responses().distinct('phone_no') #eliminates repeated counts
         return self.responses().count()
+
+    def number_of_participants(self):
+        locations = self.target_locations
+        users = 0
+        for loc in locations:
+            locObj = Location.objects(id=loc).first()
+            if locObj.parent == None:
+                locs = locObj.full_tree()
+                for l in locs:
+                    users += len(UserProfile.objects(location=l).distinct('phone'))
+            else:
+                users += len(UserProfile.objects(location=locObj).distinct('phone'))
+        return users
+
+    def yesno_poll_stats(self):
+        if self.ptype == 'yesno':
+            app = get_app('dms')
+            RCModel = app.poll_response.ResponseCategory
+            yes_cat = RCModel.objects(poll=self, name='yes').first()
+            no_cat = RCModel.objects(poll=self, name='no').first()
+            unknown_cat = RCModel.objects(poll=self, name='unknown').first()
+            PRCModel = app.poll_response.PollResponseCategory
+            yes_count = PRCModel.objects(**dict(response_category=yes_cat)).count()
+            no_count = PRCModel.objects(**dict(response_category=no_cat)).count()
+            unknown_count = PRCModel.objects(**dict(response_category=unknown_cat)).count()
+            return {'participants': self.number_of_participants(),
+                    'total': self.number_of_responses(),
+                    'yes':yes_count,
+                    'no':no_count,
+                    'unknown':unknown_count}
+
+
 
 class Rule(Document):
     """

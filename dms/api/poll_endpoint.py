@@ -47,7 +47,10 @@ class PollListCreateView(ListCreateAPIView):
     def post_save(self, obj, created=True):
         locations = self.get_location(obj)
         phone_numbers = list(UserProfile.objects(location__in=locations).values_list('phone'))
-        text = '%s Reply With: %s' % (obj.question, obj.keyword)
+        if obj.ptype == 'yesno':
+            text = '%s Reply With: NECOCPoll YES/NO' % obj.question
+        else:
+            text = '%s Reply With: NECOCPoll %s ...' % (obj.question, obj.keyword)
         send_bulk_sms.delay(obj, phone_numbers, text)
 
     def get_location(self, obj):

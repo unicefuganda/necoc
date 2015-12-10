@@ -23,12 +23,6 @@ class PollResponse(RapidProMessageBase):
         self.poll = self.poll or self._assign_poll()
         return super(PollResponse, self).save(*args, **kwargs)
 
-    # def _assign_poll(self):
-    #     text = self.split_text()
-    #     if len(text) > settings.POLL_RESPONSE_KEYWORD_INDEX-1:
-    #         keyword = text[settings.POLL_RESPONSE_KEYWORD_INDEX - 1]
-    #         return Poll.objects(keyword=keyword).first()
-
     def _assign_poll(self):
         text = self.split_text()
         if len(text):

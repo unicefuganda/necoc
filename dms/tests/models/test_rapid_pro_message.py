@@ -63,20 +63,20 @@ class TestRapidProMessage(MongoTestCase):
         self.assertEqual(self.village, message_location)
 
     @override_settings(MESSAGE_LOCATION_INDEX=2)
-    def test_message_has_no_location_if_message_content_does_not_specify_location(self):
+    def test_message_defaults_to_userprofile_location_if_message_content_does_not_specify_location(self):
         message = self.message.copy()
         message['text'] = "NECOC hahaha Fire"
         rapid_pro_message = RapidProMessage(**message).save()
 
-        self.assertIsNone(rapid_pro_message.location)
+        self.assertEqual(self.mobile_user.location, rapid_pro_message.location)
 
     @override_settings(MESSAGE_LOCATION_INDEX=2)
-    def test_message_has_no_location_if_message_is_empty(self):
+    def test_message_defaults_to_userprofile_location_if_message_is_empty(self):
         message = self.message.copy()
         message['text'] = ""
         rapid_pro_message = RapidProMessage(**message).save()
 
-        self.assertIsNone(rapid_pro_message.location)
+        self.assertEqual(self.mobile_user.location, rapid_pro_message.location)
 
     @override_settings(MESSAGE_LOCATION_INDEX=2)
     def test_message_has_no_location_when_message_object_is_instantiated_with_empty_attributes(self):
@@ -92,13 +92,13 @@ class TestRapidProMessage(MongoTestCase):
 
         self.assertEqual("Kampala >> Bukoto", rapid_pro_message.location_str())
 
-    def test_message_location_str_is_empty_if_no_location(self):
+    def test_message_location_str_defaults_to_userprofile_location_str_if_no_location(self):
         message = self.message.copy()
         message['text'] = "NECOC.UnknownLocation. there are some serious fire over here"
 
         rapid_pro_message = RapidProMessage(**message).save()
 
-        self.assertEqual("", rapid_pro_message.location_str())
+        self.assertEqual(self.mobile_user.location.__unicode__(), rapid_pro_message.location_str())
 
     def test_get_messages_from_a_location(self):
         location_name = 'Abim'

@@ -70,6 +70,8 @@ class RapidProMessageBase (ReceivedMessage):
             return mobile_user
         except DoesNotExist:
             return None
+        except TypeError:
+            return None
 
 
     def _assign_location(self):

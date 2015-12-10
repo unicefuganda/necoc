@@ -2,7 +2,8 @@ from mongoengine import *
 
 from dms.models.message import RapidProMessageBase
 from dms.utils.location_utils import MessageLocationExtractor
-from dms.utils.message_utils import MessageDisasterAssociator
+from dms.utils.message_utils import MessageDisasterAssociator, MessageProfileLocationAssociator, \
+    MessageTextLocationAssociator
 from mongoengine import post_save
 from dms.utils.signal_receivers import associate_disaster
 
@@ -11,7 +12,11 @@ class RapidProMessage(RapidProMessageBase):
     auto_associated = BooleanField(default=False)
 
     def _assign_location(self):
-        return MessageLocationExtractor(self.text).best_match()
+        mobile_user = self.mobile_user()
+        if MessageTextLocationAssociator(self.text).best_match():
+            return MessageTextLocationAssociator(self.text).best_match()
+        else:
+            return MessageProfileLocationAssociator(mobile_user).best_match()
 
     def _associate_to_disaster(self):
         return MessageDisasterAssociator(self.text).match_disaster()

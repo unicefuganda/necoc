@@ -8,45 +8,99 @@
                 <h4 id="mu-modal-title" class="modal-title">{[{ modalTitle }]}</h4>
             </div>
             <div>
-                <div class="row with-btm-margin">
-                    <div class="disaster-toast" growl></div>
-                    <div class="col-lg-12">
-                        <div class="info-container">
-                            <div>
-                                <i class="icon icon-torso"></i>
-                                <span>Type:</span>
-                                <strong>{[{ disasterInfo.name.name }]}</strong>
-                            </div>
-                            <div>
-                                <i class="icon icon-location"></i>
-                                <span>Location:</span>
+                <form role="form" novalidate="" name="form.disasters_form" ng-submit="saveDisaster(disaster)">
+                    <div class="modal-body">
+                        <div id="disaster-type-field" class="form-group"
+                             ng-class="{'has-error': form.disasters_form.type.$invalid && hasErrors }">
+                            <label class="control-label">Type</label>
+                            <input type="text" ng-model="disaster.name" disaster-types="disaster" name="type"
+                                   class="form-control"
+                                   data-default-value="disaster.name.id"
+                                   placeholder="select disaster type" required="">
 
-                                <div class="multi-line-details">
-                                    <strong>
-                                        <div>{[{ disasterInfo.locations[0].parent.name }]}</div>
-                                    </strong>
-                                    <span>{[{ disasterInfo.locations | joinNames | capitalize }]}</span>
-                                </div>
-                            </div>
-                            <div>
-                                <i class="icon icon-phone-on"></i>
-                                <span>Description:</span>
-                                <strong>{[{ disasterInfo.description }]}</strong>
-                            </div>
-                            <div>
-                                <i class="icon icon-location"></i>
-                                <span>Status:</span>
-                                <strong>{[{ disasterInfo.status }]}</strong>
-                            </div>
-                            <div>
-                                <i class="icon icon-contacts-social"></i>
-                                <span>Duration:</span>
-                                <strong>{[{ disasterInfo.date | duration }]}</strong>
+                            <div id="name-errors" class="error-text"
+                                 ng-show="form.disasters_form.type.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="form.disasters_form.type.$error.required">
+                                    This field is required
+                                </p>
                             </div>
                         </div>
-                    </div>
+                        <div id="district-field" class="form-group"
+                             ng-class="{'has-error': form.disasters_form.district.$invalid && hasErrors}">
+                            <label class="control-label" for="district">District</label>
+                            <input type="text" id="district" name="district" class="form-control" data-parent="true"
+                                   location-cascade="districts" ng-model="disaster.district" data-max-locations="1"
+                                   placeholder="select district" data-child="subcounties" data-dataset="disaster" required=""
+                                   data-default-parent-value="disaster.locations[0].parent.id"
+                                   data-default-child-value="disaster.locations | idsAsString">
 
-                </div>
+                            <div id="district-errors" class="error-text"
+                                 ng-show="form.disasters_form.district.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="form.disasters_form.district.$error.required">
+                                    This field is required
+                                </p>
+                            </div>
+                        </div>
+                        <div id="subcounty-field" class="form-group subcounty"
+                             ng-class="{'has-error': form.disasters_form.subcounty.$invalid && hasErrors}">
+                            <label class="control-label" for="subcounty">Sub-County</label>
+                            <input type="text" id="subcounty" ng-model="disaster.subcounties" name="subcounty"
+                                   location-cascade="subcounties" class="form-control"
+                                   placeholder="select sub-county" data-dataset="disaster">
+                        </div>
+                        <div class="form-group"
+                             ng-class="{'has-error': form.disasters_form.description.$invalid && hasErrors }">
+                            <label class="control-label">Disaster Description</label>
+                            <textarea class="form-control" rows="3" ng-model="disaster.description" name="description"
+                                      placeholder="enter description"></textarea>
+
+                            <div id="description-errors" class="error-text"
+                                 ng-show="form.disasters_form.description.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="form.disasters_form.description.$error.required">
+                                    This field is required
+                                </p>
+                            </div>
+                        </div>
+                        <div id="status-field" class="form-group"
+                             ng-class="{'has-error': form.disasters_form.status.$invalid && hasErrors }">
+                            <label class="control-label">Disaster Status</label>
+                            <input type="text" ng-model="disaster.status" name="status" class="form-control"
+                                   placeholder="select disaster status" disaster-status="disaster" required=""
+                                    data-default-value="disaster.status">
+
+                            <div id="status-errors" class="error-text"
+                                 ng-show="form.disasters_form.status.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="form.disasters_form.status.$error.required">
+                                    This field is required
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group"
+                             ng-class="{'has-error': form.disasters_form.date.$invalid && hasErrors }">
+                            <label class="control-label">Disaster Date</label>
+                            <input type="text" ng-model="disaster.date" name="date" data-timepicker="true"
+                                   datepicker="" class="form-control"
+                                   placeholder="enter disaster date" required="">
+
+                            <div id="date-errors" class="error-text"
+                                 ng-show="form.disasters_form.date.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="form.disasters_form.date.$error.required">
+                                    This field is required
+                                </p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="close-disaster-modal" class="btn btn-default"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="submit" id="save-disaster-modal" class="btn btn-primary" save-state=""
+                                    close-modal="disasters-modal"
+                                    data-loading-text="Saving...">Save
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

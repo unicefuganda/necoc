@@ -857,3 +857,7 @@ list-style-type: none;
 .capitalize {
     text-transform: capitalize;
 }
+
+span.disaster{
+    cursor: pointer; cursor: hand;
+}

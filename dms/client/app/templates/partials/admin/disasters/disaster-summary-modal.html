@@ -1,13 +1,13 @@
-<div class="modal fade" id="disasters-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade" ng-controller="DisastersController" id="disaster-summary-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog sm-2">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 id="mu-modal-title" class="modal-title">{[{ modalTitle }]}</h4>
+                <h4 id="mu-modal-title" class="modal-title">Disaster Risk</h4>
             </div>
-            <div>
+            <div class="modal-body">
                 <div class="row with-btm-margin">
                     <div class="disaster-toast" growl></div>
                     <div class="col-lg-12">
@@ -47,6 +47,9 @@
                     </div>
 
                 </div>
+            </div>
+            <div class="modal-footer">
+
             </div>
         </div>
     </div>

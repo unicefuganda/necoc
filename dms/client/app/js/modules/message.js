@@ -92,6 +92,20 @@
                 element.bind('click', openProfile);
            }
        }
+    })
+    .directive('openDisaster',
+       function() {
+          return {
+             link :   function($document, element, attrs) {
+                function openDisaster() {
+                    var element = angular.element('#disaster-summary-modal');
+                    var ctrl = element.controller();
+                    ctrl.showDisasterDetail(attrs.disaster);
+                    element.modal('show');
+                }
+                element.bind('click', openDisaster);
+           }
+       }
     });
 
     module.controller('SmsModalController', function ($scope, growl, MessageService, helpers) {

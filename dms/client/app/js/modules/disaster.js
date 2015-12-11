@@ -28,6 +28,22 @@
             $scope.disasters = response.data;
         });
 
+        this.showDisasterDetail = function(disaster) {
+            $scope.$apply( function() {
+                DisasterService.disaster(disaster).then(function (response) {
+                    $scope.setDisaster(response.data);
+                });
+            });
+        }
+
+        $scope.showDisasterDetail = this.showDisasterDetail;
+        $scope.disaster = {};
+        $scope.disasterInfo = {};
+        $scope.setDisaster = function (data) {
+            $scope.disaster = data;
+            $scope.disasterInfo = angular.copy($scope.disaster);
+        };
+
         $scope.$watch(function () {
                 return DisastersPageFilters;
             }, function (filter) {

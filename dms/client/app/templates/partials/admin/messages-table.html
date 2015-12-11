@@ -19,12 +19,12 @@
         <td>{[{ message.location }]}</td>
         <td>{[{ message.time | date:"MMM dd, yyyy - h:mma" }]}</td>
         <td class="status">
-            <span ng-show="message.disaster" class="label label-success">Associated</span>
+            <span ng-show="message.disaster" class="label label-success disaster" open-disaster disaster="{[{ message.disaster.id }]}">Associated</span>
             <span ng-hide="message.disaster" class="label label-warning">Pending</span>
         </td>
         <td class="status">
-            <span ng-show="message.auto_associated" class="label label-success">Auto: {[{ message.disaster }]}</span>
-            <span ng-hide="message.auto_assoicated" class="label label-warning"></span>
+            <span ng-show="message.auto_associated" class="label label-success disaster" open-disaster disaster="{[{ message.disaster.id }]}">Auto: Associated</span>
+            <span ng-hide="message.auto_associated" class="label label-warning"></span>
         </td>
     </tr>
     </tbody>
@@ -37,3 +37,4 @@
     </tfoot>
 </table>
 <ng-include src="'/static/templates/partials/admin/users/sender-profile.html'"></ng-include>
+<ng-include src="'/static/templates/partials/admin/disasters/disaster-summary-modal.html'"></ng-include>

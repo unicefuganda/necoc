@@ -28,9 +28,23 @@
         });
 
         $scope.showPollResponses = function (poll) {
-            $state.go('admin.poll-responses', {poll: poll.id, pollName: poll.name,
-                pollType: poll.ptype, t: poll.yesno_poll_stats.total, pt: poll.yesno_poll_stats.participants, y: poll.yesno_poll_stats.yes,
-                n: poll.yesno_poll_stats.no, u: poll.yesno_poll_stats.unknown});
+            if (poll.ptype == 'yesno') {
+                $state.go('admin.poll-responses', {
+                    poll: poll.id,
+                    pollName: poll.name,
+                    pollType: poll.ptype,
+                    t: poll.yesno_poll_stats.total,
+                    pt: poll.yesno_poll_stats.participants,
+                    y: poll.yesno_poll_stats.yes,
+                    n: poll.yesno_poll_stats.no,
+                    u: poll.yesno_poll_stats.unknown
+                });
+            }else{
+                $state.go('admin.poll-responses', {
+                    poll: poll.id,
+                    pollName: poll.name
+                });
+            }
         };
 
         $scope.downloadPoll = function (poll) {

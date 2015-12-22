@@ -1,22 +1,27 @@
 <div class="section">
     <ng-include ng-controller="AddUserController" src="'/static/templates/partials/admin/users/user-modal.html'">
     </ng-include>
+    <div class="profile-toast" growl></div>
     <div class="c-well">
         <div class="row with-btm-margin">
             <div class="col-md-3 sub-section-header">
                 <span class="icon icon-contact-add"></span><span class="title">Users List</span>
             </div>
             <div class="user-actions pull-right">
-                <ul>
-                    <li>
+                <form class="form-inline" role="form">
+                    <div class="form-group">
+                        <label class="sr-only" for="csvFile">CSV File:</label>
+                        <input type="file" id="csvFile" placeholder="upload csv file" ng-model="csvFile" class="form-control" filelist-bind>
+                    </div>
+                    <div class="form-group">
                         <button type="button" id="create-user" class="btn btn-default btn-action btn-icon"
                                 data-toggle="modal"
                                 data-target="#mobile-user-modal">
                             <span class="icon icon-plus-circle"></span>
                             <span class="value">Add new user</span>
                         </button>
-                    </li>
-                </ul>
+                    </div>
+                </form>
             </div>
         </div>
 

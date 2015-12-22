@@ -1,7 +1,9 @@
+from django.test.utils import override_settings
+from django.conf import settings
 from dms.models.location import Location
 from dms.tests.base import MongoAPITestCase
 
-
+@override_settings(REST_FRAMEWORK={})
 class TestLocationEndpoint(MongoAPITestCase):
 
     LOCATION_ENDPOINT = '/api/v1/locations/'
@@ -72,6 +74,7 @@ class TestLocationEndpoint(MongoAPITestCase):
         self.assertDictContainsSubset(self.expected_district, response.data[0])
 
 
+@override_settings(REST_FRAMEWORK={})
 class TestLocationChildrenEndpoint(MongoAPITestCase):
 
     LOCATION_ENDPOINT = '/api/v1/locations/'

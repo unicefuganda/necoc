@@ -39,3 +39,9 @@ class UserProfile(BaseModel):
         if self.photo and self.id:
             return '/api/v1/photo/%s' % self.id
         return None
+
+    def district(self):
+        return self.location.find('district').name if self.location.find('district') else None
+
+    def subcounty(self):
+        return self.location.find('subcounty').name if self.location.find('subcounty') else None

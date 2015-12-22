@@ -217,10 +217,15 @@ REST_FRAMEWORK = {
         'rest_framework_csv.renderers.CSVRenderer'
     ),
 
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+        'rest_framework_csv.parsers.CSVParser',
+    ),
+
     'TEST_REQUEST_RENDERER_CLASSES': (
         'rest_framework.renderers.MultiPartRenderer',
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework_csv.renderers.CSVRenderer'
+        'rest_framework_csv.renderers.CSVRenderer',
     )
 }
 

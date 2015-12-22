@@ -1,5 +1,5 @@
 import datetime
-from django.test import override_settings
+from django.test.utils import override_settings
 import pytz
 import urllib2
 import json
@@ -142,6 +142,7 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(wakiso_expected_message, response.data[0])
         self.assertEqual(bukoto_expected_message, response.data[1])
 
+    @override_settings(REST_FRAMEWORK={})
     def test_should_update_disaster_field_with_put(self):
         message = RapidProMessage(**self.message).save()
 
@@ -156,6 +157,7 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(1, retrieved_message.count())
         self.assertEqual(self.disaster, retrieved_message[0].disaster)
 
+    @override_settings(REST_FRAMEWORK={})
     def test_should_update_disaster_field_using_a_patch(self):
         message = RapidProMessage(**self.message).save()
 
@@ -166,6 +168,7 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(1, retrieved_message.count())
         self.assertEqual(self.disaster, retrieved_message[0].disaster)
 
+    @override_settings(REST_FRAMEWORK={})
     def test_should_update_disaster_field_with_post_is_also_supported_for_phantomjs_sake(self):
         message = RapidProMessage(**self.message).save()
 

@@ -1,9 +1,10 @@
 import datetime
+from django.test.utils import override_settings
 
 from dms.models import Location, DisasterType, Disaster
 from dms.tests.base import MongoAPITestCase
 
-
+@override_settings(REST_FRAMEWORK={})
 class StatsSummaryServiceEndpointTest(MongoAPITestCase):
     API_ENDPOINT = '/api/v1/stats-summary/'
 

@@ -1,4 +1,5 @@
 import datetime
+from django.test.utils import override_settings
 
 from dms.models import Location, DisasterType, Disaster
 from dms.models.rapid_pro_message import RapidProMessage
@@ -8,6 +9,7 @@ from dms.tests.base import MongoAPITestCase
 class LocationStatsServiceEndpointTest(MongoAPITestCase):
     API_ENDPOINT = '/api/v1/location-stats/'
 
+    @override_settings(REST_FRAMEWORK={})
     def setUp(self):
         self.location_name = 'Kampala'
         text = "NECOC.%s. fire baba fire" % self.location_name
@@ -105,6 +107,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(expected_serialized_data, response.data)
 
+    @override_settings(REST_FRAMEWORK={})
     def test_filter_stats_in_subcounties_in_district_by_date(self):
         RapidProMessage(**self.message).save()
 
@@ -150,6 +153,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
 
         self.assertEqual(expected_serialized_data, response.data)
 
+    @override_settings(REST_FRAMEWORK={})
     def test_should_filter_stats_in_all_locations_by_disaster_types(self):
         kampala_disaster = Disaster(**self.disaster_attr).save()
         bukoto_disaster = Disaster(**self.disaster_attr_bukoto).save()
@@ -318,6 +322,7 @@ class LocationStatsServiceEndpointTest(MongoAPITestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(expected_serialized_data, response.data)
 
+    @override_settings(REST_FRAMEWORK={})
     def test_all_locations_empty_GET_parameter_query(self):
         RapidProMessage(**self.message).save()
         RapidProMessage(**self.message_bukoto).save()

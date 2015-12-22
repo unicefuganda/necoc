@@ -36,3 +36,22 @@ class Location(BaseModel):
             return locs + self.children(include_self=True)
         else:
             return self.children(include_self=True)
+
+    def find(self, node):
+        if self.type == node:
+            node_obj = self
+        else:
+            fd = False
+            parent = self._parent()
+            while fd == False:
+                if parent:
+                    if parent.type == node:
+                        fd = True
+                        node_obj = parent
+                    else:
+                        parent = parent.parent
+                else:
+                    node_obj = None
+                    fd = True
+        return node_obj
+

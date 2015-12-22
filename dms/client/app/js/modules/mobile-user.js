@@ -24,14 +24,19 @@
             },
             resetPassword: function (user) {
                 return $http.post(Config.apiUrl + 'mobile-users/' + user.id + '/password_reset/');
+            },
+            bulkUpdateInsert: function (bulk_users) {
+                return $http.post(Config.apiUrl + 'bulk-mobile-users/' , bulk_users);
             }
         };
     });
 
-    module.controller('MobileUserController', function ($scope, $state, MobileUserService) {
+    module.controller('MobileUserController', function ($scope, $state, MobileUserService, Papa, growl) {
         $scope.users = [];
         $scope.sort_field = '-created_at';
         $scope.toggled = false
+        $scope.csvFiles = []
+        $scope.CSVReadStatus = false
 
         listUsers = function(sort_fields){
             MobileUserService.all(sort_fields).then(function (response) {
@@ -89,6 +94,28 @@
         //By default list users ordered by created_at descending
         listUsers($scope.sort_field);
 
+    })
+    .directive('filelistBind', function(Papa, MobileUserService, growl, $state) {
+      return function( scope, elm, attrs ) {
+        elm.bind('change', function( evt ) {
+          scope.$apply(function() {
+              growl.success('Uploading...', {ttl: 5000});
+            scope[ attrs.name ] = evt.target.files;
+              var csvFiles = scope[ attrs.name ]
+              Papa.parse(csvFiles[0], {
+                  header: true,
+                  skipEmptyLines: true,
+                  complete: function(results) {
+                      var obj = {}
+                      obj = results.data;
+                      MobileUserService.bulkUpdateInsert(angular.toJson(obj)).then(function (response) {
+                          scope.rebuildUsersList();
+                      });
+                  }
+              });
+          });
+        });
+      };
     });
 
     module.controller('AddUserController', function ($scope, MobileUserService, helpers) {
@@ -294,7 +321,7 @@
                             callback(response.data)
 
                             scope.$watch(attrs.defaultValue, function (defaultValue) {
-                                console.log(defaultValue);
+                                //console.log(defaultValue);
                                 if (defaultValue) {
                                     $select[0].selectize.setValue(defaultValue);
                                 }
@@ -312,4 +339,4 @@
         }
     });
 
-})(angular.module('dms.mobile-user', ['angularFileUpload', 'dms.config', 'angular-growl', 'dms.utils', 'dms.user']));
+})(angular.module('dms.mobile-user', ['angularFileUpload', 'ngPapaParse', 'dms.config', 'angular-growl', 'dms.utils', 'dms.user']));

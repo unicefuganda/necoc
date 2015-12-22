@@ -18,7 +18,8 @@ from dms.api.rapid_pro_endpoint import RapidProListCreateView, RapidProRetrieveU
 from dms.api.location_endpoint import LocationListCreateView
 from dms.api.response_message_endpoint import ResponseMessageListCreateView
 from dms.api.stats_summary_service_endpoint import SummaryStatsListView
-from dms.api.user_profile_endpoint import UserProfileListCreateView, UserProfileView
+from dms.api.user_profile_endpoint import UserProfileListCreateView, UserProfileView, CSVUserProfileView, \
+    BulkUserProfileView
 from dms.views.api_token import ObtainAPIToken
 from dms.views.export_poll_responses import ExportPollResponsesView
 from dms.views.homepage import HomeView
@@ -60,6 +61,8 @@ urlpatterns = patterns('',
     url(r'^api/v1/admin-settings/(?P<name>[0-9a-zA-Z_]+)/$', AdminSettingUpdateView.as_view()),
     url(r'^api/v1/csv-messages/$', CSVMessageView.as_view()),
     url(r'^api/v1/csv-poll/$', CSVPollResponsesView.as_view()),
+    url(r'^api/v1/csv-mobile-users/$', CSVUserProfileView.as_view()),
+    url(r'^api/v1/bulk-mobile-users/$', BulkUserProfileView.as_view()),
     # url(r'^api/v1/csvm/$', CSVMView.as_view()),
     url(r'^export/poll-responses/(?P<poll_id>[0-9a-z]+)/$',
         login_required(ExportPollResponsesView.as_view(), login_url='login/')),

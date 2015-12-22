@@ -1,10 +1,15 @@
 from collections import OrderedDict
+import collections
+import json
 from django.conf import settings
+from django.test import override_settings
 import mock
 from mongoengine.django.auth import Group
 import time
+from rest_framework_csv.renderers import CSVRenderer
 from dms.models import User, Location, UserProfile
 from dms.tests.base import MongoAPITestCase
+from dms.utils.rapidpro_message_utils import split_text
 
 
 class FakeImageResizer:
@@ -29,14 +34,20 @@ def dict_replace(param, replace, datadict):
 
 class TestUserProfileEndpoint(MongoAPITestCase):
     API_ENDPOINT = '/api/v1/mobile-users/'
+    CSV_ENDPOINT = '/api/v1/csv-mobile-users/'
+    BULK_ENDPOINT = '/api/v1/bulk-mobile-users/'
 
     def setUp(self):
         self.login_user()
         self.district = Location(**dict(name='Kampala', type='district', parent=None))
         self.district.save()
+        self.masaka = Location(**dict(name='Masaka', type='district', parent=None)).save()
+        self.subcounty = Location(**dict(name='Nangabo', type='subcounty', parent=self.masaka)).save()
+
         self.mobile_user_to_post = dict(name='tim', phone='+256775019500', location=self.district.id,
                                         email='tim@akampa.com')
         self.mobile_user = dict(name='timothy', phone='+256775019449', location=self.district, email=None)
+        self.masaka_user = dict(name='Munamasaka', phone='+256775019441', location=self.subcounty, email='m@emasaka.com')
 
     def tearDown(self):
         UserProfile.drop_collection()
@@ -290,3 +301,155 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         retrieved_user = User.objects(username='cage2').first()
         reloaded_profile = UserProfile.objects(user=retrieved_user).first()
         self.assertEqual(reloaded_profile.photo.read(), None)
+
+    def test_should_return_csv_when_csv_endpoint_is_called(self):
+        self.mobile_user['email'] = 'mobile_user@mobuser.com'
+        UserProfile(**self.mobile_user).save()
+        UserProfile(**self.masaka_user).save()
+        response = self.client.get(self.CSV_ENDPOINT, format='csv')
+
+        expected_response = "name,phone,email,district,subcounty\r\n" \
+                            "timothy,+256775019449,mobile_user@mobuser.com,%s,%s" % (self.district.name,'')
+        expected_response = expected_response + "\r\nMunamasaka,+256775019441,m@emasaka.com,%s,%s" % (self.masaka.name, self.subcounty.name)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(2, len(response.data))
+        self.assertTrue(isinstance(response.accepted_renderer, CSVRenderer))
+        self.assertEqual(collections.Counter(split_text(expected_response)), collections.Counter(split_text(response.content)))
+
+    def test_should_return_filtered_csv_when_csv_endpoint_is_called_with_location_filter(self):
+        self.mobile_user['email'] = 'mobile_user@mobuser.com'
+        UserProfile(**self.mobile_user).save()
+        UserProfile(**self.masaka_user).save()
+        response = self.client.get(self.CSV_ENDPOINT + '?location=%s' % self.masaka.id, format='csv')
+
+        expected_response = "name,phone,email,district,subcounty\r\n" \
+                            "Munamasaka,+256775019441,m@emasaka.com,%s,%s" % (self.masaka.name, self.subcounty.name)
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertTrue(isinstance(response.accepted_renderer, CSVRenderer))
+        result_set = set(split_text(expected_response)) & set(split_text(response.content))
+        self.assertEqual(collections.Counter(split_text(expected_response)), collections.Counter(split_text(response.content)))
+
+    def test_should_bulk_save_streamed_csv_user_profiles(self):
+        dup_user = self.masaka_user.copy()
+        dup_user['name'] = 'AnotherMasakarian'
+        UserProfile(**dup_user).save()
+        self.assertEqual(dup_user['name'], UserProfile.objects(**dup_user).first().name)
+        dup_user['name'] = 'NamedChanged'
+        bulk_mobile_users = [
+            {
+                "name":"%s" % self.masaka_user['name'],
+                "phone":"%s" % self.masaka_user['phone'],
+                "email": "%s" % self.masaka_user['email'],
+                "district": "%s" % self.masaka.name,
+                "subcounty": "%s" % self.subcounty.name,
+             },
+            {
+                "name":"%s" % self.mobile_user['name'],
+                "phone":"%s" % self.mobile_user['phone'],
+                "email": None,
+                "district": "%s" % self.district.name,
+                "subcounty": "%s" % '',
+             },
+            {
+                "name":"%s" % dup_user['name'],
+                "phone":"%s" % dup_user['phone'],
+                "email": "%s" % dup_user['email'],
+                "district": "%s" % self.masaka.name,
+                "subcounty": "%s" % self.subcounty.name,
+             },
+        ]
+
+        response = self.client.post(self.BULK_ENDPOINT, bulk_mobile_users, format='json')
+
+        self.assertEqual(2, UserProfile.objects.count())
+        response = UserProfile.objects(**self.masaka_user)
+        self.assertEqual(0, response.count())
+        response = UserProfile.objects(**dup_user)
+        self.assertEqual(1, response.count())
+        self.assertEqual(dup_user['name'], UserProfile.objects(**dup_user).first().name)
+        self.mobile_user['email']="" #empty string is not equal to None
+        response = UserProfile.objects(**self.mobile_user)
+        self.assertEqual(1, response.count())
+
+    def test_should_omit_invalid_csv_rows_but_save_valid_ones(self):
+
+        bulk_mobile_users = [
+            {
+                "name":"new name",
+                "phone":"+256771289018",
+                "email": "me@me.com",
+                "district": "%s" % self.masaka.name,
+                "subcounty": "unknownSub", #unknown subcounty
+             },
+            {
+                "name":"new name",
+                "phone":"+256771289018",
+                "email": "me@me.com",
+                "district": "unknowndistrict", #unknown district
+                "subcounty": None,
+             },
+            {
+                "name":"new name",
+                "phone":"+256771289018",
+                "email": "me@me.com",
+                "district": "unknowndistrict", #unknown district
+                "subcounty": "badsubcounty", #unknown subcounty
+             },
+            {
+                "name":"%s" % self.mobile_user['name'],
+                "phone":"%s" % self.mobile_user['phone'],
+                "email": None,
+                "district": "%s" % self.district.name,
+                "subcounty": "%s" % '',
+             },
+        ]
+
+        response = self.client.post(self.BULK_ENDPOINT, bulk_mobile_users, format='json')
+
+        self.assertEqual(1, UserProfile.objects.count())
+        masaka_users = UserProfile.objects(name=self.masaka_user['name'])
+        self.assertEqual(0, masaka_users.count())
+        self.mobile_user['email']="" #empty string is not equal to None
+        kampala_users = UserProfile.objects(**self.mobile_user)
+        self.assertEqual(1, kampala_users.count())
+
+    def test_should_omit_empty_csv_rows(self):
+
+        bulk_mobile_users = [
+            {
+                "name":"new name",
+                "phone":"+256771289018",
+                "email": "me@me.com",
+                "district": "%s" % self.masaka.name,
+                "subcounty": "unknownSub",
+             },
+            {},
+            {
+                "name":"%s" % self.mobile_user['name'],
+                "phone":"%s" % self.mobile_user['phone'],
+                "email": None,
+                "district": "%s" % self.district.name,
+                "subcounty": "%s" % '',
+             },
+        ]
+
+        response = self.client.post(self.BULK_ENDPOINT, bulk_mobile_users, format='json')
+
+        self.assertEqual(1, UserProfile.objects.count())
+        masaka_users = UserProfile.objects(name=self.masaka_user['name'])
+        self.assertEqual(0, masaka_users.count())
+        self.mobile_user['email']="" #empty string is not equal to None
+        kampala_users = UserProfile.objects(**self.mobile_user)
+        self.assertEqual(1, kampala_users.count())
+
+    def test_should_omit_blank_csv(self):
+
+        bulk_mobile_users = [
+            {},
+        ]
+
+        response = self.client.post(self.BULK_ENDPOINT, bulk_mobile_users, format='json')
+        self.assertEqual(0, UserProfile.objects.count())
+

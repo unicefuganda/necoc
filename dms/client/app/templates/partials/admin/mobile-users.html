@@ -1,6 +1,7 @@
 <div class="section">
     <ng-include ng-controller="AddUserController" src="'/static/templates/partials/admin/users/user-modal.html'">
     </ng-include>
+    <ng-include src="'/static/templates/partials/admin/users/download-users-modal.html'"></ng-include>
     <div class="profile-toast" growl></div>
     <div class="c-well">
         <div class="row with-btm-margin">
@@ -8,20 +9,25 @@
                 <span class="icon icon-contact-add"></span><span class="title">Users List</span>
             </div>
             <div class="user-actions pull-right">
-                <form class="form-inline" role="form">
-                    <div class="form-group">
-                        <label class="sr-only" for="csvFile">CSV File:</label>
-                        <input type="file" id="csvFile" placeholder="upload csv file" ng-model="csvFile" class="form-control" filelist-bind>
-                    </div>
-                    <div class="form-group">
+                <ul class="ul-horizontal">
+                    <li>
+                        <button id="download-users-modal" type="button" class="btn btn-default btn-action btn-icon"
+                                data-toggle="modal"
+                                data-target="#download-users-modal">
+                            <span class="icon icon-download"></span>
+
+                            <div class="value">Download Users CSV</div>
+                        </button>
+                    </li>
+                    <li>
                         <button type="button" id="create-user" class="btn btn-default btn-action btn-icon"
                                 data-toggle="modal"
                                 data-target="#mobile-user-modal">
                             <span class="icon icon-plus-circle"></span>
-                            <span class="value">Add new user</span>
+                            <span class="value">Add new user(s)</span>
                         </button>
-                    </div>
-                </form>
+                    </li>
+                </ul>
             </div>
         </div>
 

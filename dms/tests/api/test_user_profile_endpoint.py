@@ -317,6 +317,21 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.assertTrue(isinstance(response.accepted_renderer, CSVRenderer))
         self.assertEqual(collections.Counter(split_text(expected_response)), collections.Counter(split_text(response.content)))
 
+    def test_should_return_csv_with_all_users_when_location_is_empty_when_csv_endpoint_is_called(self):
+        self.mobile_user['email'] = 'mobile_user@mobuser.com'
+        UserProfile(**self.mobile_user).save()
+        UserProfile(**self.masaka_user).save()
+        response = self.client.get(self.CSV_ENDPOINT + '?location=', format='csv')
+
+        expected_response = "name,phone,email,district,subcounty\r\n" \
+                            "timothy,+256775019449,mobile_user@mobuser.com,%s,%s" % (self.district.name,'')
+        expected_response = expected_response + "\r\nMunamasaka,+256775019441,m@emasaka.com,%s,%s" % (self.masaka.name, self.subcounty.name)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(2, len(response.data))
+        self.assertTrue(isinstance(response.accepted_renderer, CSVRenderer))
+        self.assertEqual(collections.Counter(split_text(expected_response)), collections.Counter(split_text(response.content)))
+
     def test_should_return_filtered_csv_when_csv_endpoint_is_called_with_location_filter(self):
         self.mobile_user['email'] = 'mobile_user@mobuser.com'
         UserProfile(**self.mobile_user).save()

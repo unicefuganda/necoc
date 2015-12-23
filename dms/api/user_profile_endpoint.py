@@ -127,8 +127,11 @@ class CSVUserProfileView(ListCreateAPIView):
     def _filter_params(self, req):
         location = req.GET.get('location')
         params = {}
+        locations = []
         if location and not self._undefined(location):
-            locations = Location.objects(**dict(id=location)).first().children(include_self=True)
+            locs = location.split(',')
+            for loc in locs:
+                locations += Location.objects(**dict(id=loc)).first().children(include_self=True)
             params = {'location__in': locations}
         return params
 

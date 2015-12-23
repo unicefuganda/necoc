@@ -861,3 +861,11 @@ list-style-type: none;
 span.disaster{
     cursor: pointer; cursor: hand;
 }
+
+div.pushed{
+    margin: 15px 0px 0px 15px;
+}
+
+div.upcsv{
+    margin: 15px 0px 0px 15px;
+}

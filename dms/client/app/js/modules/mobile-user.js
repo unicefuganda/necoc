@@ -27,6 +27,9 @@
             },
             bulkUpdateInsert: function (bulk_users) {
                 return $http.post(Config.apiUrl + 'bulk-mobile-users/' , bulk_users);
+            },
+            downloadMobileUsers: function (locations) {
+                return $http.get(Config.apiUrl + 'csv-mobile-users/?location=' + locations);
             }
         };
     });
@@ -113,9 +116,67 @@
                       });
                   }
               });
+              var element = angular.element('#mobile-user-modal');
+              element.modal('hide');
           });
         });
       };
+    });
+
+    module.controller('DownloadUsersModalController', function ($scope, growl, MobileUserService, helpers) {
+        $scope.modalTitle = 'Download Mobile Users';
+        $scope.form = {};
+        $scope.users = {};
+        $scope.locations = {}
+
+        $scope.downloadUsers = function (users) {
+            $scope.saveStatus = true;
+            if (users.all == true){
+                users.locations = ''
+            }else{
+                $scope.users.locations = $scope.users.subcounties ?
+                    helpers.stringToArray($scope.users.subcounties, ',') : [ $scope.users.district ];
+
+                delete $scope.users.district;
+                delete $scope.users.subcounties;
+            }
+
+            console.log($scope.users.locations)
+
+            MobileUserService.downloadMobileUsers($scope.users.locations).then(function (response) {
+
+                var data = helpers.objArrayToCsv(response.data);
+                var anchor = angular.element('<a/>');
+                anchor.css({display: 'none'}); // Make sure it's not visible
+                angular.element(document.body).append(anchor); // Attach to document
+                 anchor.attr({
+                     href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
+                     target: '_blank',
+                     download: 'mobile_users.csv'
+                 })[0].click();
+                $scope.saveStatus = false;
+
+                //Clean up, remove anchor and call directive to close modal
+                anchor.remove();
+                $scope.dismiss();
+
+                growl.success('Users downloaded successfully', {
+                    ttl: 5000
+                });
+            });
+
+        };
+
+    })
+    .directive('modalClose', function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attr) {
+                scope.dismiss = function() {
+                    element.modal('hide');
+                };
+            }
+        }
     });
 
     module.controller('AddUserController', function ($scope, MobileUserService, helpers) {

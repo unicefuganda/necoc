@@ -1,0 +1,52 @@
+<div class="modal fade" modal-close id="download-users-modal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog sm-2">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 id="download-users-modal-title" class="modal-title">Download Users</h4>
+            </div>
+            <div>
+                <form ng-controller="DownloadUsersModalController" role="form" novalidate="" name="download_users_form" ng-submit="downloadUsers(users)" novalidate>
+                    <div class="modal-body">
+                        <div class="checkbox">
+                            <label class="control-label"><input type="checkbox" name="all" ng-model="users.all" value="">All Users</label>
+                        </div>
+                        <div id="district-field" class="form-group"
+                             ng-class="{'has-error': form.download_users_form.district.$invalid && hasErrors}">
+                            <label class="control-label" for="district">District</label>
+                            <input type="text" id="district" name="district" class="form-control" data-parent="true"
+                                   location-cascade="districts" ng-model="users.district" data-max-locations="1"
+                                   placeholder="select district" data-child="subcounties" data-dataset="users" required=""
+                                   data-default-parent-value="users.locations[0].parent.id"
+                                   data-default-child-value="users.locations | idsAsString">
+
+                            <div id="district-errors" class="error-text"
+                                 ng-show="form.download_users_form.district.$invalid && hasErrors">
+                                <p class="text-danger" ng-show="form.download_users_form.district.$error.required">
+                                    This field is required
+                                </p>
+                            </div>
+                        </div>
+                        <div id="subcounty-field" class="form-group subcounty"
+                             ng-class="{'has-error': form.download_users_form.subcounty.$invalid && hasErrors}">
+                            <label class="control-label" for="subcounty">Sub-County</label>
+                            <input type="text" id="subcounty" ng-model="users.subcounties" name="subcounty"
+                                   location-cascade="subcounties" class="form-control"
+                                   placeholder="select sub-county" data-dataset="users">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="close-sms-modal" class="btn btn-default"
+                                data-dismiss="modal">Close
+                        </button>
+                        <button type="submit" id="download-users-btn" close-modal="download-users-modal" class="btn btn-info" save-state=""
+                                data-loading-text="Downloading..." save-state="">Download
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -9,8 +9,11 @@
                 <span class="icon icon-contact-add"></span><span class="title">Users List</span>
             </div>
             <div class="user-actions pull-right">
-                <ul class="ul-horizontal">
-                    <li>
+                <form class="form-inline">
+                    <div class="form-group">
+                        <selectize config='filterConfig' options='filterOptions' ng-model="filterParam" ng-change="filterUsers(filterParam)"></selectize>
+                    </div>
+                    <div class="form-group">
                         <button id="download-users-modal" type="button" class="btn btn-default btn-action btn-icon"
                                 data-toggle="modal"
                                 data-target="#download-users-modal">
@@ -18,16 +21,16 @@
 
                             <div class="value">Download Users CSV</div>
                         </button>
-                    </li>
-                    <li>
+                    </div>
+                    <div class="form-group">
                         <button type="button" id="create-user" class="btn btn-default btn-action btn-icon"
                                 data-toggle="modal"
                                 data-target="#mobile-user-modal">
                             <span class="icon icon-plus-circle"></span>
                             <span class="value">Add new user(s)</span>
                         </button>
-                    </li>
-                </ul>
+                    </div>
+                </form>
             </div>
         </div>
 

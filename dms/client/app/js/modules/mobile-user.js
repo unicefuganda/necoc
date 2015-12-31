@@ -34,12 +34,60 @@
         };
     });
 
-    module.controller('MobileUserController', function ($scope, $state, MobileUserService, Papa, growl) {
+    module.controller('MobileUserController', function ($scope, $state, MobileUserService, growl, filterFilter, helpers) {
         $scope.users = [];
         $scope.sort_field = '-created_at';
         $scope.toggled = false
         $scope.csvFiles = []
         $scope.CSVReadStatus = false
+        $scope.filterParam = null;
+        $scope.isFiltered = false;
+        $scope.users_copy = []
+
+        $scope.filterOptions = [
+            {id: 0, title: 'Name'},
+            {id: 1, title: 'Phone'},
+            {id: 2, title: 'Email'},
+            {id: 3, title: 'Location'}
+        ];
+
+        $scope.filterConfig = {
+            create: true,
+            valueField: 'id',
+            labelField: 'title',
+            delimiter: '|',
+            placeholder: 'select filter, type parameter and press Enter...',
+            openOnFocus: true,
+            closeAfterSelect: true,
+            onInitialize: function(selectize){
+                //console.log(selectize)
+            },
+            // maxItems: 1
+        };
+
+        $scope.filterUsers = function(params){
+            if($scope.isFiltered == false && $scope.users_copy.length == 0) {
+                $scope.users_copy = helpers.clone($scope.users);
+            }
+
+            if(params.length>1) {
+                $scope.isFiltered = true;
+                var param_idx = parseInt(params[0]);
+                var search_expr = {};
+                var search_param = $scope.filterOptions[param_idx]['title'].toLowerCase();
+                var search_term = params[1];
+                search_param == 'location' ?  search_expr[search_param] = {'name': search_term} : search_expr[search_param] = search_term ;
+                $scope.$apply(function(){
+                    $scope.users = filterFilter($scope.users, search_expr);
+                });
+            } else {
+                if($scope.isFiltered == true) {
+                    $scope.$apply(function () {
+                        $scope.users = $scope.users_copy;
+                    });
+                }
+            }
+        }
 
         listUsers = function(sort_fields){
             MobileUserService.all(sort_fields).then(function (response) {
@@ -56,8 +104,8 @@
                 return [];
             }
             var sorted = Object.keys(obj);
-            //return sorted.sort()
-            return sorted
+            return sorted.sort()
+            //return sorted
         }
 
         $scope.toggleAndrebuildList = function(property){
@@ -140,8 +188,6 @@
                 delete $scope.users.district;
                 delete $scope.users.subcounties;
             }
-
-            console.log($scope.users.locations)
 
             MobileUserService.downloadMobileUsers($scope.users.locations).then(function (response) {
 
@@ -400,4 +446,4 @@
         }
     });
 
-})(angular.module('dms.mobile-user', ['angularFileUpload', 'ngPapaParse', 'dms.config', 'angular-growl', 'dms.utils', 'dms.user']));
+})(angular.module('dms.mobile-user', ['angularFileUpload', 'dms.config', 'angular-growl', 'dms.utils', 'dms.user']));

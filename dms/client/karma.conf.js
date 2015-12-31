@@ -22,10 +22,12 @@ module.exports = function(config) {
             'app/bower_components/angular-growl-v2/build/angular-growl.min.js',
             'app/bower_components/moment/min/moment.min.js',
             'app/bower_components/angular-mocks/angular-mocks.js',
-            'app/bower_components/highcharts/highcharts.js',
+            'app/bower_components/highcharts/lib/highcharts.js',
             'app/bower_components/highcharts-ng/dist/highcharts-ng.js',
             'app/bower_components/spin.js/spin.js',
             'app/bower_components/angular-spinner/angular-spinner.js',
+            'app/bower_components/papaparse/papaparse.min.js',
+            'bower_components/angular-papaparse/dist/js/angular-PapaParse.js',
             'app/js/**/*.js',
             'test/**/*.js'
         ],

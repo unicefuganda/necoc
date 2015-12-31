@@ -34,14 +34,14 @@ describe('dms.mobile-user', function () {
 
             beforeEach(function () {
                 inject(function ($controller) {
-                    httpMock.when('GET', apiUrl + 'mobile-users/').respond([responseStub]);
+                    httpMock.when('GET', apiUrl + 'mobile-users/?ordering=-created_at').respond([responseStub]);
                     stateMock = jasmine.createSpyObj('stateMock', ['go']);
                     $controller('MobileUserController', {$scope: scope, $state: stateMock});
                 })
             });
 
             it('should add a list of existing users to the scope', function () {
-                httpMock.expectGET(apiUrl + 'mobile-users/');
+                httpMock.expectGET(apiUrl + 'mobile-users/?ordering=-created_at');
                 httpMock.flush();
 
                 expect(scope.users).toEqual([responseStub]);

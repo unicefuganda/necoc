@@ -142,7 +142,7 @@
 
     });
 
-})(angular.module('dms', ['ui.router', 'permission', 'siTable', 'checklist-model', 'angularFileUpload', 'dms.message', 'dms.admin-panel', 'dms.location', 'dms.mobile-user',
+})(angular.module('dms', ['ui.router', 'permission', 'ngPapaParse', 'selectize', 'siTable', 'checklist-model', 'angularFileUpload', 'dms.message', 'dms.admin-panel', 'dms.location', 'dms.mobile-user',
     'dms.utils', 'dms.disaster', 'dms.disaster-type', 'dms.map', 'dms.polls', 'dms.poll-responses', 'dms.filters', 'dms.dashboard',
     'dms.user-profile', 'dms.admin-settings', 'dms.user', 'angularSpinner']));
 

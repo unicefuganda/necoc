@@ -10,7 +10,7 @@ from rest_framework import serializers as serialiserzz
 
 
 from dms.api.retrieve_update_wrapper import MongoRetrieveUpdateView
-from dms.models import Location, RapidProMessage, Disaster, DisasterType
+from dms.models import Location, RapidProMessage, Disaster, DisasterType, UserProfile
 from necoc import settings
 from rest_framework_csv import renderers as r
 from rest_framework.settings import api_settings
@@ -55,6 +55,13 @@ class RapidProListCreateView(ListCreateAPIView):
     def get_queryset(self):
         queryset = self._non_location_queried_messages()
         location_queried = self.request.GET.get('location', None)
+
+        if not location_queried:
+            if self.request.user.has_perm('dms.can_view_messages') and \
+                    not self.request.user.has_perm('dms.can_manage_messages'):
+                user_profile = UserProfile.objects(user=self.request.user).first()
+                if user_profile:
+                    location_queried = user_profile.location.id
 
         if location_queried:
             location = Location.objects(id=location_queried).first()

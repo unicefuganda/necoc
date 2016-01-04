@@ -1,7 +1,8 @@
 import json
 import datetime
+from mongoengine.django.auth import Group
 
-from dms.models import Location, DisasterType, Disaster
+from dms.models import Location, DisasterType, Disaster, User, UserProfile
 from dms.tests.base import MongoAPITestCase
 
 
@@ -10,7 +11,7 @@ class TestDisasterEndpoint(MongoAPITestCase):
     API_ENDPOINT = '/api/v1/disasters/'
 
     def setUp(self):
-        self.login_user()
+        self.user = self.login_user()
         self.district = Location(**dict(name='Kampala', type='district', parent=None))
         self.district.save()
         self.disaster_type = DisasterType(**dict(name="Fire", description="Fire"))
@@ -19,6 +20,10 @@ class TestDisasterEndpoint(MongoAPITestCase):
                                      description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
         self.disaster = dict(name=self.disaster_type, locations=[self.district],
                              description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
+
+        self.mobile_user = UserProfile(**dict(name='timothy', phone="+256775019449",
+                                             location=self.district, email=None)).save()
+        self.cao_group, created = Group.objects.get_or_create(name='CAO')
 
     def test_should_post_a_disaster(self):
         response = self.client.post(self.API_ENDPOINT, data=json.dumps(self.disaster_to_post), content_type="application/json")
@@ -152,3 +157,25 @@ class TestDisasterEndpoint(MongoAPITestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, len(response.data))
         self.assertEqual(datetime.datetime.strptime(date_1_jan, "%Y-%m-%d"), response.data[0]['date'])
+
+    def test_should_return_only_district_disasters_for_CAO(self):
+        self.user.group = self.cao_group
+        self.user.save()
+        self.mobile_user.user = self.user
+        self.mobile_user.save()
+
+        masaka_district = Location(**dict(name='Masaka', parent=None, type='district')).save()
+
+        masaka_disaster = dict(name=self.disaster_type, locations=[masaka_district],
+                             description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
+
+        Disaster(**self.disaster).save()
+        Disaster(**masaka_disaster).save()
+        response = self.client.get(self.API_ENDPOINT, format='json')
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertEqual(self.disaster_to_post['status'], response.data[0]['status'])
+        self.assertEqual(self.disaster_to_post['date'], str(response.data[0]['date']))
+        self.assertEqual(self.disaster_to_post['description'], response.data[0]['description'])
+        self.assertEqual('Kampala', response.data[0]['locations'][0]['name'])

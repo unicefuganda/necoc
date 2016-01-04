@@ -14,7 +14,7 @@
                         </button>
 
                     </li>
-                    <li>
+                    <li ng-if-permissions="can_manage_messages" class="hide">
                         <button id="send-bulk-sms" type="button" class="btn btn-info btn-big" data-toggle="modal"
                                 data-target="#bulk-sms-modal">
                             <span class="icon icon-mail-letter"></span>
@@ -22,7 +22,7 @@
                             <div class="value">Send SMS Alert</div>
                         </button>
                     </li>
-                    <li>
+                    <li ng-if-permissions="can_manage_messages" class="hide">
                         <button id="download-messages-modal" type="button" class="btn btn-info btn-big" data-toggle="modal"
                                 data-target="#download-messages-modal">
                             <span class="icon icon-download"></span>
@@ -48,15 +48,17 @@
                     <span class="value">Refresh</span>
                 </button>
             </div>
-            <div class="col-md-1">
-                <div class="btn-group">
-                    <button id="actions-btn" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-                        Actions <span class="caret"></span>
-                    </button>
-                    <ul ng-show="selected.messages.length" class="dropdown-menu" role="menu">
-                        <li><a id="add-to-disaster" data-toggle="modal"
-                               data-target="#add-to-disaster-modal">Associate to disaster</a></li>
-                    </ul>
+            <div ng-if-permissions="can_manage_messages" class="hide">
+                <div class="col-md-1">
+                    <div class="btn-group">
+                        <button id="actions-btn" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                            Actions <span class="caret"></span>
+                        </button>
+                        <ul ng-show="selected.messages.length" class="dropdown-menu" role="menu">
+                            <li><a id="add-to-disaster" data-toggle="modal"
+                                   data-target="#add-to-disaster-modal">Associate to disaster</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

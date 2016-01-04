@@ -2,11 +2,11 @@
 
     <div class="row with-btm-margin">
         <div class="col-md-3 sub-section-header">
-            <span class="icon icon-flash-electric"></span><span class="title">Registered Disaster Risks</span>
+            <span class="icon icon-flash-electric"></span><span class="title">Disaster Risks</span>
         </div>
         <div class="user-actions pull-right">
             <ul>
-                <li>
+                <li ng-if-permissions="can_manage_disasters" class="hide">
                     <button type="button" id="add-disaster" class="btn btn-default btn-action btn-icon"
                             data-toggle="modal" data-target="#disasters-modal" ng-click="addDisaster()">
                         <span class="icon icon-plus-circle"></span>

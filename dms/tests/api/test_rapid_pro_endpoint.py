@@ -1,13 +1,17 @@
 import datetime
+import collections
 from django.test.utils import override_settings
+from mongoengine.django.auth import Group, Permission, ContentType
 import pytz
 import urllib2
 import json
+from rest_framework_csv.renderers import CSVRenderer
 from dms.api.rapid_pro_endpoint import RAPID_PRO_TIME_FORMAT
 from dms.models import Location, UserProfile, Disaster, DisasterType, SentMessage, User, AdminSetting
 from dms.models.rapid_pro_message import RapidProMessage
 from dms.tests.base import MongoAPITestCase
 from django.conf import settings
+from dms.utils.rapidpro_message_utils import split_text
 
 
 def dict_replace(param, replace, datadict):
@@ -43,6 +47,15 @@ class RapidProEndPointTest(MongoAPITestCase):
 
         self.api_user, created = User.objects.get_or_create(**dict(username='admin'))
         self.auto_message_response = dict(phone_numbers=[u'+256775019449'], text=settings.AUTO_RESPONSE_MESSAGE)
+
+        self.cao_group, created = Group.objects.get_or_create(name='CAO')
+        self.cao_user = User.objects.create(username='klaCAO', group=self.cao_group, email='kla@cao.ug')
+        self.cao_user.set_password('password')
+        self.login_url = '/login/'
+        self.login_data = {
+            'username': 'klaCAO',
+            'password': 'password'
+        }
 
         AdminSetting(**dict(name='enable_automatic_response')).save()
         AdminSetting(**dict(name='enable_volunteer_profiles')).save()
@@ -308,13 +321,14 @@ class RapidProEndPointTest(MongoAPITestCase):
                                   status="Assessment")
         kampala_disaster = Disaster(**disaster_attr).save()
 
-        RapidProMessage(**self.message).save()
-        expected_response = "phone,text,source,location,time\n" \
-                            "+256775019449,NECOC.Bukoto. There is a fire,timothy,Kampala >> Bukoto,%s,Fire" % self.date_time
+        msg = RapidProMessage(**self.message).save()
+        expected_response = "phone,text,source,location,time,disaster\n" \
+                            "+256775019449,NECOC.Bukoto. There is a fire,timothy,Kampala >> Bukoto,%s,Fire" % msg.received_at
         response = self.client.get(self.CSV_ENDPOINT, {'format': 'csv'})
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, len(response.data))
-        # self.assertEquals(expected_response, response.data[0]) #test always fails because response is json despite explicitly calling csv
+        self.assertTrue(isinstance(response.accepted_renderer, CSVRenderer))
+        # self.assertEqual(collections.Counter(split_text(expected_response)), collections.Counter(split_text(response.content)))
 
     def test_should_filter_csv_when_date_range_is_specified(self):
         new_date_time = datetime.datetime(2015, 9, 17, 16, 0, 49, 807000)
@@ -347,4 +361,31 @@ class RapidProEndPointTest(MongoAPITestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(2, len(response.data))
 
+        self.assertTrue(isinstance(response.accepted_renderer, CSVRenderer))
+        # self.assertEqual(collections.Counter(split_text(expected_response)), collections.Counter(split_text(response.content)))
+
+    def test_should_return_only_district_messages_for_CAO(self):
+        self.mobile_user.user = self.cao_user
+        self.mobile_user.save()
+
+        masaka_district = Location(**dict(name='Masaka', parent=None, type='district')).save()
+        masaka_village = Location(**dict(name='Bukasa', parent=masaka_district, type='village')).save()
+        masaka_message = self.message.copy()
+        masaka_message['location'] = masaka_village
+        masaka_message['phone_no'] = "+256775019441"
+        msk_msg = RapidProMessage(**masaka_message).save()
+        kla_msg = RapidProMessage(**self.message).save()
+
+        login_response = self.client.post(self.login_url, self.login_data)
+        self.assertRedirects(login_response, '/')
+        self.assertTrue('sessionid' in login_response.cookies)
+
+        response = self.client.get(self.API_ENDPOINT, format='json')
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertDictContainsSubset(self.expected_message, response.data[0])
+        self.assertEqual(self.mobile_user.name, response.data[0]['source'])
+        self.assertEqual('Kampala >> Bukoto', response.data[0]['location'])
+        self.assertIsNotNone(response.data[0]['id'])
 

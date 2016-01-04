@@ -80,7 +80,7 @@
                 data: {
                     pageTitle: 'Disaster',
                     permissions: {
-                        only: ['can_manage_disasters']
+                        only: ['can_manage_disasters', 'can_view_disasters']
                     }
                 },
                 templateUrl: '/static/templates/partials/admin/disasters/disaster-info.html',
@@ -92,7 +92,7 @@
                 data: {
                     pageTitle: 'Messages',
                     permissions: {
-                        only: ['can_manage_messages']
+                        only: ['can_manage_messages', 'can_view_messages']
                     }
                 },
                 templateUrl: '/static/templates/partials/admin/messages.html',

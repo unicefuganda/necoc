@@ -25,6 +25,19 @@
                         <span class="bar-content">Disaster Risks</span>
                     </a>
                 </li>
+                <li ui-sref-active="active" ng-if-permissions="can_view_messages" class="hide">
+                    <a ui-sref="admin.messages" id="messages-tab">
+                        <span class="icon icon-bubble-3"></span>
+                        <span class="bar-content">Messages</span>
+                        <span class="badge">{[{uncategorizedMessagesCount}]}</span>
+                    </a>
+                </li>
+                <li ui-sref-active="active" ng-if-permissions="can_view_disasters" class="hide">
+                    <a ui-sref="admin.disasters" id="disasters-tab">
+                        <span class="icon icon-flash-electric"></span>
+                        <span class="bar-content">Disaster Risks</span>
+                    </a>
+                </li>
                 <li ui-sref-active="active">
                     <a ui-sref="admin.polls" id="polls-tab">
                         <span class="icon icon-pie-2"></span>

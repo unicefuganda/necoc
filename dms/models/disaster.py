@@ -36,3 +36,13 @@ class Disaster(BaseModel):
         queryset = cls.from_(**kwargs)
         return queryset.count()
 
+    def csv_locations(self):
+        if self.locations:
+            locations = []
+            for loc in self.locations:
+                locations.append(loc.name)
+            return '|'.join(locations)
+
+    def csv_name(self):
+        return self.name.name
+

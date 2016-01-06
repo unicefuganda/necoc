@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from dms.api.admin_setting_endpoint import AdminSettingListCreateView, AdminSettingUpdateView
 from dms.api.bulk_sms_endpoint import SentMessageListCreateView
 from dms.api.current_permissions_endpoint import CurrentPermissionsView
-from dms.api.disaster_endpoint import DisasterListCreateView, DisasterView
+from dms.api.disaster_endpoint import DisasterListCreateView, DisasterView, CSVDisasterView
 from dms.api.disaster_type_endpoint import DisasterTypeListCreateView
 from dms.api.groups_endpoint import GroupsEndpointListView
 from dms.api.location_stats_service_endpoint import LocationStatsListView, DistrictStatsListView
@@ -63,6 +63,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/csv-poll/$', CSVPollResponsesView.as_view()),
     url(r'^api/v1/csv-mobile-users/$', CSVUserProfileView.as_view()),
     url(r'^api/v1/bulk-mobile-users/$', BulkUserProfileView.as_view()),
+    url(r'^api/v1/csv-disasters/$', CSVDisasterView.as_view()),
     # url(r'^api/v1/csvm/$', CSVMView.as_view()),
     url(r'^export/poll-responses/(?P<poll_id>[0-9a-z]+)/$',
         login_required(ExportPollResponsesView.as_view(), login_url='login/')),

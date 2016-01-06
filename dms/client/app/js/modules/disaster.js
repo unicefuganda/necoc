@@ -19,13 +19,18 @@
             },
             disaster: function (disasterId) {
                 return $http.get(Config.apiUrl + 'disasters/' + disasterId + '/');
+            },
+            downloadDisasters: function (dstatus, dfrom, dto) {
+                return $http.get(Config.apiUrl + 'csv-disasters/?status=' + dstatus + '&from=' + dfrom + '&to=' + dto);
             }
         };
     });
 
     module.controller('DisastersController', function ($scope, DisasterService, $state, DisastersPageFilters) {
+
         DisasterService.all().then(function (response) {
             $scope.disasters = response.data;
+            $scope.statusOptions = response.data[0]
         });
 
         this.showDisasterDetail = function(disaster) {
@@ -128,6 +133,53 @@
                 $scope.hasErrors = true;
             }
         }
+    });
+
+    module.controller('DownloadDisastersModalController', function ($scope, growl, DisasterService, helpers) {
+        $scope.disaster = {}
+        $scope.statusOptions = {
+            availableOptions: [
+              {id: '1', name: 'Option A'},
+              {id: '2', name: 'Option B'},
+              {id: '3', name: 'Option C'}
+            ]
+        }
+
+        $scope.downloadDisasters = function (disaster) {
+            $scope.saveStatus = true;
+
+            DisasterService.downloadDisasters(disaster.status, disaster.dfrom, disaster.dto).then(function (response) {
+                var data = helpers.objArrayToCsv(response.data);
+                var anchor = angular.element('<a/>');
+                 anchor.attr({
+                     href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
+                     target: '_blank',
+                     download: 'disasters.csv'
+                 })[0].click();
+                $scope.saveStatus = false;
+
+                //Clean up, remove anchor and call directive to close modal
+                anchor.remove();
+                $scope.dismiss();
+
+                growl.success('Disasters downloaded successfully', {
+                    ttl: 5000
+                });
+            });
+
+        };
+
+    });
+
+    module.directive('modalClose', function() {
+       return {
+         restrict: 'A',
+         link: function(scope, element, attr) {
+           scope.dismiss = function() {
+               element.modal('hide');
+           };
+         }
+       }
     });
 
     module.directive('disasterStatus', function (DisasterConfig) {

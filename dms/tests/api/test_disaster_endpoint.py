@@ -1,14 +1,18 @@
 import json
 import datetime
+import collections
 from mongoengine.django.auth import Group
+from rest_framework_csv.renderers import CSVRenderer
 
 from dms.models import Location, DisasterType, Disaster, User, UserProfile
 from dms.tests.base import MongoAPITestCase
+from dms.utils.rapidpro_message_utils import split_text
 
 
 class TestDisasterEndpoint(MongoAPITestCase):
 
     API_ENDPOINT = '/api/v1/disasters/'
+    CSV_ENDPOINT = '/api/v1/csv-disasters/'
 
     def setUp(self):
         self.user = self.login_user()
@@ -16,6 +20,8 @@ class TestDisasterEndpoint(MongoAPITestCase):
         self.district.save()
         self.disaster_type = DisasterType(**dict(name="Fire", description="Fire"))
         self.disaster_type.save()
+        self.disaster_type2 = DisasterType(**dict(name="Flood", description="Flood"))
+        self.disaster_type2.save()
         self.disaster_to_post = dict(name=str(self.disaster_type.id), locations=[str(self.district.id)],
                                      description="Big Flood", date="2014-12-01 00:00:00", status="Assessment")
         self.disaster = dict(name=self.disaster_type, locations=[self.district],
@@ -179,3 +185,101 @@ class TestDisasterEndpoint(MongoAPITestCase):
         self.assertEqual(self.disaster_to_post['date'], str(response.data[0]['date']))
         self.assertEqual(self.disaster_to_post['description'], response.data[0]['description'])
         self.assertEqual('Kampala', response.data[0]['locations'][0]['name'])
+
+    def test_should_return_csv_when_csv_endpoint_is_called(self):
+        Disaster(**self.disaster).save()
+        disaster_attr2 = self.disaster.copy()
+        disaster_attr2['status'] = "Closed"
+        Disaster(**disaster_attr2).save()
+        disaster2 = self.disaster.copy()
+        disaster2['name'] = self.disaster_type2
+        Disaster(**disaster2).save()
+
+        response = self.client.get(self.CSV_ENDPOINT, format='csv')
+
+        expected_response = "name,description,location,status,date\r\n" \
+                            "Fire,Big Flood,%s,Assessment,2014-12-01 00:00:00" % (self.district.name,)
+        expected_response = expected_response + "\r\nFire,Big Flood,%s,Closed,2014-12-01 00:00:00" % (self.district.name)
+        expected_response = expected_response + "\r\nFlood,Big Flood,%s,Assessment,2014-12-01 00:00:00" % (self.district.name)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(3, len(response.data))
+        self.assertTrue(isinstance(response.accepted_renderer, CSVRenderer))
+        self.assertEqual(collections.Counter(split_text(expected_response)), collections.Counter(split_text(response.content)))
+
+    def test_should_return_filtered_csv_when_csv_endpoint_is_called(self):
+        Disaster(**self.disaster).save()
+        disaster_attr2 = self.disaster.copy()
+        disaster_attr2['status'] = "Closed"
+        Disaster(**disaster_attr2).save()
+        disaster2 = self.disaster.copy()
+        disaster2['name'] = self.disaster_type2
+        sdisaster = Disaster(**disaster2).save()
+
+        response = self.client.get(self.CSV_ENDPOINT, format='csv')
+
+        expected_response = "name,description,location,status,date\r\n" \
+                            "Fire,Big Flood,%s,Assessment,2014-12-01 00:00:00" % (self.district.name,)
+        expected_response = expected_response + "\r\nFire,Big Flood,%s,Closed,2014-12-01 00:00:00" % (self.district.name)
+        expected_response = expected_response + "\r\nFlood,Big Flood,%s,Assessment,2014-12-01 00:00:00" % (self.district.name)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(3, len(response.data))
+        self.assertTrue(isinstance(response.accepted_renderer, CSVRenderer))
+        self.assertEqual(collections.Counter(split_text(expected_response)), collections.Counter(split_text(response.content)))
+
+        response = self.client.get(self.CSV_ENDPOINT + '?status=Assessment&from=undefined', format='csv')
+
+        expected_response = "name,description,location,status,date\r\n" \
+                            "Fire,Big Flood,%s,Assessment,2014-12-01 00:00:00" % (self.district.name,)
+        expected_response = expected_response + "\r\nFlood,Big Flood,%s,Assessment,2014-12-01 00:00:00" % (self.district.name)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(2, len(response.data))
+        self.assertTrue(isinstance(response.accepted_renderer, CSVRenderer))
+        self.assertEqual(collections.Counter(split_text(expected_response)), collections.Counter(split_text(response.content)))
+
+        sdisaster.date = "2014-12-02 00:00:00"
+        sdisaster.save()
+
+        response = self.client.get(self.CSV_ENDPOINT + '?status=Assessment&from=2014-12-02 00:00:00', format='csv')
+
+        expected_response = "name,description,location,status,date\r\n" \
+                            "Flood,Big Flood,%s,Assessment,2014-12-02 00:00:00" % (self.district.name)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertTrue(isinstance(response.accepted_renderer, CSVRenderer))
+        self.assertEqual(collections.Counter(split_text(expected_response)), collections.Counter(split_text(response.content)))
+
+        response = self.client.get(self.CSV_ENDPOINT + '?to=2014-12-01 00:00:00', format='csv')
+
+        expected_response = "name,description,location,status,date\r\n" \
+                            "Fire,Big Flood,%s,Assessment,2014-12-01 00:00:00" % (self.district.name,)
+        expected_response = expected_response + "\r\nFire,Big Flood,%s,Closed,2014-12-01 00:00:00" % (self.district.name)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(2, len(response.data))
+        self.assertTrue(isinstance(response.accepted_renderer, CSVRenderer))
+        self.assertEqual(collections.Counter(split_text(expected_response)), collections.Counter(split_text(response.content)))
+
+    def test_should_return_csv_with_all_records_when_empty_filters_are_used_on_csv_endpoint(self):
+        Disaster(**self.disaster).save()
+        disaster_attr2 = self.disaster.copy()
+        disaster_attr2['status'] = "Closed"
+        Disaster(**disaster_attr2).save()
+        disaster2 = self.disaster.copy()
+        disaster2['name'] = self.disaster_type2
+        sdisaster = Disaster(**disaster2).save()
+
+        response = self.client.get(self.CSV_ENDPOINT + '?status=undefined&from=undefined&to=undefined', format='csv')
+
+        expected_response = "name,description,location,status,date\r\n" \
+                            "Fire,Big Flood,%s,Assessment,2014-12-01 00:00:00" % (self.district.name,)
+        expected_response = expected_response + "\r\nFire,Big Flood,%s,Closed,2014-12-01 00:00:00" % (self.district.name)
+        expected_response = expected_response + "\r\nFlood,Big Flood,%s,Assessment,2014-12-01 00:00:00" % (self.district.name)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(3, len(response.data))
+        self.assertTrue(isinstance(response.accepted_renderer, CSVRenderer))
+        self.assertEqual(collections.Counter(split_text(expected_response)), collections.Counter(split_text(response.content)))

@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.test import Client
+import mock
 from dms.models import User
 from dms.tests.base import MongoTestCase
 
@@ -47,6 +49,34 @@ class TestLogin(MongoTestCase):
         errors = response.context['form'].errors
         self.assertEqual(1, len(errors))
         self.assertIn(u'Username or Password is invalid', errors['__all__'])
+
+    @mock.patch('dms.tasks.send_email.delay')
+    def test_should_email_password_reset_link_when_newpass_requested(self, mock_send_email):
+        data = {
+            'username': 'admin',
+            'email': 'admin@admin.admin',
+            'resetPass': 1,
+        }
+        response = self.client.post(self.login_url, data)
+        self.assertEqual(200, response.status_code)
+        mock_send_email.assert_called_with('NECOC Password Reset Request',
+                                           mock.ANY,
+                                           settings.DEFAULT_FROM_EMAIL,
+                                           [data['email']])
+        self.assertTemplateUsed(response, 'login.html')
+
+
+    def test_should_return_form_with_errors_if_wrong_data_password_reset_data_submitted(self):
+        data = {
+            'username': 'badname',
+            'password': 'poor.email',
+            'resetPass': 1,
+        }
+        response = self.client.post(self.login_url, data)
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed(response, 'login.html')
+        form = response.context['form']
+        self.assertEqual(2, len(form.errors))
 
 
 class TestLogout(MongoTestCase):

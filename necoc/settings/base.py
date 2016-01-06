@@ -286,6 +286,25 @@ RESET_PASSWORD_MESSAGE = """
                 Thank you,
                 NECOC DMS team
                 """
+
+PASSWORD_RESET_REQUEST_MESSAGE = """
+                Dear %(name)s,
+
+                Someone requested for a reset of your password for the NECOC DMS
+
+                If you made this request, click the link below to complete the reset
+
+                If you did not, simply ignore this email.
+
+                        %(hostname)s/api/v1/mobile-users/%(user_id)s/password_reset/
+
+                If you think this is a mistake, please contact immediately the NECOC DMS
+                administrator at %(admin_email)s.
+
+                Thank you,
+                NECOC DMS team
+                """
+
 AUTO_RESPONSE_MESSAGE = """Thank you for your message. A response team will be deployed to your area. \
 Please continue sending messages using NECOC.District.Subcounty.Message to 6700
 """

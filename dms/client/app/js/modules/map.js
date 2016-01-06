@@ -367,6 +367,20 @@
                     subCountyLayer && subCountyLayer.zoomIn();
                 }
             },
+            searchSubcounty: function(srv, subcounty){
+                GeoJsonService.districts().then(function (response) {
+                    L.geoJson(response.data, {
+                        onEachFeature: function (feature, layer) {
+                            var districtName = feature.properties.DNAME_2010 || 'unknown',
+                                districtLayer = Layer.build(districtName, map, layer, self.districtlayerOptions);
+                            if(srv.selectSubcounty(districtName.toLowerCase(), subcounty)){
+                                console.log('searched')
+                            }
+                        }
+                    });
+                });
+
+            },
             addSubCountyLayer: function (district) {
                 return addSubCountyLayer(district);
             },
@@ -437,15 +451,26 @@
             scope: false,
             link: function (scope, element, attrs) {
 
-                scope.$watch(attrs.ngModel, function (district) {
-                    if (district == undefined) return;
+                scope.$watch(attrs.ngModel, function (search_term) {
+                    if (search_term == undefined) return;
+                    if (search_term.length < 3) return;
 
-                    if (district) {
-                        MapService.hasLayer(district.toLowerCase()) &&
-                        $state.go('admin.dashboard.district', {district: district.toLowerCase()}, {reload: true})
+                    if (search_term) {
+                        var districtFound = false
+                        MapService.hasLayer(search_term.toLowerCase()) &&
+                        $state.go('admin.dashboard.district', {district: search_term.toLowerCase()}, {reload: true})
                             .then(function () {
-                                MapService.selectDistrict(district, scope.filter);
+                                if(MapService.selectDistrict(search_term, scope.filter)){
+                                    districtFound = true
+                                };
                             });
+
+                        if(districtFound == false){
+                            $state.go('admin.dashboard.district.subcounty', {subcounty: search_term.toLowerCase()}, {reload: true})
+                            .then(function () {
+                                MapService.searchSubcounty(MapService, search_term)
+                            });
+                        }
 
                     } else {
                         $state.go('admin.dashboard', {}, {reload: true});
@@ -454,5 +479,28 @@
             }
         }
     });
+
+    //module.directive('searchMap', function ($state, MapService) {
+    //    return {
+    //        scope: false,
+    //        link: function (scope, element, attrs) {
+    //
+    //            scope.$watch(attrs.ngModel, function (district) {
+    //                if (district == undefined) return;
+    //
+    //                if (district) {
+    //                    MapService.hasLayer(district.toLowerCase()) &&
+    //                    $state.go('admin.dashboard.district', {district: district.toLowerCase()}, {reload: true})
+    //                        .then(function () {
+    //                            MapService.selectDistrict(district, scope.filter);
+    //                        });
+    //
+    //                } else {
+    //                    $state.go('admin.dashboard', {}, {reload: true});
+    //                }
+    //            });
+    //        }
+    //    }
+    //});
 
 })(angular.module('dms.map', ['dms.config', 'ui.router', 'dms.geojson', 'dms.stats', 'dms.layer', 'dms.utils']));

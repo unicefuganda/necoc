@@ -35,7 +35,7 @@
                 <form class="navbar-form navbar-right" role="search"
                       ng-show="$state.current.data.pageTitle == 'Dashboard'">
                     <div class="form-group">
-                        <input type="text" search-map="" ng-model="map.search" class="form-control"
+                        <input type="text" name="txt" search-map="" ng-model="map.search" class="form-control"
                                placeholder="Search">
                     </div>
                 </form>
@@ -70,6 +70,7 @@
 <script src="{{ STATIC_URL }}bower_components/moment/min/moment.min.js"></script>
 <script src="{{ STATIC_URL }}bower_components/checklist-model/checklist-model.js"></script>
 <script src="{{ STATIC_URL }}bower_components/leaflet/dist/leaflet.js"></script>
+<script src="{{ STATIC_URL }}bower_components/leaflet-search/dist/leaflet-search.min.js"></script>
 <script src="{{ STATIC_URL }}bower_components/ng-file-upload/angular-file-upload.js"></script>
 <script src="{{ STATIC_URL }}bower_components/chroma-js/chroma.js"></script>
 <script src="{{ STATIC_URL }}bower_components/highcharts/lib/highcharts.js"></script>

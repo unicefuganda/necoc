@@ -26,6 +26,12 @@
 
             })
 
+            .state('admin.dashboard.subcounty', {
+                url: '/:district/:subcounty',
+                data: { pageTitle: 'Dashboard'},
+                templateUrl: '/static/templates/partials/admin/dashboard.html'
+            })
+
             .state('admin.dashboard.district.subcounty', {
                 url: '/:subcounty',
                 data: { pageTitle: 'Dashboard'},

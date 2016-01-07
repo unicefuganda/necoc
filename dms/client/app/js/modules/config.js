@@ -58,6 +58,8 @@
             'can_manage_users',
             'can_manage_polls',
             'can_view_polls',
+            'can_view_messages',
+            'can_view_disasters',
             'can_manage_disasters',
             'can_manage_messages'
         ]

@@ -127,14 +127,6 @@
             return scale;
         }
 
-        function circleMarkerIcon(content, classPrefix) {
-            return L.divIcon({
-                iconSize: new L.Point(40, 40),
-                className: classPrefix + '-aggregate-marker-icon',
-                html: '<div>' + content + '</div>'
-            });
-        }
-
         function doImage(err, canvas) {
             var img = document.createElement('img');
             var dimensions = map.getSize();
@@ -170,6 +162,14 @@
             }
             LayerMap.addControl('print', print);
             map.addControl(print);
+        }
+
+        function circleMarkerIcon(content, classPrefix) {
+            return L.divIcon({
+                iconSize: new L.Point(40, 40),
+                className: classPrefix + '-aggregate-marker-icon',
+                html: '<div>' + content + '</div>'
+            });
         }
 
         function aggregateMarker(layer, aggregateValue, classPrefix) {
@@ -266,13 +266,17 @@
                 return 0;
             }
 
+            //user percentange instead of absolute value
             var district = Object.keys(stats).reduce(function (prevDistrict, nextDistrict) {
-                if (stats[prevDistrict].messages.count > stats[nextDistrict].messages.count) {
+                //if (stats[prevDistrict].messages.count > stats[nextDistrict].messages.count) {
+                //    return prevDistrict;
+                //}
+                if (Math.round(stats[prevDistrict].messages.percentage, 0) > Math.round(stats[nextDistrict].messages.percentage, 0)) {
                     return prevDistrict;
                 }
                 return nextDistrict;
             });
-            return stats[district].messages.count
+            return Math.round(stats[district].messages.percentage, 0)
         }
 
         function generateHeatMapColor(stats, layerName) {
@@ -280,7 +284,7 @@
                 scaleValue = 0;
 
             if (maxMessages != 0) {
-                scaleValue = Math.sqrt((stats[layerName].messages.count) / maxMessages);
+                scaleValue = Math.sqrt((Math.round(stats[layerName].messages.percentage, 0)) / maxMessages);
             }
             return buildColor(scaleValue);
         }
@@ -543,28 +547,6 @@
                 });
             }
         }
-    });
-
-    module.directive('printer', function() {
-        return {
-            restrict: 'E',
-            replace: true,
-            template: '<div ng-transclude></div>',
-            transclude: true,
-            link: function(scope, element, attrs) {
-                var isClickable = angular.isDefined(attrs.isClickable) && scope.$eval(attrs.isClickable) === true ? true : false;
-
-                if (isClickable) {
-                    attrs.$set('ngClick', 'onHandleClick()');
-                    element.removeAttr('ng-transclude');
-                    $compile(element)(scope);
-                }
-
-                scope.onHandleClick = function() {
-                    console.log('onHandleClick');
-                };
-            }
-        };
     });
 
 })(angular.module('dms.map', ['dms.config', 'ui.router', 'dms.geojson', 'dms.stats', 'dms.layer', 'dms.utils']));

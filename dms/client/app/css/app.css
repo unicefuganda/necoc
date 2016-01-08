@@ -874,3 +874,8 @@ div.upcsv{
     margin-top:0px;
     padding-top:0px;
 }
+
+.mapprint {
+    font-size: 25px;
+    cursor: pointer; cursor: hand;
+}

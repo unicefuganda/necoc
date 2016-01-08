@@ -50,7 +50,8 @@
             '#FAAE22',
             '#FB8E1F',
             '#EF2602'
-        ]
+        ],
+        enablePrinting: false
     });
 
     module.constant('Permissions', {

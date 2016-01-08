@@ -52,4 +52,47 @@
         }
     });
 
+    module.directive('disasterStatus', function (DisasterTypeService, DisasterConfig) {
+        return {
+            link: function (scope, element, attrs) {
+                var $select = element.selectize({
+                    valueField: 'id',
+                    labelField: 'name',
+                    searchField: 'name',
+                    maxItems: 1,
+                    preload: true,
+                    load: function (query, callback) {
+                        var statuses = DisasterConfig.statuses
+                        var disaster_status = []
+                        for (i = 0; i < statuses.length; i++) {
+                            disaster_status[i] = {"id": statuses[i], "name":statuses[i]}
+                        }
+                        callback(disaster_status)
+                        if(attrs.defaultValue) {
+                            scope.$watch(attrs.defaultValue, function (defaultValue) {
+                                if (defaultValue) {
+                                    $select[0].selectize.setValue(defaultValue);
+                                }
+                            });
+                        }
+                    },
+                    //create: function (input, callback) {
+                    //    DisasterTypeService.create({name: input})
+                    //        .then(function (response) {
+                    //            callback(response.data)
+                    //        }, function () {
+                    //            callback(false);
+                    //        });
+                    //}
+                });
+
+                scope.$watch(attrs.disasterStatus, function (user) {
+                    if (!user) {
+                        $select[0].selectize.clear();
+                    }
+                });
+            }
+        }
+    });
+
 })(angular.module('dms.disaster-type', ['dms.config']));

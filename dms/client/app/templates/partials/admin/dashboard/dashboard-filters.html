@@ -9,6 +9,13 @@
                    class="form-control"
                    placeholder="select disaster type"/>
         </div>
+
+        <label>Filter by</label>
+        <div id="dashboard-disaster-status-field" class="form-group">
+            <input type="text" ng-model="filter.status" disaster-status="disaster" name="status"
+                   class="form-control"
+                   placeholder="select disaster status"/>
+        </div>
         <div>
             <label for="from-date">Show data from</label>
             <input id="from-date" class="form-control" ng-model="filter.from" data-datepicker="" data-timepicker="false"

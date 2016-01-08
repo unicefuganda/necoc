@@ -35,7 +35,7 @@
                 <form class="navbar-form navbar-right" role="search"
                       ng-show="$state.current.data.pageTitle == 'Dashboard'">
                     <div class="form-group">
-                        <input type="text" name="txt" search-map="" ng-model="map.search" class="form-control"
+                        <input type="text" search-map="" ng-model="map.search" class="form-control"
                                placeholder="Search">
                     </div>
                 </form>
@@ -82,6 +82,7 @@
 <script src="{{ STATIC_URL }}bower_components/angular-selectize2/dist/angular-selectize.js"></script>
 
 <!-- Custom files -->
+<script src='{{ STATIC_URL }}js/modules/leaflet-image.js'></script>
 <script src="{{ STATIC_URL }}js/modules/index.js"></script>
 <script src="{{ STATIC_URL }}js/modules/config.js"></script>
 <script src="{{ STATIC_URL }}js/modules/user.js"></script>

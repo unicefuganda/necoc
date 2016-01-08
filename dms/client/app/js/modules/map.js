@@ -135,6 +135,43 @@
             });
         }
 
+        function doImage(err, canvas) {
+            var img = document.createElement('img');
+            var dimensions = map.getSize();
+            img.width = dimensions.x;
+            img.height = dimensions.y;
+            img.src = canvas.toDataURL();
+            var anchor = angular.element('<a/>');
+                anchor.css({display: 'none'}); // Make sure it's not visible
+                angular.element(document.body).append(anchor); // Attach to document
+                anchor.attr({
+                    href: canvas.toDataURL(),
+                    target: '_blank',
+                    download: 'map'
+                })[0].click();
+        }
+
+        function addPrintIcon() {
+            var print = L.control({position: 'topleft'});
+            print.onAdd = function () {
+                var div = L.DomUtil.create('div', 'printIcon');
+                div.innerHTML += '<span class="glyphicon glyphicon-print mapprint"></span>';
+                L.DomEvent
+                    .addListener(div, 'click', L.DomEvent.stopPropagation)
+                    .addListener(div, 'click', L.DomEvent.preventDefault)
+                    .addListener(div, 'click', function () {
+                        leafletImage(map, doImage);
+                    });
+                return div;
+            };
+            try {
+                LayerMap.getControl('print').removeFrom(map);
+            } catch (E) {
+            }
+            LayerMap.addControl('print', print);
+            map.addControl(print);
+        }
+
         function aggregateMarker(layer, aggregateValue, classPrefix) {
             return new L.Marker(layer.getCenter(), {
                 icon: circleMarkerIcon(aggregateValue, classPrefix)
@@ -328,7 +365,11 @@
                     addHeatMapLayer(filter).then(addDisasterBubbles.bind({}, map)).then(function () {
                         removeLayerGroupOnZoom('disaster_bubbles', TOGGLE_ZOOM_LEVEL);
                     });
-                }).then(function () {
+                }.bind(this)).then(function (){
+                    if (MapConfig.enablePrinting == true) {
+                        addPrintIcon();
+                    }
+                }.bind(this)).then(function () {
                     return this;
                 }.bind(this));
             },
@@ -376,18 +417,6 @@
                         break;
                     }
                 }
-                //GeoJsonService.districts().then(function (response) {
-                //    L.geoJson(response.data, {
-                //        onEachFeature: function (feature, layer) {
-                //            var districtName = feature.properties.DNAME_2010 || 'unknown',
-                //                districtLayer = Layer.build(districtName, map, layer, self.districtlayerOptions);
-                //            if(srv.selectSubcounty(districtName.toLowerCase(), subcounty)){
-                //                console.log('searched')
-                //            }
-                //        }
-                //    });
-                //});
-
             },
             addSubCountyLayer: function (district) {
                 return addSubCountyLayer(district);
@@ -454,66 +483,88 @@
         }
     });
 
+    //module.directive('searchMap', function ($state, MapService) {
+    //    return {
+    //        scope: false,
+    //        link: function (scope, element, attrs) {
+    //            element.bind("keydown keypress", function (event) {
+    //                if(event.which === 13) {
+    //                    scope.$apply(function () {
+    //                        var search_term = scope.map.search
+    //                        if (search_term) {
+    //                            var districtFound = false
+    //                            MapService.hasLayer(search_term.toLowerCase()) &&
+    //                            $state.go('admin.dashboard.district', {district: search_term.toLowerCase()}, {reload: true})
+    //                                .then(function () {
+    //                                    if (MapService.selectDistrict(search_term, scope.filter)) {
+    //                                        districtFound = true
+    //                                    }
+    //                                });
+    //
+    //                            if (districtFound == false) {
+    //                                var district = MapService.searchSubcounty(search_term)
+    //                                if (district) {
+    //                                    $state.go('admin.dashboard.subcounty', {district: district, subcounty: search_term.toLowerCase()}, {reload: true})
+    //                                        .then(function () {
+    //                                            MapService.selectSubcounty(district, search_term)
+    //                                        });
+    //                                }
+    //                            }
+    //
+    //                        } else {
+    //                            $state.go('admin.dashboard', {}, {reload: true});
+    //                        }
+    //                    });
+    //                    event.preventDefault();
+    //                }
+    //            });
+    //        }
+    //    }
+    //});
+
     module.directive('searchMap', function ($state, MapService) {
         return {
             scope: false,
             link: function (scope, element, attrs) {
-                element.bind("keydown keypress", function (event) {
-                    if(event.which === 13) {
-                        scope.$apply(function () {
-                            var search_term = scope.map.search
-                            if (search_term) {
-                                var districtFound = false
-                                MapService.hasLayer(search_term.toLowerCase()) &&
-                                $state.go('admin.dashboard.district', {district: search_term.toLowerCase()}, {reload: true})
-                                    .then(function () {
-                                        if (MapService.selectDistrict(search_term, scope.filter)) {
-                                            districtFound = true
-                                        }
-                                    });
 
-                                if (districtFound == false) {
-                                    var district = MapService.searchSubcounty(search_term)
-                                    if (district) {
-                                        $state.go('admin.dashboard.subcounty', {district: district, subcounty: search_term.toLowerCase()}, {reload: true})
-                                            .then(function () {
-                                                MapService.selectSubcounty(district, search_term)
-                                            });
-                                    }
-                                }
+                scope.$watch(attrs.ngModel, function (district) {
+                    if (district == undefined) return;
 
-                            } else {
-                                $state.go('admin.dashboard', {}, {reload: true});
-                            }
-                        });
-                        event.preventDefault();
+                    if (district) {
+                        MapService.hasLayer(district.toLowerCase()) &&
+                        $state.go('admin.dashboard.district', {district: district.toLowerCase()}, {reload: true})
+                            .then(function () {
+                                MapService.selectDistrict(district, scope.filter);
+                            });
+
+                    } else {
+                        $state.go('admin.dashboard', {}, {reload: true});
                     }
                 });
             }
         }
     });
 
-    //module.directive('searchMap', function ($state, MapService) {
-    //    return {
-    //        scope: false,
-    //        link: function (scope, element, attrs) {
-    //
-    //            scope.$watch(attrs.ngModel, function (district) {
-    //                if (district == undefined) return;
-    //
-    //                if (district) {
-    //                    MapService.hasLayer(district.toLowerCase()) &&
-    //                    $state.go('admin.dashboard.district', {district: district.toLowerCase()}, {reload: true})
-    //                        .then(function () {
-    //                            MapService.selectDistrict(district, scope.filter);
-    //                        });
-    //
-    //                } else {
-    //                    $state.go('admin.dashboard', {}, {reload: true});
-    //                }
-    //            });
-    //        }
-    //    }
-    //});
+    module.directive('printer', function() {
+        return {
+            restrict: 'E',
+            replace: true,
+            template: '<div ng-transclude></div>',
+            transclude: true,
+            link: function(scope, element, attrs) {
+                var isClickable = angular.isDefined(attrs.isClickable) && scope.$eval(attrs.isClickable) === true ? true : false;
+
+                if (isClickable) {
+                    attrs.$set('ngClick', 'onHandleClick()');
+                    element.removeAttr('ng-transclude');
+                    $compile(element)(scope);
+                }
+
+                scope.onHandleClick = function() {
+                    console.log('onHandleClick');
+                };
+            }
+        };
+    });
 
 })(angular.module('dms.map', ['dms.config', 'ui.router', 'dms.geojson', 'dms.stats', 'dms.layer', 'dms.utils']));

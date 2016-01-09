@@ -27,6 +27,7 @@ INTERNATIONAL_PHONE_PREFIX = '+'
 DEFAULT_STR_MATCH_RATIO = 90 #expressed in absolute percentange values
 DISASTER_STATUSES = ['Registered', 'Situation Report Field', 'Verification', 'Assessment', 'Deployed Response Team', 'Closed']
 DISASTER_ASSOCIATION_MATCH_RATIO = 50 #Expressed in absolute percentage value
+DISASTER_NOTIFY_STATUS = ['necocdev@gmail.com']
 COUNTRY_CALLING_CODE = 256
 NUMBER_OF_CHARS_IN_PHONE_NUMBER = 9 #Without country code and leading zero(s)
 
@@ -300,6 +301,17 @@ PASSWORD_RESET_REQUEST_MESSAGE = """
 
                 If you think this is a mistake, please contact immediately the NECOC DMS
                 administrator at %(admin_email)s.
+
+                Thank you,
+                NECOC DMS team
+                """
+
+DISASTER_STATUS_CHANGE_MESSAGE = """
+                Dear %(name)s,
+
+                The Disaster Risk [%(disaster_name)s] in the following areas %(locations)s
+
+                Has changed status from "%(original_status)s" to "%(new_status)s".
 
                 Thank you,
                 NECOC DMS team

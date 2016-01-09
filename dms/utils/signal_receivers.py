@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.db.models.loading import get_app
-from dms.utils.decorators import signal_receiver
-from dms.utils.message_utils import location_ids
+from dms.tasks import send_email
 
 __author__ = 'asseym'
+
 
 def associate_disaster(sender, instance=None, created=False, **kwargs):
     app = get_app('dms')
@@ -16,7 +16,6 @@ def associate_disaster(sender, instance=None, created=False, **kwargs):
             if disaster and type(disaster) == str:
                 disaster_type = dTModel.objects(**dict(name=disaster)).order_by('-created_at').first()
                 locs = instance.location.full_tree()
-                # locs = location_ids(locs)
                 disaster_obj = dModel.objects(**dict(name=disaster_type, locations__in=locs))\
                     .order_by('-created_at').first()
                 instance.disaster = disaster_obj
@@ -51,3 +50,24 @@ def auto_close_old_polls(sender, instance=None, created=False, **kwargs):
                 to_close = open_polls[always_open:(always_open+1)]
                 open_polls.filter(id__in=[to_close[0].id]).update(set__open=False)
                 # to_close.update(set__open=False)
+
+
+def notify_new_disaster_status(sender, instance=None, created=False, **kwargs):
+    if sender.__name__ == 'Disaster':
+        if not created:
+            instance = kwargs.get('document')
+            if instance.pk is not None:
+                orig = sender.objects.get(pk=instance.pk)
+                if not orig.status == instance.status:
+                    name = 'DMS User'
+                    subject = 'Status of Disaster Risk has changed'
+                    from_email = settings.DEFAULT_FROM_EMAIL
+                    locations = [loc.name for loc in instance.locations]
+                    message = settings.DISASTER_STATUS_CHANGE_MESSAGE % \
+                              {'name': name,
+                               'disaster_name': instance.name.name,
+                               'locations': '['+ ','.join(locations)+']',
+                               'original_status': orig.status,
+                               'new_status': instance.status}
+                    recipient_list = settings.DISASTER_NOTIFY_STATUS
+                    send_email.delay(subject, message, from_email, recipient_list)

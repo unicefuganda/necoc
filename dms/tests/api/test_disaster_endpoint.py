@@ -1,6 +1,8 @@
 import json
 import datetime
 import collections
+from django.conf import settings
+import mock
 from mongoengine.django.auth import Group
 from rest_framework_csv.renderers import CSVRenderer
 
@@ -283,3 +285,13 @@ class TestDisasterEndpoint(MongoAPITestCase):
         self.assertEqual(3, len(response.data))
         self.assertTrue(isinstance(response.accepted_renderer, CSVRenderer))
         self.assertEqual(collections.Counter(split_text(expected_response)), collections.Counter(split_text(response.content)))
+
+    @mock.patch('dms.tasks.send_email.delay')
+    def test_changing_disaster_status_sends_email_to_stakeholders(self, mock_send_email):
+        disaster = Disaster(**self.disaster).save()
+        disaster.status = 'Closed'
+        disaster.save()
+        mock_send_email.assert_called_with('Status of Disaster Risk has changed',
+                                           mock.ANY,
+                                           settings.DEFAULT_FROM_EMAIL,
+                                           settings.DISASTER_NOTIFY_STATUS)

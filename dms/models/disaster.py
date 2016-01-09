@@ -1,8 +1,9 @@
-from mongoengine import ReferenceField, StringField, DateTimeField, ListField
+from mongoengine import ReferenceField, StringField, DateTimeField, ListField, pre_save
 from dms.models.disaster_type import DisasterType
 from dms.models.location import Location
 from dms.models.base import BaseModel
 from django.conf import settings
+from dms.utils.signal_receivers import notify_new_disaster_status
 
 
 class Disaster(BaseModel):
@@ -45,4 +46,6 @@ class Disaster(BaseModel):
 
     def csv_name(self):
         return self.name.name
+
+pre_save.connect(notify_new_disaster_status)
 

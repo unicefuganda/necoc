@@ -1,5 +1,5 @@
 from dms.models import RapidProMessage, Location, Disaster
-from dms.utils.general_helpers import percentize
+from dms.utils.general_helpers import percentize, make_ratio
 
 
 class LocationStatsAttribute(object):
@@ -13,13 +13,18 @@ class LocationStatsAttribute(object):
         attribute_count = self.attribute_count()
         total_attribute_count = self.attribute_class.count_(**self.kwargs)
         percentage = percentize(attribute_count, total_attribute_count)
-        return StatsDetails(attribute_count, percentage)
+        reporter_ratio = make_ratio(attribute_count, self.reporters_count())
+        return StatsDetails(attribute_count, percentage, reporter_ratio)
 
     def attribute_count(self):
         if self.location:
             return self.attribute_class.from_(location=self.location, **self.kwargs).count()
         return 0
 
+    def reporters_count(self):
+        if self.location:
+            return self.location.count_reporters()
+        return 0
 
 class LocationStatsService(object):
     def __init__(self, **kwargs):
@@ -38,9 +43,10 @@ class LocationStats(object):
 
 
 class StatsDetails(object):
-    def __init__(self, count, percentage):
+    def __init__(self, count, percentage, reporter_ratio):
         self.count = count
         self.percentage = percentage
+        self.reporter_ratio = reporter_ratio
 
 
 class MultiLocationStatsService(object):

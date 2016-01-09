@@ -24,19 +24,19 @@ class LocationStatsServiceSerializersTest(MongoTestCase):
         RapidProMessage(**message1).save()
 
     def test_should_serialize_stats_details(self):
-        stats = StatsDetails(1, 50)
+        stats = StatsDetails(1, 50, 0.61)
         serialized_object = StatsDetailsSerializer(stats)
-        serialized_data = {'count': 1, 'percentage': 50}
+        serialized_data = {'count': 1, 'percentage': 50, 'reporter_ratio': 0.61}
 
         self.assertEqual(serialized_data, serialized_object.data)
 
     def test_should_serialize_disaster_and_message_stats(self):
-        stats = StatsDetails(1, 50)
+        stats = StatsDetails(1, 50, 0.61)
         location_stats = LocationStats(stats, stats)
 
         serialized_object = LocationStatsSerializer(location_stats)
-        serialized_data = {'messages': {'count': 1, 'percentage': 50},
-                           'disasters': {'count': 1, 'percentage': 50}}
+        serialized_data = {'messages': {'count': 1, 'percentage': 50, 'reporter_ratio': 0.61},
+                           'disasters': {'count': 1, 'percentage': 50, 'reporter_ratio': 0.61}}
 
         self.assertEqual(serialized_data, serialized_object.data)
 
@@ -52,8 +52,8 @@ class LocationStatsServiceSerializersTest(MongoTestCase):
         location_stats_service = LocationStatsService(location=self.district)
         queryset = location_stats_service.aggregate_stats()
         serialized_object = LocationStatsSerializer(queryset)
-        serialized_data = {'messages': {'count': 1, 'percentage': 50},
-                           'disasters': {'count': 1, 'percentage': 100}}
+        serialized_data = {'messages': {'count': 1, 'percentage': 50, 'reporter_ratio': 0},
+                           'disasters': {'count': 1, 'percentage': 100, 'reporter_ratio': 0}}
 
         self.assertEqual(serialized_data, serialized_object.data)
 
@@ -87,10 +87,10 @@ class MultiLocationStatsServiceSerializersTest(MongoTestCase):
         multi_location_serializer = MultiLocationStatsSerializer(location=None)
         serialized_object = multi_location_serializer
 
-        expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50},
-                                                'disasters': {'count': 1, 'percentage': 100}},
-                                    'bukoto': {'messages': {'count': 1, 'percentage': 50},
-                                               'disasters': {'count': 0, 'percentage': 0}}
+        expected_serialized_data = {'kampala': {'messages': {'count': 1, 'percentage': 50, 'reporter_ratio': 0},
+                                                'disasters': {'count': 1, 'percentage': 100, 'reporter_ratio': 0}},
+                                    'bukoto': {'messages': {'count': 1, 'percentage': 50, 'reporter_ratio': 0},
+                                               'disasters': {'count': 0, 'percentage': 0, 'reporter_ratio': 0}}
                                    }
 
         self.assertEqual(expected_serialized_data, serialized_object.data)

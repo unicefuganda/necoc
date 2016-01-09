@@ -1,3 +1,4 @@
+from django.db.models.loading import get_app
 from mongoengine import *
 
 from dms.models.base import BaseModel
@@ -54,4 +55,9 @@ class Location(BaseModel):
                     node_obj = None
                     fd = True
         return node_obj
+
+    def count_reporters(self):
+        app = get_app('dms')
+        pModel = app.user_profile.UserProfile
+        return pModel.objects(**{'location__in': self.children(include_self=True)}).count()
 

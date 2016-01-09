@@ -9,6 +9,7 @@ class StatsDetailsSerializer(serializers.Serializer):
 
     count = serializers.Field()
     percentage = serializers.Field()
+    reporter_ratio = serializers.Field()
 
 
 class LocationStatsSerializer(serializers.Serializer):

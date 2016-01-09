@@ -271,12 +271,16 @@
                 //if (stats[prevDistrict].messages.count > stats[nextDistrict].messages.count) {
                 //    return prevDistrict;
                 //}
-                if (Math.round(stats[prevDistrict].messages.percentage, 0) > Math.round(stats[nextDistrict].messages.percentage, 0)) {
+                //if (Math.round(stats[prevDistrict].messages.percentage, 0) > Math.round(stats[nextDistrict].messages.percentage, 0)) {
+                //    return prevDistrict;
+                //}
+                //Base the peak value on the reporter ratio per location
+                if (stats[prevDistrict].messages.reporter_ratio > stats[nextDistrict].messages.reporter_ratio) {
                     return prevDistrict;
                 }
                 return nextDistrict;
             });
-            return Math.round(stats[district].messages.percentage, 0)
+            return stats[district].messages.reporter_ratio
         }
 
         function generateHeatMapColor(stats, layerName) {
@@ -284,7 +288,8 @@
                 scaleValue = 0;
 
             if (maxMessages != 0) {
-                scaleValue = Math.sqrt((Math.round(stats[layerName].messages.percentage, 0)) / maxMessages);
+                //scaleValue = (Math.round(stats[layerName].messages.reporter_ratio) / maxMessages);
+                scaleValue = stats[layerName].messages.reporter_ratio / maxMessages;
             }
             return buildColor(scaleValue);
         }

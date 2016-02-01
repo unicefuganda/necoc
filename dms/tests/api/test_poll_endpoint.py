@@ -1,5 +1,6 @@
 import json
 import uuid
+from django.test import override_settings
 from mock import patch, MagicMock, ANY
 from mongoengine.django.auth import Group, Permission, ContentType
 from dms.models import Poll, Location, UserProfile, PollResponse, User
@@ -106,6 +107,35 @@ class TestPollEndpoint(MongoAPITestCase):
         self.assertEquals(response.status_code, 200)
         response = self.client.post(endpoint)
         self.assertEquals(response.status_code, 403)
+
+
+    @patch('dms.tasks.send_bulk_sms')
+    @override_settings(ALWAYS_OPEN_POLLS=1)
+    def test_should_auto_close_polls(self, mock_send_bulk_sms):
+        self.poll_to_post['question'] = 'Will you comply, yes or no?'
+        self.poll_to_post['ptype'] = 'yesno'
+        second_poll = self.poll_to_post.copy()
+        second_poll['question'] = 'Please say, yes or no?'
+        second_poll['keyword'] = 'anotherkey'
+        # self.poll_to_send['text'] = 'Will you comply, yes or no? Reply With: NECOCPoll YES/NO'
+
+        response = self.client.post(self.POLL_ENDPOINT, data=json.dumps(self.poll_to_post),
+                                    content_type="application/json")
+        self.assertEqual(201, response.status_code)
+        retrieved_poll = Poll.objects(**self.poll_to_post)
+        self.assertEqual(1, retrieved_poll.count())
+        self.assertEqual(True, retrieved_poll[0].open)
+
+        response = self.client.post(self.POLL_ENDPOINT, data=json.dumps(second_poll),
+                                    content_type="application/json")
+        self.assertEqual(201, response.status_code)
+        retrieved_poll = Poll.objects(**self.poll_to_post)
+        self.assertEqual(1, retrieved_poll.count())
+        self.assertEqual(False, retrieved_poll[0].open)
+
+        retrieved_poll = Poll.objects(**second_poll)
+        self.assertEqual(1, retrieved_poll.count())
+        self.assertEqual(True, retrieved_poll[0].open)
 
 
 

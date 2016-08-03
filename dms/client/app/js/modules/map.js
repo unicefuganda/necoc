@@ -11,17 +11,26 @@
 
         function initMap(elementId) {
             var map = L.map(elementId).setView([1.436, 32.884], 7);
-
-            L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
-                attribution: 'Map data Tiles &copy; <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" />',
-                subdomains: '1234',
-                maxZoom: 13,
-                minZoom: 7
-            }).addTo(map);
+            var mapLayer = MQ.mapLayer();
+            mapLayer.addTo(map);
 
             initMapEvents(map);
             return map;
         }
+
+        //function initMap(elementId) {
+        //    var map = L.map(elementId).setView([1.436, 32.884], 7);
+        //
+        //    L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+        //        attribution: 'Map data Tiles &copy; <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" />',
+        //        subdomains: '1234',
+        //        maxZoom: 13,
+        //        minZoom: 7
+        //    }).addTo(map);
+        //
+        //    initMapEvents(map);
+        //    return map;
+        //}
 
         function initMapEvents(map) {
             map.on('zoomend', function () {

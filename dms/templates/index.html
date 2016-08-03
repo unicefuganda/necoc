@@ -5,7 +5,8 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}bower_components/selectize/dist/css/selectize.bootstrap3.css"/>
 <link rel="stylesheet" href="{{ STATIC_URL }}bower_components/angular-growl-v2/build/angular-growl.min.css"/>
 <link rel="stylesheet" href="{{ STATIC_URL }}bower_components/datetimepicker/jquery.datetimepicker.css"/>
-<link rel="stylesheet" href="{{ STATIC_URL }}bower_components/leaflet/dist/leaflet.css"/>
+{#<link rel="stylesheet" href="{{ STATIC_URL }}bower_components/leaflet/dist/leaflet.css"/>#}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
 {% endblock %}
 
 {% block body %}
@@ -69,7 +70,9 @@
 <script src="{{ STATIC_URL }}bower_components/datetimepicker/jquery.datetimepicker.js"></script>
 <script src="{{ STATIC_URL }}bower_components/moment/min/moment.min.js"></script>
 <script src="{{ STATIC_URL }}bower_components/checklist-model/checklist-model.js"></script>
-<script src="{{ STATIC_URL }}bower_components/leaflet/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+<script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=gD1uc8VqTsVpejB9gLN4ZUwHFGKZrRXt"></script>
+{#<script src="{{ STATIC_URL }}bower_components/leaflet/dist/leaflet.js"></script>#}
 <script src="{{ STATIC_URL }}bower_components/leaflet-search/dist/leaflet-search.min.js"></script>
 <script src="{{ STATIC_URL }}bower_components/ng-file-upload/angular-file-upload.js"></script>
 <script src="{{ STATIC_URL }}bower_components/chroma-js/chroma.js"></script>

@@ -9,6 +9,7 @@ MONGODB_PASSWORD = ''
 MONGODB_HOST = 'localhost'
 MONGODB_NAME = 'dms'
 MONGODB_DATABASE_HOST = 'mongodb://%s/%s' % (MONGODB_HOST, MONGODB_NAME)
+DISTRICT_GROUPS = ['DDMC', 'CAO', 'DDMC Chairperson']
 
 
 if 'test' in sys.argv:

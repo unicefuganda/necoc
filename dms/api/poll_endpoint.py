@@ -1,3 +1,5 @@
+import json
+from django.conf import settings
 from rest_condition import And, Or
 from rest_framework_mongoengine import serializers
 from rest_framework import fields
@@ -36,6 +38,12 @@ class PollListCreateView(ListCreateAPIView):
 
     def get_queryset(self):
         query_params = {key: value or None for key, value in self.request.GET.items()}
+        location_id = self.get_location_id(self.request.user)
+        user_group = self.request.user.group.name
+        if location_id and user_group in getattr(settings, 'DISTRICT_GROUPS', []):
+            query_params['target_locations'] = [str(location_id)]
+        else:
+            pass
         if 'ordering' in query_params:
             ordering_params = query_params['ordering']
             del query_params['ordering']
@@ -59,3 +67,7 @@ class PollListCreateView(ListCreateAPIView):
             return locations
         districts_children = [district.children() for district in locations]
         return flatten(districts_children)
+
+    def get_location_id(self, user):
+        profile = UserProfile.objects(user=user).first()
+        return profile.location.id if profile else ''

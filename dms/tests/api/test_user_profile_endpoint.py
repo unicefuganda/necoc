@@ -60,7 +60,7 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.assertEqual(1, retrieved_user.count())
 
     def test_should_get_a_list_of_users(self):
-        UserProfile(**self.mobile_user).save()
+        user_profile = UserProfile(**self.mobile_user).save()
         response = self.client.get(self.API_ENDPOINT, format='json')
 
         self.assertEqual(200, response.status_code)
@@ -68,6 +68,7 @@ class TestUserProfileEndpoint(MongoAPITestCase):
         self.assertEqual(self.mobile_user['name'], response.data[0]['name'])
         self.assertEqual(self.mobile_user['phone'], response.data[0]['phone'])
         self.assertEqual(self.mobile_user['email'], response.data[0]['email'])
+        self.assertEqual(user_profile.username(), '')
         self.assertEqual(self.district.name, response.data[0]['location']['name'])
 
     def test_should_get_ordered_list_of_users(self):

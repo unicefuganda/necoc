@@ -20,6 +20,13 @@ class MongoTestCase(TestCase):
         self.client.login(username='test_user', password='password')
         return user
 
+    def login_user_with_group(self, grp):
+        group = Group.objects(name=grp.name).first()
+        user = User.objects.create(username='test2_user', email='test2@email.email', group=group)
+        user.set_password('password')
+        self.client.login(username='test2_user', password='password')
+        return user
+
     def login_with_permission(self, permission_codename):
         self.client.logout()
         ct = ContentType(app_label='dms', model=str(uuid.uuid4()), name=str(uuid.uuid4())).save()

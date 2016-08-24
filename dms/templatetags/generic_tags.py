@@ -17,3 +17,8 @@ def can_manage_settings(user):
             return ''
     else:
         return ''
+
+@register.filter
+def get_location_id(user):
+    profile = UserProfile.objects(user=user).first()
+    return profile.location.id if profile else ''

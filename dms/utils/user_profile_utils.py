@@ -26,3 +26,16 @@ def _mobile_user(phone):
         return None
     except TypeError:
         return None
+
+
+def get_user_district_locations(user):
+        """ Returns a list of locations in a user's district"""
+        profile = UserProfile.objects(user=user).first()
+        if profile and profile.location:
+            if profile.location.type == 'district':
+                district = profile.location
+            else:
+                district = profile.location.parent
+            if district:
+                return [str(district.id)] + [str(l.id) for l in district.children()]
+        return []

@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_condition import Or
 from rest_framework import fields
 from rest_framework.settings import api_settings
@@ -10,6 +11,7 @@ from dms.models import UserProfile
 
 from dms.models.disaster import Disaster
 from dms.utils.permission_class_factory import IsGetRequest, build_permission_class
+from dms.utils.user_profile_utils import get_user_district_locations
 from rest_framework import serializers as serialiserzz
 
 
@@ -36,7 +38,11 @@ class DisasterListCreateView(ListCreateAPIView):
             if self.request.user.has_perm('dms.can_view_disasters') and \
                     not self.request.user.has_perm('dms.can_manage_disasters'):
                 user_profile = UserProfile.objects(user=self.request.user).first()
-                if user_profile:
+                user_group = self.request.user.group.name
+                if user_profile and user_group in getattr(settings, 'DISTRICT_GROUPS', []):
+                    user_locations = get_user_district_locations(self.request.user)
+                    query_params.update({'locations__in': user_locations})
+                else:
                     user_location = user_profile.location.id
                     query_params.update({'locations__in':[user_location]})
 
@@ -47,7 +53,7 @@ class DisasterView(MongoRetrieveUpdateView):
     model = Disaster
     serializer_class = DisasterSerializer
     queryset = Disaster.objects()
-    permission_classes = [Or(build_permission_class('dms.can_manage_disasters'))]
+    permission_classes = [Or(build_permission_class('dms.can_view_disasters'))]
 
     def post(self, request, *args, **kwargs):
         return self.patch(request, *args, **kwargs)

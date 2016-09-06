@@ -5,7 +5,7 @@
         </div>
         <div class="user-actions pull-right">
             <ul>
-                <li>
+                <li ng-if-permissions="can_manage_disasters" class="hide">
                     <button type="button" id="edit-disaster" class="btn btn-default btn-action btn-icon"
                             data-toggle="modal"
                             data-target="#disasters-modal">

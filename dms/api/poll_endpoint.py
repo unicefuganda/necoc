@@ -11,6 +11,7 @@ from dms.models import Poll, Location, UserProfile
 from dms.tasks import send_bulk_sms
 from dms.utils.general_helpers import flatten
 from dms.utils.permission_class_factory import build_permission_class, IsGetRequest
+from dms.utils.user_profile_utils import get_user_district_locations
 
 
 class PollSerializer(serializers.MongoEngineModelSerializer):
@@ -38,18 +39,18 @@ class PollListCreateView(ListCreateAPIView):
 
     def get_queryset(self):
         query_params = {key: value or None for key, value in self.request.GET.items()}
-        location_id = self.get_location_id(self.request.user)
         user_group = self.request.user.group.name
-        if location_id and user_group in getattr(settings, 'DISTRICT_GROUPS', []):
-            query_params['target_locations'] = [str(location_id)]
-        else:
-            pass
+        if user_group in getattr(settings, 'DISTRICT_GROUPS', []):
+            target_locations = get_user_district_locations(self.request.user)
+            query_params.update({'target_locations__in': target_locations})
+
         if 'ordering' in query_params:
             ordering_params = query_params['ordering']
             del query_params['ordering']
             query_set = Poll.objects(**query_params).order_by('%s' % ordering_params)
         else:
             query_set = Poll.objects(**query_params).order_by('-created_at')
+
         return query_set
 
     def post_save(self, obj, created=True):

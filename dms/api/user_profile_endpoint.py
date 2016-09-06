@@ -1,4 +1,5 @@
 import json
+from django.conf import settings
 from mongoengine import NotUniqueError, ValidationError, DoesNotExist
 from mongoengine.django.auth import Group
 from rest_condition import Or
@@ -20,7 +21,7 @@ from dms.models.user_profile import UserProfile
 from dms.services.user_profile_service import UserProfileService
 from dms.utils import image_resizer
 from dms.utils.permission_class_factory import build_permission_class
-from dms.utils.user_profile_utils import get_profile
+from dms.utils.user_profile_utils import get_profile, get_user_district_locations
 
 
 class UserProfileSerializer(serializers.MongoEngineModelSerializer):
@@ -70,6 +71,11 @@ class UserProfileListCreateView(ListCreateAPIView):
 
     def get_queryset(self):
         query_params = {key: value or None for key, value in self.request.GET.items()}
+        user_group = self.request.user.group.name
+        if user_group in getattr(settings, 'DISTRICT_GROUPS', []):
+            target_locations = get_user_district_locations(self.request.user)
+            query_params.update({'location__in': target_locations})
+
         if 'ordering' in query_params:
             ordering_params = query_params['ordering']
             del query_params['ordering']

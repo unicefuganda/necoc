@@ -74,7 +74,7 @@
                 data: {
                     pageTitle: 'Disasters',
                     permissions: {
-                        only: ['can_manage_disasters']
+                        only: ['can_manage_disasters', 'can_view_disasters']
                     }
                 },
                 templateUrl: '/static/templates/partials/admin/disasters/disasters.html',

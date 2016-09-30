@@ -61,7 +61,7 @@
             closeAfterSelect: true,
             onInitialize: function(selectize){
                 //console.log(selectize)
-            },
+            }
             // maxItems: 1
         };
 

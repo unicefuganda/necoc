@@ -6,7 +6,14 @@
                 <span class="icon icon-pie-2"></span><span class="title">All Polls</span>
             </div>
             <div class="user-actions pull-right" ng-if-permissions="can_manage_polls">
-                <ul>
+                <ul class="ul-horizontal">
+                    <li class="form-group" style="margin-bottom: 30px">
+			        <div class="input-group" style="margin-bottom: 20px">
+                        <div class="input-group-addon"><i class="icon-search"></i></div>
+                        <input type="text" class="form-control ng-valid ng-dirty"
+                            placeholder="Search polls" ng-model="searchKeyword">
+                    </div>
+                    </li>
                     <li>
                         <button type="button" id="new-poll-btn" class="btn btn-default btn-action btn-icon"
                                 data-toggle="modal" data-target="#new-poll-modal">
@@ -30,7 +37,8 @@
             </thead>
 
             <tbody>
-            <tr ng-repeat="key in notSorted(polls)" ng-init="poll = polls[key]" ng-click="showPollResponses(poll)">
+            <!--<tr ng-repeat="key in notSorted(polls)" ng-init="poll = polls[key]" ng-click="showPollResponses(poll)"> -->
+            <tr ng-repeat="poll in polls | filter: searchKeyword | orderBy: '-id'" ng-click="showPollResponses(poll)">
                 <td>{[{ poll.name }]}</td>
                 <td>{[{ poll.question }]}</td>
                 <td>{[{ poll.number_of_responses }]}</td>

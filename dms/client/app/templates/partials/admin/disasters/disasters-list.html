@@ -5,7 +5,15 @@
             <span class="icon icon-flash-electric"></span><span class="title">Disaster Risks</span>
         </div>
         <div class="user-actions pull-right">
+
             <ul class="ul-horizontal">
+                <li class="form-group">
+			        <div class="input-group" style="margin-bottom: 20px">
+                        <div class="input-group-addon"><i class="icon-search"></i></div>
+                        <input type="text" class="form-control ng-valid ng-dirty"
+                            placeholder="Search disasters" ng-model="searchKeyword">
+                    </div>
+                </li>
                 <li ng-if-permissions="can_manage_disasters" class="hide">
                     <button id="download-disasters-modal" type="button" class="btn btn-default btn-action btn-icon" data-toggle="modal"
                                 data-target="#download-disasters-modal">
@@ -37,7 +45,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="disaster in disasters" ng-click="showDisasterInfo(disaster)">
+        <tr ng-repeat="disaster in disasters | filter: searchKeyword" ng-click="showDisasterInfo(disaster)">
             <td>{[{ disaster.name.name }]}</td>
             <td>
                 <div>{[{ disaster.locations[0].parent.name }]}</div>
@@ -48,7 +56,6 @@
             <td>{[{ disaster.date | duration }]}</td>
         </tr>
         </tbody>
-
         <tfoot>
         <tr>
             <td colspan="5">

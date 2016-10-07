@@ -13,7 +13,7 @@
     <tbody>
     <tr ng-repeat="message in messages | filter:district | filter:subcounty">
         <td ng-show="showMessageCheckboxes"><input type="checkbox" checklist-model="selected.messages" checklist-value="message.id"/></td>
-        <td><span ng-hide="linkToProfile(message)">{[{ message.source }]}<br />({[{ message.phone }]})</span>
+        <td><span ng-hide="linkToProfile(message)">{[{ message.source }]}<!--<br />({[{ message.phone }]})--></span>
         <span ng-show="linkToProfile(message)"><a href="" open-profile id="{[{ message.profile_id }]}">{[{ message.source }]}</a><br /> ({[{ message.phone }]})</span></td>
         <td>{[{ message.text }]}</td>
         <td>{[{ message.location }]}</td>

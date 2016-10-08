@@ -39,3 +39,18 @@ def get_user_district_locations(user):
             if district:
                 return [str(district.id)] + [str(l.id) for l in district.children()]
         return []
+
+
+def get_user_district_coordinates(user):
+        """ Returns a list of a users location coordinates"""
+        profile = UserProfile.objects(user=user).first()
+        if profile and profile.location:
+            if profile.location.type == 'district':
+                district = profile.location
+            else:
+                district = profile.location.parent
+            if district:
+                return district.latlong
+            else:
+                return []
+        return []

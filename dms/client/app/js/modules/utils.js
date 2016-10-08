@@ -43,6 +43,10 @@
         return chroma;
     });
 
+    module.factory('$ulocation', function($rootScope){
+        return $rootScope;
+    })
+
     module.factory('helpers', function () {
         return {
             stringToArray: function (string, seperator) {

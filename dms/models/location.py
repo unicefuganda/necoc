@@ -11,6 +11,7 @@ class Location(BaseModel):
     name = StringField(required=True)
     type = StringField(required=True, choices=TYPE_CHOICES)
     parent = ReferenceField('self', required=False)
+    latlong = ListField(required=False)
 
     def __unicode__(self):
         if self.parent and self.parent.name:

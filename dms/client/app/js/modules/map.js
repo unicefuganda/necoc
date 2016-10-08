@@ -1,16 +1,36 @@
 (function (module) {
 
-    module.factory('MapService', function (GeoJsonService, MapConfig, LayerMap, StatsService, Layer, $interval, $chroma) {
+    module.factory('MapService', function (GeoJsonService, MapConfig, LayerMap, StatsService, Layer, CoordinatesService, $interval, $chroma) {
         var map,
             self = this;
 
         var TOGGLE_ZOOM_LEVEL = 9;
+        var coordinates;
+        CoordinatesService.getCoordinates().then(function (response) {
+            coordinates = response.data;
+        });
 
         self.subCountyLayerOptions = { style: MapConfig };
         self.districtlayerOptions = { style: MapConfig };
 
+
         function initMap(elementId) {
-            var map = L.map(elementId).setView([1.436, 32.884], 7);
+            maxZoom = 13
+            distZoom = 10
+            minZoom = 7
+            //if(Object.keys(coordinates).length === 0 && coordinates.constructor === Object){
+            if (typeof(coordinates.lat) === "undefined"){
+                var lat = 1.436;
+                var long = 32.884;
+                var zm = minZoom;
+            }else{
+                var lat = coordinates.lat;
+                var long = coordinates.long;
+                var zm = distZoom;
+                console.log(lat);
+                console.log(long);
+            }
+            var map = L.map(elementId).setView([lat, long], zm);
             var mapLayer = MQ.mapLayer();
             mapLayer.addTo(map);
 
@@ -563,4 +583,4 @@
         }
     });
 
-})(angular.module('dms.map', ['dms.config', 'ui.router', 'dms.geojson', 'dms.stats', 'dms.layer', 'dms.utils']));
+})(angular.module('dms.map', ['dms.config', 'ui.router', 'dms.geojson', 'dms.stats', 'dms.layer', 'dms.utils', 'dms.coordinates']));

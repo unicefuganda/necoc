@@ -20,6 +20,7 @@ from dms.api.response_message_endpoint import ResponseMessageListCreateView
 from dms.api.stats_summary_service_endpoint import SummaryStatsListView
 from dms.api.user_profile_endpoint import UserProfileListCreateView, UserProfileView, CSVUserProfileView, \
     BulkUserProfileView
+from dms.api.coordinates_endpoint import CurrentCoordinatesView
 from dms.views.api_token import ObtainAPIToken
 from dms.views.export_poll_responses import ExportPollResponsesView
 from dms.views.homepage import HomeView
@@ -54,6 +55,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/disasters/$', DisasterListCreateView.as_view()),
     url(r'^api/v1/disasters/(?P<id>[0-9a-z]+)/$', DisasterView.as_view()),
     url(r'^api/v1/current-permissions/$', CurrentPermissionsView.as_view()),
+    url(r'^api/v1/current-coordinates/$', CurrentCoordinatesView.as_view()),
     url(r'^api/v1/stats-summary/$', SummaryStatsListView.as_view()),
     url(r'^api/v1/location-stats/$', LocationStatsListView.as_view()),
     url(r'^api/v1/location-stats/(?P<district>[0-9a-z]+)/$', DistrictStatsListView.as_view()),

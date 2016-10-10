@@ -281,6 +281,8 @@ RESET_PASSWORD_MESSAGE = """
 
                 You will need to use the new password to login to %(hostname)s.
 
+                You can also change your password to your preference by clicking the "Account" link next to Logout.
+
                 If you think this is a mistake, please contact immediately the NECOC DMS
                 administrator in %(admin_email)s.
 
@@ -320,6 +322,7 @@ DISASTER_STATUS_CHANGE_MESSAGE = """
 AUTO_RESPONSE_MESSAGE = """Thank you for your message. A response team will be deployed to your area. \
 Please continue sending messages using NECOC.District.Subcounty.Message to 6700
 """
+SENDSMS_ON_PASSWORD_RESET = True
 # AUTO_RESPONSE_ENDPOINT = '/api/v1/sent-messages/'
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
@@ -354,3 +357,8 @@ LOGGING = {
         },
     }
 }
+
+try:
+    from local_settings import *
+except ImportError:
+    pass

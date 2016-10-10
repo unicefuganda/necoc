@@ -15,7 +15,7 @@
                 </div>
             </div>
             {% if form.non_field_errors %}
-            <div class="alert alert-danger alert-dismissable">
+            <div class="alert alert-danger alert-dismissable" id="forgot-alert">
                 {{ form.non_field_errors.as_text }}
             </div>
             {% endif %}
@@ -45,7 +45,7 @@
                 <button id="btn-forgotPass" type="submit" value="submit" class="btn btn-info btn-block">Send</button>
             </div>
             <div class="form-group">
-                <a href="" id="back-to-login">Back</a>
+                <a href="" id="back-to-login">Back to Sig In</a>
             </div>
         </form>
     </div>
@@ -57,29 +57,29 @@
                     <h3>NECOC DMS</h3>
                 </div>
             </div>
-            {% if form.non_field_errors %}
-            <div class="alert alert-danger alert-dismissable">
-                {{ form.non_field_errors.as_text }}
+            {% if login_form.non_field_errors %}
+            <div class="alert alert-danger alert-dismissable" id="login-alert">
+                {{ login_form.non_field_errors.as_text }}
             </div>
             {% endif %}
 
             {% csrf_token %}
             <div class="form-group">
-                <input class="form-control" name="username" type="text" id="id_username"
-                       value="{{ form.data.username }}" placeholder="Username"/>
-                {% if form.username.errors %}
+                <input class="form-control" name="username" type="text" id="id_username1"
+                       value="{{ login_form.data.username }}" placeholder="Username"/>
+                {% if login_form.username.errors %}
                 <div class="text-danger">
-                    {{ form.username.errors.as_text }}
+                    {{ login_form.username.errors.as_text }}
                 </div>
                 {% endif %}
             </div>
 
             <div class="form-group">
                 <input class="form-control" name="password" type="password" id="id_password" minlength="6"
-                       value="{{ form.data.password}}" placeholder="Password">
-                {% if form.password.errors %}
+                       value="{{ login_form.data.password}}" placeholder="Password">
+                {% if login_form.password.errors %}
                 <div class="text-danger">
-                    {{ form.password.errors.as_text }}
+                    {{ login_form.password.errors.as_text }}
                 </div>
                 {% endif %}
             </div>
@@ -92,6 +92,7 @@
             </div>
         </form>
     </div>
+    </div>
 </div>
 {% endblock %}
 {% block scripts %}
@@ -100,6 +101,9 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function() {
+            function isEmpty( el ){
+                return !$.trim(el.html())
+            }
             $('#forgotPass').hide();
             $('#forgot-password-form-link').click(function() {
                 $('#login').hide();
@@ -111,6 +115,15 @@
                 //$('#resetPassInput').value=null;
                 $('#forgotPass').hide();
             });
+            if (isEmpty($('#forgot-alert'))){
+                $('#forgot-alert').hide();
+                $('#login').show();
+                $('#forgotPass').hide();
+            } else {
+                $('#forgot-alert').show();
+                $('#login').hide();
+                $('#forgotPass').show();
+            }
         });
     </script>
 {% endblock %}

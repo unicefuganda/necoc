@@ -5,7 +5,8 @@ from dms.forms.login_form import LoginForm
 from dms.forms.password_form import PasswordForm
 from django.conf import settings
 from dms.models import User, UserProfile
-from dms.tasks import send_email
+from mongoengine.django.auth import UserManager
+from dms.tasks import send_email, send_one_sms
 
 
 class Login(View):
@@ -13,40 +14,50 @@ class Login(View):
         if request.POST.get('resetPass', None):
             form = PasswordForm(request.POST)
             if form.is_valid():
-                user = User.objects(username=form.cleaned_data['username'], \
-                                           email=form.cleaned_data['email']).first()
+                user = User.objects(username=form.cleaned_data['username'],
+                                    email=form.cleaned_data['email']).first()
                 profile = UserProfile.objects(user=user).first()
                 if user:
                     name = profile.name if profile else 'DMS User'
+                    phone = profile.phone if profile else ''
                     subject = 'NECOC Password Reset Request'
                     from_email = settings.DEFAULT_FROM_EMAIL
-                    user_id = user.id
                     hostname = settings.HOSTNAME
                     admin_email = settings.ADMIN_EMAIL
-                    message = settings.PASSWORD_RESET_REQUEST_MESSAGE % \
-                              {'name': name,
-                               'hostname': hostname,
-                               'user_id': user_id,
-                               'admin_email': admin_email}
+                    password = UserManager().make_random_password()
+                    user.set_password(password)
+                    user.save()
+
+                    message = settings.RESET_PASSWORD_MESSAGE % {
+                        'name': name,
+                        'hostname': hostname,
+                        'password': password,
+                        'admin_email': admin_email}
                     recipient_list = [user.email]
                     send_email.delay(subject, message, from_email, recipient_list)
+                    if phone and getattr(settings, 'SENDSMS_ON_PASSWORD_RESET', False):
+                        text = 'Your NECOC password has been reset to %s' % password
+                        send_one_sms.delay(None, phone, text)
                 else:
-                    form.add_error(None, 'No user with matching Username and Password')
+                    form.add_error(None, 'No user with matching Username and Email')
             else:
                 form.add_error(None, 'Invalid data')
+            return render(request, 'login.html', {'form': form})
         else:
-            form = LoginForm(request.POST)
-            if form.is_valid():
-                user = authenticate(username=(form.cleaned_data['username']), password=(form.cleaned_data['password']))
+            login_form = LoginForm(request.POST)
+            if login_form.is_valid():
+                user = authenticate(username=(login_form.cleaned_data['username']),
+                                    password=(login_form.cleaned_data['password']))
                 if user:
                     login(request, user)
                     return redirect('/')
-                form.add_error(None, 'Username or Password is invalid')
-        return render(request, 'login.html', {'form': form})
+                login_form.add_error(None, 'Username or Password is invalid')
+            return render(request, 'login.html', {'login_form': login_form})
 
     def get(self, request, *args, **kwargs):
-        form = LoginForm()
-        return render(request, 'login.html', {'form': form})
+        login_form = LoginForm()
+        form = PasswordForm()
+        return render(request, 'login.html', {'login_form': login_form, 'form': form})
 
 
 class Logout(View):

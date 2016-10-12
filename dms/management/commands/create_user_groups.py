@@ -31,11 +31,13 @@ class Command(BaseCommand):
 
             Group(name='IT Assistant', permissions=[view_polls,
                                                     view_disasters,
+                                                    view_disasters,
                                                     manage_disasters,
                                                     manage_messages]).save()
 
             Group(name='Disaster Preparedness Officer', permissions=[manage_polls,
                                                                      view_polls,
+                                                                     view_disasters,
                                                                      manage_disasters,
                                                                      manage_messages]).save()
 
@@ -48,6 +50,7 @@ class Command(BaseCommand):
             Group(name='Management Team', permissions=[manage_users,
                                                        manage_polls,
                                                        view_polls,
+                                                       view_disasters,
                                                        manage_disasters,
                                                        manage_messages]).save()
 
@@ -61,6 +64,7 @@ class Command(BaseCommand):
 
             Group(name='DDMC', permissions=[view_polls,
                                            view_messages,
+                                           manage_disasters,
                                            view_disasters]).save()
         except:
             print "You have likely created the user group data already"

@@ -6,10 +6,10 @@ from dms.tests.base import MongoTestCase
 
 class UserProfileSerializerTest(MongoTestCase):
     def setUp(self):
-        self.district = Location(**dict(name='Kampala', type='district', parent=None)).save()
+        self.district = Location(**dict(name='Kampala', type='district', parent=None, latlong=[])).save()
 
         self.serialized_location = dict(created_at=self.district.created_at, type=self.district.type,
-                                        name=self.district.name, id=str(self.district.id))
+                                        name=self.district.name, id=str(self.district.id), latlong=[])
         self.mobile_user = dict(name='timothy', phone='+256775019449', location=self.district,
                                 email="timothyakampa@gmail.com")
         self.serialized_mobile_user = dict(name='timothy', phone='+256775019449', location=self.serialized_location,

@@ -9,6 +9,7 @@ class TestLocationEndpoint(MongoAPITestCase):
     LOCATION_ENDPOINT = '/api/v1/locations/'
 
     def setUp(self):
+        self.user = self.login_user()
         self.district_to_post = dict(name='Kampala', type='district')
         self.district = dict(name='Kampala', type='district')
         self.expected_district = dict(name='Kampala', type="district", parent=None)
@@ -80,6 +81,7 @@ class TestLocationChildrenEndpoint(MongoAPITestCase):
     LOCATION_ENDPOINT = '/api/v1/locations/'
 
     def setUp(self):
+        self.user = self.login_user()
         self.district_to_post = dict(name='Kampala', type='district')
         self.district = dict(name='Kampala', type='district')
 

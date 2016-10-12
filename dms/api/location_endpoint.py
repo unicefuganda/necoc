@@ -2,6 +2,9 @@ from rest_framework import fields
 from rest_framework_mongoengine.generics import ListCreateAPIView
 from rest_framework_mongoengine import serializers
 from dms.models.location import Location
+from dms.utils.user_profile_utils import get_user_district_locations
+from django.conf import settings
+from dms.models import UserProfile
 
 
 class LocationSerializer(serializers.MongoEngineModelSerializer):
@@ -24,6 +27,11 @@ class LocationListCreateView(ListCreateAPIView):
     def get_non_children_queryset(self):
         fields = Location._fields_ordered
         query_params = {key: value or None for key, value in self.request.GET.items() if key in fields}
+        user_profile = UserProfile.objects(user=self.request.user).first()
+        user_group = self.request.user.group.name
+        if user_profile and user_group in getattr(settings, 'DISTRICT_GROUPS', []):
+            user_locations = get_user_district_locations(self.request.user)
+            query_params.update({'id__in': user_locations})
         return Location.objects(**query_params)
 
     def get_location_children_by_type(self, query_set):

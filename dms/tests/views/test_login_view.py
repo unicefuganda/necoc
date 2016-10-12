@@ -35,7 +35,7 @@ class TestLogin(MongoTestCase):
         response = self.client.post(self.login_url, data)
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'login.html')
-        form = response.context['form']
+        form = response.context['login_form']
         self.assertEqual(2, len(form.errors))
 
     def test_post_should_return_form_if_invalid_user(self):
@@ -46,7 +46,7 @@ class TestLogin(MongoTestCase):
         response = self.client.post(self.login_url, data)
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'login.html')
-        errors = response.context['form'].errors
+        errors = response.context['login_form'].errors
         self.assertEqual(1, len(errors))
         self.assertIn(u'Username or Password is invalid', errors['__all__'])
 

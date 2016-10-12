@@ -1,7 +1,7 @@
 from dms.models import User
 from mongoengine.django.auth import UserManager
 
-from dms.tasks import send_email
+from dms.tasks import send_email, send_one_sms
 from django.conf import settings
 
 
@@ -15,6 +15,9 @@ class UserProfileService(object):
         password = self.set_new_password(user)
         message = self._build_new_user_email_message(username, password)
         send_email.delay('Your NECOC Account', message, settings.DEFAULT_FROM_EMAIL, [self.profile.email])
+        if self.profile.phone and getattr(settings, 'SENDSMS_ON_PASSWORD_RESET', False):
+            text = 'Your NECOC password has been set to %s' % password
+            send_one_sms.delay(None, self.profile.phone, text)
         return user
 
     def reset_password(self):

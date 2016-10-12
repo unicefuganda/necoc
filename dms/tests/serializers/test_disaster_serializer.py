@@ -14,7 +14,7 @@ class DisasterSerializerTest(MongoTestCase):
         self.disaster_type.save()
 
         self.serialized_location = dict(created_at=self.district.created_at, type=self.district.type,
-                                        name=self.district.name, id=str(self.district.id))
+                                        name=self.district.name, id=str(self.district.id), latlong=[])
 
         self.serialized_disaster_type = dict(created_at=self.disaster_type.created_at, name=self.disaster_type.name,
                                              description=self.disaster_type.description, id=str(self.disaster_type.id))

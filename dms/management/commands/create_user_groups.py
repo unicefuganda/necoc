@@ -24,11 +24,13 @@ class Command(BaseCommand):
             Group(name='Administrator', permissions=[manage_users,
                                                      manage_polls,
                                                      view_polls,
+                                                     view_disasters,
                                                      manage_disasters,
                                                      manage_messages,
                                                      manage_settings,]).save()
 
             Group(name='IT Assistant', permissions=[view_polls,
+                                                    view_disasters,
                                                     manage_disasters,
                                                     manage_messages]).save()
 
@@ -39,6 +41,7 @@ class Command(BaseCommand):
 
             Group(name='Disaster Management Officer', permissions=[manage_polls,
                                                                    view_polls,
+                                                                   view_disasters,
                                                                    manage_disasters,
                                                                    manage_messages]).save()
 

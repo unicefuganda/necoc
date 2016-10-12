@@ -35,16 +35,16 @@ class DisasterListCreateView(ListCreateAPIView):
 
         location_queried = self.request.GET.get('location', None)
         if not location_queried:
-            if self.request.user.has_perm('dms.can_view_disasters') and \
-                    not self.request.user.has_perm('dms.can_manage_disasters'):
+            if self.request.user.has_perm('dms.can_view_disasters'):
                 user_profile = UserProfile.objects(user=self.request.user).first()
                 user_group = self.request.user.group.name
                 if user_profile and user_group in getattr(settings, 'DISTRICT_GROUPS', []):
                     user_locations = get_user_district_locations(self.request.user)
                     query_params.update({'locations__in': user_locations})
                 else:
-                    user_location = user_profile.location.id
-                    query_params.update({'locations__in':[user_location]})
+                    if not self.request.user.has_perm('dms.can_manage_disasters'):
+                        user_location = user_profile.location.id
+                        query_params.update({'locations__in':[user_location]})
 
         return Disaster.objects(**query_params)
 

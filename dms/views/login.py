@@ -36,7 +36,7 @@ class Login(View):
                     recipient_list = [user.email]
                     send_email.delay(subject, message, from_email, recipient_list)
                     if phone and getattr(settings, 'SENDSMS_ON_PASSWORD_RESET', False):
-                        text = 'Your NECOC password has been reset to %s' % password
+                        text = 'Your NECOC password for user: %s has been reset to %s' % (user.username, password)
                         send_one_sms.delay(None, phone, text)
                 else:
                     form.add_error(None, 'No user with matching Username and Email')

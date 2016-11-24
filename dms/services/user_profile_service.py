@@ -16,7 +16,7 @@ class UserProfileService(object):
         message = self._build_new_user_email_message(username, password)
         send_email.delay('Your NECOC Account', message, settings.DEFAULT_FROM_EMAIL, [self.profile.email])
         if self.profile.phone and getattr(settings, 'SENDSMS_ON_PASSWORD_RESET', False):
-            text = 'Your NECOC password has been set to %s' % password
+            text = 'Your NECOC password for user: %s has been set to %s' % (username, password)
             send_one_sms.delay(None, self.profile.phone, text)
         return user
 
